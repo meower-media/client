@@ -185,6 +185,9 @@
 					type="text"
 					class="white"
 					placeholder="Write something..."
+				        id="postinput"
+				        name="postinput"
+					autocomplete="false"
 					maxlength="250"
 				>
 				<button>Post</button>
