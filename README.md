@@ -12,8 +12,8 @@ Requirements:
 To clone and run a development server on your machine (that autoupdates when you modify files):
 
 ```
-git clone https://github.com/CST1229/meower-svelte
-cd meower-svelte
+git clone https://github.com/meower-media-co/Meower-Svelte
+cd Meower-Svelte
 npm install
 npm run dev
 ```
