@@ -15,7 +15,7 @@
 		<img
 			{alt}
 			title={alt}
-			src="/avatars/icon_{
+			src="./avatars/icon_{
 				icon < 0 ? (icon === -1 ? 21 : "err") : icon-1}.svg"
 			class:loading={icon === -1}
 			draggable={false}
