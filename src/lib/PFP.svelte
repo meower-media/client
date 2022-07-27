@@ -15,8 +15,19 @@
 		<img
 			{alt}
 			title={alt}
+<<<<<<< Updated upstream
 			src="./avatars/icon_{
 				icon < 0 ? (icon === -1 ? 21 : "err") : icon-1}.svg"
+=======
+			src={
+				new URL(
+					`./../assets/avatars/icon_${
+						(icon < 0 ? (icon === -1 ? 21 : "err") : icon-1)
+					}.svg`,
+					import.meta.url
+				).href
+			}
+>>>>>>> Stashed changes
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
