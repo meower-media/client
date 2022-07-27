@@ -49,6 +49,8 @@
 	.view {
 		margin-left: 3.5em;
 		padding: 0.33em;
+		
+		background-color: var(--background);
 	}
 
 	@media (max-aspect-ratio: 1/1) {
