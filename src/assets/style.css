@@ -1,0 +1,140 @@
+@font-face {
+    font-family: simvoni;
+    src: url(./font/Simvoni.ttf);
+    font-display: swap;
+}
+
+@font-face {
+    font-family: simvoni-bold;
+    src: url(./font/Simvoni-Bold.ttf);
+	font-weight: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: simvoni-bolditalic;
+    src: url(./font/Simvoni-BoldItalic.ttf);
+	font-style: normal;
+	font-weight: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: simvoni-italic;
+    src: url(./font/Simvoni-Italic.ttf);
+	font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    padding: none;
+}
+
+#app, body, :root {
+	width: 100%;
+	height: 100%;
+}
+
+button,
+input[type="text"],
+input[type="password"],
+textarea {
+    border: solid 2px var(--foreground-orange);
+    border-radius: 1px;
+    outline: none;
+
+    background-color: var(--orange);
+    color: var(--foreground-orange);
+
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    margin-bottom: -0.15rem;
+
+	font-family: inherit;
+    font-size: inherit;
+}
+button + button {
+	margin-left: -0.15rem;
+}
+input::placeholder {
+	color: var(--foreground-orange);
+	opacity: 0.75;
+}
+input.white::placeholder {
+	color: var(--foreground);
+	opacity: 0.75;
+}
+
+button:hover,
+button:focus-visible,
+input[type="text"]:hover,
+input[type="text"]:focus-visible,
+input[type="password"]:hover,
+input[type="password"]:focus-visible {
+    background-color: var(--orange-light);
+}
+
+button:active,
+input[type="text"]:focus,
+input[type="password"]:focus {
+    background-color: var(--orange-dark);
+}
+
+button.round {
+    border-radius: 0.75em;
+    border-bottom-width: 5px;
+    padding: 0.5em;
+    overflow-wrap: break-word;
+}
+
+input[type="text"].white,
+input[type="password"].white,
+textarea {
+    background-color: var(--background);
+    border-color: var(--orange);
+    color: var(--foreground);
+    font-weight: normal;
+}
+
+button.white {
+    background-color: var(--background);
+    border-color: var(--orange);
+    color: var(--orange-button);
+}
+
+input[type="text"].white:hover,
+input[type="password"].white:hover,
+textarea:hover,
+button.white:hover,
+input[type="text"].white:focus-visible,
+input[type="password"].white:focus-visible,
+textarea:focus-visible,
+button.white:focus-visible {
+    border-color: var(--orange-light);
+}
+
+input[type="text"].white:focus,
+input[type="password"].white:focus,
+textarea:focus,
+button.white:active {
+    border-color: var(--orange-dark);
+}
+
+textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+	margin-bottom: 1ex;
+}
+h1, h2, h3, h4, h5, h6, b {
+	font-family: Simvoni-Bold, sans-serif;
+	font-weight: normal;
+}
+h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
+	font-family: Simvoni, sans-serif;
+	font-weight: bold;
+}
