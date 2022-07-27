@@ -172,8 +172,6 @@
 				<div>
 					<p class="small">
 						Meower Svelte v1.0, by CST1229
-						<br />
-						credits to Meower Media Co. for creating Meower
 					</p>
 					<img
 						src={meowy}
