@@ -1,6 +1,6 @@
 # Meower Svelte
 
-A Meower client made with [Svelte](https://svelte.dev).
+A Meower client written in [Svelte](https://svelte.dev).
 
 ## Developing
 
