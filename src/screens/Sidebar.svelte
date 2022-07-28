@@ -7,8 +7,7 @@
 		screen,
 		user,
 	} from "../lib/stores.js";
-	import unloadedProfile from "../lib/unloadedprofile.js";
-
+	
 	import {tick} from "svelte";
 
 	import logo from "../assets/logo.svg";
@@ -71,8 +70,6 @@
 		screen.set("setup");
 		await tick();
 		setupPage.set("reconnect");
-
-		user.set(unloadedProfile());
 	}} class="logout-btn round">
 		<img
 			src={logout}

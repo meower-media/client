@@ -66,18 +66,18 @@ input.white::placeholder {
 	opacity: 0.75;
 }
 
-button:hover,
+button:not(:disabled):hover,
 button:focus-visible,
-input[type="text"]:hover,
+input[type="text"]:not(:disabled):hover,
 input[type="text"]:focus-visible,
-input[type="password"]:hover,
+input[type="password"]:not(:disabled):hover,
 input[type="password"]:focus-visible {
     background-color: var(--orange-light);
 }
 
-button:active,
-input[type="text"]:focus,
-input[type="password"]:focus {
+button:not(:disabled):active,
+input[type="text"]:not(:disabled):focus,
+input[type="password"]:not(:disabled):focus {
     background-color: var(--orange-dark);
 }
 
@@ -103,10 +103,10 @@ button.white {
     color: var(--orange-button);
 }
 
-input[type="text"].white:hover,
-input[type="password"].white:hover,
-textarea:hover,
-button.white:hover,
+input[type="text"].white:not(:disabled):hover,
+input[type="password"].white:not(:disabled):hover,
+textarea:not(:disabled):hover,
+button.white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
 textarea:focus-visible,
@@ -114,8 +114,8 @@ button.white:focus-visible {
     border-color: var(--orange-light);
 }
 
-input[type="text"].white:focus,
-input[type="password"].white:focus,
+input[type="text"].white:not(:disabled):focus,
+input[type="password"].white:not(:disabled):focus,
 textarea:focus,
 button.white:active {
     border-color: var(--orange-dark);
@@ -137,4 +137,53 @@ h1, h2, h3, h4, h5, h6, b {
 h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
 	font-family: Simvoni, sans-serif;
 	font-weight: bold;
+}
+
+input[type="checkbox"] {
+	appearance: none;
+
+	width: 1em;
+	height: 1em;
+	vertical-align: bottom;
+	position: relative;
+
+	font: inherit;
+	
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: var(--background);
+	border-radius: 4px;
+}
+input[type="checkbox"]:not(:disabled):hover {
+	filter: brightness(0.9);
+}
+input[type="checkbox"]:not(:disabled):active,
+label:active input[type="checkbox"]:not(:disabled) {
+	filter: brightness(0.8);
+}
+
+input[type="checkbox"]::after {
+	content: "";
+	display: inline-block;
+
+	overflow: hidden;
+	padding: calc(50% - 5px);
+
+	font: inherit;
+	border-radius: 100%;
+
+	background-color: transparent;
+}
+input[type="checkbox"]:checked::after {
+	background-color: var(--foreground);
+}
+
+a {
+	color: #0066ff;
+}
+
+:disabled {
+	opacity: 0.5;
 }

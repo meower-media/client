@@ -15,22 +15,22 @@
 
 	let logo, setup, logoImg, loginStatus = "";
 
+	let acceptTerms = false;
+
 	async function connect() {
-		return new Promise(resolve => {
-			if (link.ws && link.ws.readyState === 1) {
-				resolve();
-				return;
-			};
+		await clm.disconnect();
+		clm.connect();
 
-			clm.connect();
-
-			link.once("connected", resolve);
-		});
+		await new Promise(resolve => link.once("connected", resolve));
 	}
+
+	let rememberMe = false;
 
 	onMount(() => {
 		page.subscribe(async value => {
 			if (!setup) return;
+			rememberMe = false;
+			acceptTerms = false;
 			setup.classList.remove("white");
 			if (value === "start") {
 				clm.disconnect();
@@ -99,6 +99,12 @@
 						...profileVal.payload,
 						name: val.payload.username,
 					}));
+					
+					if (rememberMe) {
+						localStorage.setItem("meower_savedusername", username);
+						localStorage.setItem("meower_savedpassword", password);
+					}
+
 					screen.set("main");
 				} catch(e) {
 					console.error(e);
@@ -164,6 +170,15 @@
 				</div>
 				<button on:click={() => page.set("login")}>Log in</button> <br />
 				<button on:click={() => page.set("join")}>Create an account</button> <br />
+				{#if localStorage.getItem("meower_savedusername")}
+					<button on:click={() => {
+						doLogin(
+							localStorage.getItem("meower_savedusername"),
+							localStorage.getItem("meower_savedpassword"),
+						)
+					}}>Use saved login ({localStorage.getItem("meower_savedusername")})</button>
+					<p class="small">{loginStatus}</p>
+				{/if}
 				<button on:click={() => {
 					user.set(unloadedProfile());
 					loginStatus = "";
@@ -173,7 +188,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.0.1, by CST1229
+						Meower Svelte v1.1.0, by CST1229
 					</p>
 					<img
 						src={meowy}
@@ -201,8 +216,14 @@
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72"> <br /> <br />
-				<div class="login-status">{loginStatus}</div>
+				<input type="password" placeholder="Password" maxlength="72">
+				<p class="checkboxes">
+					<label>
+						<input type="checkbox" bind:checked={rememberMe}>
+						Save this login
+					</label>
+				</p>
+				<span class="login-status">{loginStatus}</span>
 				<div class="buttons"> 
 					<button>Log in</button><button on:click|preventDefault={()=>{
 						page.set("welcome");
@@ -210,6 +231,12 @@
 						return false;
 					}}>Go back</button>
 				</div>
+				<button on:click|preventDefault={()=>{
+					localStorage.removeItem("meower_savedusername");
+					localStorage.removeItem("meower_savedpassword");
+					loginStatus = "Saved login cleared.";
+					return false;
+				}}>Clear saved login</button>
 			</form>
 		</div>
 	{:else if $page === "join"}
@@ -253,9 +280,14 @@
 							}));
 
 							loginStatus = "";
+							
+							if (rememberMe) {
+								localStorage.setItem("meower_savedusername", username);
+								localStorage.setItem("meower_savedpassword", password);
+							}
 
 							page.set("go");
-							await sleep(500);
+							await sleep(1000);
 							screen.set("main");
 						} else {
 							loginStatus = "Unexpected error logging in!";
@@ -273,10 +305,23 @@
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72"> <br /> <br />
-				<div class="login-status">{loginStatus}</div>
+				<input type="password" placeholder="Password" maxlength="72">
+				<p class="checkboxes">
+					<label>
+						<input type="checkbox" bind:checked={rememberMe}>
+						Save this login
+					</label>
+					<br />
+					<label>
+						<input type="checkbox" bind:checked={acceptTerms}>
+						I agree to <a
+							href="https://meower.org/legal"
+						>Meower's Terms of Service and Privacy Policy</a>
+					</label>
+				</p>
+				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button>Join!</button><button on:click|preventDefault={()=>{
+					<button disabled={!acceptTerms}>Join!</button><button on:click|preventDefault={()=>{
 						page.set("welcome");
 						loginStatus = "";
 						return false;
@@ -287,7 +332,7 @@
 	{:else if $page === "blank"}
 		<div></div>
 	{:else if $page === "go"}
-		<div>Let's go!</div>
+		<div class="fullcenter">Let's go!</div>
 	{:else}
 		Somehow, you got to a page that doesn't exist...
 		<br />
@@ -379,7 +424,7 @@
 		width: 24em;
 		max-width: 100%;
 
-		margin-top: 5em;
+		margin-top: 2em;
 	}
 	.column-ui .buttons * {
 		flex-grow: 1;
@@ -389,7 +434,17 @@
 	}
 
 	.login-status {
+		display: inline-block;
 		height: 0;
 		overflow: visible;
+	}
+
+	label {
+		vertical-align: middle;
+	}
+
+	.checkboxes {
+		text-align: left;
+		font-size: 90%;
 	}
 </style>
