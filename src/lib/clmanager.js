@@ -187,7 +187,6 @@ export async function updateProfile() {
 				bgm_song: profile.bgm_song,
 				layout: profile.layout,
 				pfp_data: profile.pfp_data,
-				quote: profile.quote,
 			},
 		},
 	});
