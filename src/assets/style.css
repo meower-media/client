@@ -57,7 +57,7 @@ textarea {
 button + button {
 	margin-left: -0.15rem;
 }
-input::placeholder {
+input:not(.white)::placeholder {
 	color: var(--foreground-orange);
 	opacity: 0.75;
 }
@@ -66,18 +66,18 @@ input.white::placeholder {
 	opacity: 0.75;
 }
 
-button:not(:disabled):hover,
-button:focus-visible,
-input[type="text"]:not(:disabled):hover,
-input[type="text"]:focus-visible,
-input[type="password"]:not(:disabled):hover,
-input[type="password"]:focus-visible {
+button:not(.white):not(:disabled):hover,
+button:not(.white):focus-visible,
+input[type="text"]:not(.white):not(:disabled):hover,
+input[type="text"]:not(.white):focus-visible,
+input[type="password"]:not(.white):not(:disabled):hover,
+input[type="password"]:not(.white):focus-visible {
     background-color: var(--orange-light);
 }
 
-button:not(:disabled):active,
-input[type="text"]:not(:disabled):focus,
-input[type="password"]:not(:disabled):focus {
+button:not(.white):not(:disabled):active,
+input[type="text"]:not(.white):not(:disabled):focus,
+input[type="password"]:not(.white):not(:disabled):focus {
     background-color: var(--orange-dark);
 }
 
