@@ -5,7 +5,7 @@
 
 	import Container from "../lib/Container.svelte";
 
-	import {user, screen, setupPage} from "../lib/stores.js";
+	import {user, screen, setupPage, spinner} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 
 	let delete1 = false, delete2 = false, delete3 = false, delete4 = false, delete5 = false;
@@ -16,7 +16,8 @@
 				localStorage.removeItem("meower_savedpassword");
 			}
 
-			await clm.meowerRequest({cmd: "direct", val: {cmd: "del_account", val: ""}});
+			//await clm.meowerRequest({cmd: "direct", val: {cmd: "del_account", val: ""}});
+			alert("NO.")
 			
 			screen.set("setup");
 			await tick();
@@ -25,6 +26,29 @@
 	}
 </script>
 
+<!--<p>Quote: {$user.quote}</p>
+<form 
+	class="createpost"
+	on:submit|preventDefault={e => {
+		//spinner.set(true);
+		const _user = $user;
+		_user.quote = e.target[0].value;
+		user.set(_user);
+
+		clm.updateProfile();
+		//spinner.set(false);
+	}}
+>
+	<input
+		type="text"
+		class="white"
+		placeholder="Write something..."
+			id="qinput"
+			name="qinput"
+		autocomplete="false"
+	>
+	<button>Save Quote</button>
+</form>-->
 <Container>
 	<h1>Settings</h1>
 	You can change your settings here. These will save to your account, so they will carry over into other clients.
