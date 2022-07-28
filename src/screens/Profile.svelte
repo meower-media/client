@@ -4,7 +4,7 @@
 	import PFP from "../lib/PFP.svelte";
 	import Container from "../lib/Container.svelte";
 	import * as clm from "../lib/clmanager.js";
-	import {user, profileData} from "../lib/stores.js";
+	import {user, profileData, spinner} from "../lib/stores.js";
 
 	let _user = $user;
 	user.subscribe(v => _user = v);
@@ -16,6 +16,7 @@
 	 */
 	function save() {
 		if ($profileData[$user.name]) {
+			alert("upd")
 			const _profileData = $profileData;
 			delete _profileData[$user.name];
 			profileData.set(_profileData);
@@ -26,6 +27,29 @@
 </script>
 
 <div class="profile">
+	<p>Quote: {$user.quote}</p>
+	<form 
+		class="createpost"
+		on:submit|preventDefault={e => {
+			spinner.set(true);
+			const _user2 = $user;
+			_user2.quote = e.target[0].value
+			user.set(_user2);
+
+			clm.updateProfile();
+			spinner.set(false);
+		}}
+	>
+		<input
+			type="text"
+			class="white"
+			placeholder="Write something..."
+				id="qinput"
+				name="qinput"
+			autocomplete="false"
+		>
+		<button>Save Quote</button>
+	</form>
 	<Container>
 		<div class="profile-header">
 			<PFP
