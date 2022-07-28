@@ -16,7 +16,8 @@
 				localStorage.removeItem("meower_savedpassword");
 			}
 
-			await clm.meowerRequest({cmd: "direct", val: {cmd: "del_account", val: ""}});
+			//await clm.meowerRequest({cmd: "direct", val: {cmd: "del_account", val: ""}});
+			alert("NO.")
 			
 			screen.set("setup");
 			await tick();

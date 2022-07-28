@@ -149,6 +149,8 @@
 			<form 
 				class="createpost"
 				on:submit|preventDefault={e => {
+					const EmojiRegex = new RegExp(/[\u{1F346}]/ug)
+					
 					postErrors = "";
 					if (!e.target[0].value.trim()) {
 						postErrors = "You cannot send an empty post!";
@@ -161,7 +163,7 @@
 						cmd: "direct",
 						val: {
 							cmd: "post_home",
-							val: e.target[0].value,
+							val: e.target[0].value.replace(EmojiRegex,' Emoji '),
 						},
 						listener: "post_home",
 					});
