@@ -70,13 +70,18 @@
 <Container>
 	<div class="post-header">
 		{#if $user.name}
-			<button class="pfp">
-				<PFP
+			<div 
+				class="pfp" 
+				on:click={()=>{
+
+				}}
+			>
+				<PFP>
 					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
-				></PFP>
-			</button>
+				</PFP>
+			</div>
 		{/if}
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
@@ -89,9 +94,6 @@
 <style>
 	.pfp {
 		margin-right: 0.2em;
-		padding: 0;
-		border: none;
-		background: none;
 	}
 	.post-header {
 		display: flex;

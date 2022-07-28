@@ -67,16 +67,16 @@
 				draggable={false}
 			/>
 		</button>
-		<button on:click={()=>goto("groupchat")} class="groupcat-btn round">
-			<img
-				src={groupcat}
-				alt="Group cat"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
 	{/if}
+	<button on:click={()=>goto("groupcat")} class="groupcat-btn round">
+		<img
+			src={groupcat}
+			alt="Group cat"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
 	<button on:click={async () => {
 		screen.set("setup");
 		await tick();

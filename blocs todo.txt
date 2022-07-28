@@ -1,0 +1,5 @@
+so ill do:
+- all profile stuff (eg, role. active, recent msgs)
+- quotes (when mike fix)
+- delete post detection
+- mod panel

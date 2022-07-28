@@ -41,6 +41,7 @@
 		height: 5em;
 	}
 	.pfp {
+		transition: 0.3s;
 		width: 3.75em;
 		height: 3.75em;
 		box-sizing: border-box;
@@ -54,6 +55,11 @@
 		align-items: center;
 		justify-content: center;
 		user-select: none;
+	}
+
+	.pfp:hover {
+		transition: 0.3s;
+		transform: scale(1.1);
 	}
 
 	.loading {

@@ -24,7 +24,7 @@
 			<Profile />
 		{:else if $page === "settings"}
 			<Settings />
-		{:else if $page === "groupchat"}
+		{:else if $page === "groupcat"}
 			<Groupcat />
 		{:else if $page === "blank"}
 			<div></div>

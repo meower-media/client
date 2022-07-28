@@ -135,7 +135,7 @@
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
 	{#if $page === "start"}
 		<div class="fullcenter"><button on:click={()=>page.set("logo")}>
-			Click here to continue.
+			Click here to Start Meower Svelte!
 		</button></div>
 	{:else if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
@@ -188,7 +188,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.1.0, by CST1229
+						Meower Svelte v1.2.0, by CST1229, Bloctans_4 and Arrow
 					</p>
 					<img
 						src={meowy}
