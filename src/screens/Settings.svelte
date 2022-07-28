@@ -92,7 +92,7 @@
 	<div class="settings-controls">
 		<input
 			type="checkbox"
-			value={!$user.mode}
+			value={$user.mode}
 			on:change={()=>{
 				const _user = $user;
 				_user.mode = !_user.mode;
