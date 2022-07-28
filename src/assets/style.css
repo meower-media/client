@@ -66,8 +66,8 @@ input.white::placeholder {
 	opacity: 0.75;
 }
 
-button:not(.white):not(:disabled):hover,
-button:not(.white):focus-visible,
+button:not(.circle):not(.white):not(:disabled):hover,
+button:not(.circle):not(.white):focus-visible,
 input[type="text"]:not(.white):not(:disabled):hover,
 input[type="text"]:not(.white):focus-visible,
 input[type="password"]:not(.white):not(:disabled):hover,
@@ -75,7 +75,7 @@ input[type="password"]:not(.white):focus-visible {
     background-color: var(--orange-light);
 }
 
-button:not(.white):not(:disabled):active,
+button:not(.circle):not(.white):not(:disabled):active,
 input[type="text"]:not(.white):not(:disabled):focus,
 input[type="password"]:not(.white):not(:disabled):focus {
     background-color: var(--orange-dark);
@@ -106,18 +106,18 @@ button.white {
 input[type="text"].white:not(:disabled):hover,
 input[type="password"].white:not(:disabled):hover,
 textarea:not(:disabled):hover,
-button.white:not(:disabled):hover,
+button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
 textarea:focus-visible,
-button.white:focus-visible {
+button:not(.circle).white:focus-visible {
     border-color: var(--orange-light);
 }
 
 input[type="text"].white:not(:disabled):focus,
 input[type="password"].white:not(:disabled):focus,
 textarea:focus,
-button.white:active {
+button:not(.circle).white:active {
     border-color: var(--orange-dark);
 }
 
@@ -139,45 +139,38 @@ h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
 	font-weight: bold;
 }
 
+button.circle, input[type="checkbox"] {
+    border: solid 2px var(--foreground-orange);
+	border-radius: 100%;
+    outline: none;
+
+    background-color: var(--orange);
+    color: var(--foreground-orange);
+
+	width: 1.6em;
+	height: 1.6em;
+	padding: 0;
+	
+	font: inherit;
+
+	background-position: center;
+	background-size: 1.3em;
+	background-repeat: no-repeat;
+}
 input[type="checkbox"] {
 	appearance: none;
 
-	width: 1em;
-	height: 1em;
-	vertical-align: bottom;
-	position: relative;
-
-	font: inherit;
-	
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-
-	background-color: var(--background);
-	border-radius: 4px;
+	background-image: url("./off.svg");
 }
-input[type="checkbox"]:not(:disabled):hover {
-	filter: brightness(0.9);
+button.settings {
+	background-image: url("./settings.svg");
 }
-input[type="checkbox"]:not(:disabled):active,
-label:active input[type="checkbox"]:not(:disabled) {
-	filter: brightness(0.8);
+input[type="checkbox"]:hover:not(:active),
+button.circle:hover:not(:active) {
+	transform: scale(1.2);
 }
-
-input[type="checkbox"]::after {
-	content: "";
-	display: inline-block;
-
-	overflow: hidden;
-	padding: calc(50% - 5px);
-
-	font: inherit;
-	border-radius: 100%;
-
-	background-color: transparent;
-}
-input[type="checkbox"]:checked::after {
-	background-color: var(--foreground);
+input[type="checkbox"]:checked {
+	background-image: url("./on.svg");
 }
 
 a {

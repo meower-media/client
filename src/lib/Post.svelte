@@ -87,11 +87,12 @@
 </Container>
 
 <style>
-	.pfp {
+	.post-header .pfp {
 		margin-right: 0.2em;
 		padding: 0;
 		border: none;
 		background: none;
+		color: inherit;
 	}
 	.post-header {
 		display: flex;
