@@ -187,3 +187,31 @@ a {
 :disabled {
 	opacity: 0.5;
 }
+
+input[type="color"] {
+	background: none;
+	border: none;
+	padding: 0;
+	appearance: none;
+
+	width: 2em;
+	height: 2em;
+	border-radius: 2px;
+
+	vertical-align: middle;
+
+	font: inherit;
+
+	cursor: pointer;
+}
+
+table {
+	border-collapse: collapse;
+}
+table, td {
+	border: solid 2px var(--orange);
+	border-radius: 1px;
+}
+td {
+	padding: 0.5em;
+}

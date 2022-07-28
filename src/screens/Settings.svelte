@@ -5,7 +5,11 @@
 
 	import Container from "../lib/Container.svelte";
 
-	import {user, screen, setupPage} from "../lib/stores.js";
+	import {
+		user,
+		screen, setupPage,
+		customTheme, useCustomTheme, defaultCustomTheme
+	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 
 	let delete1 = false, delete2 = false, delete3 = false, delete4 = false, delete5 = false;
@@ -23,11 +27,15 @@
 			setupPage.set("reconnect");
 		}
 	}
+
+	function updateTheme() {
+		localStorage.setItem("meower_customtheme", JSON.stringify($customTheme));
+	}
 </script>
 
 <Container>
 	<h1>Settings</h1>
-	You can change your settings here. These will save to your account, so they will carry over into other clients.
+	You can change your account's settings here. These will save to your account, so they will carry over into other clients.
 </Container>
 <Container>
 	<div class="settings-controls">
@@ -83,6 +91,124 @@
 	<h2>Dark Mode</h2>
 	Dark mode is currently {$user.mode ? "disabled" : "enabled"}.
 </Container>
+
+<br />
+
+<Container>
+	<h1>Client Settings</h1>
+	These settings will only apply for Meower Svelte, and are saved on your device.
+</Container>
+<Container>
+	<div class="settings-controls">
+		<button
+			class="settings-button switch"
+			class:on={$useCustomTheme}
+			on:click={()=>{
+				useCustomTheme.set(!$useCustomTheme);
+				localStorage.setItem("meower_usecustomtheme", $useCustomTheme.toString());
+			}}
+		></button>
+	</div>
+	<h2>Custom Theme</h2>
+	The custom theme is currently {$useCustomTheme ? "enabled" : "disabled"}. When enabled, the custom theme overrides dark mode and the normal theme.
+	<table class="custom-theme">
+		<tbody>
+			<tr>
+				<td >
+					<div class="custom-color">
+						<span class="color-name">Main</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.orange}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Main (highlight)</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.orangeLight}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Main (shadow)</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.orangeDark}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Main (alternate)</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.orangeButton}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div class="custom-color">
+						<span class="color-name">Background</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.background}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Text</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.foreground}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Text on Main</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.foregroundOrange}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<button
+		class="reset-theme"
+		on:click={() => {
+			customTheme.set(JSON.parse(JSON.stringify($defaultCustomTheme)));
+			updateTheme();
+		}}
+	>
+		Reset theme to defaults
+	</button>
+</Container>
+
+<br />
+
 <Container>
 	<div class="settings-controls">
 		<button
@@ -92,32 +218,28 @@
 				delete1 = !delete1;
 				checkDelete();
 			}}
-		></button>
-		<button
+		></button><button
 			class="settings-button switch"
 			class:on={delete2}
 			on:click={()=>{
 				delete2 = !delete2;
 				checkDelete();
 			}}
-		></button>
-		<button
+		></button><button
 			class="settings-button switch"
 			class:on={delete3}
 			on:click={()=>{
 				delete3 = !delete3;
 				checkDelete();
 			}}
-		></button>
-		<button
+		></button><button
 			class="settings-button switch"
 			class:on={delete4}
 			on:click={()=>{
 				delete4 = !delete4;
 				checkDelete();
 			}}
-		></button>
-		<button
+		></button><button
 			class="settings-button switch"
 			class:on={delete5}
 			on:click={()=>{
@@ -127,7 +249,7 @@
 		></button>
 	</div>
 
-	<h2>Delete Account</h2>
+	<h1>Delete Account</h1>
 	THIS CANNOT BE UNDONE. Enable all the switches to delete your account, if you are really sure.
 </Container>
 
@@ -143,7 +265,7 @@
 		width: 1.6em;
 		height: 1.6em;
 		padding: 0;
-		margin-left: 0.125em;
+		margin-left: 0.25em;
 
 		border-radius: 100%;
 		border: none;
@@ -164,5 +286,23 @@
 	}
 	.change {
 		background-image: url("../assets/settings.svg");
+	}
+
+	.custom-theme {
+		width: 100%;
+		margin-top: 1em;
+	}
+	.color-name {
+		flex-grow: 1;
+	}
+	.custom-color {
+		display: flex;
+		align-items: center;
+		vertical-align: middle;
+	}
+
+	.reset-theme {
+		width: 100%;
+		margin-top: 0.5em;
 	}
 </style>

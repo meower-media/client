@@ -10,7 +10,8 @@
 	import {
 		screen, setupPage,
 		disconnected, disconnectReason,
-		user, spinner
+		user, spinner,
+		useCustomTheme, customTheme,
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 	screen.set("setup");
@@ -24,6 +25,14 @@
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
 	class:layout-old={$user.layout === "old"}
+
+	style:--orange={$useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$useCustomTheme ? $customTheme.orangeButton : null}
+	style:--orange-light={$useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$useCustomTheme ? $customTheme.foregroundOrange : null}
 >
 	{#if $disconnected}
 		<div class="disconnected">
@@ -111,7 +120,6 @@
 		--orange-button: var(--orange);
 		--orange-light: #ffce8c;
 		--orange-dark: #b46d34;
-		--orange-scrollbar-back: #a15d04;
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;
@@ -121,7 +129,6 @@
 
 		background-color: var(--background);
 		color: var(--foreground);
-		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
 		font-size: 15pt;
 	}
 
@@ -129,7 +136,6 @@
 		--orange: #b35305;
 		--orange-light: #dd7f14;
 		--orange-dark: #ac4718;
-		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #020010;
 		--foreground: #eef;
 		--foreground-orange: #eef;
@@ -138,11 +144,9 @@
 		--orange: #4d97ff;
 		--orange-light: #79b7ff;
 		--orange-dark: #3685eb;
-		--orange-scrollbar-back: #374eb1;
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;
-		scrollbar-color: unset;
 	}
 	#main.theme-blue.mode-dark {
 		--background: #202020;
