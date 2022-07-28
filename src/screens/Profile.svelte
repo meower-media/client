@@ -27,29 +27,6 @@
 </script>
 
 <div class="profile">
-	<p>Quote: {$user.quote}</p>
-	<form 
-		class="createpost"
-		on:submit|preventDefault={e => {
-			spinner.set(true);
-			const _user2 = $user;
-			_user2.quote = e.target[0].value
-			user.set(_user2);
-
-			clm.updateProfile();
-			spinner.set(false);
-		}}
-	>
-		<input
-			type="text"
-			class="white"
-			placeholder="Write something..."
-				id="qinput"
-				name="qinput"
-			autocomplete="false"
-		>
-		<button>Save Quote</button>
-	</form>
 	<Container>
 		<div class="profile-header">
 			<PFP
