@@ -111,6 +111,8 @@
 					loginStatus = "Invalid password!";
 				} else if (code == "E:018 | Account Banned") {
 					loginStatus = "This account is banned. L :(";
+				} else if (code == "E:107 | Packet too large") {
+					loginStatus = "The username and/or password is too long!";
 				} else if (code == "E:019 | Illegal characters detected") {
 					loginStatus = "Usernames must not have spaces or other special characters!";
 				} else {
@@ -130,18 +132,18 @@
 			Click here to continue.
 		</button></div>
 	{:else if $page === "logo"}
-		<div out:fade={{duration: 300}} class="fullcenter intro">
-			<div class="logo top" bind:this={logo}>
-				<img
-					bind:this={logoImg}
-					alt="Meower"
-					src={meowerLogo}
-					class="logo-img"
-					height="40"
-				/>
-			</div>
-			<div class="fullcenter">
-				<span class="connecting">{loginStatus}</span>
+		<div out:fade={{duration: 300}} class="fullcenter">
+			<div>
+				<div class="logo top" bind:this={logo}>
+					<img
+						bind:this={logoImg}
+						alt="Meower"
+						src={meowerLogo}
+						class="logo-img"
+						height="40"
+					/>
+				</div>
+				<div class="connecting">{loginStatus}</div>
 			</div>
 		</div>
 	{:else if $page === "reconnect"}
@@ -149,7 +151,7 @@
 			Reconnecting...
 		</div>
 	{:else if $page === "welcome"}
-		<div class="welcome">
+		<div class="fullcenter">
 			<div class="column-ui">
 				<div>
 					<img
@@ -171,7 +173,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.0, by CST1229
+						Meower Svelte v1.0.1, by CST1229
 					</p>
 					<img
 						src={meowy}
@@ -182,7 +184,7 @@
 			</div>
 		</div>
 	{:else if $page === "login"}
-		<div>
+		<div class="fullcenter">
 			<h1>Login to Meower</h1>
 			
 			<form class="column-ui"
@@ -198,9 +200,9 @@
 					return false;
 				}}
 			>
-				<input type="text" placeholder="Username"> <br />
-				<input type="password" placeholder="Password"> <br /> <br />
-				{loginStatus}
+				<input type="text" placeholder="Username" maxlength="20"> <br />
+				<input type="password" placeholder="Password" maxlength="72"> <br /> <br />
+				<div class="login-status">{loginStatus}</div>
 				<div class="buttons"> 
 					<button>Log in</button><button on:click|preventDefault={()=>{
 						page.set("welcome");
@@ -211,77 +213,81 @@
 			</form>
 		</div>
 	{:else if $page === "join"}
-		<h1>Welcome to Meower</h1>
+		<div class="fullcenter">
+			<h1>Welcome to Meower</h1>
 
-		<form class="column-ui"
-			on:submit|preventDefault={e => {
-				const username = e.target[0].value;
-				const password = e.target[1].value;
-				if (!(username && password)) {
-					loginStatus = "You must specify a username and a password to create an account!";
-					return false;
-				}
+			<form class="column-ui"
+				on:submit|preventDefault={e => {
+					const username = e.target[0].value;
+					const password = e.target[1].value;
+					if (!(username && password)) {
+						loginStatus = "You must specify a username and a password to create an account!";
+						return false;
+					}
 
-				loginStatus = "Creating account..."
+					loginStatus = "Creating account..."
 
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: "gen_account",
+					clm.meowerRequest({
+						cmd: "direct",
 						val: {
-							username: username,
-							pswd: password,
-						},
-					},
-					listener: "join",
-				}).then(async val => {
-					if (val.mode === "auth" && val.payload === username) {
-						loginStatus = "Getting user data...";
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
+							cmd: "gen_account",
 							val: {
-								cmd: "get_profile",
-								val: val.payload,
+								username: username,
+								pswd: password,
 							},
-						});
-						user.update(v => Object.assign(v, {
-							...profileVal.payload,
-							name: val.payload,
-						}));
+						},
+						listener: "join",
+					}).then(async val => {
+						if (val.mode === "auth" && val.payload === username) {
+							loginStatus = "Getting user data...";
+							const profileVal = await clm.meowerRequest({
+								cmd: "direct",
+								val: {
+									cmd: "get_profile",
+									val: val.payload,
+								},
+							});
+							user.update(v => Object.assign(v, {
+								...profileVal.payload,
+								name: val.payload,
+							}));
 
+							loginStatus = "";
+
+							page.set("go");
+							await sleep(500);
+							screen.set("main");
+						} else {
+							loginStatus = "Unexpected error logging in!";
+						}
+					}).catch(err => {
+						if (err === "I:015 | Account exists") {
+							loginStatus = "The account already exists!";
+						} else if (err == "E:107 | Packet too large") {
+							loginStatus = "The username and/or password is too long!";
+						} else {
+							console.error(err);
+							loginStatus = "Unexpected " + err + " error!";
+						}
+					});
+				}}
+			>
+				<input type="text" placeholder="Username" maxlength="20"> <br />
+				<input type="password" placeholder="Password" maxlength="72"> <br /> <br />
+				<div class="login-status">{loginStatus}</div>
+				<div class="buttons">
+					<button>Join!</button><button on:click|preventDefault={()=>{
+						page.set("welcome");
 						loginStatus = "";
-
-						page.set("go");
-						await sleep(500);
-						screen.set("main");
-					} else {
-						loginStatus = "Unexpected error logging in!";
-					}
-				}).catch(err => {
-					if (err === "I:015 | Account exists") {
-						loginStatus = "The account already exists!";
-					} else {
-						console.error(err);
-						loginStatus = "Unexpected " + err + " error!";
-					}
-				});
-			}}
-		>
-			<input type="text" placeholder="Username"> <br />
-			<input type="password" placeholder="Password"> <br /> <br />
-			{loginStatus}
-			<div class="buttons">
-				<button>Join!</button><button on:click|preventDefault={()=>{
-					page.set("welcome");
-					loginStatus = "";
-					return false;
-				}}>Go back</button>
-			</div>
-		</form>
+						return false;
+					}}>Go back</button>
+				</div>
+			</form>
+		</div>
 	{:else if $page === "blank"}
 		<div></div>
 	{:else if $page === "go"}
-		<div class="fullcenter">Let's go!</div>
+		<div>Let's go!</div>
 	{:else}
 		Somehow, you got to a page that doesn't exist...
 		<br />
@@ -305,58 +311,43 @@
 		top: 0;
 		left: 0;
 		z-index: 1000;
-
+		
 		width: 100%;
 		min-height: 100vh;
-		padding: 1em;
+		height: 100%;
+
+		display: table;
+	}
+	.fullcenter {
+		width: 100%;
+		height: 100%;
 		box-sizing: border-box;
+
+		margin: auto;
+		overflow: auto;
+
+		display: table-cell;
+		vertical-align: middle;
+		padding: 1em;
 	}
-	.intro {
-		background-color: var(--orange);
-		color: var(--foreground-orange);
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1001;
-	}
-	.setup.white .intro {
+
+	.setup.white {
 		background-color: var(--background);
 		color: var(--orange-button);
 	}
-	.welcome {
-		min-height: calc(100vh - 2em);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.buttons {
-		position: absolute;
-		bottom: 2em;
-		width: calc(100% - 4em);
-	}
-	.fullcenter {
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
 
 	.logo {
+		position: relative;
+		bottom: 0px;
 		transition:
-			margin-bottom 0.3s cubic-bezier(0,1,1,1);
+			bottom 0.3s cubic-bezier(0,1,1,1);
 	}
 	.logo-img {
 		transition:
 			height 0.3s cubic-bezier(0,1,1,1);
 	}
 	.logo.top {
-		margin-bottom: 1.5em;
+		bottom: 10px;
 	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
@@ -367,27 +358,38 @@
 	}
 
 	.connecting {
-		margin-top: 1.5em;
+		height: 0;
+		overflow: visible;
 	}
 
 	.column-ui {
 		width: 24em;
-		max-width: calc(100% - 2em);
+		max-width: calc(100vw - 2em);
 		min-height: 8em;
+
+		position: relative;
+
 		margin: auto;
 	}
-	.column-ui * {
+	.column-ui > * {
 		width: 100%;
 	}
 	.column-ui .buttons {
 		display: flex;
 		width: 24em;
-		max-width: calc(100% - 4em);
+		max-width: 100%;
+
+		margin-top: 5em;
 	}
 	.column-ui .buttons * {
 		flex-grow: 1;
 		flex-shrink: 1;
 		padding-left: 0;
 		padding-right: 0;
+	}
+
+	.login-status {
+		height: 0;
+		overflow: visible;
 	}
 </style>

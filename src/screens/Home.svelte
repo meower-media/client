@@ -147,7 +147,7 @@
 		</Container>
 		{#if $user.name}
 			<form 
-				id="createpost"
+				class="createpost"
 				on:submit|preventDefault={e => {
 					postErrors = "";
 					if (!e.target[0].value.trim()) {
@@ -234,11 +234,11 @@
 </div>
 
 <style>
-	#createpost {
+	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
 	}
-	#createpost input {
+	.createpost input {
 		flex-grow: 1;
 		margin-right: 0.25em;
 	}
