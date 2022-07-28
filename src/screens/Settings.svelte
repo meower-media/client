@@ -26,17 +26,17 @@
 	}
 </script>
 
-<p>Quote: {$user.quote}</p>
+<!--<p>Quote: {$user.quote}</p>
 <form 
 	class="createpost"
 	on:submit|preventDefault={e => {
-		spinner.set(true);
+		//spinner.set(true);
 		const _user = $user;
-		_user.quote = e.target[0].value
+		_user.quote = e.target[0].value;
 		user.set(_user);
 
 		clm.updateProfile();
-		spinner.set(false);
+		//spinner.set(false);
 	}}
 >
 	<input
@@ -48,7 +48,7 @@
 		autocomplete="false"
 	>
 	<button>Save Quote</button>
-</form>
+</form>-->
 <Container>
 	<h1>Settings</h1>
 	You can change your settings here. These will save to your account, so they will carry over into other clients.
