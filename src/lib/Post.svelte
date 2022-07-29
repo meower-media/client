@@ -5,7 +5,7 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
-	import {profileData, user, ulist} from "../lib/stores.js";
+	import {profileData, profileclicked, user, ulist, mainPage as page} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
@@ -73,7 +73,10 @@
 			<div 
 				class="pfp" 
 				on:click={()=>{
-
+					var _pclick = $profileclicked;
+					_pclick = post.user
+					profileclicked.set(_pclick);
+					page.set("otherprofile")
 				}}
 			>
 				<PFP>
@@ -94,6 +97,10 @@
 <style>
 	.pfp {
 		margin-right: 0.2em;
+		padding: 0;
+		border: none;
+		background: none !important;
+		color: inherit;
 	}
 	.post-header {
 		display: flex;

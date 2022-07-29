@@ -18,7 +18,7 @@
 			src={
 				new URL(
 					`./../assets/avatars/icon_${
-						(icon < 0 ? (icon === -1 ? 21 : "err") : icon-1)
+						(icon < 1 ? (icon === -1 ? 21 : "err") : (icon <= 23 ? icon-1 : "err"))
 					}.svg`,
 					import.meta.url
 				).href
