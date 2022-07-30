@@ -3,3 +3,6 @@ so ill do:
 - quotes (when mike fix)
 - delete post detection
 - mod panel
+
+maybe:
+- group chats

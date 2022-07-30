@@ -1,48 +1,53 @@
 <script>
     import PFP from "../lib/PFP.svelte";
-	import {profileclicked} from "../lib/stores.js";
+	import {profileclicked, ulist, mainPage as page, user} from "../lib/stores.js";
     import Loading from "../lib/Loading.svelte";
     import Container from "../lib/Container.svelte";
     import * as clm from "../lib/clmanager.js";
+    import * as fmt from "../lib/formatting.js";
 
     var data = null
 </script>
 
 <div class="OtherProfile">
-    {#await
-        data = clm.meowerRequest({
-            cmd: "direct",
-              val: {
-                cmd: "get_profile",
-                val: $profileclicked,
-              },
-          })
-    }
-        <div class="fullcenter">
-            <Loading />
-        </div>
-    {:then data}
-        <!-- data loaded, do stuff with it -->
-        <Container>
-            <div class="profile-header">
-                <PFP
-                    online={true}
-                    icon={data.payload.pfp_data}
-                    alt="{data.payload.name}'s profile picture"
-                    big={true}
-                ></PFP>
-                <h1 class="profile-username">{data.payload._id}</h1>
-                <p class="profile-active">hi</p>
-                <p>smol hi</p>
+    {#if $profileclicked != $user.name}
+        {#await
+            data = clm.meowerRequest({
+                cmd: "direct",
+                val: {
+                    cmd: "get_profile",
+                    val: $profileclicked,
+                },
+            })
+        }
+            <div class="fullcenter">
+                <Loading />
             </div>
-        </Container>
-    {:catch e}
-        <!-- error happened, you can display it here -->
-        <Container>
-            <h1>Error Occured While Displaying Profile.</h1>
-            <p>Error: {e}, If this error occurs again, Contact CST or Bloctans</p>
-        </Container>
-    {/await}
+        {:then data}
+            <!-- data loaded, do stuff with it -->
+            <Container>
+                <div class="profile-header">
+                    <PFP
+                        online={$ulist.includes(data.payload._id)}
+                        icon={data.payload.pfp_data}
+                        alt="{data.payload.name}'s profile picture"
+                        big={true}
+                    ></PFP>
+                    <h1 class="profile-username">{data.payload._id}</h1>
+                    <p class="profile-active">{($ulist.includes(data.payload._id)) && "Online" || "Offline"}</p>
+                    <p class="profile-role">{fmt.frmt_proflvl_tostr(data.payload.lvl)}</p>
+                </div>
+            </Container>
+        {:catch e}
+            <!-- error happened, you can display it here -->
+            <Container>
+                <h1>Error Occured While Displaying Profile.</h1>
+                <p>Error: {e}, If this error occurs again, Contact CST or Bloctans</p>
+            </Container>
+        {/await}
+    {:else}
+        {page.set("profile")}
+    {/if}
 </div>
 
 <style>
@@ -60,27 +65,24 @@
 		left: 0;
 	}
 
-    .pfp {
-		padding: 0.2em;
-		margin: 0.2em;
-		border-radius: 1.25em;
-		display: inline-block;
-	}
-	.pfp:hover {
-		background-color: var(--orange-light);
-	}
-	.pfp.selected {
-		background-color: var(--orange);
-	}
-	#pfp-list {
-		display: flex;
-		flex-wrap: wrap;
-	}
+    .profile-active {
+        font-style: italic;
+        position: absolute;
+        bottom: 0.9em;
+        left:6.1em;
+    }
+
+    .profile-role {
+        position: absolute;
+        bottom: 0.2em;
+        left:6.8em;
+        font-size: 90%;
+    }
 
 	.profile-username {
 		margin: 0;
 		margin-left: 0.2em;
-        margin-bottom: 0.3em;
+        margin-bottom: 0.7em;
 		display: inline-block;
 		max-width: 100%;
 		font-size: 300%;

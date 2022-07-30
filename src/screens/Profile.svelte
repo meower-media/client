@@ -57,6 +57,7 @@
 					></PFP></span>
 			{/each}
 		</div>
+		<button>View Recent Posts</button>
 	</Container>
 </div>
 
