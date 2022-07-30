@@ -3,7 +3,7 @@
 <script>
     import meowy from "../assets/meowy.svg";
 
-    let cats = new Array(150).fill({}).map(
+    let cats = new Array(100).fill({}).map(
         _ => {
             return ({
                 x: Math.random() * 100,

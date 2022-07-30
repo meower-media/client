@@ -69,23 +69,21 @@
 
 <Container>
 	<div class="post-header">
-		{#if $user.name}
-			<div 
-				class="pfp" 
-				on:click={()=>{
-					var _pclick = $profileclicked;
-					_pclick = post.user
-					profileclicked.set(_pclick);
-					page.set("otherprofile")
-				}}
-			>
-				<PFP>
-					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
-				</PFP>
-			</div>
-		{/if}
+		<div 
+			class="pfp" 
+			on:click={()=>{
+				var _pclick = $profileclicked;
+				_pclick = post.user
+				profileclicked.set(_pclick);
+				page.set("otherprofile")
+			}}
+		>
+			<PFP>
+				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
+				alt="{post.user}'s profile picture"
+				online={$ulist.includes(post.user)}
+			</PFP>
+		</div>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
 			<FormattedDate date={post.date}></FormattedDate>
