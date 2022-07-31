@@ -1,4 +1,5 @@
 <!-- Wait, isn't it a topbar on old layout? -->
+<!-- RIP -->
 
 <script>
 	import {
@@ -15,6 +16,7 @@
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
+	import groupcat from "../assets/meowy.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
@@ -26,8 +28,8 @@
 </script>
 
 <div class="sidebar">
-	<div class="logo" on:click={()=>goto("home")}>
-		<span class="logo-inner">
+	<div class="logo">
+		<span class="logo-inner" on:click={()=>goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -60,6 +62,15 @@
 			<img
 				src={settings}
 				alt="Settings"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+		<button on:click={()=>goto("groupchat")} class="groupcat-btn round">
+			<img
+				src={groupcat}
+				alt="Group cat"
 				width="90%"
 				height="auto"
 				draggable={false}

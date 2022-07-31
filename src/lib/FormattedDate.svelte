@@ -28,7 +28,6 @@ ISO: ${_date.toISOString()}`;
 
 <style>
 	.date {
-		font-style: italic;
 		font-family: Simvoni-Italic, sans-serif;
 		text-decoration: 2px underline dotted;
 	}

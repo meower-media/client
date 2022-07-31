@@ -188,7 +188,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.2.0, by CST1229
+						Meower Svelte v1.2.0
 					</p>
 					<img
 						src={meowy}
@@ -218,8 +218,8 @@
 				<input type="text" placeholder="Username" maxlength="20"> <br />
 				<input type="password" placeholder="Password" maxlength="72">
 				<p class="checkboxes">
-					<label>
-						<input type="checkbox" bind:checked={rememberMe}>
+					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
+					<label for="remember-me">
 						Save this login
 					</label>
 				</p>
@@ -307,13 +307,13 @@
 				<input type="text" placeholder="Username" maxlength="20"> <br />
 				<input type="password" placeholder="Password" maxlength="72">
 				<p class="checkboxes">
-					<label>
-						<input type="checkbox" bind:checked={rememberMe}>
+					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
+					<label for="remember-me">
 						Save this login
 					</label>
 					<br />
-					<label>
-						<input type="checkbox" bind:checked={acceptTerms}>
+					<input id="accept-terms" type="checkbox" bind:checked={acceptTerms}>
+					<label for="accept-terms">
 						I agree to <a
 							href="https://meower.org/legal"
 						>Meower's Terms of Service and Privacy Policy</a>
@@ -439,7 +439,7 @@
 		overflow: visible;
 	}
 
-	label {
+	label, .checkboxes input {
 		vertical-align: middle;
 	}
 

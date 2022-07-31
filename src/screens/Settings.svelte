@@ -33,6 +33,31 @@
 	}
 </script>
 
+<!--
+	<p>Quote: {$user.quote}</p>
+	<form 
+		class="createpost"
+		on:submit|preventDefault={e => {
+			//spinner.set(true);
+			const _user = $user;
+			_user.quote = e.target[0].value;
+			user.set(_user);
+
+			clm.updateProfile();
+			//spinner.set(false);
+		}}
+	>
+		<input
+			type="text"
+			class="white"
+			placeholder="Write something..."
+				id="qinput"
+				name="qinput"
+			autocomplete="false"
+		>
+		<button>Save Quote</button>
+	</form>
+-->
 <Container>
 	<h1>Settings</h1>
 	You can change your account's settings here. These will save to your account, so they will carry over into other clients.
@@ -40,8 +65,7 @@
 <Container>
 	<div class="settings-controls">
 		<button
-			class="settings-button change"
-			class:on={$user.layout === "old"}
+			class="circle settings"
 			on:click={()=>{
 				const _user = $user;
 				_user.layout = _user.layout === "new" ? "old" : "new";
@@ -58,8 +82,7 @@
 <Container>
 	<div class="settings-controls">
 		<button
-			class="settings-button change"
-			class:on={$user.theme === "blue"}
+			class="circle settings"
 			on:click={()=>{
 				const _user = $user;
 				_user.theme = _user.theme === "orange" ? "blue" : "orange";
@@ -75,17 +98,17 @@
 </Container>
 <Container>
 	<div class="settings-controls">
-		<button
-			class="settings-button switch"
-			class:on={!$user.mode}
-			on:click={()=>{
+		<input
+			type="checkbox"
+			checked={!$user.mode}
+			on:change={()=>{
 				const _user = $user;
 				_user.mode = !_user.mode;
 				user.set(_user);
 
 				clm.updateProfile();
 			}}
-		></button>
+		>
 	</div>
 
 	<h2>Dark Mode</h2>
@@ -100,14 +123,13 @@
 </Container>
 <Container>
 	<div class="settings-controls">
-		<button
-			class="settings-button switch"
-			class:on={$useCustomTheme}
-			on:click={()=>{
-				useCustomTheme.set(!$useCustomTheme);
+		<input
+			type="checkbox"
+			bind:checked={$useCustomTheme}
+			on:change={()=>{
 				localStorage.setItem("meower_usecustomtheme", $useCustomTheme.toString());
 			}}
-		></button>
+		>
 	</div>
 	<h2>Custom Theme</h2>
 	The custom theme is currently {$useCustomTheme ? "enabled" : "disabled"}. When enabled, the custom theme overrides dark mode and the normal theme.
@@ -211,42 +233,31 @@
 
 <Container>
 	<div class="settings-controls">
-		<button
-			class="settings-button switch"
-			class:on={delete1}
-			on:click={()=>{
-				delete1 = !delete1;
-				checkDelete();
-			}}
-		></button><button
-			class="settings-button switch"
-			class:on={delete2}
-			on:click={()=>{
-				delete2 = !delete2;
-				checkDelete();
-			}}
-		></button><button
-			class="settings-button switch"
-			class:on={delete3}
-			on:click={()=>{
-				delete3 = !delete3;
-				checkDelete();
-			}}
-		></button><button
-			class="settings-button switch"
-			class:on={delete4}
-			on:click={()=>{
-				delete4 = !delete4;
-				checkDelete();
-			}}
-		></button><button
-			class="settings-button switch"
-			class:on={delete5}
-			on:click={()=>{
-				delete5 = !delete5;
-				checkDelete();
-			}}
-		></button>
+		<input
+			type="checkbox"
+			bind:checked={delete1}
+			on:change={checkDelete}
+		>
+		<input
+			type="checkbox"
+			bind:checked={delete2}
+			on:change={checkDelete}
+		>
+		<input
+			type="checkbox"
+			bind:checked={delete3}
+			on:change={checkDelete}
+		>
+		<input
+			type="checkbox"
+			bind:checked={delete4}
+			on:change={checkDelete}
+		>
+		<input
+			type="checkbox"
+			bind:checked={delete5}
+			on:change={checkDelete}
+		>
 	</div>
 
 	<h1>Delete Account</h1>
@@ -261,31 +272,11 @@
 		top: 0.25em;
 		right: 0.25em;
 	}
-	.settings-button {
-		width: 1.6em;
-		height: 1.6em;
-		padding: 0;
-		margin-left: 0.25em;
 
-		border-radius: 100%;
+	input[type="checkbox"], button.circle {
 		border: none;
-
-		background-position: center;
-		background-size: 1.3em;
-		background-repeat: no-repeat;
-	}
-	.settings-button:hover:not(:active) {
-		transform: scale(1.2);
-	}
-
-	.switch {
-		background-image: url("../assets/off.svg");
-	}
-	.switch.on {
-		background-image: url("../assets/on.svg");
-	}
-	.change {
-		background-image: url("../assets/settings.svg");
+		margin: 0;
+		margin-left: 0.125em;
 	}
 
 	.custom-theme {

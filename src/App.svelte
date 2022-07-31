@@ -13,6 +13,7 @@
 		user, spinner,
 		useCustomTheme, customTheme,
 	} from "./lib/stores.js";
+
 	import {tick} from "svelte";
 	screen.set("setup");
 	setupPage.set("start");
@@ -26,13 +27,13 @@
 	class:mode-dark={$user.mode === false}
 	class:layout-old={$user.layout === "old"}
 
-	style:--orange={$useCustomTheme ? $customTheme.orange : null}
-	style:--orange-button={$useCustomTheme ? $customTheme.orangeButton : null}
-	style:--orange-light={$useCustomTheme ? $customTheme.orangeLight : null}
-	style:--orange-dark={$useCustomTheme ? $customTheme.orangeDark : null}
-	style:--background={$useCustomTheme ? $customTheme.background : null}
-	style:--foreground={$useCustomTheme ? $customTheme.foreground : null}
-	style:--foreground-orange={$useCustomTheme ? $customTheme.foregroundOrange : null}
+	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orangeButton : null}
+	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
 >
 	{#if $disconnected}
 		<div class="disconnected">
