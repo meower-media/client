@@ -79,9 +79,9 @@
 			}}
 		>
 			<PFP
-				online={$ulist.includes(post.user)}
-				icon={$profileData[post.user].pfp_data}
+				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
 				alt="{post.user}'s profile picture"
+				online={$ulist.includes(post.user)}
 			></PFP>
 		</div>
 		<div class="creator">

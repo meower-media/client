@@ -51,17 +51,22 @@
 					class="pfp"
 					class:selected={_user.pfp_data === pfp}
 				><PFP
-						online={false}
-						icon={pfp}
-						alt="Profile picture {pfp}"
-					></PFP></span>
+					online={false}
+					icon={pfp}
+					alt="Profile picture {pfp}"
+				></PFP></span>
 			{/each}
 		</div>
-		<button>View Recent Posts</button>
 	</Container>
+	<button class="long" on:click={()=>{alert("Will work in r7")}}>View Recent Posts</button>
 </div>
 
 <style>
+	.long {
+        width: 100%;
+        margin: 0;
+    }
+
 	.pfp {
 		padding: 0.2em;
 		margin: 0.2em;

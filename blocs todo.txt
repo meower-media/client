@@ -1,22 +1,31 @@
 so ill do:
-- all profile stuff (eg, role. active, recent msgs)
+- all profile stuff (eg, role. active)
 - mod panel
 - discord stuff
-- group chats maybe
+- post buttons
 
 r7:
 - inbox
+- announcements
 - search
-
-later:
-- delete post detection
 - recent msgs
-maybe dev services based pfp fetching
 
 discord stuff:
 - discord based formatting text
 - for discord default emojis,when it comes to posting it will be a list of emoji names and unicode counterparts
 - discord based formatting text ui for posting posts
+
+
+
+
+
+
+
+
+
+
+later:
+- delete post detection
 
 maybe:
 - quotes (when mike fix)

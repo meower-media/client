@@ -40,6 +40,9 @@
                         <p class="profile-role">{fmt.frmt_proflvl_tostr(data.payload.lvl)}</p>
                     </div>
                 </Container>
+                <button class="long" on:click={()=>{alert("Will work in r7")}}>Report User</button>
+                <button class="long" on:click={()=>{alert("Will work in r7")}}>View recent posts</button>
+                <button class="long" on:click={()=>{alert("Arrow Hasn't Finished Group Chats")}}>Add to chat</button>
             {:catch e}
                 <!-- error happened, you can display it here -->
                 <Container>
@@ -119,4 +122,9 @@
 		align-items: center;
 		flex-wrap: wrap;
 	}
+
+    .long {
+        width: 100%;
+        margin: 0;
+    }
 </style>
