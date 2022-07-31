@@ -1,8 +1,17 @@
 so ill do:
 - all profile stuff (eg, role. active, recent msgs)
-- quotes (when mike fix)
+- discord based server emojis in posts, for posting server emojis, only some emojis will be supported
 - delete post detection
+
+later:
+- discord based formatting text
 - mod panel
 
+way later:
+- group chats
+- for discord default emojis,when it comes to posting it will be a list of emoji names and unicode counterparts
+- discord based formatting text ui for posting posts
+
 maybe:
+- quotes (when mike fix)
 - group chats

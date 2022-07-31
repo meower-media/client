@@ -66,7 +66,7 @@
         </Container>
         <Container>
             <h1>Can't Fetch Info</h1>
-            <p>Sorry, Meower Can't Fetch Much info about this user currently</p>
+            <p>Sorry, Svelte Can't Fetch Much info about this user currently</p>
             <p style="text-decoration:underline; color:blue; cursor:pointer;"on:click={async () => {
                 screen.set("setup");
                 await tick();
