@@ -57,5 +57,5 @@ jobs:
       - name: Commit and push
         uses: EndBug/add-and-commit@v8
         with:
-          message: Build site
+          message: Build branch ${{ github.ref_name }}
           push: true
