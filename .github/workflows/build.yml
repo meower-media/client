@@ -38,8 +38,7 @@ jobs:
       
       - name: Create and go to branch folder if needed
         run: |
-          mkdir branches
-          mkdir branches/${{ github.ref_name }}
+          mkdir -p branches/${{ github.ref_name }}
           echo "WORK_DIR=branches/${{ github.ref_name }}/" >> $GITHUB_ENV
         if: github.ref_name != 'master'
       
