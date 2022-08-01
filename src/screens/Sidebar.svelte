@@ -28,8 +28,8 @@
 </script>
 
 <div class="sidebar">
-	<div class="logo" on:click={()=>goto("home")}>
-		<span class="logo-inner">
+	<div class="logo">
+		<span class="logo-inner" on:click={()=>goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
