@@ -1,7 +1,8 @@
 name: build-site
 on:
   push:
-    branches: [ master ]
+    branches-ignore: 
+      - gh-pages
   workflow_dispatch:
 jobs:
   build:
@@ -9,15 +10,15 @@ jobs:
     steps:
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: 'master'
+          ref: ${{ github.ref_name }}
       
-      - name: Install
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
         
       - name: Build
         run: npm run build
@@ -28,16 +29,20 @@ jobs:
           name: built-site
           path: dist/
       
-      - name: Checkout to build
+      - name: Checkout to gh-pages
         uses: actions/checkout@v2
         with:
-          ref: 'build'
+          ref: gh-pages
+      
+      - name: Create and go to branch folder if needed
+        run: |
+          mkdir branches
+          mkdir branches/${{ github.ref_name }}
+          cd branches/${{ github.ref_name }}
+        if: github.ref_name != 'master'
       
       - name: Clear out assets folder
         run: rm -rf ./assets
-        
-      - name: Clear out avatars folder
-        run: rm -rf ./avatars
       
       - name: Clear out index.html
         run: rm -rf ./index.html
@@ -46,6 +51,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: built-site
+          path: .
       
       - name: Commit and push
         uses: EndBug/add-and-commit@v8
