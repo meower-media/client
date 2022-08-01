@@ -36,9 +36,9 @@ jobs:
       
       - name: Create and go to branch folder if needed
         run: |
-          mkdir branches
-          mkdir branches/${{ github.ref_name }}
-          cd branches/${{ github.ref_name }}
+          mkdir ./branches
+          mkdir ./branches/${{ github.ref_name }}
+          cd ./branches/${{ github.ref_name }}
         if: github.ref_name != 'master'
       
       - name: Clear out assets folder
@@ -51,10 +51,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: built-site
-          path: .
+          path: ./
       
       - name: Commit and push
         uses: EndBug/add-and-commit@v8
         with:
-          message: Build site
+          message: Build branch ${{ github.ref_name }}
           push: true
