@@ -1,9 +1,9 @@
 <!-- The profile page, AKA the change your profile picture page. -->
 
 <script>
-	import PFP from "../lib/PFP.svelte";
-	import Container from "../lib/Container.svelte";
-	import * as clm from "../lib/clmanager.js";
+	import PFP from "../lib/ui/PFP.svelte";
+	import Container from "../lib/ui/Container.svelte";
+	import * as clm from "../lib/networking/clmanager.js";
 	import {user, profileData} from "../lib/stores.js";
 
 	let _user = $user;

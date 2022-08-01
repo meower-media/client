@@ -3,14 +3,17 @@
 <script>
 	import {tick} from "svelte";
 
-	import Container from "../lib/Container.svelte";
+	import Container from "../lib/ui/Container.svelte";
+	import Button from "../lib/ui/form/Button.svelte";
+	
+	import songs from "../lib/audio/songs.js";
 
 	import {
 		user,
-		screen, setupPage,
-		customTheme, useCustomTheme, defaultCustomTheme
+		screen, mainPage, setupPage, pageParam,
+		customTheme, useCustomTheme, defaultCustomTheme, 
 	} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
+	import * as clm from "../lib/networking/clmanager.js";
 
 	let delete1 = false, delete2 = false, delete3 = false, delete4 = false, delete5 = false;
 	async function checkDelete() {
@@ -31,6 +34,8 @@
 	function updateTheme() {
 		localStorage.setItem("meower_customtheme", JSON.stringify($customTheme));
 	}
+
+	let _autoLogin = localStorage.getItem("meower_autologin");
 </script>
 
 <!--
@@ -114,12 +119,59 @@
 	<h2>Dark Mode</h2>
 	Dark mode is currently {$user.mode ? "disabled" : "enabled"}.
 </Container>
+<Container>
+	<div class="settings-controls">
+		<button
+			class="circle settings"
+			on:click={()=>{
+				mainPage.set("midsetup");
+				pageParam.set("bgm");
+			}}
+		></button>
+		<input
+			type="checkbox"
+			bind:checked={$user.bgm}
+			on:change={()=>{
+				clm.updateProfile();
+			}}
+		>
+	</div>
+
+	<h2>Background Music</h2>
+	Background music is currently {
+		$user.bgm ? `set to ${
+			(songs[$user.bgm_song - 1] || {}).name || "an unknown song"
+		}` : "disabled"
+	}.
+</Container>
 
 <br />
 
 <Container>
 	<h1>Client Settings</h1>
 	These settings will only apply for Meower Svelte, and are saved on your device.
+</Container>
+<Container>
+	<div class="settings-controls">
+		<input
+			type="checkbox"
+			checked={localStorage.getItem("meower_autologin") === "true"}
+			on:change={(e)=>{
+				const val = String(e.currentTarget.checked);
+				localStorage.setItem(
+					"meower_autologin",
+					val
+				);
+				_autoLogin = val;
+			}}
+		>
+	</div>
+
+	<h2>Auto-Login</h2>
+	Auto-login is currently {
+		_autoLogin === "true" ?
+			"enabled" : "disabled"
+	}. When enabled, auto-login tries to automatically login with the saved login after connecting.
 </Container>
 <Container>
 	<div class="settings-controls">
@@ -132,7 +184,7 @@
 		>
 	</div>
 	<h2>Custom Theme</h2>
-	The custom theme is currently {$useCustomTheme ? "enabled" : "disabled"}. When enabled, the custom theme overrides dark mode and the normal theme.
+	The custom theme is currently {$useCustomTheme ? "enabled" : "disabled"}. When enabled, the custom theme overrides dark mode and the theme.
 	<table class="custom-theme">
 		<tbody>
 			<tr>
@@ -147,6 +199,19 @@
 						>
 					</div>
 				</td>
+				<td>
+					<div class="custom-color">
+						<span class="color-name">Main (alternate)</span>
+						<input
+							class="theme-color"
+							type="color"
+							bind:value={$customTheme.orangeButton}
+							on:change={updateTheme}
+						>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<td>
 					<div class="custom-color">
 						<span class="color-name">Main (highlight)</span>
@@ -169,20 +234,9 @@
 						>
 					</div>
 				</td>
-				<td>
-					<div class="custom-color">
-						<span class="color-name">Main (alternate)</span>
-						<input
-							class="theme-color"
-							type="color"
-							bind:value={$customTheme.orangeButton}
-							on:change={updateTheme}
-						>
-					</div>
-				</td>
 			</tr>
 			<tr>
-				<td colspan="2">
+				<td>
 					<div class="custom-color">
 						<span class="color-name">Background</span>
 						<input
@@ -204,6 +258,8 @@
 						>
 					</div>
 				</td>
+			</tr>
+			<tr>
 				<td>
 					<div class="custom-color">
 						<span class="color-name">Text on Main</span>
@@ -218,15 +274,17 @@
 			</tr>
 		</tbody>
 	</table>
-	<button
-		class="reset-theme"
-		on:click={() => {
-			customTheme.set(JSON.parse(JSON.stringify($defaultCustomTheme)));
-			updateTheme();
-		}}
-	>
-		Reset theme to defaults
-	</button>
+	<div class="reset-theme">
+		<Button
+			fullWidth={true}
+			on:click={() => {
+				customTheme.set(JSON.parse(JSON.stringify($defaultCustomTheme)));
+				updateTheme();
+			}}
+		>
+			Reset theme to defaults
+		</Button>
+	</div>
 </Container>
 
 <br />
@@ -237,23 +295,19 @@
 			type="checkbox"
 			bind:checked={delete1}
 			on:change={checkDelete}
-		>
-		<input
+		><input
 			type="checkbox"
 			bind:checked={delete2}
 			on:change={checkDelete}
-		>
-		<input
+		><input
 			type="checkbox"
 			bind:checked={delete3}
 			on:change={checkDelete}
-		>
-		<input
+		><input
 			type="checkbox"
 			bind:checked={delete4}
 			on:change={checkDelete}
-		>
-		<input
+		><input
 			type="checkbox"
 			bind:checked={delete5}
 			on:change={checkDelete}
@@ -271,12 +325,15 @@
 		position: absolute;
 		top: 0.25em;
 		right: 0.25em;
+
+		display: flex;
+		flex-wrap: wrap;
 	}
 
 	input[type="checkbox"], button.circle {
 		border: none;
 		margin: 0;
-		margin-left: 0.125em;
+		margin-left: 0.25em;
 	}
 
 	.custom-theme {
@@ -293,7 +350,6 @@
 	}
 
 	.reset-theme {
-		width: 100%;
 		margin-top: 0.5em;
 	}
 </style>

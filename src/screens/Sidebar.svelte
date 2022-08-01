@@ -18,6 +18,8 @@
 	import logout from "../assets/logout.svg";
 	import groupcat from "../assets/meowy.svg";
 
+	import Button from "../lib/ui/form/Button.svelte";
+
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
@@ -39,17 +41,19 @@
 			/>
 		</span>
 	</div>
-	<button on:click={()=>goto("home")} class="home-btn round">
-		<img
-			src={home}
-			alt="Home"
-			width="90%"
-			height="auto"
-			draggable={false}
-		/>
-	</button>
+	<span class="home-btn">
+		<Button style="round" on:click={()=>goto("home")}>
+			<img
+				src={home}
+				alt="Home"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</Button>
+	</span>
 	{#if $user.name}
-		<button on:click={()=>goto("profile")} class="profile-btn round">
+		<Button style="round" on:click={()=>goto("profile")}>
 			<img
 				src={profile}
 				alt="Profile"
@@ -57,8 +61,8 @@
 				height="auto"
 				draggable={false}
 			/>
-		</button>
-		<button on:click={()=>goto("settings")} class="settings-btn round">
+		</Button>
+		<Button style="round" on:click={()=>goto("settings")}>
 			<img
 				src={settings}
 				alt="Settings"
@@ -66,8 +70,8 @@
 				height="auto"
 				draggable={false}
 			/>
-		</button>
-		<button on:click={()=>goto("groupchat")} class="groupcat-btn round">
+		</Button>
+		<Button style="round" on:click={()=>goto("groupchat")}>
 			<img
 				src={groupcat}
 				alt="Group cat"
@@ -75,13 +79,13 @@
 				height="auto"
 				draggable={false}
 			/>
-		</button>
+		</Button>
 	{/if}
-	<button on:click={async () => {
+	<Button style="round" on:click={async () => {
 		screen.set("setup");
 		await tick();
 		setupPage.set("reconnect");
-	}} class="logout-btn round">
+	}}>
 		<img
 			src={logout}
 			alt="Log out"
@@ -89,13 +93,17 @@
 			height="auto"
 			draggable={false}
 		/>
-	</button>
+	</Button>
 </div>
 
 <style>
-	button {
+	.sidebar :global(button) {
 		/* Hack to center icons */
 		line-height: 0;
+
+		margin-bottom: 0.5em;
+		width: 2.8em;
+		height: 2.8em;
 	}
 
 	.sidebar {
@@ -109,11 +117,6 @@
 
 		width: 100%;
 		height: 100%;
-	}
-	.sidebar > button {
-		margin-bottom: 0.5em;
-		width: 2.8em;
-		height: 2.8em;
 	}
 
 	.logo {
@@ -138,7 +141,7 @@
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;
 	}
-	:global(main.layout-old) .sidebar > button {
+	:global(main.layout-old) .sidebar > :global(button) {
 		margin-bottom: 0;
 		margin-right: 0.5em;
 	}
@@ -153,7 +156,7 @@
 		.sidebar {
 			flex-direction: row;
 		}
-		.sidebar > button {
+		.sidebar > :global(button) {
 			margin-bottom: 0;
 			margin-right: 0.5em;
 		}

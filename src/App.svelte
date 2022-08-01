@@ -3,9 +3,15 @@
 <script>
 	import Main from "./screens/Main.svelte";
 	import Setup from "./screens/Setup.svelte";
-	import Spinner from "./lib/Spinner.svelte";
-	import {apiUrl} from "./lib/urls.js";
-	import {link} from "./lib/clmanager.js";
+	
+	import Spinner from "./lib/ui/Spinner.svelte";
+	import Button from "./lib/ui/form/Button.svelte";
+
+	import {apiUrl} from "./lib/constants/urls.js";
+
+	import {link} from "./lib/networking/clmanager.js";
+
+	import {play} from "./lib/audio/sfx.js";
 
 	import {
 		screen, setupPage,
@@ -13,10 +19,15 @@
 		user, spinner,
 		useCustomTheme, customTheme,
 	} from "./lib/stores.js";
-
+	
 	import {tick} from "svelte";
 	screen.set("setup");
 	setupPage.set("start");
+
+	function errorSound(_) {
+		play("deny");
+		console.log($disconnectReason);
+	}
 </script>
 
 <main
@@ -38,7 +49,7 @@
 	{#if $disconnected}
 		<div class="disconnected">
 			<div class="disconnected-inner">
-				<h1>Me-owch.</h1>
+				<h1 use:errorSound>Me-owch.</h1>
 				{#if $disconnectReason === ""}
 					You have been disconnected.
 					Reconnect using the below button:
@@ -50,13 +61,15 @@
 					address ({apiUrl}ip), or the Meower team actually blocking your IP.
 					<br />
 					Attempt reconnecting using the below button:
+				{:else if $disconnectReason === "Intentional disconnect"}
+					{""}
 				{:else}
 					We ran into an error trying to connect to the server.
 					<pre><code>{$disconnectReason}</code></pre>
 					Reconnect using the below button:
 				{/if}
 				<br /><br />
-				<button 
+				<Button 
 					on:click={async () => {
 						screen.set("setup");
 						disconnected.set(false);
@@ -65,7 +78,7 @@
 					}}
 				>
 					Reconnect!
-				</button>
+				</Button>
 			</div>
 		</div>
 	{:else}

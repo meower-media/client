@@ -2,9 +2,14 @@
 
 <script>
 	import {screen, setupPage as page, user} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
-	import unloadedProfile from "../lib/unloadedprofile.js";
+
+	import Button from "../lib/ui/form/Button.svelte";
+	import Input from "../lib/ui/form/Input.svelte";
+
+	import * as clm from "../lib/networking/clmanager.js";
 	const link = clm.link;
+
+	import unloadedProfile from "../lib/constants/unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
@@ -12,6 +17,8 @@
 	import {tick, onMount} from "svelte";
 	import {fade} from 'svelte/transition';
 	import sleep from "../lib/sleep.js";
+
+	import {play} from "../lib/audio/sfx.js";
 
 	let logo, setup, logoImg, loginStatus = "";
 
@@ -29,20 +36,22 @@
 	onMount(() => {
 		page.subscribe(async value => {
 			if (!setup) return;
+			
 			rememberMe = false;
 			acceptTerms = false;
+			loginStatus = "";
 			setup.classList.remove("white");
+
 			if (value === "start") {
 				clm.disconnect();
 			} else if (value === "logo") {
-				loginStatus = "";
-
 				await tick();
 				setup.classList.add("white");
 				logoImg.height = 0;
 				logo.classList.remove("top");
 				
 				await sleep(300);
+				play("start");
 				// Directly changing image height instead
 				// of using transforms to prevent blur
 				logoImg.height = 80;
@@ -54,7 +63,21 @@
 				await sleep(700);
 				loginStatus = "Connecting...";
 				await connect();
-				await sleep(800);
+				await sleep(300);
+
+				if (
+					localStorage.getItem("meower_autologin") === "true" &&
+					localStorage.getItem("meower_savedusername")
+				) {
+					const loginResp = await doLogin(
+						localStorage.getItem("meower_savedusername"),
+						localStorage.getItem("meower_savedpassword"),
+					)
+					 if (loginResp) {
+						return;
+					}
+					await sleep(1500);
+				}
 
 				loginStatus = "";
 				page.set("blank");
@@ -74,7 +97,7 @@
 	 * @param {string} username
 	 * @param {string} password
 	*/
-	function doLogin(username, password) {
+	async function doLogin(username, password) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -106,9 +129,11 @@
 					}
 
 					screen.set("main");
+					return true;
 				} catch(e) {
 					console.error(e);
 					loginStatus = "Unexpected " + e + " error getting user data!";
+					return false;
 				}
 			}).catch(code => {
 				if (code == "E:103 | ID not found") {
@@ -124,19 +149,24 @@
 				} else {
 					loginStatus = `Unexpected ${code} error!`;
 				}
+				return false;
 			});
 		} catch(e) {
 			console.error(e);
 			loginStatus = "Error logging in: " + e;
+			return false;
 		}
 	}
 </script>
 
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
 	{#if $page === "start"}
-		<div class="fullcenter"><button on:click={()=>page.set("logo")}>
+		<div class="fullcenter"><Button
+			sound={false}
+			on:click={()=>page.set("logo")}
+		>
 			Click here to continue.
-		</button></div>
+		</Button></div>
 	{:else if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
@@ -168,23 +198,23 @@
 					/>
 					<br /><br />
 				</div>
-				<button on:click={() => page.set("login")}>Log in</button> <br />
-				<button on:click={() => page.set("join")}>Create an account</button> <br />
+				<Button on:click={() => page.set("login")}>Log in</Button> <br />
+				<Button on:click={() => page.set("join")}>Create an account</Button> <br />
 				{#if localStorage.getItem("meower_savedusername")}
-					<button on:click={() => {
+					<Button on:click={() => {
 						doLogin(
 							localStorage.getItem("meower_savedusername"),
 							localStorage.getItem("meower_savedpassword"),
 						)
-					}}>Use saved login ({localStorage.getItem("meower_savedusername")})</button>
+					}}>Continue as {localStorage.getItem("meower_savedusername")}</Button>
 					<p class="small">{loginStatus}</p>
 				{/if}
-				<button on:click={() => {
+				<Button on:click={() => {
 					user.set(unloadedProfile());
 					loginStatus = "";
 					page.set("blank");
 					screen.set("main");
-				}}>Skip</button>
+				}}>Skip</Button>
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
@@ -215,8 +245,8 @@
 					return false;
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72">
+				<Input type="text" placeholder="Username" maxlength="20" /> <br />
+				<Input type="password" placeholder="Password" maxlength="72" />
 				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
@@ -225,18 +255,18 @@
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons"> 
-					<button>Log in</button><button on:click|preventDefault={()=>{
+					<Button>Log in</Button><Button on:click={(e) => {
 						page.set("welcome");
 						loginStatus = "";
 						return false;
-					}}>Go back</button>
+					}}>Go back</Button>
 				</div>
-				<button on:click|preventDefault={()=>{
+				<Button on:click={(e) => {
 					localStorage.removeItem("meower_savedusername");
 					localStorage.removeItem("meower_savedpassword");
 					loginStatus = "Saved login cleared.";
 					return false;
-				}}>Clear saved login</button>
+				}}>Clear saved login</Button>
 			</form>
 		</div>
 	{:else if $page === "join"}
@@ -304,8 +334,8 @@
 					});
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72">
+				<Input type="text" placeholder="Username" maxlength="20" /> <br />
+				<Input type="password" placeholder="Password" maxlength="72" />
 				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
@@ -321,11 +351,11 @@
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button disabled={!acceptTerms}>Join!</button><button on:click|preventDefault={()=>{
+					<Button disabled={!acceptTerms}>Join!</Button><Button on:click={(e) => {
 						page.set("welcome");
 						loginStatus = "";
 						return false;
-					}}>Go back</button>
+					}}>Go back</Button>
 				</div>
 			</form>
 		</div>
@@ -339,7 +369,7 @@
 		(Current page: {$page})
 
 		<div class="buttons">
-			<button on:click={()=>page.set("page2")}>Go back!</button>
+			<Button on:click={()=>page.set("page2")}>Go back!</Button>
 		</div>
 	{/if}
 </div>
@@ -416,7 +446,7 @@
 
 		margin: auto;
 	}
-	.column-ui > * {
+	.column-ui > :global(*) {
 		width: 100%;
 	}
 	.column-ui .buttons {
@@ -426,7 +456,7 @@
 
 		margin-top: 2em;
 	}
-	.column-ui .buttons * {
+	.column-ui .buttons :global(*) {
 		flex-grow: 1;
 		flex-shrink: 1;
 		padding-left: 0;

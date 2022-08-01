@@ -5,11 +5,17 @@
 
 <script>
 	import {user, ulist, spinner} from "../lib/stores.js";
-	import Post from "../lib/Post.svelte";
-	import Container from "../lib/Container.svelte";
-	import Loading from "../lib/Loading.svelte";
-	import {link} from "../lib/clmanager.js";
-	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+
+	import Post from "../lib/ui/Post.svelte";
+	import Container from "../lib/ui/Container.svelte";
+	import Loading from "../lib/ui/Loading.svelte";
+
+	import Button from "../lib/ui/form/Button.svelte";
+	import Input from "../lib/ui/form/Input.svelte";
+
+	import {link} from "../lib/networking/clmanager.js";
+
+	import {apiUrl, encodeApiURLParams} from "../lib/constants/urls.js";
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
@@ -183,16 +189,16 @@
 					return false;
 				}}
 			>
-				<input
+				<Input
 					type="text"
-					class="white"
+					white={true}
 					placeholder="Write something..."
 				        id="postinput"
 				        name="postinput"
 					autocomplete="false"
 					maxlength="250"
-				>
-				<button>Post</button>
+				/>
+				<Button>Post</Button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}
@@ -217,12 +223,14 @@
 				<Loading />
 			{:else}
 				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
-					>
-						Load More
-					</button>
+					<span class="load-more">
+						<Button
+							fullWidth={true}
+							on:click={() => loadPage(pagesLoaded + 1)}
+						>
+							Load More
+						</Button>
+					</span>
 				{/if}
 			{/if}
 		</div>
@@ -238,11 +246,10 @@
 <style>
 	.createpost {
 		display: flex;
-		margin-bottom: 0.5em;
 	}
-	.createpost input {
+	.createpost :global(input) {
 		flex-grow: 1;
-		margin-right: 0.25em;
+		margin-right: 0.4em;
 	}
 	.home {
 		height: 100%;
@@ -250,8 +257,7 @@
 	.center {
 		text-align: center;
 	}
-	.load-more {
-		width: 100%;
+	.load-more :global(button) {
 		margin-bottom: 1.88em;
 	}
 	.fullcenter {
@@ -272,6 +278,9 @@
 		color: red;
 		font-size: 75%;
 		font-weight: bold;
-		margin: 0.25em 0;
+
+		display: inline-block;
+
+		margin: 0.5em 0;
 	}
 </style>
