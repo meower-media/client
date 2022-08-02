@@ -15,14 +15,12 @@
 		<img
 			{alt}
 			title={alt}
-			src={
-				new URL(
-					`./../assets/avatars/icon_${
-						(icon < 1 ? (icon === -1 ? 21 : "err") : (icon <= 23 ? icon-1 : "err"))
-					}.svg`,
-					import.meta.url
-				).href
-			}
+			src={new URL(`./../assets/avatars/icon_${
+				icon === -1 ? 21 : (icon === -2 ? "err" : icon - 1)
+			}.svg`, import.meta.url).href}
+
+			on:error|once={() => icon = -2}
+
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
@@ -54,6 +52,9 @@
 		align-items: center;
 		justify-content: center;
 		user-select: none;
+
+		/* Always make fallback text visible */
+		color: black;
 	}
 
 	.loading {
