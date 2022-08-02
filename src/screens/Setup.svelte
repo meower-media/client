@@ -32,9 +32,8 @@
 			rememberMe = false;
 			acceptTerms = false;
 			setup.classList.remove("white");
-			if (value === "start") {
+			if (value === "logo") {
 				clm.disconnect();
-			} else if (value === "logo") {
 				loginStatus = "";
 
 				await tick();
@@ -42,7 +41,7 @@
 				logoImg.height = 0;
 				logo.classList.remove("top");
 				
-				await sleep(300);
+				await sleep(600);
 				// Directly changing image height instead
 				// of using transforms to prevent blur
 				logoImg.height = 80;
@@ -133,11 +132,7 @@
 </script>
 
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
-	{#if $page === "start"}
-		<div class="fullcenter"><button on:click={()=>page.set("logo")}>
-			Click here to continue.
-		</button></div>
-	{:else if $page === "logo"}
+	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
 				<div class="logo top" bind:this={logo}>
@@ -188,7 +183,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.1.3
+						Meower Svelte v1.1.4
 					</p>
 					<img
 						src={meowy}
@@ -334,12 +329,16 @@
 	{:else if $page === "go"}
 		<div class="fullcenter">Let's go!</div>
 	{:else}
-		Somehow, you got to a page that doesn't exist...
-		<br />
-		(Current page: {$page})
+		<div class="fullcenter">
+			<div class="column-ui">
+				Somehow, you got to a page that doesn't exist...
+				<br />
+				(Current page: {$page})
 
-		<div class="buttons">
-			<button on:click={()=>page.set("page2")}>Go back!</button>
+				<div class="buttons">
+					<button on:click={()=>page.set("logo")}>Go back!</button>
+				</div>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -373,7 +372,7 @@
 
 		display: table-cell;
 		vertical-align: middle;
-		padding: 1em;
+		padding: 0.5em;
 	}
 
 	.setup.white {

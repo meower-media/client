@@ -13,8 +13,6 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-	screen.set("setup");
-	setupPage.set("start");
 </script>
 
 <main
