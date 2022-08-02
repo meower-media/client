@@ -101,7 +101,7 @@
 					
 					if (rememberMe) {
 						localStorage.setItem("meower_savedusername", username);
-						localStorage.setItem("meower_savedpassword", password);
+						localStorage.setItem("meower_savedpassword", val.payload.token);
 					}
 
 					screen.set("main");
@@ -120,6 +120,8 @@
 					loginStatus = "The username and/or password is too long!";
 				} else if (code == "E:019 | Illegal characters detected") {
 					loginStatus = "Usernames must not have spaces or other special characters!";
+				} else if (code == "E:106 | Too many requests") {
+					loginStatus = "Too many requests! Please try again later.";
 				} else {
 					loginStatus = `Unexpected ${code} error!`;
 				}
@@ -167,6 +169,7 @@
 				<button on:click={() => page.set("join")}>Create an account</button> <br />
 				{#if localStorage.getItem("meower_savedusername")}
 					<button on:click={() => {
+						rememberMe = true;
 						doLogin(
 							localStorage.getItem("meower_savedusername"),
 							localStorage.getItem("meower_savedpassword"),
@@ -260,25 +263,25 @@
 						},
 						listener: "join",
 					}).then(async val => {
-						if (val.mode === "auth" && val.payload === username) {
+						if (val.mode === "auth" && val.payload.username === username) {
 							loginStatus = "Getting user data...";
 							const profileVal = await clm.meowerRequest({
 								cmd: "direct",
 								val: {
 									cmd: "get_profile",
-									val: val.payload,
+									val: val.payload.username,
 								},
 							});
 							user.update(v => Object.assign(v, {
 								...profileVal.payload,
-								name: val.payload,
+								name: val.payload.username,
 							}));
 
 							loginStatus = "";
 							
 							if (rememberMe) {
 								localStorage.setItem("meower_savedusername", username);
-								localStorage.setItem("meower_savedpassword", password);
+								localStorage.setItem("meower_savedpassword", val.payload.token);
 							}
 
 							page.set("go");
@@ -292,6 +295,10 @@
 							loginStatus = "The account already exists!";
 						} else if (err == "E:107 | Packet too large") {
 							loginStatus = "The username and/or password is too long!";
+						} else if (err == "E:106 | Too many requests") {
+							loginStatus = "Too many requests! Please try again later.";
+						} else if (err == "E:119 | IP Blocked") {
+							loginStatus = "Your IP is blocked from creating accounts!";
 						} else {
 							console.error(err);
 							loginStatus = "Unexpected " + err + " error!";
