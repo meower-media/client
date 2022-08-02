@@ -1,23 +1,26 @@
 name: build-site
 on:
   push:
-    branches: [ master ]
+    branches-ignore: 
+      - gh-pages
   workflow_dispatch:
+env:
+  WORK_DIR: ''
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: 'master'
+          ref: ${{ github.ref_name }}
       
-      - name: Install
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
         
       - name: Build
         run: npm run build
@@ -28,27 +31,31 @@ jobs:
           name: built-site
           path: dist/
       
-      - name: Checkout to build
+      - name: Checkout to gh-pages
         uses: actions/checkout@v2
         with:
-          ref: 'build'
+          ref: gh-pages
+      
+      - name: Create and go to branch folder if needed
+        run: |
+          mkdir -p branches/${{ github.ref_name }}
+          echo "WORK_DIR=branches/${{ github.ref_name }}/" >> $GITHUB_ENV
+        if: github.ref_name != 'master'
       
       - name: Clear out assets folder
-        run: rm -rf ./assets
-        
-      - name: Clear out avatars folder
-        run: rm -rf ./avatars
+        run: rm -rf ./${{ env.WORK_DIR }}assets
       
       - name: Clear out index.html
-        run: rm -rf ./index.html
+        run: rm -rf ./${{ env.WORK_DIR }}index.html
       
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: built-site
+          path: ./${{ env.WORK_DIR }}
       
       - name: Commit and push
         uses: EndBug/add-and-commit@v8
         with:
-          message: Build site
+          message: Build branch ${{ github.ref_name }}
           push: true
