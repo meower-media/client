@@ -18,6 +18,7 @@ export const soundEls = {
 // Preload sounds
 for (const el of Object.values(soundEls)) {
 	el.preload = "auto";
+	el.load();
 }
 
 export function play(sound) {
@@ -25,6 +26,8 @@ export function play(sound) {
 	if (!$user.sfx) return;
 
 	try {
-		soundEls[sound].cloneNode().play();
+		soundEls[sound].currentTime = 0;
+		if (soundEls[sound].fastSeek) soundEls[sound].fastSeek(0);
+		soundEls[sound].play();
 	} catch (e) {}
 }

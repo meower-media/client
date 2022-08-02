@@ -12,12 +12,14 @@
 <button
 	class:white={white}
 	class:full-width={fullWidth}
-	class="meower-ui meower-btn {style}"
+	class:meower-ui={style !== "none"}
+	class:meower-btn={style !== "none"}
+	class={style}
 
-	on:mouseenter={() => {
+	on:mouseenter={async () => {
 		if (sound) play("select");
 	}}
-	on:click={() => {
+	on:click={async () => {
 		if (sound) play("menu");
 	}}
 

@@ -64,8 +64,8 @@
 		z-index: 100;
 	}
 	.view {
-		margin-left: 3.5em;
 		padding: 0.33em;
+		padding-left: calc(3.5em + 0.33em);
 
 		box-sizing: border-box;
 		
@@ -74,8 +74,8 @@
 
 	@media (max-aspect-ratio: 1/1) {
 		.view {
-			margin-left: 0;
-			margin-top: 3.5em;
+			padding-left: 0.33em;
+			padding-top: calc(3.5em + 0.33em);
 		}
 		.sidebar {
 			width: 100%;
@@ -83,8 +83,8 @@
 		}
 	}
 	:global(main.layout-old) .view {
-		margin-left: 0;
-		margin-top: 3.5em;
+		padding-left: 0.33em;
+		padding-top: calc(3.5em + 0.33em);
 	}
 	:global(main.layout-old) .sidebar {
 		width: 100%;
