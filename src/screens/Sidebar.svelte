@@ -7,6 +7,7 @@
 		setupPage,
 		screen,
 		user,
+		profileClicked,
 	} from "../lib/stores.js";
 	
 	import {tick} from "svelte";
@@ -49,7 +50,10 @@
 		/>
 	</button>
 	{#if $user.name}
-		<button on:click={()=>goto("profile")} class="profile-btn round">
+		<button on:click={() => {
+			$profileClicked = $user.name;
+			goto("profile");
+		}} class="profile-btn round">
 			<img
 				src={profile}
 				alt="Profile"
@@ -67,16 +71,16 @@
 				draggable={false}
 			/>
 		</button>
-		<button on:click={()=>goto("groupchat")} class="groupcat-btn round">
-			<img
-				src={groupcat}
-				alt="Group cat"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
 	{/if}
+	<button on:click={()=>goto("groupcat")} class="groupcat-btn round">
+		<img
+			src={groupcat}
+			alt="Group cat"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
 	<button on:click={async () => {
 		screen.set("setup");
 		await tick();
