@@ -58,8 +58,8 @@
 				<div class="profile-header-info">
 					<h1 class="profile-username">{data.payload._id}</h1>
 					<div class="profile-active">{
-						($ulist.includes(data.payload._id)) && "Online" || "Offline"}
-					</div>
+						$ulist.includes(data.payload._id) ? "Online" : "Offline"
+					}</div>
 					<div class="profile-role">
 						{levels[data.payload.lvl] || "Unknown"}
 					</div>
@@ -119,8 +119,8 @@
 				<div class="profile-header-info">
 					<h1 class="profile-username">{$profileClicked}</h1>
 					<div class="profile-active">{
-						$ulist.includes($profileClicked) ? "Online" : "Offline"}
-					</div>
+						$ulist.includes($profileClicked) ? "Online" : "Offline"
+					}</div>
 					<div class="profile-role">Unknown</div>
 				</div>
 			</div>
