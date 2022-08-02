@@ -5,7 +5,7 @@
 	import Setup from "./screens/Setup.svelte";
 	import Spinner from "./lib/Spinner.svelte";
 	import {apiUrl} from "./lib/urls.js";
-	import {link} from "./lib/clmanager.js";
+	import {link, meowerRequest} from "./lib/clmanager.js";
 
 	import {
 		screen, setupPage,
@@ -38,6 +38,22 @@
 					This might be due to an extension blocking the URL used to get your IP
 					<br />
 					address ({apiUrl}ip), or the Meower team actually blocking your IP.
+					<br />
+					Attempt reconnecting using the below button:
+				{:else if $disconnectReason == "E:110 | ID conflict"}
+					There has been a hiccup! Looks like you logged into Meower from another device.
+					<br />
+					Please check any devices currently logged into Meower and try again.
+					<br />
+					Attempt reconnecting using the below button:
+				{:else if $disconnectReason == "E:018 | Account Banned"}
+					Your account has been banned by a moderator for recent activity.
+					<br />
+					If you think this is a mistake, please contact <a href="mailto:support@meower.org">support@meower.org</a>.
+					<br />
+					Attempt reconnecting using the below button:
+				{:else if $disconnectReason == "E:020 | Kicked"}
+					You have been kicked from Meower by a moderator :(
 					<br />
 					Attempt reconnecting using the below button:
 				{:else}
