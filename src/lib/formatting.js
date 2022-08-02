@@ -1,22 +1,14 @@
 /**
- * @file Formatting utils
+ * @file Formatting utilities
  */
 
 /**
- * formats profile lvl
- * 
- * @returns {string}
+ * Strings for profile levels.
  */
-export function frmt_proflvl_tostr(lvl) {
-    if (lvl == 0) {
-        return "User";
-    } else if (lvl == 1) {
-        return "Low-Level Moderator"
-    } else if (lvl == 2) {
-        return "Moderator"
-    } else if (lvl == 3) {
-        return "Admin"
-    } else if (lvl == 4) {
-        return "Operator"
-    }
-}
+export const levels = {
+	0: "User",
+	1: "Low-level Moderator",
+	2: "Moderator",
+	3: "Administrator",
+	4: "Operator",
+};

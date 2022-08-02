@@ -18,8 +18,8 @@ export const profileData = writable({});
 // User list
 export const ulist = writable([]);
 
-//Last profile clicked
-export const profileclicked = writable("");
+// Last profile clicked
+export const profileClicked = writable("");
 
 // The current user profile
 export const user = writable({

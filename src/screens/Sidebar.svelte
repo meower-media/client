@@ -7,6 +7,7 @@
 		setupPage,
 		screen,
 		user,
+		profileClicked,
 	} from "../lib/stores.js";
 	
 	import {tick} from "svelte";
@@ -49,7 +50,10 @@
 		/>
 	</button>
 	{#if $user.name}
-		<button on:click={()=>goto("profile")} class="profile-btn round">
+		<button on:click={() => {
+			$profileClicked = $user.name;
+			goto("profile");
+		}} class="profile-btn round">
 			<img
 				src={profile}
 				alt="Profile"

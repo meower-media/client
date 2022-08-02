@@ -2,7 +2,14 @@
     import Cats from "../lib/MEOW.svelte";
 </script>
 
-<div class="groupcat">
+<div>
+    <div class="message">GROUP CAT 2.0!!!!</div>
     <Cats />
-    <p style="z-index: 999; position:absolute;">GROUP CAT 2.0!!!!</p>
 </div>
+
+<style>
+	.message {
+		position: absolute;
+		z-index: 1;
+	}
+</style>
