@@ -5,11 +5,11 @@
 	import Container from "../lib/Container.svelte";
 	import * as clm from "../lib/clmanager.js";
 	import {user, profileData} from "../lib/stores.js";
-
+	
 	let _user = $user;
 	user.subscribe(v => _user = v);
 
-	const pfps = new Array(23).fill().map((v,i) => i+1)
+	const pfps = new Array(28).fill().map((v,i) => i+1)
 	
 	/**
 	 * Saves the user profile, and also clears its cache entry.

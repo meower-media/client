@@ -31,7 +31,7 @@ jobs:
       - name: Checkout to build
         uses: actions/checkout@v2
         with:
-          ref: 'build'
+          ref: 'gh-pages'
       
       - name: Clear out assets folder
         run: rm -rf ./assets
