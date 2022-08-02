@@ -5,7 +5,7 @@
 	import Setup from "./screens/Setup.svelte";
 	import Spinner from "./lib/Spinner.svelte";
 	import {apiUrl} from "./lib/urls.js";
-	import {link, meowerRequest} from "./lib/clmanager.js";
+	import {link} from "./lib/clmanager.js";
 
 	import {
 		screen, setupPage,
