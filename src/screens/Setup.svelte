@@ -72,8 +72,8 @@
 					const loginResp = await doLogin(
 						localStorage.getItem("meower_savedusername"),
 						localStorage.getItem("meower_savedpassword"),
-					)
-					 if (loginResp) {
+					);
+					if (loginResp) {
 						return;
 					}
 					await sleep(1500);
@@ -97,65 +97,67 @@
 	 * @param {string} username
 	 * @param {string} password
 	*/
-	async function doLogin(username, password) {
-		try {
-			loginStatus = "Logging in...";
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "authpswd",
+	function doLogin(username, password) {
+		return new Promise((res) => {
+			try {
+				loginStatus = "Logging in...";
+				clm.meowerRequest({
+					cmd: "direct",
 					val: {
-						username: username,
-						pswd: password,
-					},
-				},
-			}).then(async val => {
-				try {
-					const profileVal = await clm.meowerRequest({
-						cmd: "direct",
+						cmd: "authpswd",
 						val: {
-							cmd: "get_profile",
-							val: val.payload.username,
+							username: username,
+							pswd: password,
 						},
-					});
-					user.update(v => Object.assign(v, {
-						...profileVal.payload,
-						name: val.payload.username,
-					}));
-					
-					if (rememberMe) {
-						localStorage.setItem("meower_savedusername", username);
-						localStorage.setItem("meower_savedpassword", password);
-					}
+					},
+				}).then(async val => {
+					try {
+						const profileVal = await clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "get_profile",
+								val: val.payload.username,
+							},
+						});
+						user.update(v => Object.assign(v, {
+							...profileVal.payload,
+							name: val.payload.username,
+						}));
+						
+						if (rememberMe) {
+							localStorage.setItem("meower_savedusername", username);
+							localStorage.setItem("meower_savedpassword", password);
+						}
 
-					screen.set("main");
-					return true;
-				} catch(e) {
-					console.error(e);
-					loginStatus = "Unexpected " + e + " error getting user data!";
-					return false;
-				}
-			}).catch(code => {
-				if (code == "E:103 | ID not found") {
-					loginStatus = "Invalid username!";
-				} else if (code == "I:011 | Invalid Password") {
-					loginStatus = "Invalid password!";
-				} else if (code == "E:018 | Account Banned") {
-					loginStatus = "This account is banned. L :(";
-				} else if (code == "E:107 | Packet too large") {
-					loginStatus = "The username and/or password is too long!";
-				} else if (code == "E:019 | Illegal characters detected") {
-					loginStatus = "Usernames must not have spaces or other special characters!";
-				} else {
-					loginStatus = `Unexpected ${code} error!`;
-				}
-				return false;
-			});
-		} catch(e) {
-			console.error(e);
-			loginStatus = "Error logging in: " + e;
-			return false;
-		}
+						screen.set("main");
+						res(true);
+					} catch(e) {
+						console.error(e);
+						loginStatus = "Unexpected " + e + " error getting user data!";
+						res(false);
+					}
+				}).catch(code => {
+					if (code == "E:103 | ID not found") {
+						loginStatus = "Invalid username!";
+					} else if (code == "I:011 | Invalid Password") {
+						loginStatus = "Invalid password!";
+					} else if (code == "E:018 | Account Banned") {
+						loginStatus = "This account is banned. L :(";
+					} else if (code == "E:107 | Packet too large") {
+						loginStatus = "The username and/or password is too long!";
+					} else if (code == "E:019 | Illegal characters detected") {
+						loginStatus = "Usernames must not have spaces or other special characters!";
+					} else {
+						loginStatus = `Unexpected ${code} error!`;
+					}
+					res(false);
+				});
+			} catch(e) {
+				console.error(e);
+				loginStatus = "Error logging in: " + e;
+				res(false);
+			}
+		});
 	}
 </script>
 

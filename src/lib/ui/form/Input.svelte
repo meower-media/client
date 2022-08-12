@@ -6,6 +6,7 @@
 	export let fullWidth = false;
 	export let sound = true;
 	export let type = "text";
+	export let style = "normal";
 
 	export let placeholder = null,
 		autocomplete = null,
@@ -19,7 +20,9 @@
 <input
 	class:white={white}
 	class:full-width={fullWidth}
-	class="meower-ui meower-input"
+	class:meower-ui={style !== "none"}
+	class:meower-input={style !== "none"}
+	class={style}
 
 	{type}
 

@@ -148,7 +148,7 @@ export async function meowerRequest(data) {
 		const timer = setTimeout(() => {
 			reject("Timed out");
 			spinner.set(false);
-		}, 10000);
+		}, 30000);
 		const ev = link.sendListener({
 			...data,
 			listener: "listener_" + Math.floor(Math.random()*10000000),

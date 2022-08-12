@@ -36,9 +36,9 @@ body {
 	height: 100%;
 }
 
-button,
-input[type="text"],
-input[type="password"],
+.meower-btn,
+.meower-input[type="text"],
+.meower-input[type="password"],
 textarea {
     border: solid 2px var(--foreground-orange);
     border-radius: 2px;
@@ -50,53 +50,53 @@ textarea {
     padding: 0.5em 1em;
     box-sizing: border-box;
     margin-bottom: -0.15rem;
-
-	font-family: inherit;
-    font-size: inherit;
 }
-button + button {
+button, input {
+	font: inherit;
+}
+.meower-btn + .meower-btn {
 	margin-left: -0.15rem;
 }
-input:not(.white)::placeholder {
+.meower-input:not(.white)::placeholder {
 	color: var(--foreground-orange);
 	opacity: 0.75;
 }
-input.white::placeholder {
+.meower-input.white::placeholder {
 	color: var(--foreground);
 	opacity: 0.75;
 }
 
-button.full-width {
+.meower-btn.full-width {
 	width: 100%;
 }
 
-button.normal:not(:disabled):hover,
-button.normal:focus-visible,
-button.round:not(:disabled):hover,
-button.round:focus-visible,
-input[type="text"]:not(.white):not(:disabled):hover,
-input[type="text"]:not(.white):focus-visible,
-input[type="password"]:not(.white):not(:disabled):hover,
-input[type="password"]:not(.white):focus-visible {
+.meower-btn.normal:not(:disabled):hover,
+.meower-btn.normal:focus-visible,
+.meower-btn.round:not(:disabled):hover,
+.meower-btn.round:focus-visible,
+.meower-input[type="text"]:not(.white):not(:disabled):hover,
+.meower-input[type="text"]:not(.white):focus-visible,
+.meower-input[type="password"]:not(.white):not(:disabled):hover,
+.meower-input[type="password"]:not(.white):focus-visible {
     background-color: var(--orange-light);
 }
 
-button.normal:not(:disabled):active,
-button.round:not(:disabled):active,
-input[type="text"]:not(.white):not(:disabled):focus,
-input[type="password"]:not(.white):not(:disabled):focus {
+.meower-btn.normal:not(:disabled):active,
+.meower-btn.round:not(:disabled):active,
+.meower-input[type="text"]:not(.white):not(:disabled):focus,
+.meower-input[type="password"]:not(.white):not(:disabled):focus {
     background-color: var(--orange-dark);
 }
 
-button.round {
+.meower-btn.round {
     border-radius: 0.75em;
     border-bottom-width: 5px;
     padding: 0.5em;
     overflow-wrap: break-word;
 }
 
-input[type="text"].white,
-input[type="password"].white,
+.meower-input[type="text"].white,
+.meower-input[type="password"].white,
 textarea {
     background-color: var(--background);
     border-color: var(--orange);
@@ -104,27 +104,27 @@ textarea {
     font-weight: normal;
 }
 
-button.white {
+.meower-btn.white {
     background-color: var(--background);
     border-color: var(--orange);
     color: var(--orange-button);
 }
 
-input[type="text"].white:not(:disabled):hover,
-input[type="password"].white:not(:disabled):hover,
+.meower-input[type="text"].white:not(:disabled):hover,
+.meower-input[type="password"].white:not(:disabled):hover,
 textarea:not(:disabled):hover,
-button:not(.circle).white:not(:disabled):hover,
-input[type="text"].white:focus-visible,
-input[type="password"].white:focus-visible,
+.meower-btn:not(.circle).white:not(:disabled):hover,
+.meower-input[type="text"].white:focus-visible,
+.meower-input[type="password"].white:focus-visible,
 textarea:focus-visible,
-button:not(.circle).white:focus-visible {
+.meower-btn:not(.circle).white:focus-visible {
     border-color: var(--orange-light);
 }
 
-input[type="text"].white:not(:disabled):focus,
-input[type="password"].white:not(:disabled):focus,
+.meower-input[type="text"].white:not(:disabled):focus,
+.meower-input[type="password"].white:not(:disabled):focus,
 textarea:focus,
-button:not(.circle).white:active {
+.meower-btn:not(.circle).white:active {
     border-color: var(--orange-dark);
 }
 
@@ -146,7 +146,7 @@ h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
 	font-weight: bold;
 }
 
-button.circle, input[type="checkbox"] {
+.meower-btn.circle, .meower-input[type="checkbox"] {
     border: solid 2px var(--foreground-orange);
 	border-radius: 100%;
     outline: none;
@@ -164,19 +164,19 @@ button.circle, input[type="checkbox"] {
 	background-size: 1.3em;
 	background-repeat: no-repeat;
 }
-input[type="checkbox"] {
+.meower-input[type="checkbox"] {
 	appearance: none;
 
 	background-image: url("./off.svg");
 }
-button.settings {
+.meower-btn.settings {
 	background-image: url("./settings.svg");
 }
-input[type="checkbox"]:hover:not(:active),
-button.circle:hover:not(:active) {
+.meower-input[type="checkbox"]:hover:not(:active),
+.meower-btn.circle:hover:not(:active) {
 	transform: scale(1.2);
 }
-input[type="checkbox"]:checked {
+.meower-input[type="checkbox"]:checked {
 	background-image: url("./on.svg");
 }
 
@@ -188,7 +188,7 @@ a {
 	opacity: 0.5;
 }
 
-input[type="color"] {
+.meower-input[type="color"] {
 	background: none;
 	border: none;
 	padding: 0;

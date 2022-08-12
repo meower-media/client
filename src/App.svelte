@@ -26,7 +26,6 @@
 
 	function errorSound(_) {
 		play("deny");
-		console.log($disconnectReason);
 	}
 </script>
 

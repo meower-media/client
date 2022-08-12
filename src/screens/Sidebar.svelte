@@ -31,7 +31,7 @@
 
 <div class="sidebar">
 	<div class="logo">
-		<span class="logo-inner" on:click={()=>goto("home")}>
+		<Button style="none" on:click={()=>goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -39,7 +39,7 @@
 				height="100%"
 				width="auto"
 			/>
-		</span>
+		</Button>
 	</div>
 	<span class="home-btn">
 		<Button style="round" on:click={()=>goto("home")}>
@@ -129,11 +129,16 @@
 		padding: 0.75em;
 		filter: brightness(0) invert(1);
 	}
-	.logo-inner {
+	.logo > :global(button) {
 		display: inline-block;
 		height: 100%;
+
+		border: none;
+		background: none;
+		appearance: none;
+		line-height: auto;
 	}
-	.logo-inner:hover {
+	.logo > :global(button):hover {
 		background-color: var(--orange-dark);
 	}
 
