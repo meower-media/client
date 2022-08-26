@@ -41,10 +41,10 @@
 			acceptTerms = false;
 			loginStatus = "";
 			setup.classList.remove("white");
-
-			if (value === "start") {
+			if (value === "logo") {
 				clm.disconnect();
-			} else if (value === "logo") {
+				loginStatus = "";
+
 				await tick();
 				setup.classList.add("white");
 				logoImg.height = 0;
@@ -52,6 +52,7 @@
 				
 				await sleep(300);
 				play("start");
+				
 				// Directly changing image height instead
 				// of using transforms to prevent blur
 				logoImg.height = 80;
@@ -147,6 +148,8 @@
 						loginStatus = "The username and/or password is too long!";
 					} else if (code == "E:019 | Illegal characters detected") {
 						loginStatus = "Usernames must not have spaces or other special characters!";
+					} else if (code == "E:106 | Too many requests") {
+						loginStatus = "Too many requests! Please try again later.";
 					} else {
 						loginStatus = `Unexpected ${code} error!`;
 					}
@@ -162,14 +165,7 @@
 </script>
 
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
-	{#if $page === "start"}
-		<div class="fullcenter"><Button
-			sound={false}
-			on:click={()=>page.set("logo")}
-		>
-			Click here to continue.
-		</Button></div>
-	{:else if $page === "logo"}
+	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
 				<div class="logo top" bind:this={logo}>
@@ -204,6 +200,8 @@
 				<Button on:click={() => page.set("join")}>Create an account</Button> <br />
 				{#if localStorage.getItem("meower_savedusername")}
 					<Button on:click={() => {
+					<button on:click={() => {
+						rememberMe = true;
 						doLogin(
 							localStorage.getItem("meower_savedusername"),
 							localStorage.getItem("meower_savedpassword"),
@@ -297,25 +295,25 @@
 						},
 						listener: "join",
 					}).then(async val => {
-						if (val.mode === "auth" && val.payload === username) {
+						if (val.mode === "auth" && val.payload.username === username) {
 							loginStatus = "Getting user data...";
 							const profileVal = await clm.meowerRequest({
 								cmd: "direct",
 								val: {
 									cmd: "get_profile",
-									val: val.payload,
+									val: val.payload.username,
 								},
 							});
 							user.update(v => Object.assign(v, {
 								...profileVal.payload,
-								name: val.payload,
+								name: val.payload.username,
 							}));
 
 							loginStatus = "";
 							
 							if (rememberMe) {
 								localStorage.setItem("meower_savedusername", username);
-								localStorage.setItem("meower_savedpassword", password);
+								localStorage.setItem("meower_savedpassword", val.payload.token);
 							}
 
 							page.set("go");
@@ -329,6 +327,10 @@
 							loginStatus = "The account already exists!";
 						} else if (err == "E:107 | Packet too large") {
 							loginStatus = "The username and/or password is too long!";
+						} else if (err == "E:106 | Too many requests") {
+							loginStatus = "Too many requests! Please try again later.";
+						} else if (err == "E:119 | IP Blocked") {
+							loginStatus = "Your IP is blocked from creating accounts!";
 						} else {
 							console.error(err);
 							loginStatus = "Unexpected " + err + " error!";
@@ -366,12 +368,16 @@
 	{:else if $page === "go"}
 		<div class="fullcenter">Let's go!</div>
 	{:else}
-		Somehow, you got to a page that doesn't exist...
-		<br />
-		(Current page: {$page})
+		<div class="fullcenter">
+			<div class="column-ui">
+				Somehow, you got to a page that doesn't exist...
+				<br />
+				(Current page: {$page})
 
-		<div class="buttons">
-			<Button on:click={()=>page.set("page2")}>Go back!</Button>
+				<div class="buttons">
+					<Button on:click={()=>page.set("logo")}>Go back!</button>
+				</div>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -405,7 +411,7 @@
 
 		display: table-cell;
 		vertical-align: middle;
-		padding: 1em;
+		padding: 0.5em;
 	}
 
 	.setup.white {

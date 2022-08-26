@@ -21,10 +21,8 @@
 	} from "./lib/stores.js";
 	
 	import {tick} from "svelte";
-	screen.set("setup");
-	setupPage.set("start");
 
-	function errorSound(_) {
+	function errorSound() {
 		play("deny");
 	}
 </script>
@@ -48,7 +46,8 @@
 	{#if $disconnected}
 		<div class="disconnected">
 			<div class="disconnected-inner">
-				<h1 use:errorSound>Me-owch.</h1>
+				{errorSound()}
+				<h1>Me-owch.</h1>
 				{#if $disconnectReason === ""}
 					You have been disconnected.
 					Reconnect using the below button:
@@ -62,6 +61,22 @@
 					Attempt reconnecting using the below button:
 				{:else if $disconnectReason === "Intentional disconnect"}
 					{""}
+				{:else if $disconnectReason == "E:110 | ID conflict"}
+					There has been a hiccup! Looks like you logged into Meower from another device.
+					<br />
+					Please check any devices currently logged into Meower and try again.
+					<br />
+					Attempt reconnecting using the below button:
+				{:else if $disconnectReason == "E:018 | Account Banned"}
+					Your account has been banned by a moderator for recent activity.
+					<br />
+					If you think this is a mistake, please contact <a href="mailto:support@meower.org">support@meower.org</a>.
+					<br />
+					Attempt reconnecting using the below button:
+				{:else if $disconnectReason == "E:020 | Kicked"}
+					You have been kicked from Meower by a moderator :(
+					<br />
+					Attempt reconnecting using the below button:
 				{:else}
 					We ran into an error trying to connect to the server.
 					<pre><code>{$disconnectReason}</code></pre>

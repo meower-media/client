@@ -4,7 +4,7 @@
 import {writable, readable, get} from "svelte/store";
 export const screen = writable("setup");
 export const mainPage = writable("home");
-export const setupPage = writable("start");
+export const setupPage = writable("logo");
 export const pageParam = writable("");
 
 // Used for the disconnected screen

@@ -35,6 +35,11 @@ let disconnectEvent = null;
  */
 let ulistEvent = null;
 /**
+ * A variable used to keep track of any disconnection requests.
+ * @type any
+ */
+let disconnectRequest = null;
+/**
  * A variable used to keep track of the manager's pinger interval.
  * @type any
  */
@@ -57,6 +62,10 @@ export async function connect() {
 	if (ulistEvent) {
 		link.off(ulistEvent);
 		ulistEvent = null;
+	}
+	if (disconnectRequest) {
+		link.off(disconnectRequest);
+		disconnectRequest = null;
 	}
 	if (pingInterval) {
 		clearInterval(pingInterval);
@@ -90,6 +99,14 @@ export async function connect() {
 				_ulist.pop();
 			}
 			ulist.set(_ulist);
+		});
+		disconnectRequest = link.on("direct", cmd => {
+			if (cmd.val == "E:018 | Account Banned" || cmd.val == "E:020 | Kicked" || cmd.val == "E:110 | ID conflict" || cmd.val == "E:119 | IP Blocked") {
+				link.disconnect();
+				disconnectReason.set(cmd.val);
+				disconnected.set(true);
+				link.log("manager", "requested disconnect:", cmd.val);
+			}
 		});
 	});
 	

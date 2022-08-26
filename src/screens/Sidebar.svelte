@@ -19,7 +19,7 @@
 	import groupcat from "../assets/meowy.svg";
 
 	import Button from "../lib/ui/form/Button.svelte";
-
+	
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
@@ -71,16 +71,16 @@
 				draggable={false}
 			/>
 		</Button>
-		<Button style="round" on:click={()=>goto("groupchat")}>
-			<img
-				src={groupcat}
-				alt="Group cat"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</Button>
 	{/if}
+	<Button style="round" on:click={()=>goto("groupchat")}>
+		<img
+			src={groupcat}
+			alt="Group cat"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</Button>
 	<Button style="round" on:click={async () => {
 		screen.set("setup");
 		await tick();

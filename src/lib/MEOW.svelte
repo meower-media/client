@@ -2,7 +2,6 @@
 
 <script>
     import meowy from "../assets/meowy.svg";
-
     let cats = new Array(100).fill().map(
         _ => {
             return ({
@@ -43,7 +42,6 @@
     }
     .cat {
         position: absolute;
-
         animation: move 10s infinite cubic-bezier(0.5, 0, 0.5, 1);
     }
 

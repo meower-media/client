@@ -5,7 +5,7 @@
 	import Container from "../lib/ui/Container.svelte";
 	import * as clm from "../lib/networking/clmanager.js";
 	import {user, profileData} from "../lib/stores.js";
-
+	
 	let _user = $user;
 	user.subscribe(v => _user = v);
 

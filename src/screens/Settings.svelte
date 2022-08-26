@@ -352,4 +352,10 @@
 	.reset-theme {
 		margin-top: 0.5em;
 	}
+
+	input[type="checkbox"], button.circle {
+		border: none;
+		margin: 0;
+		margin-left: 0.125em;
+	}
 </style>
