@@ -23,6 +23,21 @@
 			setupPage.set("reconnect");
 		}
 	}
+
+	async function change_pswd() {
+		let pswd = prompt("Enter your new password:");
+		if (pswd === null) return;
+		if ($user.name === localStorage.getItem("meower_savedusername")) {
+			localStorage.removeItem("meower_savedusername");
+			localStorage.removeItem("meower_savedpassword");
+		}
+
+		await clm.meowerRequest({cmd: "direct", val: {cmd: "change_pswd", val: pswd}});
+		
+		screen.set("setup");
+		await tick();
+		setupPage.set("reconnect");
+	}
 </script>
 
 <!--
@@ -105,6 +120,17 @@
 
 	<h2>Dark Mode</h2>
 	Dark mode is currently {$user.mode ? "disabled" : "enabled"}.
+</Container>
+<Container>
+	<div class="settings-controls">
+		<button
+			class="circle settings"
+			on:click={change_pswd}
+		></button>
+	</div>
+
+	<h2>Change Password</h2>
+	Change your account password.
 </Container>
 <Container>
 	<div class="settings-controls">
