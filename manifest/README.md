@@ -4,5 +4,5 @@ This folder contains icons for PWA support.
 To make the folder.
 # Why did you create this folder?
 To upload the icons.
-# WHy did you need to upload the icons?
+# Why did you need to upload the icons?
 Stop.
