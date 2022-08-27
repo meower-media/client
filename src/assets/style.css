@@ -152,8 +152,8 @@ h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
     background-color: var(--orange);
     color: var(--foreground-orange);
 
-	width: 1.6em;
-	height: 1.6em;
+	width: 1.8em;
+	height: 1.8em;
 	padding: 0;
 	
 	font: inherit;

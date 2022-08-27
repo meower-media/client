@@ -36,13 +36,12 @@
 	onMount(() => {
 		page.subscribe(async value => {
 			if (!setup) return;
+			setup.classList.remove("white");
 			
 			rememberMe = false;
 			acceptTerms = false;
 			loginStatus = "";
-			setup.classList.remove("white");
 			if (value === "logo") {
-				clm.disconnect();
 				loginStatus = "";
 
 				await tick();
@@ -167,25 +166,23 @@
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
-			<div>
-				<div class="logo top" bind:this={logo}>
-					<img
-						bind:this={logoImg}
-						alt="Meower"
-						src={meowerLogo}
-						class="logo-img"
-						height="40"
-					/>
-				</div>
-				<div class="connecting">{loginStatus}</div>
+			<div class="logo top" bind:this={logo}>
+				<img
+					bind:this={logoImg}
+					alt="Meower"
+					src={meowerLogo}
+					class="logo-img"
+					height="40"
+				/>
 			</div>
+			<div class="connecting">{loginStatus}</div>
 		</div>
 	{:else if $page === "reconnect"}
-		<div class="fullcenter">
+		<div class="center">
 			Reconnecting...
 		</div>
 	{:else if $page === "welcome"}
-		<div class="fullcenter">
+		<div class="center">
 			<div class="column-ui">
 				<div>
 					<img
@@ -200,7 +197,6 @@
 				<Button on:click={() => page.set("join")}>Create an account</Button> <br />
 				{#if localStorage.getItem("meower_savedusername")}
 					<Button on:click={() => {
-					<button on:click={() => {
 						rememberMe = true;
 						doLogin(
 							localStorage.getItem("meower_savedusername"),
@@ -218,7 +214,13 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.2.0
+						Meower Svelte v1.2.0 | <a
+							href="#"
+							on:click|preventDefault={() => {
+								page.set("about");
+								play("menu");
+							}}
+						>About</a>
 					</p>
 					<img
 						src={meowy}
@@ -229,7 +231,7 @@
 			</div>
 		</div>
 	{:else if $page === "login"}
-		<div class="fullcenter">
+		<div class="center">
 			<h1>Login to Meower</h1>
 			
 			<form class="column-ui"
@@ -270,7 +272,7 @@
 			</form>
 		</div>
 	{:else if $page === "join"}
-		<div class="fullcenter">
+		<div class="center">
 			<h1>Welcome to Meower</h1>
 
 			<form class="column-ui"
@@ -365,17 +367,46 @@
 		</div>
 	{:else if $page === "blank"}
 		<div></div>
+	{:else if $page === "about"}
+		<div class="center">
+			<h1>Meower Svelte</h1>
+			Contributors:
+			<ul>
+				<li>
+					<a href="https://github.com/CST1229">CST1229</a>
+				</li>
+				<li>
+					<a href="https://github.com/Bloctans">Bloctans</a>
+				</li>
+				<li>
+					<a href="https://github.com/tnix100">tnix100</a>
+				</li>
+				<li>
+					<a href="https://github.com/ArrowAced">ArrowAced</a>
+				</li>
+			</ul>
+			<p>
+				Meower is made by <a href="https://github.com/Meower-Media-Co">Meower Media Co.</a>
+			</p>
+			
+			<div class="buttons">
+				<Button on:click={(e) => {
+					page.set("welcome");
+					loginStatus = "";
+				}}>Go back</Button>
+			</div>
+		</div>
 	{:else if $page === "go"}
-		<div class="fullcenter">Let's go!</div>
+		<div class="center">Let's go!</div>
 	{:else}
-		<div class="fullcenter">
+		<div class="center">
 			<div class="column-ui">
 				Somehow, you got to a page that doesn't exist...
 				<br />
 				(Current page: {$page})
 
 				<div class="buttons">
-					<Button on:click={()=>page.set("logo")}>Go back!</button>
+					<Button on:click={()=>page.set("logo")}>Go back!</Button>
 				</div>
 			</div>
 		</div>
@@ -395,23 +426,23 @@
 		left: 0;
 		z-index: 1000;
 		
-		width: 100%;
-		min-height: 100vh;
-		height: 100%;
+		min-width: 100%;
+		min-height: 100%;
 
-		display: table;
+		display: grid;
 	}
-	.fullcenter {
-		width: 100%;
-		height: 100%;
+	.center {
 		box-sizing: border-box;
 
 		margin: auto;
-		overflow: auto;
-
-		display: table-cell;
-		vertical-align: middle;
+		
 		padding: 0.5em;
+	}
+	.fullcenter {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	.setup.white {
@@ -484,5 +515,9 @@
 	.checkboxes {
 		text-align: left;
 		font-size: 90%;
+	}
+	
+	a {
+		color: var(--foreground-orange);
 	}
 </style>

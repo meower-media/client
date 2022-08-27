@@ -12,7 +12,11 @@
 	import {link} from "./lib/networking/clmanager.js";
 
 	import {play} from "./lib/audio/sfx.js";
-
+	
+	import comLost from "./assets/images/com-lost.svg";
+	import comFail from "./assets/images/com-fail.svg";
+	import blocked from "./assets/images/blocked.svg";
+	
 	import {
 		screen, setupPage,
 		disconnected, disconnectReason,
@@ -46,12 +50,21 @@
 	{#if $disconnected}
 		<div class="disconnected">
 			<div class="disconnected-inner">
-				{errorSound()}
-				<h1>Me-owch.</h1>
+				{errorSound() || ""}
 				{#if $disconnectReason === ""}
+					<img
+						src={comLost}
+						alt="Connection lost"
+					>
+					<h1>Me-owch.</h1>
 					You have been disconnected.
 					Reconnect using the below button:
 				{:else if $disconnectReason === "E:119 | IP Blocked"}
+					<img
+						src={blocked}
+						alt="STOP"
+					>
+					<h1>Me-owch.</h1>
 					The server has blocked your IP address ({link.ip}).
 					<br />
 					This might be due to an extension blocking the URL used to get your IP
@@ -62,22 +75,42 @@
 				{:else if $disconnectReason === "Intentional disconnect"}
 					{""}
 				{:else if $disconnectReason == "E:110 | ID conflict"}
+					<img
+						src={comLost}
+						alt="Connection lost"
+					>
+					<h1>Me-owch.</h1>
 					There has been a hiccup! Looks like you logged into Meower from another device.
 					<br />
 					Please check any devices currently logged into Meower and try again.
 					<br />
 					Attempt reconnecting using the below button:
 				{:else if $disconnectReason == "E:018 | Account Banned"}
+					<img
+						src={blocked}
+						alt="STOP"
+					>
+					<h1>Me-owch.</h1>
 					Your account has been banned by a moderator for recent activity.
 					<br />
 					If you think this is a mistake, please contact <a href="mailto:support@meower.org">support@meower.org</a>.
 					<br />
 					Attempt reconnecting using the below button:
 				{:else if $disconnectReason == "E:020 | Kicked"}
+					<img
+						src={blocked}
+						alt="STOP"
+					>
+					<h1>Me-owch.</h1>
 					You have been kicked from Meower by a moderator :(
 					<br />
 					Attempt reconnecting using the below button:
 				{:else}
+					<img
+						src={comFail}
+						alt="Connection fail"
+					>
+					<h1>Me-owch.</h1>
 					We ran into an error trying to connect to the server.
 					<pre><code>{$disconnectReason}</code></pre>
 					Reconnect using the below button:
@@ -85,10 +118,9 @@
 				<br /><br />
 				<Button 
 					on:click={async () => {
+						setupPage.set("reconnect");
 						screen.set("setup");
 						disconnected.set(false);
-						await tick();
-						setupPage.set("reconnect");
 					}}
 				>
 					Reconnect!
@@ -115,20 +147,22 @@
 		background-color: var(--orange);
 		color: var(--foreground-orange);
 
-		width: 100%;
-		height: 100%;
+		min-width: 100%;
+		min-height: 100%;
 
 		position: absolute;
 		top: 0;
 		left: 0;
 		z-index: 1000000;
 
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		display: grid;
 
 		text-align: center;
 		font-size: 150%;
+	}
+	.disconnected-inner {
+		margin: auto;
+		padding: 0.5em;
 	}
 
 	.spinner-container {

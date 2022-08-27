@@ -45,12 +45,17 @@ let disconnectRequest = null;
  */
 let pingInterval = null;
 
+let _disconnectReason = null;
+disconnectReason.subscribe(v => _disconnectReason = v);
+
 /**
  * Connect to the server, initializing some other things such as pinging.
  * 
  * @returns {Promise<string>} statusCode A status code.
  */
 export async function connect() {
+	disconnectReason.set("");
+	
 	if (connectEvent) {
 		link.off(connectEvent);
 		disconnectEvent = null;
@@ -72,8 +77,6 @@ export async function connect() {
 		pingInterval = null;
 	}
 
-	disconnectReason.set("");
-
 	link.once("connectionstart", () => {
 		connectEvent = link.on("connected", () => {
 			disconnected.set(false);
@@ -84,7 +87,17 @@ export async function connect() {
 		disconnectEvent = link.on("disconnected", (e) => {
 			ulist.set([]);
 			if (e.reason !== "Intentional disconnect") {
-				disconnectReason.set(e.reason);
+				/*
+					If the disconnect reason is an Error, it means
+					there was an error when connecting -
+					don't overwrite it
+				*/
+				if (!(_disconnectReason instanceof Error)) {
+					disconnectReason.set(e.reason);
+					if (link.connecting) {
+						disconnectReason.set("Unkown error while connecting");
+					}
+				}
 				disconnected.set(true);
 			}
 			user.set(unloadedProfile());
@@ -117,7 +130,7 @@ export async function connect() {
 		link.disconnect();
 		disconnectReason.set(e);
 		disconnected.set(true);
-		link.error("manager", "conenction error:", e);
+		link.error("manager", "connection error:", e);
 		return e;
 	}
 }

@@ -69,8 +69,8 @@
 </Container>
 <Container>
 	<div class="settings-controls">
-		<button
-			class="circle settings"
+		<Button
+			style="circle settings"
 			on:click={()=>{
 				const _user = $user;
 				_user.layout = _user.layout === "new" ? "old" : "new";
@@ -78,7 +78,7 @@
 
 				clm.updateProfile();
 			}}
-		></button>
+		></Button>
 	</div>
 
 	<h2>Layout</h2>
@@ -86,8 +86,8 @@
 </Container>
 <Container>
 	<div class="settings-controls">
-		<button
-			class="circle settings"
+		<Button
+			style="circle settings"
 			on:click={()=>{
 				const _user = $user;
 				_user.theme = _user.theme === "orange" ? "blue" : "orange";
@@ -95,7 +95,7 @@
 
 				clm.updateProfile();
 			}}
-		></button>
+		></Button>
 	</div>
 
 	<h2>Theme</h2>
@@ -121,13 +121,13 @@
 </Container>
 <Container>
 	<div class="settings-controls">
-		<button
-			class="circle settings"
+		<Button
+			style="circle settings"
 			on:click={()=>{
 				mainPage.set("midsetup");
 				pageParam.set("bgm");
 			}}
-		></button>
+		></Button>
 		<input
 			type="checkbox"
 			bind:checked={$user.bgm}
@@ -317,8 +317,6 @@
 	<h1>Delete Account</h1>
 	THIS CANNOT BE UNDONE. Enable all the switches to delete your account, if you are really sure.
 </Container>
-
-<div class="eee"></div>
 
 <style>
 	.settings-controls {

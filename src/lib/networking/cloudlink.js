@@ -25,6 +25,8 @@ export default class Cloudlink {
         this.events = {};
         this._numevents = 1;
 		this.ip = null;
+		
+		this.connecting = false;
 
         if (server) {
             this.connect(server);
@@ -86,10 +88,12 @@ export default class Cloudlink {
 					this.log("connection", "already connected, disconnecting...");
 					this.disconnect(1000, "Intentional disconnect");
 				}
+				
+				this.connecting = true;
 
 				this.ws = new WebSocket(server);
-				this.emit("connectionstart");
 				this.ws.addEventListener("open", async () => {
+					this.connecting = false;
 					try {
 						this.log("connection", "connected to websockets");
 						
@@ -151,11 +155,13 @@ export default class Cloudlink {
 				this.ws.addEventListener("close", (e) => {
 					this.log("connection", "disconnected with code ", e.code, " and reason", e.reason);
 					this.emit("disconnected", e);
+					this.connecting = false;
 				});
 				this.ws.addEventListener("error", (e) => {
 					this.error("connection", "error:", e);
 					this.emit("error", e);
 				});
+				this.emit("connectionstart");
 			} catch(e) {
 				reject(e);
 			}
@@ -261,7 +267,6 @@ export default class Cloudlink {
         if ((!this.ws) || (this.ws.readyState !== 1)) {
             return;
         }
-		console.log(_code, _reason);
         this.ws.close(_code, _reason);
     }
 }
