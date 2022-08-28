@@ -34,11 +34,7 @@ jobs:
           ref: 'gh-pages'
       
       - name: Clear out things
-        run: |
-          mkdir TO_DELETE
-          mv * TO_DELETE
-          mv TO_DELETE/branch .
-          rm -rf TO_DELETE
+        run: rm -rf ./*
       
       - name: Download artifact
         uses: actions/download-artifact@v2
