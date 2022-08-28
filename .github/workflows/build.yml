@@ -34,7 +34,11 @@ jobs:
           ref: 'gh-pages'
       
       - name: Clear out things
-        run: find /space ! -iregex '(branch)' | parallel -X rm -rf
+        run: |
+          mkdir TO_DELETE
+          mv * TO_DELETE
+          mv TO_DELETE/branch .
+          rm -rf TO_DELETE
       
       - name: Download artifact
         uses: actions/download-artifact@v2
