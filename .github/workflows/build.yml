@@ -33,14 +33,8 @@ jobs:
         with:
           ref: 'gh-pages'
       
-      - name: Clear out assets folder
-        run: rm -rf ./assets
-        
-      - name: Clear out avatars folder
-        run: rm -rf ./avatars
-      
-      - name: Clear out index.html
-        run: rm -rf ./index.html
+      - name: Clear out things
+        run: find /space ! -iregex '(branch)' | parallel -X rm -rf
       
       - name: Download artifact
         uses: actions/download-artifact@v2
