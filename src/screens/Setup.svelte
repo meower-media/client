@@ -214,7 +214,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.2.0 | <a
+						Meower Svelte v1.3.0 | <a
 							href="#"
 							on:click|preventDefault={() => {
 								page.set("about");

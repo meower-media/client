@@ -7,6 +7,7 @@
 		setupPage,
 		screen,
 		user,
+		profileClicked,
 	} from "../lib/stores.js";
 	
 	import {tick} from "svelte";
@@ -53,7 +54,10 @@
 		</Button>
 	</span>
 	{#if $user.name}
-		<Button style="round" on:click={()=>goto("profile")}>
+		<Button style="round" on:click={()=> {
+			$profileClicked = $user.name;
+			goto("profile");
+		}}>
 			<img
 				src={profile}
 				alt="Profile"
@@ -72,7 +76,7 @@
 			/>
 		</Button>
 	{/if}
-	<Button style="round" on:click={()=>goto("groupchat")}>
+	<Button style="round" on:click={()=>goto("groupcat")}>
 		<img
 			src={groupcat}
 			alt="Group cat"

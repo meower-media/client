@@ -2,6 +2,7 @@
 
 <script>
     import meowy from "../assets/meowy.svg";
+	
     let cats = new Array(100).fill().map(
         _ => {
             return ({

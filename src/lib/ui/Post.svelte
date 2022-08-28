@@ -4,8 +4,8 @@
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
-
-	import {profileData, user, ulist} from "../stores.js";
+	
+	import {profileData, profileClicked, user, ulist, mainPage as page} from "../stores.js";
 	import * as clm from "../networking/clmanager.js";
 	
 	import {onMount} from "svelte";
@@ -68,15 +68,19 @@
 
 <Container>
 	<div class="post-header">
-		{#if $user.name}
-			<button class="pfp">
-				<PFP
-					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
-				></PFP>
-			</button>
-		{/if}
+		<button 
+			class="pfp" 
+			on:click={()=>{
+				profileClicked.set(post.user);
+				page.set("profile");
+			}}
+		>
+			<PFP
+				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
+				alt="{post.user}'s profile picture"
+				online={$ulist.includes(post.user)}
+			></PFP>
+		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
 			<FormattedDate date={post.date}></FormattedDate>
@@ -107,5 +111,9 @@
 		display: block;
 		font-size: 200%;
 		margin: 0;
+	}
+
+	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
+		transform: scale(1.1);
 	}
 </style>

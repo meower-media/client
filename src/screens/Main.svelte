@@ -30,7 +30,7 @@
 				<Profile />
 			{:else if $page === "settings"}
 				<Settings />
-			{:else if $page === "groupchat"}
+			{:else if $page === "groupcht"}
 				<Groupcat />
 			{:else if $page === "midsetup"}
 				<div></div>
@@ -48,7 +48,7 @@
 <BGM
 	muted={!$user.bgm}
 	songId={$user.bgm_song}
-/> 
+/>
 
 <style>
 	.main-screen {

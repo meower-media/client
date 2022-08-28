@@ -56,7 +56,7 @@
 		/* Always make fallback text visible */
 		color: black;
 	}
-
+	
 	.loading {
 		animation: spin 0.5s linear infinite;
 		filter: saturate(0) brightness(1.5);

@@ -18,7 +18,9 @@
 	import {apiUrl, encodeApiURLParams} from "../lib/constants/urls.js";
 
 	import {fly} from "svelte/transition";
-	import {flip} from 'svelte/animate';
+	import {flip} from "svelte/animate";
+	
+	import {play} from "../lib/audio/sfx.js";
 
 	let id = 0;
 	export let posts = [];
@@ -126,6 +128,7 @@
 				date: cmd.val.t.e,
 			});
 			postOffset++;
+			play("menu");
 			posts = posts;
 		});
 	}
