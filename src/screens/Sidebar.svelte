@@ -130,16 +130,17 @@
 	}
 	.logo img {
 		box-sizing: border-box;
-		padding: 0.75em;
 		filter: brightness(0) invert(1);
 	}
 	.logo > :global(button) {
 		display: inline-block;
 		height: 100%;
+		width: auto;
 
 		border: none;
 		background: none;
 		appearance: none;
+		padding: 0.75em;
 		line-height: auto;
 	}
 	.logo > :global(button):hover {

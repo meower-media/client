@@ -303,6 +303,12 @@
 
 <br />
 
+
+<Container>
+	<h1>Danger Zone</h1>
+	Stuff in here could be <b>potentially dangerous</b>. Proceed with caution.
+</Container>
+
 <Container>
 	<div class="settings-controls">
 		<Button
@@ -340,7 +346,7 @@
 		>
 	</div>
 
-	<h1>Delete Account</h1>
+	<h2>Delete Account</h2>
 	THIS CANNOT BE UNDONE. Enable all the switches to delete your account, if you are really sure.
 </Container>
 

@@ -5,7 +5,8 @@
 	export let fullWidth = false;
 	export let sound = true;
 	export let style = "normal";
-
+	
+	export let title = "";
 	export let disabled = false;
 </script>
 
@@ -25,7 +26,7 @@
 
 	on:click
 	
-	{disabled}
+	{title} {disabled}
 >
 	<slot />
 </button>

@@ -30,7 +30,7 @@
 				<Profile />
 			{:else if $page === "settings"}
 				<Settings />
-			{:else if $page === "groupcht"}
+			{:else if $page === "groupcat"}
 				<Groupcat />
 			{:else if $page === "midsetup"}
 				<div></div>

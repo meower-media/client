@@ -1,7 +1,11 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import PFP from "../lib/ui/PFP.svelte";
+	
+	import Button from "../lib/ui/form/Button.svelte";
 	import Container from "../lib/ui/Container.svelte";
+	import Loading from "../lib/ui/Loading.svelte";
+	
 	import * as clm from "../lib/networking/clmanager.js";
 	
 	import {
@@ -88,23 +92,26 @@
 			</Container>
 		{/if}
 		{#if $profileClicked !== $user.name}
-			<button
-				class="long"
+			<Button
+				style="normal"
 				title="Coming soon?"
+				fullWidth={true}
 				disabled
-			>Report User</button>
+			>Report User</Button>
 		{/if}
-		<button
-			class="long"
+		<Button
+			style="normal"
 			title="Coming soon?"
+			fullWidth={true}
 			disabled
-		>View recent posts</button>
+		>View recent posts</Button>
 		{#if $profileClicked !== $user.name}
-			<button
-				class="long"
+			<Button
+				style="normal"
 				title="Coming soon?"
+				fullWidth={true}
 				disabled
-			>Add to chat</button>
+			>Add to chat</Button>
 		{/if}
 	{:catch e}
 		<Container>
