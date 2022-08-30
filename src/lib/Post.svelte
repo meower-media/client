@@ -87,7 +87,7 @@
 			<FormattedDate date={post.date}></FormattedDate>
 		</div>
 	</div>
-	<p>{post.content}</p>
+	<p class="post-content">{post.content}</p>
 </Container>
 
 <style>
@@ -116,5 +116,9 @@
 
 	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
+	}
+	
+	.post-content {
+		white-space: pre-wrap;
 	}
 </style>
