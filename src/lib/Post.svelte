@@ -87,10 +87,15 @@
 			<FormattedDate date={post.date}></FormattedDate>
 		</div>
 	</div>
-	<p>{post.content}</p>
+	<pre class="anti-pre">{post.content}</pre>
 </Container>
 
 <style>
+	.anti-pre {
+		font-family: simvoni;
+		white-space: none;
+	}
+	
 	.pfp {
 		margin-right: 0.2em;
 		padding: 0;
