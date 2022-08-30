@@ -87,15 +87,10 @@
 			<FormattedDate date={post.date}></FormattedDate>
 		</div>
 	</div>
-	<pre class="anti-pre">{post.content}</pre>
+	<p class="post-content">{post.content}</p>
 </Container>
 
 <style>
-	.anti-pre {
-		font-family: simvoni;
-		white-space: none;
-	}
-	
 	.pfp {
 		margin-right: 0.2em;
 		padding: 0;
@@ -121,5 +116,9 @@
 
 	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
+	}
+	
+	.post-content {
+		white-space: pre-wrap;
 	}
 </style>
