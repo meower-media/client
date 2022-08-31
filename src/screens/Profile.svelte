@@ -129,7 +129,7 @@
 			<Container>
 				<h2>Error</h2>
 				<div>
-					Unfortunately, we cannot get profile info without being logged out.
+					Unfortunately, we cannot get profile info without being logged in.
 					<a
 						href="."
 						on:click|preventDefault={async () => {
