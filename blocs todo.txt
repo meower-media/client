@@ -1,3 +1,29 @@
+do:
+- inbox/announcements
+- group chats
+- bridged tag
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 so ill do:
 - all profile stuff (eg, role. active)
 - mod panel
@@ -5,7 +31,6 @@ so ill do:
 - post buttons
 
 r7:
-- inbox
 - announcements
 - search
 - recent msgs

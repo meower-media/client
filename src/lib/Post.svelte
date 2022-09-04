@@ -76,18 +76,35 @@
 				page.set("profile");
 			}}
 		>
-			<PFP
-				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
-				alt="{post.user}'s profile picture"
-				online={$ulist.includes(post.user)}
-			></PFP>
-		</button>
+			{#if post.user == "Discord"}
+				<PFP
+					icon={10000}
+					alt="{post.content.split(":")[0]}'s profile picture"
+					online={$ulist.includes(post.content.split(":")[0])}
+				></PFP>
+			{:else}
+				<PFP
+					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				></PFP>
+			{/if}
+		</button>	
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
+			{#if post.user == "Discord"}
+				<h2 class="creator">{post.content.split(":")[0] + ' [BRIDGED]'}</h2>
+			{:else}
+				<h2 class="creator">{post.user}</h2>
+			{/if}
 			<FormattedDate date={post.date}></FormattedDate>
 		</div>
 	</div>
-	<p class="post-content">{post.content}</p>
+	{#if post.user == "Discord"}
+		<p class="post-content">{post.content.slice(post.content.indexOf(":")+2)}</p>
+	{:else}
+		<p class="post-content">{post.content}</p>
+	{/if}
 </Container>
 
 <style>
