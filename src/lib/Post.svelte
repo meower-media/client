@@ -11,6 +11,8 @@
 	import {onMount} from "svelte";
 	export let post = {};
 
+	// TODO: make bridged tag a setting
+
 	/**
 	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
 	 */
@@ -82,19 +84,11 @@
 				page.set("profile");
 			}}
 		>
-			{#if post.user == "Discord"}
-				<PFP
-					icon={$profileData[post.content.split(":")[0]] ? $profileData[post.content.split(":")[0]].pfp_data : -3}
-					alt="{post.content.split(":")[0]}'s profile picture"
-					online={$ulist.includes(post.content.split(":")[0])}
-				></PFP>
-			{:else}
-				<PFP
-					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
-				></PFP>
-			{/if}
+			<PFP
+				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
+				alt="{post.user}'s profile picture"
+				online={$ulist.includes(post.user)}
+			></PFP>
 		</button>	
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
