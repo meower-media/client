@@ -22,8 +22,8 @@
 
 		var userName = ""
 		if (post.user == "Discord") {
-			post.user = post.content.split(":")[0];
-			post.content = post.content.slice(post.content.indexOf(":")+2);
+			post.user = post.content.split(": ")[0];
+			post.content = post.content.split(": ")[1];
 		}
 		
 		userName = post.user;
