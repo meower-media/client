@@ -20,10 +20,11 @@
 
 		var userName = ""
 		if (post.user == "Discord") {
-			userName = post.content.split(":")[0];
-		} else {
-			userName = post.user;
+			post.user = post.content.split(":")[0];
 		}
+		
+		userName = post.user;
+		post.content = post.content.slice(post.content.indexOf(":")+2);
 
 		/**
 		 * Fetch the user profile and store it in the cache.
@@ -77,11 +78,7 @@
 		<button 
 			class="pfp" 
 			on:click={()=>{
-				if (post.user == "Discord") {
-					profileClicked.set(post.content.split(":")[0]);
-				} else {
-					profileClicked.set(post.user);
-				}
+				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
@@ -100,19 +97,11 @@
 			{/if}
 		</button>	
 		<div class="creator">
-			{#if post.user == "Discord"}
-				<h2 class="creator">{post.content.split(":")[0] + ' [BRIDGED]'}</h2>
-			{:else}
-				<h2 class="creator">{post.user}</h2>
-			{/if}
+			<h2 class="creator">{post.user}</h2>
 			<FormattedDate date={post.date}></FormattedDate>
 		</div>
 	</div>
-	{#if post.user == "Discord"}
-		<p class="post-content">{post.content.slice(post.content.indexOf(":")+2)}</p>
-	{:else}
-		<p class="post-content">{post.content}</p>
-	{/if}
+	<p class="post-content">{post.content}</p>
 </Container>
 
 <style>
