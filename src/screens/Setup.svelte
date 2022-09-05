@@ -115,13 +115,13 @@
 				} else if (code == "I:011 | Invalid Password") {
 					loginStatus = "Invalid password!";
 				} else if (code == "E:018 | Account Banned") {
-					loginStatus = "This account is banned. LOL :(";
+					loginStatus = "This account is banned. L :(";
 				} else if (code == "E:107 | Packet too large") {
-					loginStatus = "The username and/or password is too long! Sadly";
+					loginStatus = "The username and/or password is too long!";
 				} else if (code == "E:019 | Illegal characters detected") {
 					loginStatus = "Usernames must not have spaces or other special characters!";
 				} else if (code == "E:106 | Too many requests") {
-					loginStatus = "Too many requests! Please try again later. And While your at it blame Us for it";
+					loginStatus = "Too many requests! Please try again later.";
 				} else {
 					loginStatus = `Unexpected ${code} error!`;
 				}
