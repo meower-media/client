@@ -25,17 +25,19 @@
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
 	function goto(newPage) {
-		cljs.send({
-			cmd: "direct", 
-			val: {
-				cmd: "set_chat_state", 
+		if (page === "groupchat") {
+			cljs.send({
+				cmd: "direct", 
 				val: {
-					chatid: $chatid_stor, 
-					state: 0
+					cmd: "set_chat_state", 
+					val: {
+						chatid: $chatid_stor, 
+						state: 0
+					}
 				}
-			}
-		})
-		chatid_stor.set("")
+			})
+		}
+		chatid_stor.set("");
 		page.set("blank");
 		tick().then(() => page.set(newPage));
 	}
