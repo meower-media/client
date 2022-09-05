@@ -12,6 +12,8 @@ export const setupPage = writable("logo");
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
 
+export const chatid_stor = writable("")
+
 // Cached profiles
 export const profileData = writable({});
 

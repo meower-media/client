@@ -8,6 +8,7 @@
 		screen,
 		user,
 		profileClicked,
+		chatid_stor
 	} from "../lib/stores.js";
 	
 	import {tick} from "svelte";
@@ -18,11 +19,23 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import groupcat from "../assets/meowy.svg";
+	import gc from "../assets/chat.svg"
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
 	function goto(newPage) {
+		cljs.send({
+			cmd: "direct", 
+			val: {
+				cmd: "set_chat_state", 
+				val: {
+					chatid: $chatid_stor, 
+					state: 0
+				}
+			}
+		})
+		chatid_stor.set("")
 		page.set("blank");
 		tick().then(() => page.set(newPage));
 	}
@@ -66,6 +79,15 @@
 			<img
 				src={settings}
 				alt="Settings"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+		<button on:click={()=>goto("groupchat")} class="gc-btn round">
+			<img
+				src={gc}
+				alt="Group Chats"
 				width="90%"
 				height="auto"
 				draggable={false}

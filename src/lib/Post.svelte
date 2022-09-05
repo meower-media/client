@@ -18,7 +18,12 @@
 		if (!post.user) return;
 		if (!($user.name)) return;
 
-		const userName = post.user;
+		var userName = ""
+		if (post.user == "Discord") {
+			userName = post.content.split(":")[0];
+		} else {
+			userName = post.user;
+		}
 
 		/**
 		 * Fetch the user profile and store it in the cache.
@@ -72,26 +77,29 @@
 		<button 
 			class="pfp" 
 			on:click={()=>{
-				profileClicked.set(post.user);
+				if (post.user == "Discord") {
+					profileClicked.set(post.content.split(":")[0]);
+				} else {
+					profileClicked.set(post.user);
+				}
 				page.set("profile");
 			}}
 		>
 			{#if post.user == "Discord"}
 				<PFP
-					icon={10000}
+					icon={$profileData[post.content.split(":")[0]] ? $profileData[post.content.split(":")[0]].pfp_data : -3}
 					alt="{post.content.split(":")[0]}'s profile picture"
 					online={$ulist.includes(post.content.split(":")[0])}
 				></PFP>
 			{:else}
 				<PFP
-					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
+					icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				></PFP>
 			{/if}
 		</button>	
 		<div class="creator">
-			<h2 class="creator">{post.user}</h2>
 			{#if post.user == "Discord"}
 				<h2 class="creator">{post.content.split(":")[0] + ' [BRIDGED]'}</h2>
 			{:else}

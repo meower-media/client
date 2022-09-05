@@ -165,6 +165,14 @@ input[type="checkbox"] {
 button.settings {
 	background-image: url("./settings.svg");
 }
+button.leave {
+	background-image: url("./leave_chat.svg");
+    background-size: 50%;
+}
+button.join {
+	background-image: url("./chat_join.svg");
+    background-size: 50%;
+}
 input[type="checkbox"]:hover:not(:active),
 button.circle:hover:not(:active) {
 	transform: scale(1.2);

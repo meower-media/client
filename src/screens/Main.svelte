@@ -5,6 +5,7 @@
 	import Profile from "./Profile.svelte";
 	import Settings from "./Settings.svelte";
 	import Groupcat from "./Groupcat.svelte";
+	import Groupchat from "./Groupchat.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -26,6 +27,8 @@
 			<Settings />
 		{:else if $page === "groupcat"}
 			<Groupcat />
+		{:else if $page === "groupchat"}
+			<Groupchat />
 		{:else if $page === "blank"}
 			<div></div>
 		{:else}
