@@ -23,10 +23,10 @@
 		var userName = ""
 		if (post.user == "Discord") {
 			post.user = post.content.split(":")[0];
+			post.content = post.content.slice(post.content.indexOf(":")+2);
 		}
 		
 		userName = post.user;
-		post.content = post.content.slice(post.content.indexOf(":")+2);
 
 		/**
 		 * Fetch the user profile and store it in the cache.
