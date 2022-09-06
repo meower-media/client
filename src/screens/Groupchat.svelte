@@ -1,5 +1,5 @@
 <!--
-	The home page!
+	The groupchat page!
 	It features live post updates and a load more button which is pretty nice.
 -->
 
