@@ -224,7 +224,7 @@
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button on:click|preventDefault={()=>{
+					<button type="button" on:click|preventDefault={()=>{
 						page.set("welcome");
 						loginStatus = "";
 						return false;
