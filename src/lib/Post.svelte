@@ -5,11 +5,14 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
-	import {profileData, profileClicked, user, ulist, mainPage as page} from "../lib/stores.js";
+	import {profileData, profileClicked, user, chatid, ulist, mainPage as page} from "../lib/stores.js";
+	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
 	export let post = {};
+
+	// TODO: make bridged tag a setting
 
 	/**
 	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
@@ -18,13 +21,40 @@
 		if (!post.user) return;
 		if (!($user.name)) return;
 
-		const userName = post.user;
+		var userName = ""
+		if (post.user == "Discord" && post.content.includes(":")) {
+			post.user = post.content.split(": ")[0];
+			post.content = post.content.slice(post.content.indexOf(": ")+1);
+		}
+		
+		userName = post.user;
 
 		/**
 		 * Fetch the user profile and store it in the cache.
 		 */
 		const getProfile = () => {
 			let _profileData = $profileData;
+
+			if (userName === "Notification") {
+				_profileData[userName] = {
+					pfp_data: 101
+				}
+				profileData.set(_profileData);
+				return;
+			} else if (userName === "Announcement") {
+				_profileData[userName] = {
+					pfp_data: 102
+				}
+				profileData.set(_profileData);
+				return;
+			} else if (userName === "Server") {
+				_profileData[userName] = {
+					pfp_data: 102
+				}
+				profileData.set(_profileData);
+				return;
+			}
+
 			_profileData[userName] = {
 				pfp_data: -1,
 			};
@@ -69,19 +99,58 @@
 
 <Container>
 	<div class="post-header">
+		<div class="settings-controls">
+			{#if $user.name && $chatid !== "livechat" && post.user !== "Server"}	
+			{#if $user.lvl >= 1 || post.user === $user.name}
+			<button
+				class="circle close"
+				on:click={()=>{
+					if (shiftHeld || confirm("Are you sure you want to delete this post?")) {
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "delete_post",
+								val: post.post_id,
+							},
+						});
+					}
+				}}
+			></button>
+			{:else}
+			<button
+				class="circle report"
+				on:click={()=>{
+					if (confirm("Are you sure you want to report this post?")) {
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "report",
+								val: {
+									type: 0,
+									id: post.post_id,
+								},
+							},
+						});
+					}
+				}}
+			></button>
+			{/if}
+			{/if}
+		</div>
 		<button 
 			class="pfp" 
 			on:click={()=>{
+				if (post.user === "Notification" || post.user === "Announcement") return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
 			<PFP
-				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -1}
+				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
 				alt="{post.user}'s profile picture"
 				online={$ulist.includes(post.user)}
 			></PFP>
-		</button>
+		</button>	
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
 			<FormattedDate date={post.date}></FormattedDate>
@@ -113,12 +182,20 @@
 		font-size: 200%;
 		margin: 0;
 	}
-
 	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
 	}
-	
 	.post-content {
 		white-space: pre-wrap;
+	}
+	.settings-controls {
+		position: absolute;
+		top: 0.25em;
+		right: 0.25em;
+	}
+	button.circle {
+		border: none;
+		margin: 0;
+		margin-left: 0.125em;
 	}
 </style>
