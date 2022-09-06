@@ -35,6 +35,11 @@ let disconnectEvent = null;
  */
 let ulistEvent = null;
 /**
+ * A variable used to keep track of new inbox messages.
+ * @type any
+ */
+ let inboxMessageEvent = null;
+/**
  * A variable used to keep track of any disconnection requests.
  * @type any
  */
@@ -62,6 +67,10 @@ export async function connect() {
 	if (ulistEvent) {
 		link.off(ulistEvent);
 		ulistEvent = null;
+	}
+	if (inboxMessageEvent) {
+		link.off(inboxMessageEvent);
+		inboxMessageEvent = null;
 	}
 	if (disconnectRequest) {
 		link.off(disconnectRequest);
@@ -96,6 +105,12 @@ export async function connect() {
 				_ulist.pop();
 			}
 			ulist.set(_ulist);
+		});
+		inboxMessageEvent = link.on("direct", cmd => {
+			if (cmd.val.mode == "inbox_message") {
+				_user.unread_inbox = true;
+				user.set(_user);
+			}
 		});
 		disconnectRequest = link.on("direct", cmd => {
 			if (cmd.val == "E:018 | Account Banned" || cmd.val == "E:020 | Kicked" || cmd.val == "E:110 | ID conflict" || cmd.val == "E:119 | IP Blocked") {
@@ -197,6 +212,7 @@ export async function updateProfile() {
 		val: {
 			cmd: "update_config",
 			val: {
+				unread_inbox: profile.unread_inbox,
 				theme: profile.theme,
 				mode: profile.mode,
 				sfx: profile.sfx,

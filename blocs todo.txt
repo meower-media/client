@@ -1,6 +1,4 @@
 do:
-- inbox/announcements
-- group chats
 - bridged tag
 
 

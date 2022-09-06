@@ -12,7 +12,9 @@ export const setupPage = writable("logo");
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
 
-export const chatid_stor = writable("")
+// Current chat ID
+export const chatName = writable("");
+export const chatid = writable("");
 
 // Cached profiles
 export const profileData = writable({});
@@ -23,9 +25,17 @@ export const ulist = writable([]);
 // Last profile clicked
 export const profileClicked = writable("");
 
+// Whether the profile picture is being edited
+export const pfpSwitcher = writable(false);
+
+// Current auth header
+export const auth_header = writable({});
+
 // The current user profile
 export const user = writable({
 	name: null,
+	lvl: 0,
+	unread_inbox: false,
 	theme: "orange",
 	mode: true,
 	sfx: true,

@@ -2,8 +2,9 @@
 <script>
 	import {
 		ulist,
-		profileClicked, profileData, user,
+		profileClicked, profileData, user, pfpSwitcher,
 		screen, setupPage,
+		mainPage as page
 	} from "../lib/stores.js";
 	
     import PFP from "../lib/PFP.svelte";
@@ -15,6 +16,9 @@
 	import {tick} from "svelte";
 	
 	const pfps = new Array(28).fill().map((_,i) => i+1);
+
+	// Update pfpSwitcher
+	pfpSwitcher.set(false);
 
 	/**
 	 * Saves the user profile, and also clears its cache entry.
@@ -66,14 +70,15 @@
 				</div>
 			</div>
 		</Container>
-		{#if $profileClicked === $user.name}
+
+		{#if $pfpSwitcher}
 			<Container>
 				<h2>Profile Picture</h2>
 				<div id="pfp-list">
 					{#each pfps as pfp}
 						<span
 							on:click={() => {
-								if ($user.pfp_data === pfp) return;
+								pfpSwitcher.set(false);
 								$user.pfp_data = pfp;
 								save();
 							}}
@@ -87,25 +92,49 @@
 					{/each}
 				</div>
 			</Container>
-		{/if}
-		{#if $profileClicked !== $user.name}
+		{:else if $profileClicked === $user.name}
 			<button
 				class="long"
-				title="Coming soon?"
-				disabled
-			>Report User</button>
+				title="Change Profile Picture"
+				on:click={() => pfpSwitcher.set(true)}
+			>Change Profile Picture</button>
 		{/if}
+
 		<button
 			class="long"
-			title="Coming soon?"
-			disabled
+			title="View Recet Posts"
+			on:click={()=>{
+				window.scrollTo(0,0);
+				page.set("blank");
+				tick().then(() => page.set("recent"));
+			}}
 		>View recent posts</button>
+
 		{#if $profileClicked !== $user.name}
 			<button
 				class="long"
 				title="Coming soon?"
 				disabled
 			>Add to chat</button>
+
+			<button
+				class="long"
+				title="Report User"
+				on:click={()=>{
+					if (confirm("Are you sure you want to report this user?")) {
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "report",
+								val: {
+									type: 1,
+									id: $profileClicked,
+								},
+							},
+						});
+					}
+				}}
+			>Report User</button>
 		{/if}
 	{:catch e}
 		<Container>
