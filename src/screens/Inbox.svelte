@@ -1,6 +1,6 @@
 <!--
-	The home page!
-	It features live post updates and a load more button which is pretty nice.
+	The inbox page!
+	It features messages sent to the user's inbox.
 -->
 
 <script>
@@ -132,7 +132,7 @@
 			Here are your latest inbox messages. We will send announcements and moderator messages to here!
 		</Container>
 		{#if posts.length < 1}
-			No posts here. Check back later!
+			No messages yet. Check back later!
 		{:else}
 			{#each posts as post (post.id)}
 				<div
