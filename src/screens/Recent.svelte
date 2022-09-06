@@ -1,6 +1,6 @@
 <!--
-	The home page!
-	It features live post updates and a load more button which is pretty nice.
+	The recent posts page!
+	It features a user's recent posts.
 -->
 
 <script>
