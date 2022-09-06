@@ -38,6 +38,8 @@
 			<Settings />
 		{:else if $page === "groupcat"}
 			<Groupcat />
+		{:else if $page === "groupchat"}
+			<Groupchat />
 		{:else if $page === "blank"}
 			<div></div>
 		{:else}

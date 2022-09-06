@@ -172,6 +172,10 @@ button.report {
 	background-image: url("./report.svg");
     background-size: 50%;
 }
+button.leave {
+	background-image: url("./leave_chat.svg");
+    background-size: 50%;
+}
 button.join {
 	background-image: url("./chat_join.svg");
     background-size: 50%;

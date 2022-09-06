@@ -25,6 +25,7 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import groupcat from "../assets/meowy.svg";
+	import gc from "../assets/chat.svg"
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
@@ -113,6 +114,15 @@
 			<img
 				src={settings}
 				alt="Settings"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+		<button on:click={()=>goto("groupchat")} class="gc-btn round">
+			<img
+				src={gc}
+				alt="Group Chats"
 				width="90%"
 				height="auto"
 				draggable={false}
