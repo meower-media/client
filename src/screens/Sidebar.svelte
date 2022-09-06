@@ -87,7 +87,6 @@
 	</Button>
 	<Button style="round" on:click={async () => {
 		screen.set("setup");
-		await tick();
 		setupPage.set("reconnect");
 	}}>
 		<img

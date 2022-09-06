@@ -5,6 +5,7 @@
 import Cloudlink from "./cloudlink.js";
 import {ulist, user, spinner, disconnected, disconnectReason} from "../stores.js";
 import unloadedProfile from "../constants/unloadedprofile.js";
+import {play} from "../audio/sfx.js";
 import {linkUrl} from "../constants/urls.js";
 
 let _user = null;
@@ -87,6 +88,7 @@ export async function connect() {
 		disconnectEvent = link.on("disconnected", (e) => {
 			ulist.set([]);
 			if (e.reason !== "Intentional disconnect") {
+				play("deny");
 				/*
 					If the disconnect reason is an Error, it means
 					there was an error when connecting -

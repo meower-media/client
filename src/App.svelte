@@ -25,10 +25,6 @@
 	} from "./lib/stores.js";
 	
 	import {tick} from "svelte";
-
-	function errorSound() {
-		play("deny");
-	}
 </script>
 
 <main
@@ -50,7 +46,6 @@
 	{#if $disconnected}
 		<div class="disconnected">
 			<div class="disconnected-inner">
-				{errorSound() || ""}
 				{#if $disconnectReason === ""}
 					<img
 						src={comLost}
