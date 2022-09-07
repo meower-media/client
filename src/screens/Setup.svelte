@@ -1,7 +1,7 @@
 <!-- Boring orange screen with login and signup. -->
 
 <script>
-	import {screen, setupPage as page, user} from "../lib/stores.js";
+	import {screen, setupPage as page, auth_header, user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	import unloadedProfile from "../lib/unloadedprofile.js";
 	const link = clm.link;
@@ -98,7 +98,8 @@
 						...profileVal.payload,
 						name: val.payload.username,
 					}));
-					
+					auth_header.set({username: val.payload.username, token: val.payload.token});
+
 					if (rememberMe) {
 						localStorage.setItem("meower_savedusername", username);
 						localStorage.setItem("meower_savedpassword", val.payload.token);
@@ -186,7 +187,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.2.0
+						Meower Svelte v1.3.0
 					</p>
 					<img
 						src={meowy}
@@ -222,19 +223,14 @@
 					</label>
 				</p>
 				<span class="login-status">{loginStatus}</span>
-				<div class="buttons"> 
-					<button>Log in</button><button on:click|preventDefault={()=>{
+				<div class="buttons">
+					<button type="button" on:click|preventDefault={()=>{
 						page.set("welcome");
 						loginStatus = "";
 						return false;
 					}}>Go back</button>
+					<button type="submit">Log in</button>
 				</div>
-				<button on:click|preventDefault={()=>{
-					localStorage.removeItem("meower_savedusername");
-					localStorage.removeItem("meower_savedpassword");
-					loginStatus = "Saved login cleared.";
-					return false;
-				}}>Clear saved login</button>
 			</form>
 		</div>
 	{:else if $page === "join"}
@@ -317,17 +313,18 @@
 					<input id="accept-terms" type="checkbox" bind:checked={acceptTerms}>
 					<label for="accept-terms">
 						I agree to <a
-							href="https://meower.org/legal"
+							href="https://meower.org/legal" target="_blank"
 						>Meower's Terms of Service and Privacy Policy</a>
 					</label>
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button disabled={!acceptTerms}>Join!</button><button on:click|preventDefault={()=>{
+					<button type="button" on:click|preventDefault={()=>{
 						page.set("welcome");
 						loginStatus = "";
 						return false;
 					}}>Go back</button>
+					<button type="submit" disabled={!acceptTerms}>Join!</button>
 				</div>
 			</form>
 		</div>

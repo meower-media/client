@@ -158,12 +158,31 @@ button.circle, input[type="checkbox"] {
 	background-repeat: no-repeat;
 }
 input[type="checkbox"] {
-	appearance: none;
-
 	background-image: url("./off.svg");
+    appearance: none;
 }
 button.settings {
 	background-image: url("./settings.svg");
+}
+button.plus {
+	background-image: url("./plus.svg");
+    background-size: 50%;
+}
+button.close {
+	background-image: url("./close.svg");
+    background-size: 50%;
+}
+button.report {
+	background-image: url("./report.svg");
+    background-size: 50%;
+}
+button.join {
+	background-image: url("./chat_join.svg");
+    background-size: 50%;
+}
+button.profile {
+	background-image: url("./profile.svg");
+    background-size: 50%;
 }
 input[type="checkbox"]:hover:not(:active),
 button.circle:hover:not(:active) {
