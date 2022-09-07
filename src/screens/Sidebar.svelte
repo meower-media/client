@@ -18,7 +18,6 @@
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
-	import gc from "../assets/chat.svg";
 	import mail from "../assets/mail.svg";
 	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
@@ -114,15 +113,6 @@
 			<img
 				src={settings}
 				alt="Settings"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={()=>goto("groupchat")} class="gc-btn round">
-			<img
-				src={gc}
-				alt="Group Chats"
 				width="90%"
 				height="auto"
 				draggable={false}

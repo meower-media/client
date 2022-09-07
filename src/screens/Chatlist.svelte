@@ -27,6 +27,11 @@
 	 * 
 	 * @param {number} [page] The page to load. If not present, simply clears the chats.
 	 */
+	function reloadchat() {
+		loadPage(undefined)
+		loadPage(0)
+	}
+
 	async function loadPage(page) {
 		pageLoading = true;
 		if (page === undefined) {
@@ -88,6 +93,11 @@
 			<h1>Chats</h1>
 			Here are your chats. Press the chat button to enter a chat.
 		</Container>
+		<button class="longboi" on:click = {()=>{
+			reloadchat()
+		}}>Reload Chats</button>
+		<br>
+		<br>
 		<Container>
 			<div class="settings-controls">
 				<button
@@ -171,6 +181,9 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 1.88em;
+	}
+	.longboi {
+		width: 100%;
 	}
 	.fullcenter {
 		text-align: center;
