@@ -272,6 +272,7 @@
 								...profileVal.payload,
 								name: val.payload.username,
 							}));
+							auth_header.set({username: val.payload.username, token: val.payload.token});
 
 							loginStatus = "";
 							
