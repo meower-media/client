@@ -1,14 +1,15 @@
 <!--
-	The home page!
+	The groupchat page!
 	It features live post updates and a load more button which is pretty nice.
 -->
 
 <script>
-	import {user, ulist, spinner, mainPage as page} from "../lib/stores.js";
-	import {playNotification} from "../lib/sounds.js";
+	import {auth_header, user, chatName, chatid, ulist, spinner, mainPage as page} from "../lib/stores.js";
+    import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
+    import * as clm from "../lib/clmanager.js";
 	import {link} from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
@@ -34,6 +35,19 @@
 	 * @returns {Promise<array>} The posts array.
 	 */
 	async function loadPage(page) {
+        if ($chatid === "livechat") {
+            clm.meowerRequest({
+                cmd: "direct",
+                val: {
+                    cmd: "set_chat_state",
+                    val: {
+                        state: 1,
+                        chatid: $chatid
+                    },
+                }
+            });
+            return;
+        }
 		pageLoading = true;
 		if (page === undefined) {
 			posts = [];
@@ -43,10 +57,11 @@
 			let realOffset = postOffset % 25;
 
 			try {
-				let path = `home?autoget&page=`;
+				let path = `posts/${$chatid}?autoget&page=`;
 				if (encodeApiURLParams) path = encodeURIComponent(path);
 				const resp = await fetch(
-					`${apiUrl}${path}${realPage}`
+					`${apiUrl}${path}${realPage}`,
+					{headers: $auth_header}
 				);
 				if (!resp.ok) {
 					throw new Error("Response code is not OK; code is " + resp.status);
@@ -90,6 +105,16 @@
 				throw e;
 			}
 		}
+        clm.meowerRequest({
+            cmd: "direct",
+            val: {
+                cmd: "set_chat_state",
+                val: {
+                    state: 1,
+                    chatid: $chatid
+                },
+            }
+        });
 		posts = posts;
 		pageLoading = false;
 		return posts;
@@ -113,8 +138,8 @@
 	 */
 	function listenOnLink() {
 		link.on("direct", cmd => {
-			if ($page === "home" && cmd.val.mode === 1) {
-				if (!(cmd.val.post_origin === "home")) return;
+			if ($page === "groupchat" && cmd.val.state === 2) {
+				if (!(cmd.val.post_origin === $chatid)) return;
 				addPost({
 					post_id: cmd.val._id,
 					user: cmd.val.u,
@@ -123,10 +148,28 @@
 				});
 				postOffset++;
 				posts = posts;
-				if ($user.sfx && cmd.val.u !== $user.name) {
+                if ($user.sfx && cmd.val.u !== $user.name) {
 					playNotification();
 				}
 			}
+            if ($page === "groupchat" && cmd.val.state === 0) {
+                if (!(cmd.val.chatid === $chatid)) return;
+                addPost({
+					post_id: id++,
+					user: "Server",
+					content: `${cmd.val.u} left ${$chatName}.`,
+					date: new Date().getTime()/1000,
+				});
+            }
+            if ($page === "groupchat" && cmd.val.state === 1) {
+                if (!(cmd.val.chatid === $chatid)) return;
+                addPost({
+					post_id: id++,
+					user: "Server",
+					content: `${cmd.val.u} joined ${$chatName}!`,
+					date: new Date().getTime()/1000,
+				});
+            }
 			if (cmd.val.mode === "delete") {
 				posts = posts.filter(post => post.post_id !== cmd.val.id);
 			}
@@ -144,18 +187,18 @@
 	})
 </script>
 
-<div class="home">
+<div class="posts">
 	{#await loadPage(1)}
 		<div class="fullcenter">
 			<Loading />
 		</div>
 	{:then}
 		<Container>
-			<h1>Home</h1>
-			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
+			<h1>{$chatName}</h1>
+            Chat ID: {$chatid}
 		</Container>
 		{#if $user.name}
-			<form 
+			<form
 				class="createpost"
 				on:submit|preventDefault={e => {					
 					postErrors = "";
@@ -169,13 +212,16 @@
 					link.send({
 						cmd: "direct",
 						val: {
-							cmd: "post_home",
-							val: e.target[0].value,
+							cmd: "post_chat",
+							val: {
+								p: e.target[0].value,
+								chatid: $chatid,
+							},
 						},
-						listener: "post_home",
+						listener: "post_chat",
 					});
 					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_home") return;
+						if (cmd.listener !== "post_chat") return;
 						link.off(postListener);
 						spinner.set(false);
 
@@ -194,10 +240,10 @@
 					type="text"
 					class="white"
 					placeholder="Write something..."
-				        id="postinput"
-				        name="postinput"
+						id="postinput"
+						name="postinput"
 					autocomplete="false"
-					maxlength="250"
+					maxlength="360"
 				>
 				<button>Post</button>
 			</form>
@@ -235,7 +281,7 @@
 		</div>
 	{:catch error}
 		<Container>
-			<h1>Home</h1>
+			<h1>{chatName}</h1>
 			Error loading posts. Please try again.
 			<pre><code>{error}</code></pre>
 		</Container>
@@ -251,7 +297,7 @@
 		flex-grow: 1;
 		margin-right: 0.25em;
 	}
-	.home {
+	.posts {
 		height: 100%;
 	}
 	.center {

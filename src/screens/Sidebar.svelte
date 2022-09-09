@@ -8,21 +8,43 @@
 		screen,
 		user,
 		profileClicked,
+		chatid
 	} from "../lib/stores.js";
+	import {shiftHeld} from "../lib/keyDetect.js";
 	
+	import * as clm from "../lib/clmanager.js";
+
 	import {tick} from "svelte";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
+	import gc from "../assets/chat.svg";
+	import mail from "../assets/mail.svg";
+	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
-	import groupcat from "../assets/meowy.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
-	function goto(newPage) {
+	function goto(newPage, resetScroll=true) {
+		if (resetScroll) {
+			window.scrollTo(0,0);
+		}
+		if ($page === "groupchat") {
+			clm.meowerRequest({
+				cmd: "direct",
+				val: {
+					cmd: "set_chat_state",
+					val: {
+						state: 0,
+						chatid: $chatid
+					},
+				}
+			});
+		}
+		chatid.set("");
 		page.set("blank");
 		tick().then(() => page.set(newPage));
 	}
@@ -50,6 +72,30 @@
 		/>
 	</button>
 	{#if $user.name}
+		<button on:click={()=>goto("inbox")} class="gc-btn round">
+			<img
+				src={$user.unread_inbox ? mail_new : mail}
+				alt="Inbox Messages"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+		<button on:click={()=>{
+			if (shiftHeld) {
+				goto("groupcat");
+			} else {
+				goto("chatlist");
+			}
+		}} class="gc-btn round">
+			<img
+				src={gc}
+				alt="Group Chats"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
 		<button on:click={() => {
 			$profileClicked = $user.name;
 			goto("profile");
@@ -72,16 +118,9 @@
 			/>
 		</button>
 	{/if}
-	<button on:click={()=>goto("groupcat")} class="groupcat-btn round">
-		<img
-			src={groupcat}
-			alt="Group cat"
-			width="90%"
-			height="auto"
-			draggable={false}
-		/>
-	</button>
 	<button on:click={async () => {
+		localStorage.removeItem("meower_savedusername");
+		localStorage.removeItem("meower_savedpassword");
 		screen.set("setup");
 		await tick();
 		setupPage.set("reconnect");
