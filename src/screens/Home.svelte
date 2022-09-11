@@ -157,7 +157,7 @@
 		{#if $user.name}
 			<form 
 				class="createpost"
-				on:submit|preventDefault={e => {		
+				on:submit|preventDefault={e => {					
 					postErrors = "";
 					if (!e.target[0].value.trim()) {
 						postErrors = "You cannot send an empty post!";
@@ -166,6 +166,7 @@
 
 					spinner.set(true);
 
+					e.target[1].disabled = true;
 					link.send({
 						cmd: "direct",
 						val: {
@@ -178,6 +179,8 @@
 						if (cmd.listener !== "post_home") return;
 						link.off(postListener);
 						spinner.set(false);
+
+						e.target[1].disabled = false;
 
 						if (cmd.val === "I:100 | OK") {
 							e.target[0].value = "";
