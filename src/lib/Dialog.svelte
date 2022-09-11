@@ -1,3 +1,8 @@
+<!--
+    A Half working dialog UI
+    For literally any "Are you sure?" in Meower
+-->
+
 <script>
     import { getContext } from 'svelte';
     export let message;

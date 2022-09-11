@@ -1,4 +1,7 @@
-<!-- MEOW -->
+<!-- 
+    MEOW VERSION 1.0 
+    Literally The script that generates the group cat page (minus the text) 
+-->
 
 <script>
     import meowy from "../assets/meowy.svg";

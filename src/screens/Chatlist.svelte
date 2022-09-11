@@ -1,5 +1,5 @@
 <script>
-	import {chatName, chatid, mainPage as page} from "../lib/stores.js";
+	import {chatName, chatid, mainPage as page, chatMembers} from "../lib/stores.js";
 
     import {shiftHeld} from "../lib/keyDetect.js";
 	import Container from "../lib/Container.svelte";
@@ -90,7 +90,18 @@
 			<div class="settings-controls">
 				<button
 					class="circle plus"
-					disabled
+					on:click = {()=>{
+						clm.meowerRequest({
+							cmd:"direct",
+							val:{
+								cmd:"create_chat", 
+								val:"hidden"
+							}
+						});
+						window.scrollTo(0,0);
+						page.set("blank");
+						tick().then(() => page.set("chatlist"));
+					}}
 				></button>
 			</div>
 		</Container>
