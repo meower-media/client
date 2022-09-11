@@ -41,9 +41,8 @@ input[type="text"],
 input[type="password"],
 textarea {
     border: solid 2px var(--foreground-orange);
-    border-radius: 11px;
+    border-radius: 1px;
     outline: none;
-	filter: drop-shadow(0px 4px 0px #B48739);
 
     background-color: var(--orange);
     color: var(--foreground-orange);
@@ -57,7 +56,6 @@ textarea {
 }
 button + button {
 	margin-left: -0.15rem;
-	filter: drop-shadow(0px 4px 0px #B48739);
 }
 input:not(.white)::placeholder {
 	color: var(--foreground-orange);
@@ -126,7 +124,6 @@ button:not(.circle).white:active {
 textarea {
     resize: vertical;
     font-family: inherit;
-filter: drop-shadow(0px 4px 0px #B48739);	
 }
 
 h1, h2, h3, h4, h5, h6 {
