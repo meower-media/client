@@ -157,7 +157,7 @@
 		{#if $user.name}
 			<form 
 				class="createpost"
-				on:submit|preventDefault={e => {					
+				on:submit|preventDefault={e => {		
 					postErrors = "";
 					if (!e.target[0].value.trim()) {
 						postErrors = "You cannot send an empty post!";
