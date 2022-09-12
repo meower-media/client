@@ -277,7 +277,6 @@
 		top: 0;
 		left: 0;
 	}
-
 	.post-errors {
 		color: red;
 		font-size: 75%;

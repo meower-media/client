@@ -5,7 +5,7 @@
 
 	import Container from "../lib/Container.svelte";
 
-	import {user, screen, setupPage} from "../lib/stores.js";
+	import {user, screen, setupPage, modalShown, modalPage} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 
 	let delete1 = false, delete2 = false, delete3 = false, delete4 = false, delete5 = false;
@@ -66,7 +66,7 @@
 	</form>
 -->
 <Container>
-	<h1>Account Settings</h1>
+	<h1>Settings</h1>
 	You can change your settings here. These will save to your account, so they will carry over into other clients.
 </Container>
 <Container>
@@ -137,13 +137,17 @@
 	</div>
 
 	<h2>Sound Effects</h2>
-	Sound effects are currently {$user.sfx ? "disabled" : "enabled"}.
+	Sound effects are currently {!$user.sfx ? "disabled" : "enabled"}.
 </Container>
+{#if $user.name}
 <Container>
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={change_pswd}
+			on:click={() => {
+				$modalPage = "changePassword";
+				$modalShown = true;
+			}}
 		></button>
 	</div>
 
@@ -182,6 +186,7 @@
 	<h2>Delete Account</h2>
 	THIS CANNOT BE UNDONE. Enable all the switches to delete your account, if you are really sure.
 </Container>
+{/if}
 
 <div class="eee"></div>
 

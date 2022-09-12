@@ -3,7 +3,6 @@
 	import {
 		ulist,
 		profileClicked, profileData, user,
-		screen, setupPage,
 		mainPage as page
 	} from "../lib/stores.js";
 	
@@ -14,9 +13,23 @@
     import {levels} from "../lib/formatting.js";
 
 	import {tick} from "svelte";
+	import {apiUrl, encodeApiURLParams} from "../lib/urls";
 	
 	const pfps = new Array(28).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
+
+	async function loadProfile() {
+		let path = `users/${$profileClicked}`;
+		if (encodeApiURLParams) path = encodeURIComponent(path);
+		const resp = await fetch(
+			`${apiUrl}${path}`
+		);
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
+		}
+		const json = await resp.json();
+		return json;
+	}
 
 	/**
 	 * Saves the user profile, and also clears its cache entry.
@@ -33,37 +46,29 @@
 </script>
 
 <div class="OtherProfile">
-	{#await
-		clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "get_profile",
-				val: $profileClicked,
-			},
-		})
-	}
-		<div class="fullcenter">
-			<Loading />
-		</div>
-	{:then data}
+{#await loadProfile()}
+	<div class="fullcenter">
+		<Loading />
+	</div>
+{:then data}
 		<Container>
 			<div class="profile-header">
 				<PFP
-					online={$ulist.includes(data.payload._id)}
+					online={$ulist.includes(data._id)}
 					icon={
 						$profileClicked === $user.name ?
-							$user.pfp_data : data.payload.pfp_data
+							$user.pfp_data : data.pfp_data
 					}
-					alt="{data.payload.name}'s profile picture"
+					alt="{data._id}'s profile picture"
 					big={true}
 				></PFP>
 				<div class="profile-header-info">
-					<h1 class="profile-username">{data.payload._id}</h1>
+					<h1 class="profile-username">{data._id}</h1>
 					<div class="profile-active">{
-						$ulist.includes(data.payload._id) ? "Online" : "Offline"
+						$ulist.includes(data._id) ? "Online" : "Offline"
 					}</div>
 					<div class="profile-role">
-						{levels[data.payload.lvl] || "Unknown"}
+						{levels[data.lvl] || "Unknown"}
 					</div>
 				</div>
 			</div>
@@ -108,7 +113,7 @@
 			}}
 		>View recent posts</button>
 
-		{#if $profileClicked !== $user.name}
+		{#if $user.name && $profileClicked !== $user.name}
 			<button
 				class="long"
 				title="Moved to GC member management"
@@ -152,32 +157,15 @@
 				</div>
 			</div>
 		</Container>
-		{#if e === "E:115 | Refused" && !$user.name}
-			<Container>
-				<h2>Error</h2>
-				<div>
-					Unfortunately, we cannot get profile info without being logged in.
-					<a
-						href="."
-						on:click|preventDefault={async () => {
-							screen.set("setup");
-							await tick();
-							setupPage.set("reconnect");
-						}}
-					>Try logging in.</a>
-				</div>
-			</Container>
-		{:else}
-			<Container>
-				<h2>Error</h2>
-				We couldn't get this user's profile info.
-				<pre><code>{e}</code></pre>
-				Try again. If this issue persists,
-				<a
-					href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
-				>create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
-			</Container>
-		{/if}
+		<Container>
+			<h2>Error</h2>
+			We couldn't get this user's profile info.
+			<pre><code>{e}</code></pre>
+			Try again. If this issue persists,
+			<a
+				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
+			>create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
+		</Container>
 	{/await}
 </div>
 

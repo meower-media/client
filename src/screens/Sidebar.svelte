@@ -8,7 +8,9 @@
 		screen,
 		user,
 		profileClicked,
-		chatid
+		chatid,
+		modalShown,
+		modalPage
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	
@@ -29,6 +31,11 @@
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
 	function goto(newPage, resetScroll=true) {
+		if (!$user.name && newPage !== "home" && newPage !== "settings") {
+			modalPage.set("signup");
+			modalShown.set(true);
+			return;
+		}
 		if (resetScroll) {
 			window.scrollTo(0,0);
 		}
@@ -71,56 +78,56 @@
 			draggable={false}
 		/>
 	</button>
-	{#if $user.name}
-		<button on:click={()=>goto("inbox")} class="gc-btn round">
-			<img
-				src={$user.unread_inbox ? mail_new : mail}
-				alt="Inbox Messages"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={()=>{
-			if (shiftHeld) {
-				goto("groupcat");
-			} else {
-				goto("chatlist");
-			}
-		}} class="gc-btn round">
-			<img
-				src={gc}
-				alt="Group Chats"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={() => {
-			$profileClicked = $user.name;
-			goto("profile");
-		}} class="profile-btn round">
-			<img
-				src={profile}
-				alt="Profile"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={()=>goto("settings")} class="settings-btn round">
-			<img
-				src={settings}
-				alt="Settings"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-	{/if}
+	<button on:click={()=>goto("inbox")} class="gc-btn round">
+		<img
+			src={$user.unread_inbox ? mail_new : mail}
+			alt="Inbox Messages"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>{
+		if (shiftHeld) {
+			goto("groupcat");
+		} else {
+			goto("chatlist");
+		}
+	}} class="gc-btn round">
+		<img
+			src={gc}
+			alt="Group Chats"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={() => {
+		$profileClicked = $user.name;
+		goto("profile");
+	}} class="profile-btn round">
+		<img
+			src={profile}
+			alt="Profile"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("settings")} class="settings-btn round">
+		<img
+			src={settings}
+			alt="Settings"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
 	<button on:click={async () => {
-		localStorage.removeItem("meower_savedusername");
-		localStorage.removeItem("meower_savedpassword");
+		if ($user.name === localStorage.getItem("meower_savedusername")) {
+			localStorage.removeItem("meower_savedusername");
+			localStorage.removeItem("meower_savedpassword");
+		}
 		screen.set("setup");
 		await tick();
 		setupPage.set("reconnect");

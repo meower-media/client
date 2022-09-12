@@ -8,6 +8,10 @@ export const screen = writable("setup");
 export const mainPage = writable("home");
 export const setupPage = writable("logo");
 
+// Used for modal overlay
+export const modalShown = writable(false);
+export const modalPage = writable("");
+
 // Used for the disconnected screen
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
@@ -25,11 +29,19 @@ export const profileData = writable({});
 // User list
 export const ulist = writable([]);
 
+// Last post clicked
+export const postClicked = writable({});
+
 // Last profile clicked
 export const profileClicked = writable("");
 
+
+// Last chat clicked
+export const chatClicked = writable("");
+
 // Last group chat profile clicked
 export const profileClicked_GC = writable("");
+
 
 // Current auth header
 export const auth_header = writable({});
@@ -43,7 +55,7 @@ export const user = writable({
 	mode: true,
 	sfx: true,
 	bgm: true,
-	bgm_song: 10,
+	bgm_song: 2,
 	layout: "new",
 	pfp_data: 1,
 	quote: "",
@@ -51,5 +63,4 @@ export const user = writable({
 
 export const spinner = writable(false);
 
-export const modal = writable(null);
 export const windowStyle = writable({});

@@ -227,9 +227,11 @@
 
 						spinner.set(true);
 
-						e.target[1].disabled = true;
-						link.send({
-							cmd: "direct",
+					e.target[1].disabled = true;
+					link.send({
+						cmd: "direct",
+						val: {
+							cmd: "post_chat",
 							val: {
 								cmd: "post_chat",
 								val: {
@@ -237,25 +239,35 @@
 									chatid: $chatid,
 								},
 							},
-							listener: "post_chat",
-						});
-						const postListener = link.on("statuscode", cmd => {
-							if (cmd.listener !== "post_chat") return;
-							link.off(postListener);
-							spinner.set(false);
+						},
+						listener: "post_chat",
+					});
+					const postListener = link.on("statuscode", cmd => {
+						if (cmd.listener !== "post_chat") return;
+						link.off(postListener);
+						spinner.set(false);
 
-							e.target[1].disabled = false;
+						e.target[1].disabled = false;
 
-							if (cmd.val === "I:100 | OK") {
-								e.target[0].value = "";
-							} else if (cmd.val === "E:106 | Too many requests") {
-								postErrors = "You're posting too fast!";
-							} else {
-								postErrors = "Unexpected " + cmd.val + " error!";
-							}
-						});
-						return false;
-					}}
+						if (cmd.val === "I:100 | OK") {
+							e.target[0].value = "";
+						} else if (cmd.val === "E:106 | Too many requests") {
+							postErrors = "You're posting too fast!";
+						} else {
+							postErrors = "Unexpected " + cmd.val + " error!";
+						}
+					});
+					return false;
+				}}
+			>
+				<input
+					type="text"
+					class="white"
+					placeholder="Write something..."
+						id="postinput"
+						name="postinput"
+					autocomplete="false"
+					maxlength="360"
 				>
 					<input
 						type="text"

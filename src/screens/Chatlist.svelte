@@ -1,7 +1,7 @@
 <script>
-	import {chatName, chatid, mainPage as page, chatMembers} from "../lib/stores.js";
+	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatClicked, chatMembers} from "../lib/stores.js";
 
-    import {shiftHeld} from "../lib/keyDetect.js";
+  import {shiftHeld} from "../lib/keyDetect.js";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
 	import * as clm from "../lib/clmanager.js";
@@ -91,21 +91,8 @@
 				<button
 					class="circle plus"
 					on:click = {()=>{
-						let cname = prompt("Please enter the name of your group chat", "Hidden");
-						if (cname == null || cname == "") {
-							return
-						} else {
-							clm.meowerRequest({
-								cmd:"direct",
-								val:{
-									cmd:"create_chat", 
-									val:cname
-								}
-							});
-							window.scrollTo(0,0);
-							page.set("blank");
-							tick().then(() => page.set("chatlist"));
-						}
+						modalPage.set("createChat");
+						modalShown.set(true);
 					}}
 				></button>
 			</div>
@@ -135,18 +122,11 @@
                 <Container>
                     <div class="settings-controls">
                         <button
-                            class="circle close"
+                            class="circle profile"
                             on:click = {()=>{
-                                if (shiftHeld || confirm(`Are you sure you want to leave ${chat.nickname}?`)) {
-                                    clm.meowerRequest({
-                                        cmd: "direct",
-                                        val: {
-                                            cmd: "leave_chat",
-                                            val: chat._id,
-                                        }
-                                    });
-                                    chats = chats.filter(chat1 => chat1._id !== chat._id);
-                                }
+								chatClicked.set(chat);
+								modalPage.set("chatMembers");
+								modalShown.set(true);
                             }}
                         ></button>
                         <button

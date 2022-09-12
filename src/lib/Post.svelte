@@ -5,12 +5,14 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
-	import {profileData, profileClicked, user, chatid, ulist, mainPage as page} from "../lib/stores.js";
+	import {profileData, profileClicked, postClicked, user, chatid, ulist, mainPage as page, modalShown, modalPage} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
+	import {apiUrl} from "./urls";
 	export let post = {};
+	export let buttons = true;
 
 	// TODO: make bridged tag a setting
 
@@ -19,7 +21,6 @@
 	 */
 	function initPostUser() {
 		if (!post.user) return;
-		if (!($user.name)) return;
 
 		var userName = ""
 		if (post.user == "Discord" && post.content.includes(":")) {
@@ -32,7 +33,7 @@
 		/**
 		 * Fetch the user profile and store it in the cache.
 		 */
-		const getProfile = () => {
+		const getProfile = async () => {
 			let _profileData = $profileData;
 
 			if (userName === "Notification") {
@@ -60,19 +61,16 @@
 			};
 			profileData.set(_profileData);
 
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "get_profile",
-					val: userName,
-				},
-				listener: "get_profile_" + userName,
-			}).then(val => {
+			fetch(`${apiUrl}/users/${userName}`)
+			.then((response) => response.json())
+			.then(response => {
 				// Ding dong! The data has arrived.
-				_profileData[userName] = val.payload;
+				_profileData[userName] = response;
+				console.log(response)
 				profileData.set(_profileData);
 			}).catch(e => {
 				// Uh oh - something has gone wrong.
+				console.log(e)
 				_profileData[userName] = {
 					error: true,
 					pfp_data: -2,
@@ -100,12 +98,12 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
-			{#if $user.name && $chatid !== "livechat" && post.user !== "Server"}	
+			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
 			{#if $user.lvl >= 1 || post.user === $user.name}
 			<button
 				class="circle close"
 				on:click={()=>{
-					if (shiftHeld || confirm("Are you sure you want to delete this post?")) {
+					if (shiftHeld) {
 						clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -113,34 +111,29 @@
 								val: post.post_id,
 							},
 						});
+						return;
 					}
+					postClicked.set(post);
+					modalPage.set("deletePost");
+					modalShown.set(true);
 				}}
 			></button>
 			{:else}
 			<button
 				class="circle report"
 				on:click={()=>{
-					if (confirm("Are you sure you want to report this post?")) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "report",
-								val: {
-									type: 0,
-									id: post.post_id,
-								},
-							},
-						});
-					}
+					postClicked.set(post);
+					modalPage.set("reportPost");
+					modalShown.set(true);
 				}}
 			></button>
 			{/if}
 			{/if}
 		</div>
-		<button 
+		<button
 			class="pfp" 
 			on:click={()=>{
-				if (post.user === "Notification" || post.user === "Announcement") return;
+				if (!buttons || post.user === "Notification" || post.user === "Announcement") return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
@@ -150,7 +143,7 @@
 				alt="{post.user}'s profile picture"
 				online={$ulist.includes(post.user)}
 			></PFP>
-		</button>	
+		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
 			<FormattedDate date={post.date}></FormattedDate>

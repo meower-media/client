@@ -3,12 +3,25 @@
 <script>
 	import Main from "./screens/Main.svelte";
 	import Setup from "./screens/Setup.svelte";
+	
+	import Modal from "./lib/Modal.svelte";
+	import LoginModal from "./lib/modals/Login.svelte";
+	import SignupModal from "./lib/modals/Signup.svelte";
+	import BannedModal from "./lib/modals/Banned.svelte";
+	import IPBannedModal from "./lib/modals/IPBanned.svelte";
+	import ReportPostModal from "./lib/modals/ReportPost.svelte";
+	import DeletePostModal from "./lib/modals/DeletePost.svelte";
+	import CreateChatModal from "./lib/modals/CreateChat.svelte";
+	import ChatMembersModal from "./lib/modals/ChatMembers.svelte";
+	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
+
 	import Spinner from "./lib/Spinner.svelte";
 	import {apiUrl} from "./lib/urls.js";
 	import {link} from "./lib/clmanager.js";
 
 	import {
 		screen, setupPage,
+		modalShown, modalPage,
 		disconnected, disconnectReason,
 		user, spinner
 	} from "./lib/stores.js";
@@ -24,60 +37,65 @@
 	class:layout-old={$user.layout === "old"}
 >
 	{#if $disconnected}
-		<div class="disconnected">
-			<div class="disconnected-inner">
-				<h1>Me-owch.</h1>
-				{#if $disconnectReason === ""}
-					You have been disconnected.
-					Reconnect using the below button:
-				{:else if $disconnectReason === "E:119 | IP Blocked"}
-					The server has blocked your IP address ({link.ip}).
-					<br />
-					This might be due to an extension blocking the URL used to get your IP
-					<br />
-					address ({apiUrl}ip), or the Meower team actually blocking your IP.
-					<br />
-					Attempt reconnecting using the below button:
-				{:else if $disconnectReason == "E:110 | ID conflict"}
-					There has been a hiccup! Looks like you logged into Meower from another device.
-					<br />
-					Please check any devices currently logged into Meower and try again.
-					<br />
-					Attempt reconnecting using the below button:
-				{:else if $disconnectReason == "E:018 | Account Banned"}
-					Your account has been banned by a moderator for recent activity.
-					<br />
-					If you think this is a mistake, please contact <a href="mailto:support@meower.org">support@meower.org</a>.
-					<br />
-					Attempt reconnecting using the below button:
-				{:else if $disconnectReason == "E:020 | Kicked"}
-					You have been kicked from Meower by a moderator :(
-					<br />
-					Attempt reconnecting using the below button:
-				{:else}
-					We ran into an error trying to connect to the server.
-					<pre><code>{$disconnectReason}</code></pre>
-					Reconnect using the below button:
-				{/if}
-				<br /><br />
-				<button 
-					on:click={async () => {
-						screen.set("setup");
-						disconnected.set(false);
-						await tick();
-						setupPage.set("reconnect");
-					}}
-				>
-					Reconnect!
-				</button>
+		<Modal>
+			<h2 slot="header">
+				Me-owch.
+			</h2>
+			<div slot="default">
+				<p>
+					{#if $disconnectReason === ""}
+						Something went wrong and the connection to Meower was lost.
+					{:else if $disconnectReason === "E:119 | IP Blocked"}
+						The server has blocked your IP address ({link.ip}).
+					{:else if $disconnectReason == "E:110 | ID conflict"}
+						There has been a hiccup! Looks like you logged into Meower from another device.
+						<br /><br />
+						Please check any devices currently logged into Meower and try again.
+					{:else if $disconnectReason == "E:018 | Account Banned"}
+						You have been banned by a moderator.
+					{:else if $disconnectReason == "E:020 | Kicked"}
+						You have been kicked by a moderator.
+					{:else}
+						We ran into an error trying to connect to the server.
+						<pre><code>{$disconnectReason}</code></pre>
+					{/if}
+				</p>
+				<button on:click={async () => {
+					screen.set("setup");
+					disconnected.set(false);
+					await tick();
+					setupPage.set("reconnect");
+				}}>Reconnect</button>
 			</div>
-		</div>
-	{:else}
-		{#if $screen === "setup"}
-			<Setup />
-		{:else}
-			<Main />
+		</Modal>
+	{/if}
+
+	{#if $modalShown}
+		{#if $modalPage === "login"}
+			<LoginModal />
+		{:else if $modalPage === "signup"}
+			<SignupModal />
+		{:else if $modalPage === "banned"}
+			<BannedModal />
+		{:else if $modalPage === "ipBanned"}
+			<IPBannedModal />
+		{:else if $modalPage === "reportPost"}
+			<ReportPostModal />
+		{:else if $modalPage === "deletePost"}
+			<DeletePostModal />
+		{:else if $modalPage === "createChat"}
+			<CreateChatModal />
+		{:else if $modalPage === "chatMembers"}
+			<ChatMembersModal />
+		{:else if $modalPage === "changePassword"}
+			<ChangePasswordModal />
 		{/if}
+	{/if}
+
+	{#if $screen === "setup"}
+		<Setup />
+	{:else}
+		<Main />
 	{/if}
 
 	{#if $spinner}
@@ -88,26 +106,6 @@
 </main>
 
 <style>
-	.disconnected {
-		background-color: var(--orange);
-		color: var(--foreground-orange);
-
-		width: 100%;
-		height: 100%;
-
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1000000;
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		text-align: center;
-		font-size: 150%;
-	}
-
 	.spinner-container {
 		position: fixed;
 		right: 27px;
