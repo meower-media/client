@@ -1,7 +1,7 @@
 <!-- Boring orange screen with login and signup. -->
 
 <script>
-	import {screen, setupPage as page, auth_header, user} from "../lib/stores.js";
+	import {screen, setupPage as page, modalShown, modalPage, auth_header, user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	import unloadedProfile from "../lib/unloadedprofile.js";
 	const link = clm.link;
@@ -111,20 +111,26 @@
 					loginStatus = "Unexpected " + e + " error getting user data!";
 				}
 			}).catch(code => {
-				if (code == "E:103 | ID not found") {
-					loginStatus = "Invalid username!";
-				} else if (code == "I:011 | Invalid Password") {
-					loginStatus = "Invalid password!";
-				} else if (code == "E:018 | Account Banned") {
-					loginStatus = "This account is banned. L :(";
-				} else if (code == "E:107 | Packet too large") {
-					loginStatus = "The username and/or password is too long!";
-				} else if (code == "E:019 | Illegal characters detected") {
-					loginStatus = "Usernames must not have spaces or other special characters!";
-				} else if (code == "E:106 | Too many requests") {
-					loginStatus = "Too many requests! Please try again later.";
-				} else {
-					loginStatus = `Unexpected ${code} error!`;
+				switch (code) {
+					case "E:103 | ID not found":
+						loginStatus = "Invalid username!";
+						break;
+					case "I:011 | Invalid Password":
+						loginStatus = "Invalid password!";
+						break;
+					case "E:018 | Account Banned":
+						$modalPage = "banned";
+						$modalShown = true;
+						loginStatus = "";
+						break;
+					case "E:019 | Illegal characters detected":
+						loginStatus = "Usernames must not have spaces or other special characters!";
+						break;
+					case "E:106 | Too many requests":
+						loginStatus = "Too many requests! Please try again later.";
+						break;
+					default:
+						loginStatus = `Unexpected ${code} error!`;
 				}
 			});
 		} catch(e) {
@@ -187,7 +193,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.3.0
+						Meower Svelte v1.4.0 Development
 					</p>
 					<img
 						src={meowy}
@@ -215,7 +221,7 @@
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72">
+				<input type="password" placeholder="Password" maxlength="64">
 				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
@@ -287,24 +293,33 @@
 						} else {
 							loginStatus = "Unexpected error logging in!";
 						}
-					}).catch(err => {
-						if (err === "I:015 | Account exists") {
-							loginStatus = "The account already exists!";
-						} else if (err == "E:107 | Packet too large") {
-							loginStatus = "The username and/or password is too long!";
-						} else if (err == "E:106 | Too many requests") {
-							loginStatus = "Too many requests! Please try again later.";
-						} else if (err == "E:119 | IP Blocked") {
-							loginStatus = "Your IP is blocked from creating accounts!";
-						} else {
-							console.error(err);
-							loginStatus = "Unexpected " + err + " error!";
+					}).catch(code => {
+						switch (code) {
+							case "I:015 | Account exists":
+								loginStatus = "That username already exists!";
+								break;
+							case "I:011 | Invalid Password":
+								loginStatus = "Invalid password!";
+								break;
+							case "E:119 | IP Blocked":
+								$modalPage = "ipBanned";
+								$modalShown = true;
+								loginStatus = "";
+								break;
+							case "E:019 | Illegal characters detected":
+								loginStatus = "Usernames must not have spaces or other special characters!";
+								break;
+							case "E:106 | Too many requests":
+								loginStatus = "Too many requests! Please try again later.";
+								break;
+							default:
+								loginStatus = `Unexpected ${code} error!`;
 						}
 					});
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72">
+				<input type="password" placeholder="Password" maxlength="64">
 				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">

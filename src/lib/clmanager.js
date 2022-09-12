@@ -93,7 +93,10 @@ export async function connect() {
 		disconnectEvent = link.on("disconnected", (e) => {
 			ulist.set([]);
 			if (e.reason !== "Intentional disconnect") disconnected.set(true);
-			user.set(unloadedProfile());
+			let tmp_unloaded = unloadedProfile();
+			tmp_unloaded.theme = _user.theme;
+			tmp_unloaded.mode = _user.mode;
+			user.set(tmp_unloaded);
 			if (pingInterval) {
 				clearInterval(pingInterval);
 				pingInterval = null;

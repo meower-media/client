@@ -1,5 +1,5 @@
 <script>
-	import {chatName, chatid, mainPage as page} from "../lib/stores.js";
+	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatClicked} from "../lib/stores.js";
 
     import {shiftHeld} from "../lib/keyDetect.js";
 	import Container from "../lib/Container.svelte";
@@ -90,7 +90,10 @@
 			<div class="settings-controls">
 				<button
 					class="circle plus"
-					disabled
+					on:click = {()=>{
+						modalPage.set("createChat");
+						modalShown.set(true);
+					}}
 				></button>
 			</div>
 		</Container>
@@ -119,18 +122,11 @@
                 <Container>
                     <div class="settings-controls">
                         <button
-                            class="circle close"
+                            class="circle profile"
                             on:click = {()=>{
-                                if (shiftHeld || confirm(`Are you sure you want to leave ${chat.nickname}?`)) {
-                                    clm.meowerRequest({
-                                        cmd: "direct",
-                                        val: {
-                                            cmd: "leave_chat",
-                                            val: chat._id,
-                                        }
-                                    });
-                                    chats = chats.filter(chat1 => chat1._id !== chat._id);
-                                }
+								chatClicked.set(chat);
+								modalPage.set("chatMembers");
+								modalShown.set(true);
                             }}
                         ></button>
                         <button

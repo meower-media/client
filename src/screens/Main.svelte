@@ -12,7 +12,7 @@
 
 	import Sidebar from "./Sidebar.svelte";
 
-	import {user, mainPage as page} from "../lib/stores.js";
+	import {mainPage as page} from "../lib/stores.js";
 
 	page.set("home");
 </script>
