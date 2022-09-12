@@ -20,6 +20,9 @@ export const disconnectReason = writable("");
 export const chatName = writable("");
 export const chatid = writable("");
 
+// Current chat Members
+export const chatMembers = writable("");
+
 // Cached profiles
 export const profileData = writable({});
 
@@ -32,8 +35,13 @@ export const postClicked = writable({});
 // Last profile clicked
 export const profileClicked = writable("");
 
+
 // Last chat clicked
 export const chatClicked = writable("");
+
+// Last group chat profile clicked
+export const profileClicked_GC = writable("");
+
 
 // Current auth header
 export const auth_header = writable({});

@@ -1,7 +1,7 @@
 <script>
-	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatClicked} from "../lib/stores.js";
+	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatClicked, chatMembers} from "../lib/stores.js";
 
-    import {shiftHeld} from "../lib/keyDetect.js";
+  import {shiftHeld} from "../lib/keyDetect.js";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
 	import * as clm from "../lib/clmanager.js";
@@ -134,6 +134,7 @@
                             on:click = {()=>{
 								chatName.set(chat.nickname);
 								chatid.set(chat._id);
+								chatMembers.set(chat.members)
                                 window.scrollTo(0,0);
 								page.set("blank");
 								tick().then(() => page.set("groupchat"));

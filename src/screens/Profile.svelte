@@ -116,7 +116,7 @@
 		{#if $user.name && $profileClicked !== $user.name}
 			<button
 				class="long"
-				title="Coming soon?"
+				title="Moved to GC member management"
 				disabled
 			>Add to chat</button>
 
