@@ -91,16 +91,21 @@
 				<button
 					class="circle plus"
 					on:click = {()=>{
-						clm.meowerRequest({
-							cmd:"direct",
-							val:{
-								cmd:"create_chat", 
-								val:"hidden"
-							}
-						});
-						window.scrollTo(0,0);
-						page.set("blank");
-						tick().then(() => page.set("chatlist"));
+						let cname = prompt("Please enter the name of your group chat", "Hidden");
+						if (cname == null || cname == "") {
+							return
+						} else {
+							clm.meowerRequest({
+								cmd:"direct",
+								val:{
+									cmd:"create_chat", 
+									val:cname
+								}
+							});
+							window.scrollTo(0,0);
+							page.set("blank");
+							tick().then(() => page.set("chatlist"));
+						}
 					}}
 				></button>
 			</div>
@@ -149,6 +154,7 @@
                             on:click = {()=>{
 								chatName.set(chat.nickname);
 								chatid.set(chat._id);
+								chatMembers.set(chat.members)
                                 window.scrollTo(0,0);
 								page.set("blank");
 								tick().then(() => page.set("groupchat"));

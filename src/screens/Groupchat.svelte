@@ -4,9 +4,10 @@
 -->
 
 <script>
-	import {auth_header, user, chatName, chatid, ulist, spinner, mainPage as page} from "../lib/stores.js";
+	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page} from "../lib/stores.js";
     import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
+	import Memberbutton from "../lib/Member.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
     import * as clm from "../lib/clmanager.js";
@@ -185,6 +186,22 @@
 	ulist.subscribe(val => {
 		_ulist = val;
 	})
+
+	function getpfp(userName) {
+		let pfpd = 0
+		clm.meowerRequest({
+			cmd: "direct",
+			val: {
+				cmd: "get_profile",
+				val: userName,
+			},
+			listener: "get_profile_" + userName,
+		}).then(val => {
+			// Ding dong! The data has arrived.
+			pfpd = val.payload.pfp_data
+			return pfpd
+		})
+	}
 </script>
 
 <div class="posts">
@@ -193,94 +210,113 @@
 			<Loading />
 		</div>
 	{:then}
-		<Container>
-			<h1>{$chatName}</h1>
-            Chat ID: {$chatid}
-		</Container>
-		{#if $user.name}
-			<form
-				class="createpost"
-				on:submit|preventDefault={e => {					
-					postErrors = "";
-					if (!e.target[0].value.trim()) {
-						postErrors = "You cannot send an empty post!";
-						return false;
-					};
-
-					spinner.set(true);
-
-					e.target[1].disabled = true;
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_chat",
-							val: {
-								p: e.target[0].value,
-								chatid: $chatid,
-							},
-						},
-						listener: "post_chat",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_chat") return;
-						link.off(postListener);
-						spinner.set(false);
-
-						e.target[1].disabled = false;
-
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				}}
-			>
-				<input
-					type="text"
-					class="white"
-					placeholder="Write something..."
-						id="postinput"
-						name="postinput"
-					autocomplete="false"
-					maxlength="360"
-				>
-				<button>Post</button>
-			</form>
-			<div class="post-errors">{postErrors}</div>
-		{/if}
-		{#if posts.length < 1}
+		<div id="chat">
+			<Container>
+				<h1>{$chatName}</h1>
+				Chat ID: {$chatid}
+			</Container>
 			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
-			{/if}
-		{:else}
-			{#each posts as post (post.id)}
-				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
+				<form
+					class="createpost"
+					on:submit|preventDefault={e => {					
+						postErrors = "";
+						if (!e.target[0].value.trim()) {
+							postErrors = "You cannot send an empty post!";
+							return false;
+						};
+
+						spinner.set(true);
+
+						e.target[1].disabled = true;
+						link.send({
+							cmd: "direct",
+							val: {
+								cmd: "post_chat",
+								val: {
+									p: e.target[0].value,
+									chatid: $chatid,
+								},
+							},
+							listener: "post_chat",
+						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_chat") return;
+							link.off(postListener);
+							spinner.set(false);
+
+							e.target[1].disabled = false;
+
+							if (cmd.val === "I:100 | OK") {
+								e.target[0].value = "";
+							} else if (cmd.val === "E:106 | Too many requests") {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors = "Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					}}
 				>
-					<Post post={post} />
-				</div>
-			{/each}
-		{/if}
-		<div class="center">
-			{#if pageLoading}
-				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
+					<input
+						type="text"
+						class="white"
+						placeholder="Write something..."
+							id="postinput"
+							name="postinput"
+						autocomplete="false"
+						maxlength="360"
 					>
-						Load More
-					</button>
-				{/if}
+					<button>Post</button>
+				</form>
+				<div class="post-errors">{postErrors}</div>
 			{/if}
+			{#if posts.length < 1}
+				{#if $user.name}
+					No posts here. Check back later or be the first to post!
+				{:else}
+					No posts here. Check back later!
+				{/if}
+			{:else}
+				{#each posts as post (post.id)}
+					<div
+						transition:fly|local="{{y: -50, duration: 250}}"
+						animate:flip="{{duration: 250}}"
+					>
+						<Post post={post} />
+					</div>
+				{/each}
+			{/if}
+			<div class="center">
+				{#if pageLoading}
+					<Loading />
+				{:else}
+					{#if numPages && numPages > pagesLoaded}
+						<button 
+							class="load-more"
+							on:click={() => loadPage(pagesLoaded + 1)}
+						>
+							Load More
+						</button>
+					{/if}
+				{/if}
+			</div>
+		</div>
+		<div id="members">
+			<div class="settings-controls">
+				<button
+					class="circle join"
+					on:click = {()=>{
+						
+					}}
+				></button>
+			</div>
+			<br>
+			<br>
+			<div id="members-inner">
+				{#each $chatMembers as chatmember}
+					<Memberbutton member={chatmember} />
+				{/each}
+			</div>
 		</div>
 	{:catch error}
 		<Container>
@@ -292,6 +328,60 @@
 </div>
 
 <style>
+	#members-inner {
+		top: 1%;
+		position: relative;
+		height: 90%;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+	.member-name {
+		top: -0.1em;
+		left: 30%;
+		text-align: left;
+		position: absolute;
+		width: 65%;
+		background-color: red;
+		text-overflow: clip;
+		overflow: hidden;
+	}
+
+	.member-pfp {
+		top: 1em;
+		left: 5%;
+		text-align: center;
+		position: absolute;
+	}
+
+	.member {
+		margin: 0;
+		height: 8%;
+		width: 100%;
+		background-color: transparent;
+		border: none;
+		position: relative;
+	}
+
+	.member:hover {
+		background-color: #00000080 !important;
+	}
+	
+	#chat {
+		width: 80%;
+		position: absolute;
+	}
+
+	#members {
+		position: absolute;
+		left: 85.4%;
+		height: 98%;
+		width: 14%;
+		background-color: var(--background);
+		border: solid 2px var(--orange);
+		border-radius: 1px;
+	}
+
 	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
@@ -305,6 +395,9 @@
 	}
 	.center {
 		text-align: center;
+	}
+	.long-boi {
+		width: 100%;
 	}
 	.load-more {
 		width: 100%;
@@ -329,5 +422,11 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.settings-controls {
+		position: absolute;
+		top: 0.25em;
+		right: 0.25em;
 	}
 </style>
