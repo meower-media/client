@@ -199,3 +199,13 @@ a {
 :disabled {
 	opacity: 0.5;
 }
+
+.modal-input {
+    position: relative;
+    width: 100%;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
