@@ -204,6 +204,11 @@
 	}
 </script>
 
+<!--
+	so {cmd: direct, val: {cmd: add_to_chat, val: {chatid: "", username: ""}}}?
+	also  remove_from_chat
+-->
+
 <div class="posts">
 	{#await loadPage(1)}
 		<div class="fullcenter">
@@ -260,15 +265,6 @@
 					return false;
 				}}
 			>
-				<input
-					type="text"
-					class="white"
-					placeholder="Write something..."
-						id="postinput"
-						name="postinput"
-					autocomplete="false"
-					maxlength="360"
-				>
 					<input
 						type="text"
 						class="white"

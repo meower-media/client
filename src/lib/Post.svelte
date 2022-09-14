@@ -13,6 +13,7 @@
 	import {apiUrl} from "./urls";
 	export let post = {};
 	export let buttons = true;
+	let bridged = false
 
 	// TODO: make bridged tag a setting
 
@@ -21,6 +22,10 @@
 	 */
 	function initPostUser() {
 		if (!post.user) return;
+
+		if (post.user == "Discord" && post.content.includes(":")) {
+			bridged = true
+		}
 
 		var userName = ""
 		if (post.user == "Discord" && post.content.includes(":")) {
@@ -146,7 +151,8 @@
 		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
-			<FormattedDate date={post.date}></FormattedDate>
+
+			<FormattedDate date={post.date} bridged={bridged}></FormattedDate>
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>

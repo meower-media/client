@@ -11,6 +11,7 @@
 
 	// 32-bit UTC time (1 is 1 second instead of 1 millisecond)
 	export let date = 0;
+	export let bridged = false;
 
 	let text, title;
 
@@ -24,7 +25,13 @@ ISO: ${_date.toISOString()}`;
 	}
 </script>
 
-<span {title} class="date">{text}</span>
+<span {title} class="date">
+	{#if bridged}
+		{text + " [BRIDGED]"}
+	{:else}
+		{text}
+	{/if}
+</span>
 
 <style>
 	.date {

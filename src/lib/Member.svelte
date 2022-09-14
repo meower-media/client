@@ -1,11 +1,11 @@
 <script>
 	import PFP from "../lib/PFP.svelte";
 
-	import {profileData, profileClicked, user, chatid, ulist, mainPage as page} from "../lib/stores.js";
+	import {modalShown, modalPage, profileClicked_GC, ulist, mainPage as page} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
-	export let member = {};
+	export let member = "";
 
 	let pfp = 0
 
@@ -33,7 +33,11 @@
 	onMount(initPostUser);
 </script>
 
-<button class="Memberbutton">
+<button class="Memberbutton" on:click={()=>{
+		modalPage.set("GC_Member");
+		modalShown.set(true);
+		profileClicked_GC.set(member);
+	}}>
 	<div class="member-pfp">
 		<PFP
 			icon={pfp}

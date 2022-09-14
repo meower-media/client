@@ -122,14 +122,6 @@
                 <Container>
                     <div class="settings-controls">
                         <button
-                            class="circle profile"
-                            on:click = {()=>{
-								chatClicked.set(chat);
-								modalPage.set("chatMembers");
-								modalShown.set(true);
-                            }}
-                        ></button>
-                        <button
                             class="circle join"
                             on:click = {()=>{
 								chatName.set(chat.nickname);
