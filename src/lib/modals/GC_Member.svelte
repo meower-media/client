@@ -6,7 +6,7 @@
 
     import * as clm from "../clmanager.js";
 
-	import {modalShown, profileClicked_GC, ulist, profileData,user, profileClicked, mainPage as page, chatid} from "../stores.js";
+	import {modalShown, modalPage, profileClicked_GC, ulist, profileData,user, profileClicked, mainPage as page, chatid} from "../stores.js";
     import {apiUrl, encodeApiURLParams} from "../urls";
     import {levels} from "../formatting.js";
 
@@ -84,7 +84,9 @@
 			}}
 				>View full profile</button>
 			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
-			<button class="long" on:click={() => {$modalShown = false}}>Remove from chat</button>
+			<button class="long" on:click={() => {
+				modalPage.set("Memberem");
+			}}>Remove from chat</button>
         {/await}
     </div>
 </Modal>

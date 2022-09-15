@@ -4,10 +4,10 @@
 -->
 
 <script>
-	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page} from "../lib/stores.js";
+	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page, modalShown, modalPage, profileClicked_GC} from "../lib/stores.js";
     import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
-	import Memberbutton from "../lib/Member.svelte";
+	import Member from "../lib/Member.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
     import * as clm from "../lib/clmanager.js";
@@ -238,11 +238,8 @@
 						val: {
 							cmd: "post_chat",
 							val: {
-								cmd: "post_chat",
-								val: {
-									p: e.target[0].value,
-									chatid: $chatid,
-								},
+								p: e.target[0].value,
+								chatid: $chatid,
 							},
 						},
 						listener: "post_chat",
@@ -314,7 +311,8 @@
 				<button
 					class="circle join"
 					on:click = {()=>{
-						
+						modalPage.set("AddMember");
+						modalShown.set(true);
 					}}
 				></button>
 			</div>
@@ -322,7 +320,13 @@
 			<br>
 			<div id="members-inner">
 				{#each $chatMembers as chatmember}
-					<Memberbutton member={chatmember} />
+					<button class="Memberbutton" on:click={()=>{
+						modalPage.set("GC_Member");
+						modalShown.set(true);
+						profileClicked_GC.set(chatmember);
+					}}>
+						<Member member={chatmember} />
+					</button>
 				{/each}
 			</div>
 		</div>
@@ -344,36 +348,18 @@
 		overflow-x: hidden;
 	}
 
-	.member-name {
-		top: -0.1em;
-		left: 30%;
-		text-align: left;
-		position: absolute;
-		width: 65%;
-		background-color: red;
-		text-overflow: clip;
-		overflow: hidden;
-	}
+	.Memberbutton {
+        margin: 0;
+        height: 8%;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        position: relative;
+    }
 
-	.member-pfp {
-		top: 1em;
-		left: 5%;
-		text-align: center;
-		position: absolute;
-	}
-
-	.member {
-		margin: 0;
-		height: 8%;
-		width: 100%;
-		background-color: transparent;
-		border: none;
-		position: relative;
-	}
-
-	.member:hover {
-		background-color: #00000080 !important;
-	}
+    .Memberbutton:hover {
+        background-color: #00000080 !important;
+    }
 	
 	#chat {
 		width: 80%;

@@ -12,8 +12,10 @@
 	import ReportPostModal from "./lib/modals/ReportPost.svelte";
 	import DeletePostModal from "./lib/modals/DeletePost.svelte";
 	import GC_MemberModal from "./lib/modals/GC_Member.svelte";
+	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
 	import ChatMembersModal from "./deleted/ChatMembers.svelte";
+	import ErrorModal from "./lib/modals/Error.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
@@ -92,6 +94,10 @@
 			<ChangePasswordModal />
 		{:else if $modalPage === "GC_Member"}
 			<GC_MemberModal />
+		{:else if $modalPage === "Memberem"}
+			<RemoveMemberModal />
+		{:else}
+			<ErrorModal />
 		{/if}
 	{/if}
 
