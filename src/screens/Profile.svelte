@@ -93,14 +93,12 @@
 		{:else if $profileClicked === $user.name}
 			<button
 				class="long"
-				title="Change Profile Picture"
 				on:click={() => pfpSwitcher = true}
 			>Change Profile Picture</button>
 		{/if}
 
 		<button
 			class="long"
-			title="View Recet Posts"
 			on:click={()=>{
 				window.scrollTo(0,0);
 				page.set("blank");
@@ -117,7 +115,6 @@
 
 			<button
 				class="long"
-				title="Report User"
 				on:click={()=>{
 					if (confirm("Are you sure you want to report this user?")) {
 						clm.meowerRequest({
