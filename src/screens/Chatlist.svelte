@@ -132,6 +132,21 @@
 								tick().then(() => page.set("groupchat"));
                             }}
                         ></button>
+						<button
+                            class="circle close"
+                            on:click = {()=>{
+                                if (shiftHeld || confirm(`Are you sure you want to leave ${chat.nickname}?`)) {
+                                    clm.meowerRequest({
+                                        cmd: "direct",
+                                        val: {
+                                            cmd: "leave_chat",
+                                            val: chat._id,
+                                        }
+                                    });
+                                    chats = chats.filter(chat1 => chat1._id !== chat._id);
+                                }
+                            }}
+                        ></button>
                     </div>
 
                     <h1>{chat.nickname}</h1>

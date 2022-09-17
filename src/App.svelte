@@ -13,8 +13,10 @@
 	import DeletePostModal from "./lib/modals/DeletePost.svelte";
 	import GC_MemberModal from "./lib/modals/GC_Member.svelte";
 	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
+	import AddMemberModal from "./lib/modals/AddMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
 	import ChatMembersModal from "./deleted/ChatMembers.svelte";
+	import AddMember_ByNameModal from "./lib/modals/AddMember_ByName.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 
@@ -29,6 +31,7 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
+    import AddMemberByName from "./lib/modals/AddMember_ByName.svelte";
 </script>
 
 <main
@@ -40,7 +43,7 @@
 	class:layout-old={$user.layout === "old"}
 >
 	{#if $disconnected}
-		<Modal>
+		<Modal on:close={() => {$disconnected = false}}>
 			<h2 slot="header">
 				Me-owch.
 			</h2>
@@ -96,6 +99,10 @@
 			<GC_MemberModal />
 		{:else if $modalPage === "Memberem"}
 			<RemoveMemberModal />
+		{:else if $modalPage === "AddMember"}
+			<AddMemberModal />
+		{:else if $modalPage === "AddMemberBN"}
+			<AddMember_ByNameModal />
 		{:else}
 			<ErrorModal />
 		{/if}

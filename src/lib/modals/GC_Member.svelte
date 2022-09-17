@@ -83,10 +83,19 @@
 				page.set("profile");
 			}}
 				>View full profile</button>
-			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
 			<button class="long" on:click={() => {
 				modalPage.set("Memberem");
 			}}>Remove from chat</button>
+			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
+		{:catch error}
+			<Container>
+				Error loading user profile.
+				<pre><code>{error}</code></pre>
+			</Container>
+			<button class="long" on:click={() => {
+				modalPage.set("Memberem");
+			}}>Remove from chat</button>
+			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
         {/await}
     </div>
 </Modal>
