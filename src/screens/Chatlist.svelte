@@ -11,8 +11,15 @@
 	import {flip} from 'svelte/animate';
 
 	import {tick} from "svelte";
+    import Modal from "../lib/Modal.svelte";
 
 	export let chats = [];
+
+	let toleavechat = false;
+
+	function filter1(v) {
+        return v._id !== $chatid
+    }
 
 	let pagesLoaded = 0;
 	let pageLoading = false;
@@ -135,16 +142,9 @@
 						<button
                             class="circle close"
                             on:click = {()=>{
-                                if (shiftHeld || confirm(`Are you sure you want to leave ${chat.nickname}?`)) {
-                                    clm.meowerRequest({
-                                        cmd: "direct",
-                                        val: {
-                                            cmd: "leave_chat",
-                                            val: chat._id,
-                                        }
-                                    });
-                                    chats = chats.filter(chat1 => chat1._id !== chat._id);
-                                }
+								chatName.set(chat.nickname)
+								chatid.set(chat._id)
+								toleavechat = true
                             }}
                         ></button>
                     </div>
@@ -168,6 +168,26 @@
 				{/if}
 			{/if}
 		</div>
+	{/if}
+	{#if toleavechat}
+		<Modal on:close={() => {toleavechat = false}}>
+			<h2 slot="header">Are you sure you want to leave {$chatName}?</h2>
+			<div slot="default">
+				<button on:click={() => {
+					chats = chats.filter(filter1);
+					clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "leave_chat",
+							val: $chatid,
+						}
+					});
+					toleavechat = false
+				}}>
+					Leave
+				</button>
+			</div>
+		</Modal>
 	{/if}
 </div>
 
