@@ -104,13 +104,15 @@
 	<div class="post-header">
 		<div class="settings-controls">
 			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
-				<button 
-					class="circle join"
-					on:click={()=>{
-						document.getElementById("postinput").value = "@" + post.user
-						document.getElementById("postinput").focus()
-					}}
-				></button>
+				{#if post.user !== "Notification" && post.user !== "Announcement"}
+					<button 
+						class="circle join"
+						on:click={()=>{
+							document.getElementById("postinput").value = "@" + post.user
+							document.getElementById("postinput").focus()
+						}}
+					></button>
+				{/if}
 				{#if $user.lvl >= 1 || post.user === $user.name}
 					<button
 						class="circle close"
@@ -145,7 +147,7 @@
 		<button
 			class="pfp" 
 			on:click={()=>{
-				if (!buttons || post.user === "Notification" || post.user === "Announcement") return;
+				if (!buttons || post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}

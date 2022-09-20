@@ -307,28 +307,32 @@
 			</div>
 		</div>
 		<div id="members">
-			<div class="settings-controls">
-				<button
-					class="circle join"
-					on:click = {()=>{
-						modalPage.set("AddMember");
-						modalShown.set(true);
-					}}
-				></button>
-			</div>
-			<br>
-			<br>
-			<div id="members-inner">
-				{#each $chatMembers as chatmember}
-					<button class="Memberbutton" on:click={()=>{
-						modalPage.set("GC_Member");
-						modalShown.set(true);
-						profileClicked_GC.set(chatmember);
-					}}>
-						<Member member={chatmember} />
-					</button>
-				{/each}
-			</div>
+			{#if $chatName !== "Livechat"}
+				<div class="settings-controls">
+					<button
+						class="circle join"
+						on:click = {()=>{
+							modalPage.set("AddMember");
+							modalShown.set(true);
+						}}
+					></button>
+				</div>
+				<br>
+				<br>
+				<div id="members-inner">
+					{#each $chatMembers as chatmember}
+						<button class="Memberbutton" on:click={()=>{
+							modalPage.set("GC_Member");
+							modalShown.set(true);
+							profileClicked_GC.set(chatmember);
+						}}>
+							<Member member={chatmember} />
+						</button>
+					{/each}
+				</div>
+			{:else}
+				<h1 style="margin: 0; left: 4%; position:absolute;">In LiveChat</h1>
+			{/if}
 		</div>
 	{:catch error}
 		<Container>
