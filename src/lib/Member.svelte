@@ -52,7 +52,6 @@
         text-align: left;
         position: absolute;
         width: 65%;
-        background-color: red;
         text-overflow: clip;
         overflow: hidden;
     }

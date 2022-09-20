@@ -104,35 +104,42 @@
 	<div class="post-header">
 		<div class="settings-controls">
 			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
-			{#if $user.lvl >= 1 || post.user === $user.name}
-			<button
-				class="circle close"
-				on:click={()=>{
-					if (shiftHeld) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "delete_post",
-								val: post.post_id,
-							},
-						});
-						return;
-					}
-					postClicked.set(post);
-					modalPage.set("deletePost");
-					modalShown.set(true);
-				}}
-			></button>
-			{:else}
-			<button
-				class="circle report"
-				on:click={()=>{
-					postClicked.set(post);
-					modalPage.set("reportPost");
-					modalShown.set(true);
-				}}
-			></button>
-			{/if}
+				<button 
+					class="circle join"
+					on:click={()=>{
+						document.getElementById("postinput").value = "@" + post.user
+						document.getElementById("postinput").focus()
+					}}
+				></button>
+				{#if $user.lvl >= 1 || post.user === $user.name}
+					<button
+						class="circle close"
+						on:click={()=>{
+							if (shiftHeld) {
+								clm.meowerRequest({
+									cmd: "direct",
+									val: {
+										cmd: "delete_post",
+										val: post.post_id,
+									},
+								});
+								return;
+							}
+							postClicked.set(post);
+							modalPage.set("deletePost");
+							modalShown.set(true);
+						}}
+					></button>
+				{:else}
+					<button
+						class="circle report"
+						on:click={()=>{
+							postClicked.set(post);
+							modalPage.set("reportPost");
+							modalShown.set(true);
+						}}
+					></button>
+				{/if}
 			{/if}
 		</div>
 		<button
