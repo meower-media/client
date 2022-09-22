@@ -1,4 +1,4 @@
-<!-- Meower Svelte, the app itself. -->
+<!-- BetterMeower, the app itself. -->
 
 <script>
 	import Main from "./screens/Main.svelte";
