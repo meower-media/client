@@ -1,6 +1,6 @@
-# Meower Svelte
+# BetterMeower
 
-A Meower client written in [Svelte](https://svelte.dev).
+BetterMeower has new features and enhancements not available in vanilla Meower, such as higher character limit, linebreaks and an emoji picker. Everything posted with BetterMeower can be seen by vanilla users, except emojis on Scratch Meower.
 
 ## Developing
 
