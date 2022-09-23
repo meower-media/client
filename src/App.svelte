@@ -174,11 +174,11 @@
 	}
 
 	::-webkit-scrollbar-thumb {
-  		background: var(--orange-light); 
+  		background: var(--orange); 
   		border-radius: 10px;
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-  		background: var(--orange-light);
+  		background: var(--orange);
 	}
 </style>
