@@ -8,7 +8,6 @@ import {injectManifest} from "rollup-plugin-workbox";
 export default defineConfig({
 	plugins: [
 		svelte(),
-		/*
 		injectManifest({
 			swSrc: "sw.js",
 			swDest: "dist/sw.js",
@@ -20,7 +19,6 @@ export default defineConfig({
 			is_vite_preview: true,
 			preventAssignment: true,
 		}),
-		*/
 	],
 	base: "./",
 });

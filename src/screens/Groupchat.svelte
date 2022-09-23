@@ -239,14 +239,15 @@
 					return false;
 				}}
 			>
-				<input
+				<textarea
 					type="text"
 					class="white"
 					placeholder="Write something..."
-						id="postinput"
-						name="postinput"
+					id="postinput"
+					name="postinput"
 					autocomplete="off"
 					maxlength="360"
+					style="width: 100%; max-width: 100%; resize: vertical;"
 				>
 				<button>Post</button>
 			</form>
