@@ -210,7 +210,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  	background: var(--orange);
+  	background: #f9a636;
   	border-radius: 10px;
 }
 
