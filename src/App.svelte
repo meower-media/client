@@ -163,4 +163,22 @@
 		--foreground: white;
 		--foreground-orange: white;
 	}
+	
+	::-webkit-scrollbar {
+  		width: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+  		background: var(--orange-dark);
+  		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+  		background: var(--orange-light); 
+  		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+  		background: var(--orange-light);
+	}
 </style>
