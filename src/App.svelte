@@ -169,16 +169,16 @@
 	}
 
 	::-webkit-scrollbar-track {
-  		background-color: #a15d04;
+  		background: #a15d04;
   		border-radius: 10px;
 	}
 
 	::-webkit-scrollbar-thumb {
-  		background-color: var(--orange); // #f9a636 
+  		background: #f9a636;
   		border-radius: 10px;
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-  		background-color: var(--orange); // #f9a636 
+  		background: #f9a636;
 	}
 </style>
