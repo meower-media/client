@@ -12,8 +12,8 @@ Requirements:
 To clone and run a development server on your machine (that autoupdates when you modify files):
 
 ```
-git clone https://github.com/meower-media-co/Meower-Svelte
-cd Meower-Svelte
+git clone https://github.com/BetterMeower-Project/BetterMeower
+cd BetterMeower
 npm install
 npm run dev
 ```
@@ -24,7 +24,7 @@ For one-time building:
 npm run build
 ```
 
-(Note: A GitHub Action will usually do this for you when you push to the repo.)
+(Note: Cloudflare pages will usually do this for you when you push to the repo.)
 
 ------
 
