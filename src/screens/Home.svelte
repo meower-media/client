@@ -197,16 +197,16 @@
 					type="text"
 					class="white"
 					placeholder="Write something..."
-				  id="postinput"
-				  name="postinput"
+				    id="postinput"
+				    name="postinput"
 					autocomplete="off"
 					maxlength="360"
 					style="width: 100%; max-width: 100%; resize: vertical;"
-				>
+				></textarea>
 				<button>Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
-		{/if}
+			{/if}
 		{#if posts.length < 1}
 			{#if $user.name}
 				No posts here. Check back later or be the first to post!

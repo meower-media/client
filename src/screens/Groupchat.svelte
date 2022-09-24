@@ -248,7 +248,7 @@
 					autocomplete="off"
 					maxlength="360"
 					style="width: 100%; max-width: 100%; resize: vertical;"
-				>
+				></textarea>
 				<button>Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
