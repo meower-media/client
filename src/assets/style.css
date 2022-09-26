@@ -124,6 +124,7 @@ button:not(.circle).white:active {
 textarea {
     resize: vertical;
     font-family: inherit;
+    overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
