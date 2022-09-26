@@ -199,7 +199,8 @@
 		</div>
 	{:else if $page === "login"}
 		<div class="fullcenter">
-			<h1>Login to Meower</h1>
+			<h1>Login to BetterMeower</h1>
+			<p>Use the same credentials you use to log into your Meower Account</p>
 			
 			<form class="column-ui"
 				on:submit|preventDefault={e => {
@@ -235,7 +236,8 @@
 		</div>
 	{:else if $page === "join"}
 		<div class="fullcenter">
-			<h1>Welcome to Meower</h1>
+			<h1>Welcome to BetterMeower</h1>
+			<p>The account you create here can also be used on other clients!</p>
 
 			<form class="column-ui"
 				on:submit|preventDefault={e => {
@@ -303,8 +305,172 @@
 					});
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="72">
+			<script>
+
+				let strength = 0;
+				let validations = []
+			
+				function validatePassword(e) {
+					const password = e.target.value
+			
+					validations = [
+						(password.length > 5),
+						(password.search(/[A-Z]/) > -1),
+						(password.search(/[0-9]/) > -1),
+						(password.search(/[&+,:;=?@#-]/) > -1)
+					]
+			
+					strength = validations.reduce((acc, cur) => acc + cur )
+				}
+			
+			</script>
+			
+			<style>
+				form {
+					--text-color: #afafaf;
+					max-width: 500px;
+				}
+			
+				.field {
+					width: 100%;
+					position: relative;
+					border-bottom: 2px dashed var(--text-color);
+					margin: 4rem auto 1rem;
+					/* transition: 500ms; */
+				}
+			
+				.label {
+					color: var(--text-color);
+					font-size: 1.2rem;
+				}
+			
+				.input {
+					outline: none;
+					border: none;
+					overflow: hidden;
+					margin: 0;
+					width: 100%;
+					padding: 0.25rem 0;
+					background: none;
+					color: white;
+					font-size: 1.2rem;
+					font-weight: bold;
+					/* transition: border 500ms; */
+				}
+			
+				.input:valid {
+					color: yellowgreen;
+				}
+			
+				input:invalid {
+					color: orangered;
+				}
+			
+			/* border animation */
+				.field::after {
+					content: "";
+					position: relative;
+					display: block;
+					height: 4px;
+					width: 100%;
+					background: #d16dff;
+					transform: scaleX(0);
+					transform-origin: 0%;
+					/* opacity: 0; */
+					transition: transform 500ms ease;
+					top: 2px;
+				}
+			
+				.field:focus-within {
+					border-color: transparent;
+				}
+			
+				.field:focus-within::after {
+					transform: scaleX(1);
+					opacity: 1;
+				}
+			
+			/* label animation */
+				.label {
+					z-index: -1;
+					position: absolute;
+					transform: translateY(-2rem);
+					transform-origin: 0%;
+					transition: transform 400ms;
+				}
+			
+				.field:focus-within .label,
+				.input:not(:placeholder-shown) + .label {
+					transform: scale(0.8) translateY(-5rem);
+					opacity: 1;
+				}
+			
+				/* strength meter */
+			
+				.strength {
+					display: flex;
+					height: 20px;
+					width: 100%;
+				}
+			
+				.bar {
+					margin-right: 5px;
+					height: 100%;
+					width: 25%;
+					transition: box-shadow 500ms;
+					box-shadow: inset 0px 20px #1f1f1f;
+				}
+			
+				.bar-show {
+					box-shadow: none;
+				}
+			
+				.bar-1 {
+					background: linear-gradient(to right, red, orangered)
+				}
+				
+				.bar-2 {
+					background: linear-gradient(to right, orangered, yellow)
+				}
+			
+				.bar-3 {
+					background: linear-gradient(to right, yellow, yellowgreen)
+				}
+			
+				.bar-4 {
+					background: linear-gradient(to right, yellowgreen, green)
+				}
+			
+			</style>
+			
+			<main>
+				<form>
+				
+					<div class="field">
+						<input type="text" placeholder="Username" name="Username" maxlength="20"> <br />
+						<label for="Username" class="label">Username</label>
+					</div>
+			
+					<div class="field">
+						<input type="password" name="password" class="input" placeholder="Password" maxlength="72" on:input={validatePassword}/>
+						<label for="password" class="label">Password</label>
+					</div>
+			
+					<div class="strength">
+						<span class="bar bar-1" class:bar-show={strength > 0}/>
+						<span class="bar bar-2" class:bar-show={strength > 1}/>
+						<span class="bar bar-3" class:bar-show={strength > 1}/>
+						<span class="bar bar-4" class:bar-show={strength > 3}/>
+					</div>
+			
+					<ul>
+						<li> {validations[0] ? '✔️' : '❌'} must be at least 5 characters</li>
+						<li> {validations[1] ? '✔️' : '❌'} must contain a capital letter</li>
+						<li> {validations[2] ? '✔️' : '❌'} must contain a number</li>
+						<li> {validations[3] ? '✔️' : '❌'} must contain one of $&+,:;=?@#-</li>
+					</ul>
+				</form>
+			</main>	
 				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
