@@ -6,8 +6,11 @@ BetterMeower has new features and enhancements not available in vanilla Meower, 
 BetterMeower contains many new features and improvements over standard Meower, including (but not limited to)
 
 ✅ Higher Character limit (v1.0.0 and higher)
+
 ✅ Linebreaks (v1.0.0 and higher)
+
 ✅ Better dark orange theme (v1.1.0 and higher)
+
 ✅ PWA Support (v1.1.0 and higher)
 
 ## Developing
