@@ -152,7 +152,9 @@
 	{:then}
 		<Container>
 			<h1>Home</h1>
-			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
+			There are currently {_ulist.length} users online{#if _ulist.length}{" "}
+			<p><b>Users online</b></p>
+			{_ulist.join(", ")}{/if}
 		</Container>
 		{#if $user.name}
 			<form 
