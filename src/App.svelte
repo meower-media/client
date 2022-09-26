@@ -144,7 +144,7 @@
 		--orange-light: #dd7f14;
 		--orange-dark: #dd5719;
 		--orange-scrollbar-back: rgb(150, 55, 12);
-		--background: #181a1b;
+		--background: #202020;
 		--foreground: #eef;
 		--foreground-orange: #eef;
 	}

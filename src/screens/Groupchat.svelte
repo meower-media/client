@@ -257,7 +257,7 @@
 					}}
 				></textarea>
 				<!-- Kudos to @tnix100 for the better linebreaks script!!-->
-				<button>Post</button>
+				<button id="submitpost">Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}
