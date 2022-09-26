@@ -15,6 +15,7 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
+    import { shiftHeld } from "../lib/keyDetect.js";
 
 	let id = 0;
 	export let posts = [];
@@ -248,6 +249,12 @@
 					autocomplete="off"
 					maxlength="360"
 					style="width: 100%; max-width: 100%; resize: vertical;"
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
 				></textarea>
 				<button>Post</button>
 			</form>

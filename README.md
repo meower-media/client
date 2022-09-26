@@ -13,6 +13,15 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 ✅ PWA Support (v1.1.0 and higher)
 
+# Credits
+**Everyone who contributed to [meower-media-co/Meower-Svelte](https://github.com/meower-media-co/Meower-Svelte)** - Without Meower Svelte and it's contributors, this project wouldn't exist
+**[@ArrowAced](https://github.com/ArrowAced)** - For helping me setup Cloudflare Pages
+**[@tnix100](https://github.com/tnix100)** - For helping me setup Cloudflare Pages and for the press-enter-to-post script for textarea
+**[@mdwalters](https://github.com/mdwalters)** - For testing and giving me feedback, as well as inspiring me to make BetterMeower
+**[@Bloctans](https://github.com/Bloctans)** - For inspiring me to make BetterMeower, and helping me with npm and node.js.
+
+
+
 ## Developing
 
 Requirements:
