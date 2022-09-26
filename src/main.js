@@ -2,10 +2,11 @@ import App from "./App.svelte";
 
 try {
 	if (navigator.serviceWorker) {
-		navigator.serviceWorker.register(
-			"../sw.js", {
-				type: import.meta.env.DEV ? "module" : "classic"
-		);
+		navigator.serviceWorker.getRegistration().then((registration) => {
+			if (registration) {
+		 		registration.unregister();
+			}
+		});
 	}
 } catch(e) {
 	console.error(e);
