@@ -121,9 +121,9 @@
 
 		font-family: Simvoni, sans-serif;
 
-		--orange: #f30000;
+		--orange: #db0000;
 		--orange-button: var(--orange);
-		--orange-light: #ff0000;
+		--orange-light: #b30000;
 		--orange-dark: #e20000;
 		--orange-scrollbar-back: #800000;
 		--background: white;
@@ -141,7 +141,7 @@
 
 	#main.theme-orange.mode-dark {
 		--orange: #e70000;
-		--orange-light: #ff0000;
+		--orange-light: #aa0000;
 		--orange-dark: #9e0000;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #020010;
