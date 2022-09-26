@@ -212,6 +212,7 @@
 						}
 					}}
 				></textarea>
+				<!-- Kudos to @tnix100 for the better linebreaks script!!-->
 				<button id="submitpost">Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
