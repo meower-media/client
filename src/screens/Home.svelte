@@ -199,7 +199,7 @@
 					placeholder="Write something..."
 				        id="postinput"
 				        name="postinput"
-					autocomplete="false"
+					autocomplete="off"
 					maxlength="250"
 				>
 				<button>Post</button>

@@ -268,12 +268,18 @@
 						placeholder="Write something..."
 							id="postinput"
 							name="postinput"
-						autocomplete="false"
+						autocomplete="off"
 						maxlength="360"
 					>
 					<button>Post</button>
 				</form>
 				<div class="post-errors">{postErrors}</div>
+		{/if}
+		{#if posts.length < 1}
+			{#if $user.name}
+				No posts here. Check back later or be the first to post!
+			{:else}
+				No posts here. Check back later!
 			{/if}
 			{#if posts.length < 1}
 				{#if $user.name}

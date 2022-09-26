@@ -147,7 +147,7 @@
 		<button
 			class="pfp" 
 			on:click={()=>{
-				if (!buttons || post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
+				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
