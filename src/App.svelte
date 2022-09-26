@@ -121,11 +121,11 @@
 
 		font-family: Simvoni, sans-serif;
 
-		--orange: #f9a636;
+		--orange: #f30000;
 		--orange-button: var(--orange);
-		--orange-light: #ffce8c;
-		--orange-dark: #b46d34;
-		--orange-scrollbar-back: #a15d04;
+		--orange-light: #ff0000;
+		--orange-dark: #e20000;
+		--orange-scrollbar-back: #800000;
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;
@@ -140,9 +140,9 @@
 	}
 
 	#main.theme-orange.mode-dark {
-		--orange: #b35305;
-		--orange-light: #dd7f14;
-		--orange-dark: #ac4718;
+		--orange: #e70000;
+		--orange-light: #ff0000;
+		--orange-dark: #9e0000;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #020010;
 		--foreground: #eef;
