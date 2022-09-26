@@ -153,9 +153,11 @@
 	{:then}
 		<Container>
 			<h1>Home</h1>
-			There are currently {_ulist.length} users online{#if _ulist.length}{" "}
-			<p><b>Users online</b></p>
-			{_ulist.join(", ")}{/if}
+			There are currently {_ulist.length} users online{#if _ulist.length}{" "}{/if}
+	     </Container>
+		<Container>
+			<b>Users online: </b>
+			{_ulist.join(", ")}
 		</Container>
 		{#if $user.name}
 			<form 
@@ -204,7 +206,7 @@
 				    name="postinput"
 					autocomplete="off"
 					maxlength="360"
-					style="width: 100%; max-width: 100%; resize: vertical;"
+					style="width: 100%; max-width: 100%; resize: vertical; flex-grow: 1; margin-right: 0.25em; display: flex; flex-direction: cols;"
 					on:keydown={(event) => {
 						if (event.key == "Enter" && !shiftHeld) {
 							event.preventDefault();

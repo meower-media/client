@@ -248,7 +248,7 @@
 					name="postinput"
 					autocomplete="off"
 					maxlength="360"
-					style="width: 100%; max-width: 100%; resize: vertical;"
+					style="width: 100%; max-width: 100%; resize: vertical; flex-grow: 1; margin-right: 0.25em; display: flex; flex-direction: cols;"
 					on:keydown={(event) => {
 						if (event.key == "Enter" && !shiftHeld) {
 							event.preventDefault();
