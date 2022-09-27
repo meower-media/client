@@ -15,7 +15,7 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 ✅ Auto resizing text box for posts (v1.2.0 and higher)
 
-✅ Better linebreaks with the ability to press enter to post (v1.2.0 and higher)
+✅ Better linebreaks (v1.2.0 and higher)
 
 ✅ Even better dark orange theme (v1.2.0 and higher)
 
