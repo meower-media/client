@@ -187,7 +187,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						BetterMeower v1.1.0 (based on Meower Svelte 1.3.0)
+						BetterMeower v1.2.0 (based on Meower Svelte 1.3.0)
 					</p>
 					<img
 						src={meowy}
@@ -343,7 +343,7 @@
 				(Current page: {$page})
 
 				<div class="buttons">
-					<button on:click={()=>page.set("logo")} => cmd: "direct", val: { cmd: "update_config", 	val: { }}>Go back!</button>
+					<button on:click={()=>page.set("logo")}>Go back!</button>
 				</div>
 			</div>
 		</div>
