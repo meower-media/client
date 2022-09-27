@@ -1,4 +1,4 @@
-<!-- You probably know what this is. -->
+<!-- Debug menu for testing purposes, please comment out button in production release -->
 
 <script>
 	import {tick} from "svelte";

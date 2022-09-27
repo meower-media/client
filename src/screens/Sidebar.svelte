@@ -23,6 +23,7 @@
 	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
+	import debug from "../assets/debug.svg";
 	import logout from "../assets/logout.svg";
 
 	/**
@@ -111,6 +112,15 @@
 		<button on:click={()=>goto("settings")} class="settings-btn round">
 			<img
 				src={settings}
+				alt="Settings"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+		<button on:click={()=>goto("debug")} class="debug-btn round">
+			<img
+				src={debug}
 				alt="Settings"
 				width="90%"
 				height="auto"
