@@ -16,6 +16,7 @@
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
     import { shiftHeld } from "../lib/keyDetect.js";
+	import { autoresize } from 'svelte-textarea-autoresize'
 
 	let id = 0;
 	export let posts = [];
@@ -241,6 +242,7 @@
 				}}
 			>
 				<textarea
+					use:autoresize
 					type="text"
 					class="white"
 					placeholder="Write something..."

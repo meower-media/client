@@ -343,7 +343,7 @@
 				(Current page: {$page})
 
 				<div class="buttons">
-					<button on:click={()=>page.set("logo")}>Go back!</button>
+					<button on:click={()=>page.set("logo")} => cmd: "direct", val: { cmd: "update_config", 	val: { }}>Go back!</button>
 				</div>
 			</div>
 		</div>
