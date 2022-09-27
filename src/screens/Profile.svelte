@@ -100,7 +100,7 @@
 
 		<button
 			class="long"
-			title="View Recet Posts"
+			title="View Recent Posts"
 			on:click={()=>{
 				window.scrollTo(0,0);
 				page.set("blank");
