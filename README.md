@@ -13,6 +13,14 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 ✅ PWA Support (v1.1.0 and higher)
 
+✅ Auto resizing text box for posts (v1.2.0 and higher)
+
+✅ Better linebreaks (v1.2.0 and higher)
+
+✅ Even better dark orange theme (v1.2.0 and higher)
+
+✅ Fixed group chats (v1.2.0 and higher)
+
 # Credits
 **Everyone who contributed to [meower-media-co/Meower-Svelte](https://github.com/meower-media-co/Meower-Svelte)** - Without Meower Svelte and it's contributors, this project wouldn't exist
 
