@@ -118,6 +118,7 @@
 				draggable={false}
 			/>
 		</button>
+		<!--
 		<button on:click={()=>goto("debug")} class="debug-btn round">
 			<img
 				src={debug}
@@ -127,6 +128,7 @@
 				draggable={false}
 			/>
 		</button>
+		-->
 	{/if}
 	<button on:click={async () => {
 		localStorage.removeItem("meower_savedusername");

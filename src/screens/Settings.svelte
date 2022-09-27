@@ -44,7 +44,6 @@
 	<h1>Account Settings</h1>
 	You can change your settings here. These will save to your account, so they will carry over into other clients.
 </Container>
-<!--
 <Container>
 	<h2>Set quote</h2>
 	<p><b>Current Quote</b>: "<i>{$user.quote}</i>"</p>
@@ -60,6 +59,9 @@
 			//spinner.set(false);
 		}}
 	>
+		<script>
+			
+		</script>
 		<textarea
 			type="text"
 			class="white"
@@ -68,12 +70,13 @@
 			name="qinput"
 			autocomplete="off"
 			style="width: 100%; max-width: 100%; resize: none;"
+			maxlength="360"
 			use:autoresize
-		></textarea></form>
+		></textarea>
 		<p></p>
 		<button>Set Quote</button>
+	</form>
 	</Container>
--->
 <Container>
 	<div class="settings-controls">
 		<button
@@ -97,7 +100,7 @@
 			class="circle settings"
 			on:click={()=>{
 				const _user = $user;
-				_user.theme = _user.theme === "orange" ? "blue" : "orange";
+				_user.theme = _user.theme === "orange" ? "blue" : "orange"
 				user.set(_user);
 
 				clm.updateProfile();
