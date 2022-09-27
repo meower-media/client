@@ -19,6 +19,7 @@
 	id="main"
 	class:theme-orange={$user.theme==="orange"}
 	class:theme-blue={$user.theme==="blue"}
+	class:theme-green={$user.theme==="green"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
 	class:layout-old={$user.layout === "old"}

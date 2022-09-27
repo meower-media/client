@@ -67,6 +67,7 @@
 					</div>
 				</div>
 			</div>
+			<p>"<i>{data.payload.quote}</i>"</p>
 		</Container>
 
 		{#if pfpSwitcher}
@@ -96,6 +97,11 @@
 				title="Change Profile Picture"
 				on:click={() => pfpSwitcher = true}
 			>Change Profile Picture</button>
+			<button
+				class="long"
+				title="Change your quote"
+				on:click={() => page.set("settings")}
+			>Change Quote</button>
 		{/if}
 
 		<button
