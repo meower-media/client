@@ -204,3 +204,8 @@ a {
 :disabled {
 	opacity: 0.5;
 }
+
+p.unavailable {
+    font-family: inherit;
+    color: grey;
+}
