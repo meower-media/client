@@ -21,6 +21,12 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 ✅ Fixed group chats (v1.2.0 and higher)
 
+✅ Experimental Green theme (v1.3.0 and higher)
+
+✅ Quote support (v1.3.0 and higher)
+
+✅ News screen (v1.3.1 and higher)
+
 # Credits
 **Everyone who contributed to [meower-media-co/Meower-Svelte](https://github.com/meower-media-co/Meower-Svelte)** - Without Meower Svelte and it's contributors, this project wouldn't exist
 
