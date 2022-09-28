@@ -12,5 +12,5 @@
     <p>29 September 2022 | JoshAtticus</p>
     <hr>
     <p>Only 3 days after we launched, we are proud to annouce that we have released version 1.3.1! 1.3.1 includes a new change, this new news screen! The news screen will keep BetterMeower users updated on new releases, and more! Make sure you keep sharing the news about BetterMeower, and we'll catch you all later!</p>
-    <p><b>Find out more about BetterMeower v1.3.1 here</b></p>
+    <p><b>Find out more about BetterMeower v1.3.1 <a href="https://github.com/BetterMeower-Project/BetterMeower/releases/tag/1.3.1">here</a></b></p>
 </Container>
