@@ -187,7 +187,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						BetterMeower v1.3.0 (based on Meower Svelte 1.3.0)
+						BetterMeower v1.3.1 (based on Meower Svelte 1.3.0)
 					</p>
 					<img
 						src={meowy}
