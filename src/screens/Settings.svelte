@@ -42,7 +42,7 @@
 </script>
 <Container>
 	<h1>Account Settings</h1>
-	You can change your settings here. These will save to your account, so they will carry over into other clients.
+	You can change your settings here. These will save to your account, so they will carry over into other clients (except where mentioned).
 </Container>
 <Container>
 	<h2>Set quote</h2>
@@ -95,6 +95,7 @@
 	The layout is currently set to {$user.layout}.
 </Container>
 <Container>
+	
 	<div class="settings-controls">
 		<button
 			on:click={()=>{
@@ -122,13 +123,13 @@
 
 				clm.updateProfile();
 			}}
-		>Green</button>
+		>Green (Experimental)</button>
 	</div>
 
 	<h2>Theme</h2>
 	The theme is currently set to {$user.theme}.
 	{#if $user.theme === "green"}
-			<p><b>This is a <i>BetterMeower</i> theme, it will appear as the default theme (usually light orange) on other clients.</b></p>
+			<p><b>This is a <i>BetterMeower</i> theme, it will appear as the default theme (usually light orange) on other clients where it has not been defined.</b></p>
 			{:else}
 			<p><b>This is a vanilla theme, it will sync over to other clients.</b></p>
 			{/if}
