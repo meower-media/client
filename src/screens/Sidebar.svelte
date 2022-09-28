@@ -24,6 +24,7 @@
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import debug from "../assets/debug.svg";
+	import news from "../assets/news.svg";
 	import logout from "../assets/logout.svg";
 
 	/**
@@ -97,6 +98,15 @@
 				draggable={false}
 			/>
 		</button>
+		<button on:click={()=>goto("news")} class="news-btn round">
+			<img
+				src={news}
+				alt="News"
+				width="90%"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
 		<button on:click={() => {
 			$profileClicked = $user.name;
 			goto("profile");
@@ -118,17 +128,6 @@
 				draggable={false}
 			/>
 		</button>
-		<!--
-		<button on:click={()=>goto("debug")} class="debug-btn round">
-			<img
-				src={debug}
-				alt="Settings"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		-->
 	{/if}
 	<button on:click={async () => {
 		localStorage.removeItem("meower_savedusername");
