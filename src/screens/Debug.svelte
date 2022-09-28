@@ -1,4 +1,4 @@
-<!-- You probably know what this is. -->
+<!-- Debug menu for testing purposes, please comment out button in production release -->
 
 <script>
 	import {tick} from "svelte";
@@ -42,8 +42,9 @@
 </script>
 <Container>
 	<h1>Account Settings</h1>
-	You can change your settings here. These will save to your account, so they will carry over into other clients (except where mentioned).
+	You can change your settings here. These will save to your account, so they will carry over into other clients.
 </Container>
+<!--
 <Container>
 	<h2>Set quote</h2>
 	<p><b>Current Quote</b>: "<i>{$user.quote}</i>"</p>
@@ -59,9 +60,6 @@
 			//spinner.set(false);
 		}}
 	>
-		<script>
-			
-		</script>
 		<textarea
 			type="text"
 			class="white"
@@ -70,13 +68,12 @@
 			name="qinput"
 			autocomplete="off"
 			style="width: 100%; max-width: 100%; resize: none;"
-			maxlength="360"
 			use:autoresize
-		></textarea>
+		></textarea></form>
 		<p></p>
 		<button>Set Quote</button>
-	</form>
 	</Container>
+-->
 <Container>
 	<div class="settings-controls">
 		<button
@@ -95,44 +92,21 @@
 	The layout is currently set to {$user.layout}.
 </Container>
 <Container>
-	
 	<div class="settings-controls">
 		<button
+			class="circle settings"
 			on:click={()=>{
 				const _user = $user;
-				_user.theme = _user.theme === "blue" ? "blue" : "blue";
+				_user.theme = _user.theme === "orange" ? "blue" : "orange";
 				user.set(_user);
 
 				clm.updateProfile();
 			}}
-		>Blue</button>
-		<button
-			on:click={()=>{
-				const _user = $user;
-				_user.theme = _user.theme === "orange" ? "orange" : "orange";
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
-		>Orange</button>
-		<button
-			on:click={()=>{
-				const _user = $user;
-				_user.theme = _user.theme === "green" ? "green" : "green";
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
-		>Green (Experimental)</button>
+		></button>
 	</div>
 
 	<h2>Theme</h2>
 	The theme is currently set to {$user.theme}.
-	{#if $user.theme === "green"}
-			<p><b>This is a <i>BetterMeower</i> theme, it will appear as the default theme (usually light orange) on other clients where it has not been defined.</b></p>
-			{:else}
-			<p><b>This is a vanilla theme, it will sync over to other clients.</b></p>
-			{/if}
 </Container>
 <Container>
 	<div class="settings-controls">

@@ -19,6 +19,7 @@
 	id="main"
 	class:theme-orange={$user.theme==="orange"}
 	class:theme-blue={$user.theme==="blue"}
+	class:theme-green={$user.theme==="green"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
 	class:layout-old={$user.layout === "old"}
@@ -162,5 +163,23 @@
 		--background: #202020;
 		--foreground: white;
 		--foreground-orange: white;
+	}
+	#main.theme-green {
+		--orange: #2cbe00;
+		--orange-light: #2cbe00;
+		--orange-dark: #26a300;
+		--orange-scrollbar-back: #229200;
+		--background: #ffffff;
+		--foreground: #eef;
+		--foreground-orange: #eef;
+	}
+	#main.theme-green.mode-dark {
+		--orange: #2cbe00;
+		--orange-light: #2cbe00;
+		--orange-dark: #26a300;
+		--orange-scrollbar-back: #229200;
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: #eef;
 	}
 </style>

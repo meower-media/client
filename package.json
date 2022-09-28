@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@rollup/plugin-replace": "^4.0.0",
+        "emoji-picker-textarea": "^1.0.1",
         "rollup-plugin-workbox": "^6.2.0",
         "svelte-textarea-autoresize": "^1.0.0"
     }
