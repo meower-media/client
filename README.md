@@ -38,7 +38,9 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 **[@Bloctans](https://github.com/Bloctans)** - For inspiring me to make BetterMeower, and helping me with npm and node.js.
 
+**[@webdev03](https://github.com/webdev03)** - For helping me with npm and node.js.
 
+The Internet - Almost every part of code I changed.
 
 ## Developing
 
