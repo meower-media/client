@@ -59,12 +59,12 @@
 		position: fixed;
 		left: 0;
 		top: 0;
-		width: 3.5em;
+		width: 4.6em;
 		height: 100%;
 		z-index: 100;
 	}
 	.view {
-		margin-left: 3.5em;
+		margin-left: 5em;
 		padding: 0.33em;
 		
 		background-color: var(--background);

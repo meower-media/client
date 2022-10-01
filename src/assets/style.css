@@ -36,13 +36,30 @@ body {
 	height: 100%;
 }
 
+input[type="text"] {
+    border: solid 2px var(--foreground-orange);
+    border-radius: 22px;
+    outline: none;
+    box-shadow: 0px 4px 0px 0px #575757;
+
+    background-color: var(--foreground-orange);
+    color: var(--foreground);
+
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    margin-bottom: -0.15rem;
+
+	font-family: inherit;
+    font-size: inherit;
+}
+
 button,
-input[type="text"],
 input[type="password"],
 textarea {
-    border: solid 2px var(--foreground-orange);
-    border-radius: 1px;
+    border: solid 2px var(--orange);
+    border-radius: 22px;
     outline: none;
+    box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
 
     background-color: var(--orange);
     color: var(--foreground-orange);
@@ -82,13 +99,18 @@ input[type="password"]:not(.white):not(:disabled):focus {
 }
 
 button.round {
-    border-radius: 0.75em;
-    border-bottom-width: 5px;
-    padding: 0.5em;
-    overflow-wrap: break-word;
+    background-color: var(--background);
+    border-radius: 15px;
+    border-color: var(--background);
+    padding: 0.6em;
+    box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
 }
 
-input[type="text"].white,
+button.round:hover {
+    background-color: var(--background) !important;
+    transform: scale(1.1)
+}
+
 input[type="password"].white,
 textarea {
     background-color: var(--background);
@@ -103,11 +125,10 @@ button.white {
     color: var(--orange-button);
 }
 
-input[type="text"].white:not(:disabled):hover,
 input[type="password"].white:not(:disabled):hover,
 textarea:not(:disabled):hover,
 button:not(.circle).white:not(:disabled):hover,
-input[type="text"].white:focus-visible,
+
 input[type="password"].white:focus-visible,
 textarea:focus-visible,
 button:not(.circle).white:focus-visible {
@@ -139,7 +160,22 @@ h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
 	font-weight: bold;
 }
 
-button.circle, input[type="checkbox"] {
+button.circle {
+    outline: none;
+
+    background-color: var(--background);
+    color: none;
+
+	width: 1.6em;
+	height: 1.6em;
+	padding: 0;
+    
+	background-position: center;
+	background-size: 1.6em;
+	background-repeat: no-repeat;
+}
+
+input[type="checkbox"] {
     border: solid 2px var(--foreground-orange);
 	border-radius: 100%;
     outline: none;
@@ -157,6 +193,7 @@ button.circle, input[type="checkbox"] {
 	background-size: 1.3em;
 	background-repeat: no-repeat;
 }
+
 input[type="checkbox"] {
 	background-image: url("./off.svg");
     appearance: none;

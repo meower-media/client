@@ -261,7 +261,7 @@
 					});
 					return false;
 				}}
-			>
+				>
 					<input
 						type="text"
 						class="white"
@@ -274,12 +274,6 @@
 					<button>Post</button>
 				</form>
 				<div class="post-errors">{postErrors}</div>
-		{/if}
-		{#if posts.length < 1}
-			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
 			{/if}
 			{#if posts.length < 1}
 				{#if $user.name}
@@ -287,58 +281,65 @@
 				{:else}
 					No posts here. Check back later!
 				{/if}
-			{:else}
-				{#each posts as post (post.id)}
-					<div
-						transition:fly|local="{{y: -50, duration: 250}}"
-						animate:flip="{{duration: 250}}"
-					>
-						<Post post={post} />
-					</div>
-				{/each}
-			{/if}
-			<div class="center">
-				{#if pageLoading}
-					<Loading />
-				{:else}
-					{#if numPages && numPages > pagesLoaded}
-						<button 
-							class="load-more"
-							on:click={() => loadPage(pagesLoaded + 1)}
-						>
-							Load More
-						</button>
+				{#if posts.length < 1}
+					{#if $user.name}
+						No posts here. Check back later or be the first to post!
+					{:else}
+						No posts here. Check back later!
 					{/if}
+				{:else}
+					{#each posts as post (post.id)}
+						<div
+							transition:fly|local="{{y: -50, duration: 250}}"
+							animate:flip="{{duration: 250}}"
+						>
+							<Post post={post} />
+						</div>
+					{/each}
+				{/if}
+				<div class="center">
+					{#if pageLoading}
+						<Loading />
+					{:else}
+						{#if numPages && numPages > pagesLoaded}
+							<button 
+								class="load-more"
+								on:click={() => loadPage(pagesLoaded + 1)}
+							>
+								Load More
+							</button>
+						{/if}
+					{/if}
+				</div>
+			{/if}
+			<div id="members">
+				{#if $chatName !== "Livechat"}
+					<div class="settings-controls">
+						<button
+							class="circle join"
+							on:click = {()=>{
+								modalPage.set("AddMember");
+								modalShown.set(true);
+							}}
+						></button>
+					</div>
+					<br>
+					<br>
+					<div id="members-inner">
+						{#each $chatMembers as chatmember}
+							<button class="Memberbutton" on:click={()=>{
+								modalPage.set("GC_Member");
+								modalShown.set(true);
+								profileClicked_GC.set(chatmember);
+							}}>
+								<Member member={chatmember} />
+							</button>
+						{/each}
+					</div>
+				{:else}
+					<h1 style="margin: 0; left: 4%; position:absolute;">In LiveChat</h1>
 				{/if}
 			</div>
-		</div>
-		<div id="members">
-			{#if $chatName !== "Livechat"}
-				<div class="settings-controls">
-					<button
-						class="circle join"
-						on:click = {()=>{
-							modalPage.set("AddMember");
-							modalShown.set(true);
-						}}
-					></button>
-				</div>
-				<br>
-				<br>
-				<div id="members-inner">
-					{#each $chatMembers as chatmember}
-						<button class="Memberbutton" on:click={()=>{
-							modalPage.set("GC_Member");
-							modalShown.set(true);
-							profileClicked_GC.set(chatmember);
-						}}>
-							<Member member={chatmember} />
-						</button>
-					{/each}
-				</div>
-			{:else}
-				<h1 style="margin: 0; left: 4%; position:absolute;">In LiveChat</h1>
-			{/if}
 		</div>
 	{:catch error}
 		<Container>

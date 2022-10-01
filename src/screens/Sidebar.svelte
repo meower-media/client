@@ -72,6 +72,7 @@
 	<button on:click={()=>goto("home")} class="home-btn round">
 		<img
 			src={home}
+			class="buttonimg"
 			alt="Home"
 			width="90%"
 			height="auto"
@@ -81,6 +82,17 @@
 	<button on:click={()=>goto("inbox")} class="gc-btn round">
 		<img
 			src={$user.unread_inbox ? mail_new : mail}
+			class="buttonimg"
+			alt="Inbox Messages"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("inbox")} class="gc-btn round">
+		<img
+			src={$user.unread_inbox ? mail_new : mail}
+			class="buttonimg"
 			alt="Inbox Messages"
 			width="90%"
 			height="auto"
@@ -96,6 +108,7 @@
 	}} class="gc-btn round">
 		<img
 			src={gc}
+			class="buttonimg"
 			alt="Group Chats"
 			width="90%"
 			height="auto"
@@ -108,6 +121,7 @@
 	}} class="profile-btn round">
 		<img
 			src={profile}
+			class="buttonimg"
 			alt="Profile"
 			width="90%"
 			height="auto"
@@ -118,6 +132,7 @@
 		<img
 			src={settings}
 			alt="Settings"
+			class="buttonimg"
 			width="90%"
 			height="auto"
 			draggable={false}
@@ -134,6 +149,7 @@
 	}} class="logout-btn round">
 		<img
 			src={logout}
+			class="buttonimg"
 			alt="Log out"
 			width="90%"
 			height="auto"
@@ -157,13 +173,18 @@
 		flex-direction: column;
 		user-select: none;
 
-		width: 100%;
-		height: 100%;
+		margin: 11%;
+
+		width: 90%;
+		height: 97%;
+		border-radius: 20px;
+		box-shadow: 0px 8px 0px 0px var(--orange-scrollbar-back);
+
 	}
 	.sidebar > button {
-		margin-bottom: 0.5em;
-		width: 2.8em;
-		height: 2.8em;
+		margin-bottom: 0.7em;
+		width: 3.2em;
+		height: 3.2em;
 	}
 
 	.logo {
@@ -183,7 +204,6 @@
 	.logo-inner:hover {
 		background-color: var(--orange-dark);
 	}
-
 
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;

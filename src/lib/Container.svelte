@@ -8,11 +8,12 @@
 <style>
 	div {
 		background-color: var(--background);
-		border: solid 2px var(--orange);
-		border-radius: 1px;
-		padding: 0.6em;
-		margin-bottom: 0.4em;
+		border: solid 4px var(--orange);
+		border-radius: 15px;
+		padding: 0.7em;
+		margin-bottom: 0.6em;
 		overflow-wrap: break-word;
 		position: relative;
+		box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
 	}
 </style>

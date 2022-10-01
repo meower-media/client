@@ -206,35 +206,38 @@
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}
-		{#if posts.length < 1}
-			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
-			{/if}
-		{:else}
-			{#each posts as post (post.id)}
-				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
-				>
-					<Post post={post} />
-				</div>
-			{/each}
-		{/if}
-		<div class="center">
-			{#if pageLoading}
-				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
-					>
-						Load More
-					</button>
+		<div id="fadetop"></div>
+		<div id="inner">
+			{#if posts.length < 1}
+				{#if $user.name}
+					No posts here. Check back later or be the first to post!
+				{:else}
+					No posts here. Check back later!
 				{/if}
+			{:else}
+				{#each posts as post (post.id)}
+					<div
+						transition:fly|local="{{y: -50, duration: 250}}"
+						animate:flip="{{duration: 250}}"
+					>
+						<Post post={post} />
+					</div>
+				{/each}
 			{/if}
+			<div class="center">
+				{#if pageLoading}
+					<Loading />
+				{:else}
+					{#if numPages && numPages > pagesLoaded}
+						<button 
+							class="load-more"
+							on:click={() => loadPage(pagesLoaded + 1)}
+						>
+							Load More
+						</button>
+					{/if}
+				{/if}
+			</div>
 		</div>
 	{:catch error}
 		<Container>
@@ -248,7 +251,7 @@
 <style>
 	.createpost {
 		display: flex;
-		margin-bottom: 0.5em;
+		margin-bottom: -0.1em;
 	}
 	.createpost input {
 		flex-grow: 1;
@@ -264,6 +267,24 @@
 		width: 100%;
 		margin-bottom: 1.88em;
 	}
+	#fadetop {
+		z-index: 2;
+		position: relative;
+		margin-top: 1em;
+		height: 100px;
+		background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(0,0,0,0))
+	}
+
+	#inner {
+		z-index: 0;
+		top: 9.8em;
+		position: absolute;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: 27em;
+		width: 71.1em;
+	}
+
 	.fullcenter {
 		text-align: center;
 		display: flex;
