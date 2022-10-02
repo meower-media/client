@@ -103,6 +103,7 @@
 			>Change Profile Picture</button>
 		{/if}
 
+		<br><br>
 		<button
 			class="long"
 			title="View Recet Posts"
@@ -112,6 +113,7 @@
 				tick().then(() => page.set("recent"));
 			}}
 		>View recent posts</button>
+		<br><br>
 
 		{#if $user.name && $profileClicked !== $user.name}
 			<button
@@ -119,7 +121,7 @@
 				title="Moved to GC member management"
 				disabled
 			>Add to chat</button>
-
+			<br><br>
 			<button
 				class="long"
 				title="Report User"

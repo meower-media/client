@@ -161,53 +161,71 @@
 			Reconnecting...
 		</div>
 	{:else if $page === "welcome"}
+		<div class="left">
+			<h2 id="welcometo">Welcome to</h2>
+			<div id="meowerlogo_left">
+				<img
+					alt="Meower"
+					src={meowerLogo}
+					height="70"
+				/>
+			</div>
+			<img
+				src={meowy}
+				alt=""
+				height="64"
+				id="meowy_left"
+			>
+		</div>
 		<div class="fullcenter">
-			<div class="column-ui">
-				<div>
-					<img
-						alt="Meower"
-						src={meowerLogo}
-						class="logo-img"
-						height="70"
-					/>
-					<br /><br />
-				</div>
-				<button on:click={() => page.set("login")}>Log in</button> <br />
-				<button on:click={() => page.set("join")}>Create an account</button> <br />
-				{#if localStorage.getItem("meower_savedusername")}
-					<button on:click={() => {
-						rememberMe = true;
-						doLogin(
-							localStorage.getItem("meower_savedusername"),
-							localStorage.getItem("meower_savedpassword"),
-						)
-					}}>Use saved login ({localStorage.getItem("meower_savedusername")})</button>
-					<p class="small">{loginStatus}</p>
-				{/if}
+			<h2 class="selectopt">Please select an option.</h2>
+			{#if localStorage.getItem("meower_savedusername")}
 				<button on:click={() => {
-					user.set(unloadedProfile());
-					loginStatus = "";
-					page.set("blank");
-					screen.set("main");
-				}}>Skip</button>
-				<p class="small">(Several features will be unavailable while not logged in.)</p>
-				<div>
-					<p class="small">
-						Meower Svelte v1.4.0 Development
-					</p>
-					<img
-						src={meowy}
-						alt=""
-						height="64"
-					>
-				</div>
+					rememberMe = true;
+					doLogin(
+						localStorage.getItem("meower_savedusername"),
+						localStorage.getItem("meower_savedpassword"),
+					)
+				}} class="button_welcome_savedlogin button_OOBE_NP">Use saved login</button>
+			{/if}
+			<button on:click={() => page.set("login")} class="button_OOBE">Log in</button> <br />
+			<button on:click={() => page.set("join")} class="button_OOBE">Create an account</button> <br />
+			<button on:click={() => {
+				user.set(unloadedProfile());
+				loginStatus = "";
+				page.set("blank");
+				screen.set("main");
+			}} class="button_OOBE">Explore without an account</button>
+			<div>
+				<h2 class="small sveltever">
+					Meower Svelte v1.5.0 Development_Beta6Design
+				</h2>
+				<p class="small meowerteam">
+					Made with love by the <u>Meower Team</u>
+				</p>
 			</div>
 		</div>
 	{:else if $page === "login"}
+		<div class="left">
+			<h2 id="welcometo">Welcome Back!</h2>
+			<div id="meowerlogo_left">
+				<img
+					alt="Meower"
+					src={meowerLogo}
+					height="70"
+				/>
+			</div>
+			<img
+				src={meowy}
+				alt=""
+				height="64"
+				id="meowy_left"
+			>
+		</div>
 		<div class="fullcenter">
-			<h1>Login to Meower</h1>
+			<h1 class="login_textre">Log in to Meower</h1>
 			
-			<form class="column-ui"
+			<form
 				on:submit|preventDefault={e => {
 					if (!(e.target[0].value && e.target[1].value)) {
 						loginStatus = "You must specify a username and a password to login!";
@@ -220,26 +238,40 @@
 					return false;
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="64">
-				<p class="checkboxes">
+				<input type="text" placeholder="Username" class="input_OOBE" maxlength="20"> <br />
+				<input type="password" placeholder="Password" class="input_OOBE" maxlength="64">
+				<p class="checkboxes login-save">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
-						Save this login
+						Save login
 					</label>
 				</p>
 				<span class="login-status">{loginStatus}</span>
-				<div class="buttons">
-					<button type="button" on:click|preventDefault={()=>{
-						page.set("welcome");
-						loginStatus = "";
-						return false;
-					}}>Go back</button>
-					<button type="submit">Log in</button>
-				</div>
+				<button type="button" class="backbuttonlogin" on:click|preventDefault={()=>{
+					page.set("welcome");
+					loginStatus = "";
+					return false;
+				}}>Back</button>
+				<button type="submit" class="loginbuttonlogin">Log in</button>
 			</form>
 		</div>
 	{:else if $page === "join"}
+		<div class="left">
+			<h2 id="welcometo">Welcome to</h2>
+			<div id="meowerlogo_left">
+				<img
+					alt="Meower"
+					src={meowerLogo}
+					height="70"
+				/>
+			</div>
+			<img
+				src={meowy}
+				alt=""
+				height="64"
+				id="meowy_left"
+			>
+		</div>
 		<div class="fullcenter">
 			<h1>Welcome to Meower</h1>
 
@@ -381,6 +413,7 @@
 		height: 100%;
 
 		display: table;
+		overflow: hidden;
 	}
 	.fullcenter {
 		width: 100%;
@@ -388,11 +421,110 @@
 		box-sizing: border-box;
 
 		margin: auto;
-		overflow: auto;
+		overflow: hidden;
 
 		display: table-cell;
 		vertical-align: middle;
 		padding: 0.5em;
+		z-index: 0;
+	}
+
+	#meowy_left {
+		opacity: 0.4;
+		transform: scale(4) translate(-50%,260%) rotate(30deg);
+	}
+
+	.button_welcome_savedlogin {
+		position: absolute;
+		bottom: 25%;
+		left: 35%;
+		font-family: simvoni !important;
+		line-height: 0.5;
+	}
+
+	.login_textre {
+		position: absolute;
+		font-size: 48px;
+		top: 22%;
+		right: 37%;
+	}
+
+	.button_OOBE_NP {
+		background-color: white;
+		border-width: 5px;
+		border-color: var(--orange-light);
+		font-family: simvoni-bold;
+		color: black;
+		position: relative;
+		text-align: left;
+	}
+
+	.button_OOBE_NP:hover {
+		background-color: rgb(244, 244, 244) !important;
+	}
+
+	.button_OOBE {
+		width: 100%;
+		left: 4em;
+		background-color: white;
+		border-width: 5px;
+		border-color: var(--orange-light);
+		font-family: simvoni-bold;
+		color: black;
+		position: relative;
+		text-align: left;
+		margin-bottom: 1em;
+	}
+
+	.input_OOBE {
+		width: 100%;
+		left: 4em;
+		background-color: white;
+		border-width: 5px;
+		border-color: var(--orange-light);
+		font-family: simvoni-bold;
+		color: black;
+		position: relative;
+		text-align: left;
+		margin-bottom: 1em;
+	}
+
+	.button_OOBE:hover {
+		background-color: rgb(244, 244, 244) !important;
+	}
+
+	.sveltever {
+		position: absolute;
+		bottom: 10%;
+		left: 49%;
+	}
+
+	.meowerteam {
+		position: absolute;
+		bottom: 5%;
+		left: 53%;
+	}
+
+	.selectopt {
+		position: absolute;
+		top: 3%;
+		font-size: 48px;
+		left: 35%;
+	}
+
+	#welcometo {
+		position: absolute;
+		top: 10%;
+		left: 30%;
+		color: var(--orange-button);
+		font-size: 24px;
+	}
+
+	#meowerlogo_left {
+		position: absolute;
+		top: 12%;
+		left: 8%;
+		transform: scale(0.8);
 	}
 
 	.setup.white {
@@ -415,6 +547,15 @@
 	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
+	}
+
+	.left {
+		background-color: white;
+		width: 14em;
+		height: 100%;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
 	}
 
 	.small {
@@ -465,5 +606,45 @@
 	.checkboxes {
 		text-align: left;
 		font-size: 90%;
+		position: absolute;
+	}
+
+	.login-save {
+		top: 55%;
+		right: 52%;
+	}
+
+	.backbuttonlogin {
+		position: absolute;
+		width: 50%;
+		bottom: 16%;
+		right: 40%;
+		text-align: right;
+		color: black;
+		font-family: simvoni-bold;
+		background-color: white;
+		border-width: 5px;
+		border-color: var(--orange-light);
+	}
+
+	.backbuttonlogin:hover {
+		background-color: rgb(244, 244, 244) !important;
+	}
+
+	.loginbuttonlogin {
+		position: absolute;
+		width: 50%;
+		bottom: 16%;
+		left: 70%;
+		text-align: left;
+		color: black;
+		font-family: simvoni-bold;
+		background-color: white;
+		border-width: 5px;
+		border-color: var(--orange-light);
+	}
+
+	.loginbuttonlogin:hover {
+		background-color: rgb(244, 244, 244) !important;
 	}
 </style>

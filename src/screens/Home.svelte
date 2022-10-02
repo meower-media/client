@@ -206,7 +206,6 @@
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}
-		<div id="fadetop"></div>
 		<div id="inner">
 			{#if posts.length < 1}
 				{#if $user.name}
@@ -267,18 +266,10 @@
 		width: 100%;
 		margin-bottom: 1.88em;
 	}
-	#fadetop {
-		z-index: 2;
-		position: relative;
-		margin-top: 1em;
-		height: 100px;
-		background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(0,0,0,0))
-	}
 
 	#inner {
 		z-index: 0;
-		top: 9.8em;
-		position: absolute;
+		margin-top: 1em;
 		overflow-y: scroll;
 		overflow-x: hidden;
 		height: 27em;

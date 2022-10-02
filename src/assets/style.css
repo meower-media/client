@@ -36,6 +36,23 @@ body {
 	height: 100%;
 }
 
+input::-webkit-input-placeholder {
+    font-style: italic;
+    color: gray;
+}
+input:-moz-placeholder {
+    font-style: italic;  
+    color: gray;
+}
+input::-moz-placeholder {
+    font-style: italic;  
+    color: gray;
+}
+input:-ms-input-placeholder {  
+    font-style: italic; 
+    color: gray;
+}
+
 input[type="text"] {
     border: solid 2px var(--foreground-orange);
     border-radius: 22px;
@@ -176,21 +193,19 @@ button.circle {
 }
 
 input[type="checkbox"] {
-    border: solid 2px var(--foreground-orange);
-	border-radius: 100%;
     outline: none;
 
     background-color: var(--orange);
     color: var(--foreground-orange);
 
-	width: 1.6em;
-	height: 1.6em;
+	width: 2em;
+	height: 2em;
 	padding: 0;
 	
 	font: inherit;
 
 	background-position: center;
-	background-size: 1.3em;
+	background-size: 2em;
 	background-repeat: no-repeat;
 }
 
