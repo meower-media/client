@@ -1,0 +1,4 @@
+- [] update branch
+- [] even more code refactor
+- [] finish the great input componentification
+- [] wait what was i planning to do again that i haven't already done
