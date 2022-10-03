@@ -5,15 +5,24 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
-	import {profileData, profileClicked, postClicked, user, chatid, ulist, mainPage as page, modalShown, modalPage} from "../lib/stores.js";
+	import {
+		profileData, profileClicked,
+		postClicked, user,
+		chatid, ulist,
+		mainPage as page,
+		modalShown, modalPage
+	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
-	import {apiUrl} from "./urls";
+	import {apiUrl} from "./urls.js";
+
 	export let post = {};
 	export let buttons = true;
-	let bridged = false
+	export let input = null;
+
+	let bridged = false;
 
 	// TODO: make bridged tag a setting
 
@@ -24,10 +33,10 @@
 		if (!post.user) return;
 
 		if (post.user == "Discord" && post.content.includes(":")) {
-			bridged = true
+			bridged = true;
 		}
 
-		var userName = ""
+		let userName = "";
 		if (post.user == "Discord" && post.content.includes(":")) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
@@ -104,12 +113,25 @@
 	<div class="post-header">
 		<div class="settings-controls">
 			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
-				{#if post.user !== "Notification" && post.user !== "Announcement"}
+				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
 					<button 
 						class="circle join"
-						on:click={()=>{
-							document.getElementById("postinput").value = "@" + post.user
-							document.getElementById("postinput").focus()
+						on:click={() => {
+							let existingText = input.value;
+
+							const mentionRegex = /^@\w+\s*/i;
+							const mention = "@" + post.user + " ";
+
+							if (mentionRegex.test(existingText)) {
+								input.value = existingText.trim().replace(
+									mentionRegex,
+									mention
+								);
+							} else {
+								input.value = mention + existingText.trim();
+							}
+
+							input.focus();
 						}}
 					></button>
 				{/if}
@@ -161,7 +183,10 @@
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
 
-			<FormattedDate date={post.date} bridged={bridged}></FormattedDate>
+			<FormattedDate date={post.date}></FormattedDate>
+			{#if bridged}
+				<i>[BRIDGED]</i>
+			{/if}
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>

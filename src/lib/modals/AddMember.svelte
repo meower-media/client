@@ -1,38 +1,57 @@
 <script>	
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, mainPage as page,profileClicked_GC,chatName,chatid, modalPage} from "../stores.js";
+	import {
+		modalShown, mainPage as page,
+		chatName,chatid, chatMembers
+	} from "../stores.js";
 
     import {tick} from "svelte";
 
     import * as clm from "../clmanager.js";
+
+    let username;
 </script>
 
-<!--
-    <form
-                on:submit|preventDefault={e => {					
-                    
+<Modal on:close={() => {$modalShown = false}}>
+    <h2 slot="header">Add Member to {$chatName}</h2>
+    <div slot="default">
+        <form
+            on:submit|preventDefault={e => {					
+                clm.meowerRequest({
+                    cmd: "direct", 
+                    val: {
+                        cmd: "add_to_chat", 
+                        val: {chatid: $chatid, username: e.target[0].value}
+                    }
+                });
+                $chatMembers.push(username);
+                $modalShown = false;
+                page.set("blank");
+                tick().then(() => page.set("groupchat"));
             }}
 		>
             <input
                 type="text"
-                class="white"
-                placeholder="Add Via Search"
-                    id="postinput"
-                    name="postinput"
+                class="long white"
+                placeholder="Username"
+
+                id="userinput"
+                name="userinput"
+
                 autocomplete="false"
                 maxlength="360"
-            >
-            <button>Add member</button>
-        </form>
--->
 
-<Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">{"Add Member To '" + $chatName + "'?"}</h2>
-    <div slot="default">
-        <button class="long"on:click={() => {
-            modalPage.set("AddMemberBN");
-        }}>Add Member By Name</button>
+				bind:value={username}
+            >
+            <br><br>
+			<div class="modal-buttons">
+				<button on:click|preventDefault={() => {
+					$modalShown = false;
+				}}>Cancel</button>
+            	<button disabled={!username}>Add member</button>
+			</div>
+        </form>
     </div>
 </Modal>
 

@@ -25,6 +25,8 @@
 	let numPages = null;
 	let postErrors = "";
 
+	let postInput;
+
 	// As we use a Load More button and the home is sorted newest-first,
 	// we need an offset for posts to be continuous.
 	let postOffset = 0;
@@ -181,27 +183,6 @@
 	} else {
 		link.ws.addEventListener("open", listenOnLink);
 	}
-
-	let _ulist = $ulist;
-	ulist.subscribe(val => {
-		_ulist = val;
-	})
-
-	function getpfp(userName) {
-		let pfpd = 0
-		clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "get_profile",
-				val: userName,
-			},
-			listener: "get_profile_" + userName,
-		}).then(val => {
-			// Ding dong! The data has arrived.
-			pfpd = val.payload.pfp_data
-			return pfpd
-		})
-	}
 </script>
 
 <!--
@@ -209,7 +190,7 @@
 	also  remove_from_chat
 -->
 
-<div class="posts">
+<div class="groupchat">
 	{#await loadPage(1)}
 		<div class="fullcenter">
 			<Loading />
@@ -224,62 +205,57 @@
 				<form
 					class="createpost"
 					on:submit|preventDefault={e => {					
-						postErrors = "";
-						if (!e.target[0].value.trim()) {
-							postErrors = "You cannot send an empty post!";
-							return false;
-						};
+							postErrors = "";
+							if (!e.target[0].value.trim()) {
+								postErrors = "You cannot send an empty post!";
+								return false;
+							};
 
-						spinner.set(true);
+							spinner.set(true);
 
-					e.target[1].disabled = true;
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_chat",
+						e.target[1].disabled = true;
+						link.send({
+							cmd: "direct",
 							val: {
-								p: e.target[0].value,
-								chatid: $chatid,
+								cmd: "post_chat",
+								val: {
+									p: e.target[0].value,
+									chatid: $chatid,
+								},
 							},
-						},
-						listener: "post_chat",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_chat") return;
-						link.off(postListener);
-						spinner.set(false);
+							listener: "post_chat",
+						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_chat") return;
+							link.off(postListener);
+							spinner.set(false);
 
-						e.target[1].disabled = false;
+							e.target[1].disabled = false;
 
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				}}
-			>
+							if (cmd.val === "I:100 | OK") {
+								e.target[0].value = "";
+							} else if (cmd.val === "E:106 | Too many requests") {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors = "Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					}}
+				>
 					<input
 						type="text"
 						class="white"
 						placeholder="Write something..."
-							id="postinput"
-							name="postinput"
+						id="postinput"
+						name="postinput"
 						autocomplete="off"
 						maxlength="360"
+						bind:this={postInput}
 					>
 					<button>Post</button>
 				</form>
 				<div class="post-errors">{postErrors}</div>
-		{/if}
-		{#if posts.length < 1}
-			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
 			{/if}
 			{#if posts.length < 1}
 				{#if $user.name}
@@ -293,27 +269,41 @@
 						transition:fly|local="{{y: -50, duration: 250}}"
 						animate:flip="{{duration: 250}}"
 					>
-						<Post post={post} />
+						<Post post={post} input={postInput} />
 					</div>
 				{/each}
-			{/if}
-			<div class="center">
-				{#if pageLoading}
-					<Loading />
-				{:else}
-					{#if numPages && numPages > pagesLoaded}
-						<button 
-							class="load-more"
-							on:click={() => loadPage(pagesLoaded + 1)}
-						>
-							Load More
-						</button>
+				
+				<div class="center">
+					{#if pageLoading}
+						<Loading />
+					{:else}
+						{#if numPages && numPages > pagesLoaded}
+							<button 
+								class="load-more"
+								on:click={() => loadPage(pagesLoaded + 1)}
+							>
+								Load More
+							</button>
+						{/if}
 					{/if}
-				{/if}
-			</div>
+				</div>
+			{/if}
 		</div>
+		{#if $chatid !== "livechat"}
 		<div id="members">
-			{#if $chatName !== "Livechat"}
+			<div id="members-inner">
+				{#each $chatMembers as chatmember}
+					<button class="member-button" on:click={()=>{
+						modalPage.set("GC_Member");
+						modalShown.set(true);
+						profileClicked_GC.set(chatmember);
+					}}>
+						<Member member={chatmember} />
+					</button>
+				{/each}
+			</div>
+			<div class="top">
+				<h2 class="members-title">Members</h2>
 				<div class="settings-controls">
 					<button
 						class="circle join"
@@ -323,23 +313,9 @@
 						}}
 					></button>
 				</div>
-				<br>
-				<br>
-				<div id="members-inner">
-					{#each $chatMembers as chatmember}
-						<button class="Memberbutton" on:click={()=>{
-							modalPage.set("GC_Member");
-							modalShown.set(true);
-							profileClicked_GC.set(chatmember);
-						}}>
-							<Member member={chatmember} />
-						</button>
-					{/each}
-				</div>
-			{:else}
-				<h1 style="margin: 0; left: 4%; position:absolute;">In LiveChat</h1>
-			{/if}
+			</div>
 		</div>
+		{/if}
 	{:catch error}
 		<Container>
 			<h1>{chatName}</h1>
@@ -350,40 +326,55 @@
 </div>
 
 <style>
-	#members-inner {
-		top: 1%;
-		position: relative;
-		height: 90%;
-		overflow-y: scroll;
-		overflow-x: hidden;
-	}
-
-	.Memberbutton {
+	.member-button {
+		padding: 0;
         margin: 0;
-        height: 8%;
+
         width: 100%;
+
         background-color: transparent;
+		color: var(--foreground);
         border: none;
+
         position: relative;
+		text-align: left;
     }
 
-    .Memberbutton:hover {
-        background-color: #00000080 !important;
+	/* repetition because of CSS specificity */
+	.member-button.member-button:hover,
+	.member-button.member-button:focus-visible {
+        background-color: #7773;
     }
-	
-	#chat {
-		width: 80%;
-		position: absolute;
+	.member-button.member-button:active {
+        background-color: #7776;
+    }
+
+	.groupchat {
+		height: 100%;
+		
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		gap: 0.4em;
 	}
-
+	#chat {
+		flex-shrink: 1;
+		flex-grow: 1;
+	}
 	#members {
-		position: absolute;
-		left: 85.4%;
-		height: 98%;
-		width: 14%;
+		width: 12em;
 		background-color: var(--background);
 		border: solid 2px var(--orange);
 		border-radius: 1px;
+
+		position: relative;
+	}
+	#members-inner {
+		position: relative;
+		overflow-y: auto;
+		overflow-x: hidden;
+		height: 100%;
+		padding-top: 2.25em;
 	}
 
 	.createpost {
@@ -393,15 +384,11 @@
 	.createpost input {
 		flex-grow: 1;
 		margin-right: 0.25em;
+	
 	}
-	.posts {
-		height: 100%;
-	}
+
 	.center {
 		text-align: center;
-	}
-	.long-boi {
-		width: 100%;
 	}
 	.load-more {
 		width: 100%;
@@ -428,9 +415,18 @@
 		margin: 0.25em 0;
 	}
 
+	.top {
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
 	.settings-controls {
 		position: absolute;
 		top: 0.25em;
 		right: 0.25em;
+	}
+	.members-title {
+		margin: 0.25em;
 	}
 </style>

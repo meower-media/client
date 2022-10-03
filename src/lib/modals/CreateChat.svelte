@@ -33,7 +33,7 @@
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">Create chat</h2>
+    <h2 slot="header">Create Chat</h2>
     <div slot="default">
 		<form
 			on:submit|preventDefault={e => {

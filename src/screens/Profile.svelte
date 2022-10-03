@@ -60,7 +60,7 @@
 							$user.pfp_data : data.pfp_data
 					}
 					alt="{data._id}'s profile picture"
-					big={true}
+					size={1.4}
 				></PFP>
 				<div class="profile-header-info">
 					<h1 class="profile-username">{data._id}</h1>
@@ -146,7 +146,7 @@
 					online={$ulist.includes($profileClicked)}
 					icon={-2}
 					alt="{$profileClicked}'s profile picture"
-					big={true}
+					size={1.4}
 				></PFP>
 				<div class="profile-header-info">
 					<h1 class="profile-username">{$profileClicked}</h1>

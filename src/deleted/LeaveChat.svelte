@@ -1,11 +1,9 @@
 <script>	
-	import Modal from "../lib/lib/Modal.svelte";
+	import Modal from "../lib/Modal.svelte";
 
-	import {modalShown, mainPage as page,profileClicked_GC,chatName,chatid, modalPage} from "../lib/lib/stores.js";
-
-    import {tick} from "svelte";
-
-    import * as clm from "../lib/lib/clmanager.js";
+	import {
+		modalShown
+	} from "../lib/stores.js";
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>

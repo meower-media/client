@@ -38,10 +38,10 @@
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">{"Profile of "+$profileClicked_GC}</h2>
+    <h2 slot="header">{$profileClicked_GC}'s Profile</h2>
     <div slot="default">
         {#await loadProfile()}
-            <div class="fullcenter">
+            <div class="center">
                 <Loading />
             </div>
         {:then data}
@@ -54,7 +54,7 @@
 							    $user.pfp_data : data.pfp_data
                         }
                         alt="{$profileClicked_GC}'s profile picture"
-                        big={true}
+                        size={1.4}
                     ></PFP>
                     <div class="profile-header-info">
                         <h1 class="profile-username">{$profileClicked_GC}</h1>
@@ -101,20 +101,6 @@
 </Modal>
 
 <style>
-    .fullcenter {
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		width: 100vw;
-		height: 100vh;
-
-		position: fixed;
-		top: 0;
-		left: 0;
-	}
-
     .long {
         width: 100%;
         margin: 0;
@@ -146,5 +132,9 @@
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+	}
+
+	.center {
+		text-align: center;
 	}
 </style>

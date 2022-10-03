@@ -7,9 +7,11 @@
 	import {onMount} from "svelte";
 	export let member = "";
 
-	let pfp = 0
+	let pfp = 0;
 
 	// TODO: make bridged tag a setting
+
+	let error;
 
 	/**
 	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
@@ -26,41 +28,55 @@
 			// Ding dong! The data has arrived.
 			pfp = val.payload.pfp_data
 		}).catch(e => {
-			alert("Error while loading member: "+member+", "+e)
+			error = e;
 			pfp = -2
 		})
 	};
 	onMount(initPostUser);
 </script>
 
-<div id="Member">
-	<div class="member-pfp">
-		<PFP
-			icon={pfp}
-			alt="{member}'s profile picture"
-			online={$ulist.includes(member)}
-		></PFP>
+{#if !error}
+	<div class="member">
+		<div class="member-pfp">
+			<PFP
+				icon={pfp}
+				alt="{member}'s profile picture"
+				online={$ulist.includes(member)}
+				size={0.5}
+			></PFP>
+		</div>
+		<p class="member-name">{member}</p>
 	</div>
-	<p class="member-name">{member}</p>
-</div>
+{:else}
+	<div class="error">error loading member {member}: {error}</div>
+{/if}
 
 <style>
+	.member {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		align-items: center;
+		
+		width: 100%;
+		height: 2.5em;
+		gap: 0.5em;
+		padding: 0 0.5em;
+		box-sizing: border-box;
+	}
 
     .member-name {
-        top: -0.1em;
-        left: 30%;
+		flex-grow: 1;
+		flex-shrink: 1;
+
         text-align: left;
-        position: absolute;
-        width: 65%;
         text-overflow: clip;
         overflow: hidden;
     }
 
-    .member-pfp {
-        top: -0.5em;
-        right: 66%;
-		transform: scale(0.5);
-        text-align: center;
-        position: absolute;
-    }
+	.error {
+		padding: 0.25em;
+		font-style: italic;
+		font-size: 80%;
+	}
 </style>

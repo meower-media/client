@@ -173,19 +173,22 @@
 		<Modal on:close={() => {toleavechat = false}}>
 			<h2 slot="header">Are you sure you want to leave {$chatName}?</h2>
 			<div slot="default">
-				<button on:click={() => {
-					chats = chats.filter(filter1);
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "leave_chat",
-							val: $chatid,
-						}
-					});
-					toleavechat = false
-				}}>
-					Leave
-				</button>
+				<div class="buttons">
+					<button on:click={() => {
+						toleavechat = false;
+					}}>No</button>
+					<button on:click={() => {
+						chats = chats.filter(filter1);
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "leave_chat",
+								val: $chatid,
+							}
+						});
+						toleavechat = false;
+					}}>Yes</button>
+				</div>
 			</div>
 		</Modal>
 	{/if}
@@ -224,5 +227,15 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+	}
+	
+	.buttons {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+	}
+	.buttons button {
+		flex-grow: 1;
+		flex-shrink: 1;
 	}
 </style>

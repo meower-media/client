@@ -27,6 +27,8 @@
 	// we need an offset for posts to be continuous.
 	let postOffset = 0;
 
+	let postInput;
+
 	/**
 	 * Loads a page, with offset and overflow calculations.
 	 * 
@@ -197,10 +199,12 @@
 					type="text"
 					class="white"
 					placeholder="Write something..."
-				        id="postinput"
-				        name="postinput"
+				    id="postinput"
+				    name="postinput"
 					autocomplete="off"
 					maxlength="250"
+
+					bind:this={postInput}
 				>
 				<button>Post</button>
 			</form>
@@ -218,7 +222,7 @@
 					transition:fly|local="{{y: -50, duration: 250}}"
 					animate:flip="{{duration: 250}}"
 				>
-					<Post post={post} />
+					<Post post={post} input={postInput} />
 				</div>
 			{/each}
 		{/if}
