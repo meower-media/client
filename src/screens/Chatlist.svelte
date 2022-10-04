@@ -177,7 +177,7 @@
 		<Modal on:close={() => {toleavechat = false}}>
 			<h2 slot="header">Are you sure you want to leave {$chatName}?</h2>
 			<div slot="default">
-				<div class="buttons">
+				<div class="modal-buttons">
 					<button on:click={() => {
 						toleavechat = false;
 					}}>No</button>
@@ -231,15 +231,5 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
-	}
-	
-	.buttons {
-		display: flex;
-		flex-wrap: nowrap;
-		flex-direction: row;
-	}
-	.buttons button {
-		flex-grow: 1;
-		flex-shrink: 1;
 	}
 </style>
