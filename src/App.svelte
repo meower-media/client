@@ -16,13 +16,12 @@
 	import AddMemberModal from "./lib/modals/AddMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
 	import ChatMembersModal from "./deleted/ChatMembers.svelte";
-	import AddMember_ByNameModal from "./lib/modals/AddMember_ByName.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
-	import {apiUrl} from "./lib/urls.js";
 	import {link} from "./lib/clmanager.js";
+	import {mobile} from "./lib/responsiveness.js";
 
 	import {
 		screen, setupPage,
@@ -31,7 +30,6 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-    import AddMemberByName from "./lib/modals/AddMember_ByName.svelte";
 </script>
 
 <main
@@ -40,7 +38,9 @@
 	class:theme-blue={$user.theme==="blue"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
-	class:layout-old={$user.layout === "old"}
+
+	class:layout-old={$mobile || $user.layout === "old"}
+	class:layout-mobile={$mobile}
 >
 	{#if $disconnected}
 		<Modal on:close={() => {$disconnected = false}}>
@@ -101,8 +101,6 @@
 			<RemoveMemberModal />
 		{:else if $modalPage === "AddMember"}
 			<AddMemberModal />
-		{:else if $modalPage === "AddMemberBN"}
-			<AddMember_ByNameModal />
 		{:else}
 			<ErrorModal />
 		{/if}
