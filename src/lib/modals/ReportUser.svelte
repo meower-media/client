@@ -1,19 +1,15 @@
 <script>	
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, profileClicked_GC, chatName, chatid, chatMembers} from "../stores.js";
+	import {modalShown, profileClicked} from "../stores.js";
 
     import * as clm from "../clmanager.js";
-
-    function filter1(v) {
-        return v !== $profileClicked_GC;
-    }
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">Remove Member</h2>
+    <h2 slot="header">Report User</h2>
     <div slot="default">
-		<span>Are you sure you want to remove {$profileClicked_GC} from {$chatName}?</span>
+		<span>Are you sure you want to report {$profileClicked}?</span>
 		<br /><br />
 		<div class="modal-buttons">
 			<button on:click={() => {
@@ -23,14 +19,15 @@
 				clm.meowerRequest({
 					cmd: "direct", 
 					val: {
-						cmd: "remove_from_chat", 
-						val: {chatid: $chatid, username: $profileClicked_GC}
+						cmd: "report", 
+						val: {
+							type: 1, 
+							id: $profileClicked
+						}
 					}
 				})
-				chatMembers.set($chatMembers.filter(filter1));
 				$modalShown = false;
-				
-			}}>Remove</button>
+			}}>Report</button>
 		</div>
 	</div>
 </Modal>

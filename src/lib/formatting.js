@@ -10,5 +10,5 @@ export const levels = {
 	1: "Low-level Moderator",
 	2: "Moderator",
 	3: "Administrator",
-	4: "Operator",
+	4: "Sysadmin",
 };

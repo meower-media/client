@@ -6,9 +6,10 @@
 
     import * as clm from "../clmanager.js";
 
-	import {modalShown, modalPage, profileClicked_GC, ulist, profileData,user, profileClicked, mainPage as page, chatid} from "../stores.js";
+	import {modalShown, modalPage, profileClicked_GC, ulist, profileData, user, profileClicked, mainPage as page, chatid, chatOwner} from "../stores.js";
     import {apiUrl, encodeApiURLParams} from "../urls";
     import {levels} from "../formatting.js";
+    import { dataset_dev } from "svelte/internal";
 
     async function loadProfile() {
 		let path = `users/${$profileClicked_GC}`;
@@ -61,9 +62,9 @@
                         <div class="profile-active">{
                             $ulist.includes($profileClicked_GC) ? "Online" : "Offline"
                         }</div>
-                        <div class="profile-role">
-                            {levels[data.lvl] || "Unknown"}
-                        </div>
+						<div class="profile-role">
+							{levels[data.lvl] || "Unknown"}
+						</div>
                     </div>
                 </div>
             </Container>
@@ -81,20 +82,18 @@
 				});
 				profileClicked.set($profileClicked_GC);
 				page.set("profile");
-			}}
-				>View full profile</button>
-			<button class="long" on:click={() => {
-				modalPage.set("Memberem");
-			}}>Remove from chat</button>
+			}}>View full profile</button>
+			{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}
+				<button class="long" on:click={() => {
+					modalPage.set("removeMember");
+				}}>Remove from chat</button>
+			{/if}
 			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
 		{:catch error}
 			<Container>
 				Error loading user profile.
 				<pre><code>{error}</code></pre>
 			</Container>
-			<button class="long" on:click={() => {
-				modalPage.set("Memberem");
-			}}>Remove from chat</button>
 			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
         {/await}
     </div>

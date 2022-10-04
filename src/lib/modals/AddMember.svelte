@@ -3,7 +3,7 @@
 
 	import {
 		modalShown, mainPage as page,
-		chatName,chatid, chatMembers
+		chatid, chatMembers
 	} from "../stores.js";
 
     import {tick} from "svelte";
@@ -14,7 +14,7 @@
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">Add Member to {$chatName}</h2>
+    <h2 slot="header">Add Member</h2>
     <div slot="default">
         <form
             on:submit|preventDefault={e => {					
@@ -25,12 +25,12 @@
                         val: {chatid: $chatid, username: e.target[0].value}
                     }
                 });
-                $chatMembers.push(username);
+                $chatMembers.push(username)
+                chatMembers.set($chatMembers);
                 $modalShown = false;
-                page.set("blank");
-                tick().then(() => page.set("groupchat"));
             }}
 		>
+            <label for="userinput"><b>Username</b></label>
             <input
                 type="text"
                 class="long white"
@@ -46,10 +46,10 @@
             >
             <br><br>
 			<div class="modal-buttons">
-				<button on:click|preventDefault={() => {
+				<button type="button" on:click|preventDefault={() => {
 					$modalShown = false;
 				}}>Cancel</button>
-            	<button disabled={!username}>Add member</button>
+            	<button type="submit" disabled={!username}>Add member</button>
 			</div>
         </form>
     </div>

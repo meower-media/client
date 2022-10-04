@@ -31,6 +31,8 @@
 	// we need an offset for posts to be continuous.
 	let postOffset = 0;
 
+	let showMembers = true;
+
 	/**
 	 * Loads a page, with offset and overflow calculations.
 	 * 
@@ -137,7 +139,7 @@
 	}
 
 	/**
-	 * Adds events to listen for live post updates.
+	 * Adds events to listen for live post updates and possible chat deletions.
 	 */
 	function listenOnLink() {
 		link.on("direct", cmd => {
@@ -200,6 +202,16 @@
 			<Container>
 				<h1>{$chatName}</h1>
 				Chat ID: {$chatid}
+				{#if $chatid !== "livechat"}
+				<div class="settings-controls">
+					<button
+						class="circle members"
+						on:click = {()=>{
+							showMembers = !showMembers;
+						}}
+					></button>
+				</div>
+				{/if}
 			</Container>
 			{#if $user.name}
 				<form
@@ -289,7 +301,7 @@
 				</div>
 			{/if}
 		</div>
-		{#if $chatid !== "livechat"}
+		{#if showMembers && $chatid !== "livechat"}
 		<div id="members">
 			<div id="members-inner">
 				{#each $chatMembers as chatmember}
@@ -306,7 +318,7 @@
 				<h2 class="members-title">Members</h2>
 				<div class="settings-controls">
 					<button
-						class="circle join"
+						class="circle plus"
 						on:click = {()=>{
 							modalPage.set("AddMember");
 							modalShown.set(true);
@@ -366,14 +378,14 @@
 		background-color: var(--background);
 		border: solid 2px var(--orange);
 		border-radius: 1px;
-
+		margin-bottom: 1.88em;
 		position: relative;
+		height: 100%;
 	}
 	#members-inner {
 		position: relative;
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: 100%;
 		padding-top: 2.25em;
 	}
 

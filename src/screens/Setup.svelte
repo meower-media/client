@@ -15,8 +15,6 @@
 
 	let logo, setup, logoImg, loginStatus = "";
 
-	let acceptTerms = false;
-
 	async function connect() {
 		await clm.disconnect();
 		clm.connect();
@@ -25,12 +23,12 @@
 	}
 
 	let rememberMe = false;
+	let acceptTerms = false;
 
 	onMount(() => {
 		page.subscribe(async value => {
 			if (!setup) return;
-			rememberMe = false;
-			acceptTerms = false;
+
 			setup.classList.remove("white");
 			if (value === "logo") {
 				clm.disconnect();
@@ -53,13 +51,14 @@
 				await sleep(700);
 				loginStatus = "Connecting...";
 				await connect();
-				await sleep(800);
 
-				loginStatus = "";
-				page.set("blank");
-				await sleep(600);
-				page.set("welcome");
+				if (localStorage.getItem("meower_savedusername") && localStorage.getItem("meower_savedpassword")) {
+					doLogin(localStorage.getItem("meower_savedusername"), localStorage.getItem("meower_savedpassword"), true);
+				} else {
+					await mainSetup();
+				}
 			} else if (value === "reconnect") {
+				loginStatus = "";
 				await connect();
 				await sleep(100);
 				page.set("welcome");
@@ -68,12 +67,24 @@
 	});
 
 	/**
+	 * Goes to main setup screen.
+	*/
+	async function mainSetup() {
+		localStorage.clear();
+		user.set(unloadedProfile());
+		loginStatus = "";
+		page.set("blank");
+		await sleep(600);
+		page.set("welcome");
+	}
+
+	/**
 	 * Logs in.
 	 * 
 	 * @param {string} username
 	 * @param {string} password
 	*/
-	function doLogin(username, password) {
+	function doLogin(username, password, autoLogin = false) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -100,17 +111,20 @@
 					}));
 					auth_header.set({username: val.payload.username, token: val.payload.token});
 
-					if (rememberMe) {
+					if (rememberMe || localStorage.getItem("meower_savedusername") === username) {
 						localStorage.setItem("meower_savedusername", username);
 						localStorage.setItem("meower_savedpassword", val.payload.token);
 					}
 
 					screen.set("main");
 				} catch(e) {
-					console.error(e);
-					loginStatus = "Unexpected " + e + " error getting user data!";
+					localStorage.clear();
+					console.error("Unexpected " + e + " error getting user data!");
+					link.disconnect(1000, "Failed to load userdata");
 				}
 			}).catch(code => {
+				if (autoLogin) return mainSetup();
+
 				switch (code) {
 					case "E:103 | ID not found":
 						loginStatus = "Invalid username!";
@@ -134,6 +148,8 @@
 				}
 			});
 		} catch(e) {
+			if (autoLogin) return mainSetup();
+
 			console.error(e);
 			loginStatus = "Error logging in: " + e;
 		}
@@ -185,7 +201,6 @@
 					<p class="small">{loginStatus}</p>
 				{/if}
 				<button on:click={() => {
-					user.set(unloadedProfile());
 					loginStatus = "";
 					page.set("blank");
 					screen.set("main");

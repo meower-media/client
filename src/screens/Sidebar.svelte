@@ -10,7 +10,9 @@
 		profileClicked,
 		chatid,
 		modalShown,
-		modalPage
+		modalPage,
+        disconnectReason,
+        disconnected
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	
@@ -124,10 +126,8 @@
 		/>
 	</button>
 	<button on:click={async () => {
-		if ($user.name === localStorage.getItem("meower_savedusername")) {
-			localStorage.removeItem("meower_savedusername");
-			localStorage.removeItem("meower_savedpassword");
-		}
+		disconnectReason.set("Intentional disconnect");
+		disconnected.set(false);
 		screen.set("setup");
 		await tick();
 		setupPage.set("reconnect");

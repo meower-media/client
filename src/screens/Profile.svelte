@@ -1,6 +1,7 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
+		modalPage, modalShown,
 		ulist,
 		profileClicked, profileData, user,
 		mainPage as page
@@ -14,6 +15,7 @@
 
 	import {tick} from "svelte";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls";
+    import { dataset_dev } from "svelte/internal";
 	
 	const pfps = new Array(28).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
@@ -74,6 +76,13 @@
 			</div>
 		</Container>
 
+		{#if data.quote}
+			<Container>
+				<h3>Quote</h3>
+				{data.quote}
+			</Container>
+		{/if}
+
 		{#if pfpSwitcher}
 			<Container>
 				<h2>Profile Picture</h2>
@@ -116,26 +125,10 @@
 		{#if $user.name && $profileClicked !== $user.name}
 			<button
 				class="long"
-				title="Moved to GC member management"
-				disabled
-			>Add to chat</button>
-
-			<button
-				class="long"
 				title="Report User"
 				on:click={()=>{
-					if (confirm("Are you sure you want to report this user?")) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "report",
-								val: {
-									type: 1,
-									id: $profileClicked,
-								},
-							},
-						});
-					}
+					modalPage.set("reportUser");
+					modalShown.set(true);
 				}}
 			>Report User</button>
 		{/if}
@@ -193,7 +186,7 @@
         font-style: italic;
     }
 
-    .profile-role {
+	.profile-role {
         position: absolute;
         font-size: 90%;
     }

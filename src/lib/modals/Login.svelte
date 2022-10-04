@@ -48,9 +48,6 @@
 						localStorage.setItem("meower_savedusername", username);
 						localStorage.setItem("meower_savedpassword", val.payload.token);
 					}
-
-					mainPage.set("blank");
-					tick().then(() => mainPage.set("home"));
 				} catch(e) {
 					loading = false;
 					loginStatus = "Unexpected " + e + " error getting user data!";
