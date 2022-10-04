@@ -150,7 +150,11 @@
                     </div>
 
                     <h1>{chat.nickname}</h1>
-                    {"Members: "+chat.members.join(", ")}
+                    Members: {
+						chat.members.length > 100 ? (
+							chat.members.slice(0, 99).join(", ") + "..."
+						) : chat.members.join(", ")
+					}
                 </Container>
             </div>
         {/each}
