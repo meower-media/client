@@ -3,10 +3,12 @@
 	import {
 		modalPage, modalShown,
 		ulist,
-		profileClicked, profileData, user,
+		profileClicked, user,
 		mainPage as page
 	} from "../lib/stores.js";
-	
+
+	import {profileCache} from "../lib/loadProfile.js";
+
     import PFP from "../lib/PFP.svelte";
     import Loading from "../lib/Loading.svelte";
     import Container from "../lib/Container.svelte";
@@ -37,10 +39,10 @@
 	 * Saves the user profile, and also clears its cache entry.
 	 */
 	function save() {
-		if ($profileData[$user.name]) {
-			const _profileData = $profileData;
-			delete _profileData[$user.name];
-			profileData.set(_profileData);
+		if ($profileCache[$user.name]) {
+			const _profileCache = $profileCache;
+			delete _profileCache[$user.name];
+			profileCache.set(_profileCache);
 		}
 
 		clm.updateProfile();

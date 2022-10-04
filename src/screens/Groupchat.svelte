@@ -362,8 +362,6 @@
     }
 
 	.groupchat {
-		height: 100%;
-		
 		display: flex;
 		flex-wrap: nowrap;
 		flex-direction: row;
@@ -374,19 +372,23 @@
 		flex-grow: 1;
 	}
 	#members {
+		height: var(--view-height);
 		width: 12em;
+
 		background-color: var(--background);
 		border: solid 2px var(--orange);
 		border-radius: 1px;
-		margin-bottom: 1.88em;
-		position: relative;
-		height: 100%;
+		box-sizing: border-box;
+
+		position: sticky;
+		top: 0;
 	}
 	#members-inner {
 		position: relative;
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding-top: 2.25em;
+		height: calc(100% - 2.25em);
+		margin-top: 2.25em;
 	}
 
 	.createpost {

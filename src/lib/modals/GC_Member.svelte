@@ -6,42 +6,22 @@
 
     import * as clm from "../clmanager.js";
 
-	import {modalShown, modalPage, profileClicked_GC, ulist, profileData, user, profileClicked, mainPage as page, chatid, chatOwner} from "../stores.js";
-    import {apiUrl, encodeApiURLParams} from "../urls";
+	import {
+		modalShown, modalPage, 
+		profileClicked_GC, 
+		ulist, user, profileClicked, 
+		mainPage as page, 
+		chatid, chatOwner
+	} from "../stores.js";
     import {levels} from "../formatting.js";
-    import { dataset_dev } from "svelte/internal";
 
-    async function loadProfile() {
-		let path = `users/${$profileClicked_GC}`;
-		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = await fetch(
-			`${apiUrl}${path}`
-		);
-		if (!resp.ok) {
-			throw new Error("Response code is not OK; code is " + resp.status);
-		}
-		const json = await resp.json();
-		return json;
-	}
-
-	/**
-	 * Saves the user profile, and also clears its cache entry.
-	 */
-	function save() {
-		if ($profileData[$user.name]) {
-			const _profileData = $profileData;
-			delete _profileData[$user.name];
-			profileData.set(_profileData);
-		}
-
-		clm.updateProfile();
-	}
+	import {default as loadProfile} from "../loadProfile.js";
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
     <h2 slot="header">{$profileClicked_GC}'s Profile</h2>
     <div slot="default">
-        {#await loadProfile()}
+        {#await loadProfile($profileClicked_GC)}
             <div class="center">
                 <Loading />
             </div>

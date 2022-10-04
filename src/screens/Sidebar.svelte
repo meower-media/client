@@ -155,15 +155,21 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+		flex-wrap: nowrap;
+
+		gap: 0.5em;
+		box-sizing: border-box;
+		
 		user-select: none;
 
 		width: 100%;
 		height: 100%;
 	}
 	.sidebar > button {
-		margin-bottom: 0.5em;
 		width: 2.8em;
 		height: 2.8em;
+
+		flex-shrink: 1;
 	}
 
 	.logo {
@@ -187,25 +193,16 @@
 
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;
+		padding-right: 0.5em;
 	}
-	:global(main.layout-old) .sidebar > button {
-		margin-bottom: 0;
-		margin-right: 0.5em;
-	}
-	:global(main.layout-old) .logo {
+	:global(main.layout-old:not(.layout-mobile)) .logo {
 		display: block;
 	}
-	:global(main.layout-old) .home-btn {
+	:global(main.layout-old:not(.layout-mobile)) .home-btn {
 		display: none;
 	}
 
-	@media only screen and (max-aspect-ratio: 1/1) {
-		.sidebar {
-			flex-direction: row;
-		}
-		.sidebar > button {
-			margin-bottom: 0;
-			margin-right: 0.5em;
-		}
+	:global(main.layout-mobile) .sidebar {
+		padding: 0 0.5em;
 	}
 </style>

@@ -22,6 +22,7 @@
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
+	import {mobile} from "./lib/responsiveness.js";
 
 	import {
 		screen, setupPage,
@@ -38,7 +39,9 @@
 	class:theme-blue={$user.theme==="blue"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
-	class:layout-old={$user.layout === "old"}
+
+	class:layout-old={$mobile || $user.layout === "old"}
+	class:layout-mobile={$mobile}
 >
 	{#if $disconnected}
 		<Modal>

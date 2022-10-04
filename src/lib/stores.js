@@ -19,13 +19,8 @@ export const disconnectReason = writable("");
 // Current chat ID
 export const chatName = writable("");
 export const chatid = writable("");
-
-// Current chat Members
 export const chatMembers = writable([]);
 export const chatOwner = writable("");
-
-// Cached profiles
-export const profileData = writable({});
 
 // User list
 export const ulist = writable([]);
