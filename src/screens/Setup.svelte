@@ -1,10 +1,18 @@
 <!-- Boring orange screen with login and signup. -->
 
 <script>
-	import {screen, setupPage as page, modalShown, modalPage, auth_header, user} from "../lib/stores.js";
+	import
+		{screen, setupPage as page,
+		modalShown, modalPage,
+		auth_header,
+		user
+	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
-	import unloadedProfile from "../lib/unloadedprofile.js";
 	const link = clm.link;
+	// @ts-ignore
+	window.clm = clm;
+
+	import unloadedProfile from "../lib/unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";

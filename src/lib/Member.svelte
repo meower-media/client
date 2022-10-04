@@ -2,9 +2,9 @@
 	import PFP from "../lib/PFP.svelte";
 
 	import {ulist} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
 	
 	import {onMount} from "svelte";
+	import loadProfile from "./loadProfile.js";
 	export let member = "";
 
 	let pfp = 0;
@@ -16,21 +16,13 @@
 	/**
 	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
 	 */
-	function initPostUser() {
-		clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "get_profile",
-				val: member,
-			},
-			listener: "get_profileGC_" + member,
-		}).then(val => {
-			// Ding dong! The data has arrived.
-			pfp = val.payload.pfp_data
-		}).catch(e => {
+	async function initPostUser() {
+		try {
+			pfp = (await loadProfile(member)).pfp_data;
+		} catch(e) {
 			error = e;
 			pfp = -2
-		})
+		}
 	};
 	onMount(initPostUser);
 </script>

@@ -6,7 +6,7 @@
 	import FormattedDate from "./FormattedDate.svelte";
 
 	import {
-		profileData, profileClicked,
+		 profileClicked,
 		postClicked, user,
 		chatid, ulist,
 		mainPage as page,
@@ -15,8 +15,9 @@
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	
+	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
+	
 	import {onMount} from "svelte";
-	import {apiUrl} from "./urls.js";
 
 	export let post = {};
 	export let buttons = true;
@@ -27,7 +28,7 @@
 	// TODO: make bridged tag a setting
 
 	/**
-	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
+	 * Initialize this post's user profile
 	 */
 	function initPostUser() {
 		if (!post.user) return;
@@ -36,75 +37,12 @@
 			bridged = true;
 		}
 
-		let userName = "";
 		if (post.user == "Discord" && post.content.includes(":")) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
-		
-		userName = post.user;
 
-		/**
-		 * Fetch the user profile and store it in the cache.
-		 */
-		const getProfile = async () => {
-			let _profileData = $profileData;
-
-			if (userName === "Notification") {
-				_profileData[userName] = {
-					pfp_data: 101
-				}
-				profileData.set(_profileData);
-				return;
-			} else if (userName === "Announcement") {
-				_profileData[userName] = {
-					pfp_data: 102
-				}
-				profileData.set(_profileData);
-				return;
-			} else if (userName === "Server") {
-				_profileData[userName] = {
-					pfp_data: 102
-				}
-				profileData.set(_profileData);
-				return;
-			}
-
-			_profileData[userName] = {
-				pfp_data: -1,
-			};
-			profileData.set(_profileData);
-
-			fetch(`${apiUrl}/users/${userName}`)
-			.then((response) => response.json())
-			.then(response => {
-				// Ding dong! The data has arrived.
-				_profileData[userName] = response;
-				console.log(response)
-				profileData.set(_profileData);
-			}).catch(e => {
-				// Uh oh - something has gone wrong.
-				console.log(e)
-				_profileData[userName] = {
-					error: true,
-					pfp_data: -2,
-					temporary: true,
-				};
-				profileData.set(_profileData);
-			})
-		}
-
-		// Do we have a stored profile?
-		const _profileData = $profileData;
-		if (_profileData[userName]) {
-			// Reuse the cached data if the profile isn't temporary
-			if (_profileData[userName].temporary) {
-				getProfile();
-			}
-		} else {
-			// Get the profile!
-			getProfile();
-		}
+		loadProfile(post.user);
 	};
 	onMount(initPostUser);
 </script>
@@ -175,7 +113,7 @@
 			}}
 		>
 			<PFP
-				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
+				icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
 				alt="{post.user}'s profile picture"
 				online={$ulist.includes(post.user)}
 			></PFP>

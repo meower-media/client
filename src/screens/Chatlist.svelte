@@ -1,7 +1,6 @@
 <script>
-	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatClicked, chatMembers} from "../lib/stores.js";
+	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatMembers} from "../lib/stores.js";
 
-  import {shiftHeld} from "../lib/keyDetect.js";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
 	import * as clm from "../lib/clmanager.js";
