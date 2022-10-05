@@ -15,6 +15,8 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
+    import { shiftHeld } from "../lib/keyDetect.js";
+	import { autoresize } from 'svelte-textarea-autoresize'
 
 	let id = 0;
 	export let posts = [];
@@ -239,16 +241,25 @@
 					return false;
 				}}
 			>
-				<input
+				<textarea
+					use:autoresize
 					type="text"
 					class="white"
 					placeholder="Write something..."
-						id="postinput"
-						name="postinput"
+					id="postinput"
+					name="postinput"
 					autocomplete="off"
 					maxlength="360"
-				>
-				<button>Post</button>
+					style="width: 100%; max-width: 100%; resize: none; margin-right: 0.25em;"
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+				></textarea>
+				<!-- Kudos to @tnix100 for the better linebreaks script!!-->
+				<button id="submitpost">Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}

@@ -68,6 +68,14 @@
 				</div>
 			</div>
 		</Container>
+		<Container>
+			<h2>Quote</h2>
+			{#if data.payload.quote === ""}
+			<p class="unavailable"><i>This user has not set a quote. Why not tell them about quote settings on BetterMeower?</i></p>
+			{:else}
+			<p>"<i>{data.payload.quote}</i>"</p>
+			{/if}
+		</Container>
 
 		{#if pfpSwitcher}
 			<Container>
@@ -96,11 +104,16 @@
 				title="Change Profile Picture"
 				on:click={() => pfpSwitcher = true}
 			>Change Profile Picture</button>
+			<button
+				class="long"
+				title="Change your quote"
+				on:click={() => page.set("settings")}
+			>Change Quote</button>
 		{/if}
 
 		<button
 			class="long"
-			title="View Recet Posts"
+			title="View Recent Posts"
 			on:click={()=>{
 				window.scrollTo(0,0);
 				page.set("blank");
