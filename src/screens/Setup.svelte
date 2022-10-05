@@ -187,7 +187,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						BetterMeower v1.3.1 (based on Meower Svelte 1.3.0)
+						Meower Svelte v1.3.0
 					</p>
 					<img
 						src={meowy}
@@ -199,8 +199,7 @@
 		</div>
 	{:else if $page === "login"}
 		<div class="fullcenter">
-			<h1>Login to BetterMeower</h1>
-			<p>Use the same credentials you use to log into your Meower Account</p>
+			<h1>Login to Meower</h1>
 			
 			<form class="column-ui"
 				on:submit|preventDefault={e => {
@@ -236,8 +235,7 @@
 		</div>
 	{:else if $page === "join"}
 		<div class="fullcenter">
-			<h1>Welcome to BetterMeower</h1>
-			<p>The account you create here can also be used on other clients!</p>
+			<h1>Welcome to Meower</h1>
 
 			<form class="column-ui"
 				on:submit|preventDefault={e => {

@@ -14,8 +14,6 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
-    import { shiftHeld } from "../lib/keyDetect.js";
-	import { autoresize } from 'svelte-textarea-autoresize'
 
 	let id = 0;
 	export let posts = [];
@@ -154,11 +152,7 @@
 	{:then}
 		<Container>
 			<h1>Home</h1>
-			There are currently {_ulist.length} users online{#if _ulist.length}{" "}{/if}
-	     </Container>
-		<Container>
-			<b>Users online: </b>
-			{_ulist.join(", ")}
+			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
 		{#if $user.name}
 			<form 
@@ -199,28 +193,19 @@
 					return false;
 				}}
 			>
-				<textarea
-					use:autoresize
+				<input
 					type="text"
 					class="white"
 					placeholder="Write something..."
-				    id="postinput"
-				    name="postinput"
+				        id="postinput"
+				        name="postinput"
 					autocomplete="off"
-					maxlength="360"
-					style="width: 100%; max-width: 100%; resize: none; margin-right: 0.25em;"
-					on:keydown={(event) => {
-						if (event.key == "Enter" && !shiftHeld) {
-							event.preventDefault();
-							document.getElementById("submitpost").click();
-						}
-					}}
-				></textarea>
-				<!-- Kudos to @tnix100 for the better linebreaks script!!-->
-				<button id="submitpost">Post</button>
+					maxlength="250"
+				>
+				<button>Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
-			{/if}
+		{/if}
 		{#if posts.length < 1}
 			{#if $user.name}
 				No posts here. Check back later or be the first to post!
