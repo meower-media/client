@@ -170,7 +170,7 @@
 		--orange-dark: #26a300;
 		--orange-scrollbar-back: #229200;
 		--background: #ffffff;
-		--foreground: #eef;
+		--foreground: black;
 		--foreground-orange: #eef;
 	}
 	#main.theme-green.mode-dark {
