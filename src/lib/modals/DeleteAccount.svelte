@@ -28,7 +28,7 @@
 		>
 			<span style="color: red;">Deleting your account will erase all data from our database, this action is irreversible! Are you absolutely sure you would like to permanently delete your account?</span><br /><br />
 			<span>Please confirm your username below to be able to delete your account:</span><br />
-			<input type="text" class="modal-input white" placeholder="Username" maxlength="20" bind:value={typedUsername}><br /><br />
+			<input type="text" class="modal-input white" placeholder="Username" maxlength="20" bind:value={typedUsername} /><br /><br />
 			<div class="modal-buttons">
 				<button type="button" on:click={() => {$modalShown = false}}>Cancel</button>
 				<button type="submit" disabled={!(typedUsername === $user.name)}>Delete Account</button>

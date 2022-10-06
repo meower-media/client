@@ -16,9 +16,11 @@
 	import AddMemberModal from "./lib/modals/AddMember.svelte";
 	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
-	import ErrorModal from "./lib/modals/Error.svelte";
+	import SetQuoteModal from "./lib/modals/SetQuote.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
+	import LogoutModal from "./lib/modals/Logout.svelte";
+	import ErrorModal from "./lib/modals/Error.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -31,6 +33,7 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
+    import SetQuote from "./lib/modals/SetQuote.svelte";
 </script>
 
 <main
@@ -96,6 +99,8 @@
 			<ReportUserModal />
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
+		{:else if $modalPage === "setQuote"}
+			<SetQuoteModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 		{:else if $modalPage === "deleteAccount"}
@@ -106,6 +111,8 @@
 			<AddMemberModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
+		{:else if $modalPage === "logout"}
+			<LogoutModal />
 		{:else}
 			<ErrorModal />
 		{/if}

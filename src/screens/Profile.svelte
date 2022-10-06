@@ -81,7 +81,7 @@
 		{#if data.quote}
 			<Container>
 				<h3>Quote</h3>
-				{data.quote}
+				<p>"<i>{data.quote}</i>"</p>
 			</Container>
 		{/if}
 
@@ -112,6 +112,14 @@
 				title="Change Profile Picture"
 				on:click={() => pfpSwitcher = true}
 			>Change Profile Picture</button>
+			<button
+				class="long"
+				title={data.quote ? "Update Quote" : "Set Quote"}
+				on:click={() => {
+					modalPage.set("setQuote");
+					modalShown.set(true);
+				}}
+			>{data.quote ? "Update Quote" : "Set Quote"}</button>
 		{/if}
 
 		<button

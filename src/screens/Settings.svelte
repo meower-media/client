@@ -1,11 +1,9 @@
 <!-- You probably know what this is. -->
 
 <script>
-	import {tick} from "svelte";
-
 	import Container from "../lib/Container.svelte";
 
-	import {user, screen, setupPage, modalShown, modalPage} from "../lib/stores.js";
+	import {user, modalShown, modalPage} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 </script>
 

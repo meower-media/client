@@ -44,9 +44,9 @@
 			{#if changeStatus}
 				<label for="old-password-input" style="color: red;">{changeStatus}</label>
 			{/if}
-			<input id="old-password-input" type="password" class="modal-input white" placeholder="Current Password" maxlength="64"><br /><br />
-			<input id="new-password-input" type="password" class="modal-input white" placeholder="New Password" maxlength="64"><br /><br />
-			<input type="password" class="modal-input white" placeholder="Confirm New Password" maxlength="64"><br /><br />
+			<input id="old-password-input" type="password" class="modal-input white" placeholder="Current Password" maxlength="64" /><br /><br />
+			<input id="new-password-input" type="password" class="modal-input white" placeholder="New Password" maxlength="64" /><br /><br />
+			<input type="password" class="modal-input white" placeholder="Confirm New Password" maxlength="64" /><br /><br />
 			<div class="modal-buttons">
 				<button type="button" on:click={() => {$modalShown = false}}>Cancel</button>
 				<button type="submit">Change Password</button>

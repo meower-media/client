@@ -4,15 +4,11 @@
 <script>
 	import {
 		mainPage as page,
-		setupPage,
-		screen,
 		user,
 		profileClicked,
 		chatid,
 		modalShown,
 		modalPage,
-        disconnectReason,
-        disconnected
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	
@@ -125,12 +121,9 @@
 			draggable={false}
 		/>
 	</button>
-	<button on:click={async () => {
-		disconnectReason.set("Intentional disconnect");
-		disconnected.set(false);
-		screen.set("setup");
-		await tick();
-		setupPage.set("reconnect");
+	<button on:click={() => {
+		modalPage.set("logout");
+		modalShown.set(true);
 	}} class="logout-btn round">
 		<img
 			src={logout}

@@ -4,15 +4,19 @@
 -->
 
 <script>
-	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page, modalShown, modalPage, profileClicked_GC} from "../lib/stores.js";
+	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page, modalShown, modalPage, profileClicked_GC, lastTyped} from "../lib/stores.js";
+	import {shiftHeld} from "../lib/keyDetect.js";
     import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
 	import Member from "../lib/Member.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
+	import TypingIndicator from "../lib/TypingIndicator.svelte";
     import * as clm from "../lib/clmanager.js";
 	import {link} from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+
+	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
@@ -216,6 +220,7 @@
 			{#if $user.name}
 				<form
 					class="createpost"
+					autocomplete="off"
 					on:submit|preventDefault={e => {					
 							postErrors = "";
 							if (!e.target[0].value.trim()) {
@@ -246,6 +251,8 @@
 
 							if (cmd.val === "I:100 | OK") {
 								e.target[0].value = "";
+								e.target[0].rows = "1";
+								e.target[0].style.height = "45px";
 							} else if (cmd.val === "E:106 | Too many requests") {
 								postErrors = "You're posting too fast!";
 							} else {
@@ -255,20 +262,44 @@
 						return false;
 					}}
 				>
-					<input
+					<textarea
 						type="text"
 						class="white"
 						placeholder="Write something..."
 						id="postinput"
 						name="postinput"
-						autocomplete="off"
+						autocomplete="false"
 						maxlength="360"
-						bind:this={postInput}
-					>
-					<button>Post</button>
+						rows= "1"
+						use:autoresize
+						on:input={() => {
+							if ($lastTyped + 1500 < new Date() * 1) {
+								lastTyped.set(new Date() * 1);
+								link.send({
+									cmd: "direct",
+									val: {
+										cmd: "set_chat_state",
+										val: {
+											chatid: $chatid,
+											state: 100
+										},
+									},
+									listener: "typing_indicator",
+								});
+							}
+						}}
+						on:keydown={(event) => {
+							if (event.key == "Enter" && !shiftHeld) {
+								event.preventDefault();
+								document.getElementById("submitpost").click();
+							}
+						}}
+					></textarea>
+					<button id="submitpost">Post</button>
 				</form>
 				<div class="post-errors">{postErrors}</div>
 			{/if}
+			<TypingIndicator />
 			{#if posts.length < 1}
 				{#if $user.name}
 					No posts here. Check back later or be the first to post!
@@ -395,10 +426,11 @@
 		display: flex;
 		margin-bottom: 0.5em;
 	}
-	.createpost input {
+	.createpost textarea {
 		flex-grow: 1;
 		margin-right: 0.25em;
-	
+		resize: none;
+		max-height: 300px;
 	}
 
 	.center {

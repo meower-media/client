@@ -16,6 +16,9 @@ export const modalPage = writable("");
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
 
+// Last typed
+export const lastTyped = writable(0);
+
 // Current chat ID
 export const chatName = writable("");
 export const chatid = writable("");
