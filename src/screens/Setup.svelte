@@ -142,6 +142,23 @@
 
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
 	{#if $page === "logo"}
+		<div class="left">
+			<h2 class="welcometo">Connecting to</h2>
+			<div id="meowerlogo_left">
+				<img
+					alt="Meower"
+					src={meowerLogo}
+					height="70"
+				/>
+			</div>
+			<div class="meowy-orang"></div>
+			<img
+				src={meowy}
+				alt=""
+				height="64"
+				id="meowy_left"
+			>
+		</div>
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
 				<div class="logo top" bind:this={logo}>
@@ -162,7 +179,7 @@
 		</div>
 	{:else if $page === "welcome"}
 		<div class="left">
-			<h2 id="welcometo">Welcome to</h2>
+			<h2 class="welcometo">Welcome to</h2>
 			<div id="meowerlogo_left">
 				<img
 					alt="Meower"
@@ -170,6 +187,7 @@
 					height="70"
 				/>
 			</div>
+			<div class="meowy-orang"></div>
 			<img
 				src={meowy}
 				alt=""
@@ -207,7 +225,7 @@
 		</div>
 	{:else if $page === "login"}
 		<div class="left">
-			<h2 id="welcometo">Welcome Back!</h2>
+			<h2 class="welcometo">Welcome Back!</h2>
 			<div id="meowerlogo_left">
 				<img
 					alt="Meower"
@@ -215,6 +233,7 @@
 					height="70"
 				/>
 			</div>
+			<div class="meowy-orang"></div>
 			<img
 				src={meowy}
 				alt=""
@@ -257,7 +276,7 @@
 		</div>
 	{:else if $page === "join"}
 		<div class="left">
-			<h2 id="welcometo">Welcome to</h2>
+			<h2 class="welcometo">Thanks for choosing</h2>
 			<div id="meowerlogo_left">
 				<img
 					alt="Meower"
@@ -265,6 +284,7 @@
 					height="70"
 				/>
 			</div>
+			<div class="meowy-orang"></div>
 			<img
 				src={meowy}
 				alt=""
@@ -273,9 +293,8 @@
 			>
 		</div>
 		<div class="fullcenter">
-			<h1>Welcome to Meower</h1>
 
-			<form class="column-ui"
+			<!--<form class="column-ui"
 				on:submit|preventDefault={e => {
 					const username = e.target[0].value;
 					const password = e.target[1].value;
@@ -374,7 +393,14 @@
 					}}>Go back</button>
 					<button type="submit" disabled={!acceptTerms}>Join!</button>
 				</div>
-			</form>
+			</form>-->
+			Ya cant join till OOBE
+			<br><br>
+			<button type="button" style="border-color:white;" on:click|preventDefault={()=>{
+				page.set("welcome");
+				loginStatus = "";
+				return false;
+			}}>Go back</button>
 		</div>
 	{:else if $page === "blank"}
 		<div></div>
@@ -429,8 +455,21 @@
 		z-index: 0;
 	}
 
-	#meowy_left {
+	.meowy-orang {
 		opacity: 0.4;
+		transform: translate(-20%,180%) rotate(30deg);
+		height: 300px;
+		width: 300px;
+		position: absolute;
+		z-index: 1;
+		background: linear-gradient(180deg, #F9A637 99.99%, rgba(255, 255, 255, 0) 100%);
+		mix-blend-mode: color;
+	}
+
+	#meowy_left {
+		position: relative;
+		opacity: 0.4;
+		z-index: 0;
 		transform: scale(4) translate(-50%,260%) rotate(30deg);
 	}
 
@@ -512,12 +551,14 @@
 		left: 35%;
 	}
 
-	#welcometo {
+	.welcometo {
 		position: absolute;
-		top: 10%;
-		left: 30%;
+		top: 3em;
+		left: 2.8em;
 		color: var(--orange-button);
 		font-size: 24px;
+		width:10em;
+		text-align: center;
 	}
 
 	#meowerlogo_left {

@@ -63,6 +63,7 @@
         z-index: 9999;
 		position: fixed;
 		left: 50%;
+		box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
 		top: 50%;
 		width: calc(100vw - 4em);
 		max-width: 32em;
@@ -70,9 +71,8 @@
 		overflow: auto;
 		transform: translate(-50%,-50%);
 		padding: 1em;
-		border-radius: 0.2em;
+		border-radius: 25px;
 		background-color: var(--background);
-        border: solid 2px var(--orange);
-        border-radius: 1px;
+        border: solid 5px var(--orange);
 	}
 </style>

@@ -43,7 +43,7 @@
 	class:layout-old={$user.layout === "old"}
 >
 	{#if $disconnected}
-		<Modal on:close={() => {$disconnected = false}}>
+		<Modal>
 			<h2 slot="header">
 				Me-owch.
 			</h2>
@@ -157,7 +157,7 @@
 		--orange: #b35305;
 		--orange-light: #dd7f14;
 		--orange-dark: #ac4718;
-		--orange-scrollbar-back: rgb(131, 45, 5);
+		--orange-scrollbar-back: #832d05;
 		--background: #020010;
 		--foreground: #eef;
 		--foreground-orange: #eef;
