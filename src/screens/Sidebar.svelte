@@ -161,6 +161,7 @@
 	.sidebar > button {
 		width: 2.8em;
 		height: 2.8em;
+		margin: 0;
 
 		flex-shrink: 1;
 	}
