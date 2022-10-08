@@ -4,11 +4,11 @@
 <script>
 	import {
 		mainPage as page,
-		setupPage,
-		screen,
 		user,
 		profileClicked,
-		chatid
+		chatid,
+		modalShown,
+		modalPage,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	
@@ -29,6 +29,11 @@
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
 	function goto(newPage, resetScroll=true) {
+		if (!$user.name && newPage !== "home" && newPage !== "settings") {
+			modalPage.set("signup");
+			modalShown.set(true);
+			return;
+		}
 		if (resetScroll) {
 			window.scrollTo(0,0);
 		}
@@ -71,59 +76,54 @@
 			draggable={false}
 		/>
 	</button>
-	{#if $user.name}
-		<button on:click={()=>goto("inbox")} class="gc-btn round">
-			<img
-				src={$user.unread_inbox ? mail_new : mail}
-				alt="Inbox Messages"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={()=>{
-			if (shiftHeld) {
-				goto("groupcat");
-			} else {
-				goto("chatlist");
-			}
-		}} class="gc-btn round">
-			<img
-				src={gc}
-				alt="Group Chats"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={() => {
-			$profileClicked = $user.name;
-			goto("profile");
-		}} class="profile-btn round">
-			<img
-				src={profile}
-				alt="Profile"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-		<button on:click={()=>goto("settings")} class="settings-btn round">
-			<img
-				src={settings}
-				alt="Settings"
-				width="90%"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-	{/if}
-	<button on:click={async () => {
-		localStorage.removeItem("meower_savedusername");
-		localStorage.removeItem("meower_savedpassword");
-		screen.set("setup");
-		await tick();
-		setupPage.set("reconnect");
+	<button on:click={()=>goto("inbox")} class="gc-btn round">
+		<img
+			src={$user.unread_inbox ? mail_new : mail}
+			alt="Inbox Messages"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>{
+		if (shiftHeld) {
+			goto("groupcat");
+		} else {
+			goto("chatlist");
+		}
+	}} class="gc-btn round">
+		<img
+			src={gc}
+			alt="Group Chats"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={() => {
+		$profileClicked = $user.name;
+		goto("profile");
+	}} class="profile-btn round">
+		<img
+			src={profile}
+			alt="Profile"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("settings")} class="settings-btn round">
+		<img
+			src={settings}
+			alt="Settings"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={() => {
+		modalPage.set("logout");
+		modalShown.set(true);
 	}} class="logout-btn round">
 		<img
 			src={logout}
@@ -148,15 +148,21 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+		flex-wrap: nowrap;
+
+		gap: 0.5em;
+		box-sizing: border-box;
+		
 		user-select: none;
 
 		width: 100%;
 		height: 100%;
 	}
 	.sidebar > button {
-		margin-bottom: 0.5em;
 		width: 2.8em;
 		height: 2.8em;
+
+		flex-shrink: 1;
 	}
 
 	.logo {
@@ -180,25 +186,16 @@
 
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;
+		padding-right: 0.5em;
 	}
-	:global(main.layout-old) .sidebar > button {
-		margin-bottom: 0;
-		margin-right: 0.5em;
-	}
-	:global(main.layout-old) .logo {
+	:global(main.layout-old:not(.layout-mobile)) .logo {
 		display: block;
 	}
-	:global(main.layout-old) .home-btn {
+	:global(main.layout-old:not(.layout-mobile)) .home-btn {
 		display: none;
 	}
 
-	@media only screen and (max-aspect-ratio: 1/1) {
-		.sidebar {
-			flex-direction: row;
-		}
-		.sidebar > button {
-			margin-bottom: 0;
-			margin-right: 0.5em;
-		}
+	:global(main.layout-mobile) .sidebar {
+		padding: 0 0.5em;
 	}
 </style>

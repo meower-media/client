@@ -4,10 +4,10 @@
 	export let icon = -1;
 	export let alt = "Profile picture";
 	export let online = false;
-	export let big = false;
+	export let size = 1;
 </script>
 
-<span class="pfp-container" class:big>
+<span class="pfp-container" style:--size={size}>
 	{#if online}
 		<span class="online"></span>
 	{/if}
@@ -34,19 +34,15 @@
 		display: inline-block;
 		position: relative;
 	}
-	.big .pfp {
-		width: 5em;
-		height: 5em;
-	}
 	.pfp {
-		width: 3.75em;
-		height: 3.75em;
+		width: calc(var(--size) * 3.75em);
+		height: calc(var(--size) * 3.75em);
 		box-sizing: border-box;
 
 		background-color: var(--pfp-bg);
 		border: solid 1.5px var(--pfp-outline);
 		border-bottom-width: 5px;
-		border-radius: 1.25em;
+		border-radius: calc(var(--size) * 1.25em);
 
 		display: flex;
 		align-items: center;
@@ -69,19 +65,15 @@
 	.online {
 		display: inline-block;
 
-		width: 1em;
-		height: 1em;
+		width: calc(var(--size) * 1em);
+		height: calc(var(--size) * 1em);
 		border-radius: 100%;
 
 		background-color: limegreen;
 
 		position: absolute;
-		bottom: -0.2em;
-		right: -0.2em;
+		bottom: calc(var(--size) * -0.2em);
+		right: calc(var(--size) * -0.2em);
 		z-index: 1;
-	}
-	.big .online {
-		width: 1.25em;
-		height: 1.25em;
 	}
 </style>

@@ -24,7 +24,9 @@ ISO: ${_date.toISOString()}`;
 	}
 </script>
 
-<span {title} class="date">{text}</span>
+<span {title} class="date">
+	{text}
+</span>
 
 <style>
 	.date {

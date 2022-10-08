@@ -4,13 +4,17 @@
 -->
 
 <script>
-	import {user, ulist, spinner, mainPage as page} from "../lib/stores.js";
+	import {user, ulist, spinner, lastTyped, mainPage as page} from "../lib/stores.js";
+	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
+	import TypingIndicator from "../lib/TypingIndicator.svelte";
 	import {link} from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+
+	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
@@ -26,6 +30,8 @@
 	// As we use a Load More button and the home is sorted newest-first,
 	// we need an offset for posts to be continuous.
 	let postOffset = 0;
+
+	let postInput;
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
@@ -157,6 +163,7 @@
 		{#if $user.name}
 			<form 
 				class="createpost"
+				autocomplete="off"
 				on:submit|preventDefault={e => {					
 					postErrors = "";
 					if (!e.target[0].value.trim()) {
@@ -184,6 +191,8 @@
 
 						if (cmd.val === "I:100 | OK") {
 							e.target[0].value = "";
+							e.target[0].rows = "1";
+							e.target[0].style.height = "45px";
 						} else if (cmd.val === "E:106 | Too many requests") {
 							postErrors = "You're posting too fast!";
 						} else {
@@ -193,19 +202,44 @@
 					return false;
 				}}
 			>
-				<input
+				<textarea
 					type="text"
 					class="white"
 					placeholder="Write something..."
-				        id="postinput"
-				        name="postinput"
-					autocomplete="off"
-					maxlength="250"
-				>
-				<button>Post</button>
+					id="postinput"
+					name="postinput"
+					autocomplete="false"
+					maxlength="360"
+					rows="1"
+					use:autoresize
+					on:input={() => {
+						if ($lastTyped + 1500 < new Date() * 1) {
+							lastTyped.set(new Date() * 1);
+							link.send({
+								cmd: "direct",
+								val: {
+									cmd: "set_chat_state",
+									val: {
+										chatid: "livechat",
+										state: 101
+									},
+								},
+								listener: "typing_indicator",
+							});
+						}
+					}}
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+				></textarea>
+				<button id="submitpost">Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{/if}
+		<TypingIndicator />
 		{#if posts.length < 1}
 			{#if $user.name}
 				No posts here. Check back later or be the first to post!
@@ -218,7 +252,7 @@
 					transition:fly|local="{{y: -50, duration: 250}}"
 					animate:flip="{{duration: 250}}"
 				>
-					<Post post={post} />
+					<Post post={post} input={postInput} />
 				</div>
 			{/each}
 		{/if}
@@ -250,9 +284,11 @@
 		display: flex;
 		margin-bottom: 0.5em;
 	}
-	.createpost input {
+	.createpost textarea {
 		flex-grow: 1;
 		margin-right: 0.25em;
+		resize: none;
+		max-height: 300px;
 	}
 	.home {
 		height: 100%;
@@ -277,7 +313,6 @@
 		top: 0;
 		left: 0;
 	}
-
 	.post-errors {
 		color: red;
 		font-size: 75%;

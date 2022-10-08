@@ -184,6 +184,10 @@ button.profile {
 	background-image: url("./profile.svg");
     background-size: 50%;
 }
+button.members {
+	background-image: url("./members.svg");
+    background-size: 50%;
+}
 input[type="checkbox"]:hover:not(:active),
 button.circle:hover:not(:active) {
 	transform: scale(1.2);
@@ -198,4 +202,14 @@ a {
 
 :disabled {
 	opacity: 0.5;
+}
+
+.modal-input {
+    position: relative;
+    width: 100%;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
 }

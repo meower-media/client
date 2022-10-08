@@ -10,7 +10,7 @@ export default function unloadedProfile() {
 		mode: true,
 		sfx: true,
 		bgm: true,
-		bgm_song: 10,
+		bgm_song: 2,
 		layout: "new",
 		pfp_data: 1,
 		quote: "",

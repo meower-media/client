@@ -1,12 +1,14 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
+		modalPage, modalShown,
 		ulist,
-		profileClicked, profileData, user,
-		screen, setupPage,
+		profileClicked, user,
 		mainPage as page
 	} from "../lib/stores.js";
-	
+
+	import {profileCache} from "../lib/loadProfile.js";
+
     import PFP from "../lib/PFP.svelte";
     import Loading from "../lib/Loading.svelte";
     import Container from "../lib/Container.svelte";
@@ -14,18 +16,33 @@
     import {levels} from "../lib/formatting.js";
 
 	import {tick} from "svelte";
+	import {apiUrl, encodeApiURLParams} from "../lib/urls";
+    import { dataset_dev } from "svelte/internal";
 	
 	const pfps = new Array(28).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
+
+	async function loadProfile() {
+		let path = `users/${$profileClicked}`;
+		if (encodeApiURLParams) path = encodeURIComponent(path);
+		const resp = await fetch(
+			`${apiUrl}${path}`
+		);
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
+		}
+		const json = await resp.json();
+		return json;
+	}
 
 	/**
 	 * Saves the user profile, and also clears its cache entry.
 	 */
 	function save() {
-		if ($profileData[$user.name]) {
-			const _profileData = $profileData;
-			delete _profileData[$user.name];
-			profileData.set(_profileData);
+		if ($profileCache[$user.name]) {
+			const _profileCache = $profileCache;
+			delete _profileCache[$user.name];
+			profileCache.set(_profileCache);
 		}
 
 		clm.updateProfile();
@@ -33,41 +50,40 @@
 </script>
 
 <div class="OtherProfile">
-	{#await
-		clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "get_profile",
-				val: $profileClicked,
-			},
-		})
-	}
-		<div class="fullcenter">
-			<Loading />
-		</div>
-	{:then data}
+{#await loadProfile()}
+	<div class="fullcenter">
+		<Loading />
+	</div>
+{:then data}
 		<Container>
 			<div class="profile-header">
 				<PFP
-					online={$ulist.includes(data.payload._id)}
+					online={$ulist.includes(data._id)}
 					icon={
 						$profileClicked === $user.name ?
-							$user.pfp_data : data.payload.pfp_data
+							$user.pfp_data : data.pfp_data
 					}
-					alt="{data.payload.name}'s profile picture"
-					big={true}
+					alt="{data._id}'s profile picture"
+					size={1.4}
 				></PFP>
 				<div class="profile-header-info">
-					<h1 class="profile-username">{data.payload._id}</h1>
+					<h1 class="profile-username">{data._id}</h1>
 					<div class="profile-active">{
-						$ulist.includes(data.payload._id) ? "Online" : "Offline"
+						$ulist.includes(data._id) ? "Online" : "Offline"
 					}</div>
 					<div class="profile-role">
-						{levels[data.payload.lvl] || "Unknown"}
+						{levels[data.lvl] || "Unknown"}
 					</div>
 				</div>
 			</div>
 		</Container>
+
+		{#if data.quote}
+			<Container>
+				<h3>Quote</h3>
+				<p>"<i>{data.quote}</i>"</p>
+			</Container>
+		{/if}
 
 		{#if pfpSwitcher}
 			<Container>
@@ -96,6 +112,14 @@
 				title="Change Profile Picture"
 				on:click={() => pfpSwitcher = true}
 			>Change Profile Picture</button>
+			<button
+				class="long"
+				title={data.quote ? "Update Quote" : "Set Quote"}
+				on:click={() => {
+					modalPage.set("setQuote");
+					modalShown.set(true);
+				}}
+			>{data.quote ? "Update Quote" : "Set Quote"}</button>
 		{/if}
 
 		<button
@@ -108,29 +132,13 @@
 			}}
 		>View recent posts</button>
 
-		{#if $profileClicked !== $user.name}
-			<button
-				class="long"
-				title="Coming soon?"
-				disabled
-			>Add to chat</button>
-
+		{#if $user.name && $profileClicked !== $user.name}
 			<button
 				class="long"
 				title="Report User"
 				on:click={()=>{
-					if (confirm("Are you sure you want to report this user?")) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "report",
-								val: {
-									type: 1,
-									id: $profileClicked,
-								},
-							},
-						});
-					}
+					modalPage.set("reportUser");
+					modalShown.set(true);
 				}}
 			>Report User</button>
 		{/if}
@@ -141,7 +149,7 @@
 					online={$ulist.includes($profileClicked)}
 					icon={-2}
 					alt="{$profileClicked}'s profile picture"
-					big={true}
+					size={1.4}
 				></PFP>
 				<div class="profile-header-info">
 					<h1 class="profile-username">{$profileClicked}</h1>
@@ -152,32 +160,15 @@
 				</div>
 			</div>
 		</Container>
-		{#if e === "E:115 | Refused" && !$user.name}
-			<Container>
-				<h2>Error</h2>
-				<div>
-					Unfortunately, we cannot get profile info without being logged in.
-					<a
-						href="."
-						on:click|preventDefault={async () => {
-							screen.set("setup");
-							await tick();
-							setupPage.set("reconnect");
-						}}
-					>Try logging in.</a>
-				</div>
-			</Container>
-		{:else}
-			<Container>
-				<h2>Error</h2>
-				We couldn't get this user's profile info.
-				<pre><code>{e}</code></pre>
-				Try again. If this issue persists,
-				<a
-					href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
-				>create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
-			</Container>
-		{/if}
+		<Container>
+			<h2>Error</h2>
+			We couldn't get this user's profile info.
+			<pre><code>{e}</code></pre>
+			Try again. If this issue persists,
+			<a
+				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
+			>create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
+		</Container>
 	{/await}
 </div>
 
@@ -205,7 +196,7 @@
         font-style: italic;
     }
 
-    .profile-role {
+	.profile-role {
         position: absolute;
         font-size: 90%;
     }

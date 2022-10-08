@@ -5,94 +5,44 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
-	import {profileData, profileClicked, user, chatid, ulist, mainPage as page} from "../lib/stores.js";
+	import {
+		 profileClicked,
+		postClicked, user,
+		chatid, ulist,
+		mainPage as page,
+		modalShown, modalPage
+	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	
+	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
+	
 	import {onMount} from "svelte";
+
 	export let post = {};
+	export let buttons = true;
+	export let input = null;
+
+	let bridged = false;
 
 	// TODO: make bridged tag a setting
 
 	/**
-	 * Initialize this post's user profile - gets profile info from the cache or fetches it.
+	 * Initialize this post's user profile
 	 */
 	function initPostUser() {
 		if (!post.user) return;
-		if (!($user.name)) return;
 
-		var userName = ""
+		if (post.user == "Discord" && post.content.includes(":")) {
+			bridged = true;
+		}
+
 		if (post.user == "Discord" && post.content.includes(":")) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
-		
-		userName = post.user;
 
-		/**
-		 * Fetch the user profile and store it in the cache.
-		 */
-		const getProfile = () => {
-			let _profileData = $profileData;
-
-			if (userName === "Notification") {
-				_profileData[userName] = {
-					pfp_data: 101
-				}
-				profileData.set(_profileData);
-				return;
-			} else if (userName === "Announcement") {
-				_profileData[userName] = {
-					pfp_data: 102
-				}
-				profileData.set(_profileData);
-				return;
-			} else if (userName === "Server") {
-				_profileData[userName] = {
-					pfp_data: 102
-				}
-				profileData.set(_profileData);
-				return;
-			}
-
-			_profileData[userName] = {
-				pfp_data: -1,
-			};
-			profileData.set(_profileData);
-
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "get_profile",
-					val: userName,
-				},
-				listener: "get_profile_" + userName,
-			}).then(val => {
-				// Ding dong! The data has arrived.
-				_profileData[userName] = val.payload;
-				profileData.set(_profileData);
-			}).catch(e => {
-				// Uh oh - something has gone wrong.
-				_profileData[userName] = {
-					error: true,
-					pfp_data: -2,
-					temporary: true,
-				};
-				profileData.set(_profileData);
-			})
-		}
-
-		// Do we have a stored profile?
-		const _profileData = $profileData;
-		if (_profileData[userName]) {
-			// Reuse the cached data if the profile isn't temporary
-			if (_profileData[userName].temporary) {
-				getProfile();
-			}
-		} else {
-			// Get the profile!
-			getProfile();
-		}
+		loadProfile(post.user);
 	};
 	onMount(initPostUser);
 </script>
@@ -100,44 +50,61 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
-			{#if $user.name && $chatid !== "livechat" && post.user !== "Server"}	
-			{#if $user.lvl >= 1 || post.user === $user.name}
-			<button
-				class="circle close"
-				on:click={()=>{
-					if (shiftHeld || confirm("Are you sure you want to delete this post?")) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "delete_post",
-								val: post.post_id,
-							},
-						});
-					}
-				}}
-			></button>
-			{:else}
-			<button
-				class="circle report"
-				on:click={()=>{
-					if (confirm("Are you sure you want to report this post?")) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "report",
-								val: {
-									type: 0,
-									id: post.post_id,
-								},
-							},
-						});
-					}
-				}}
-			></button>
-			{/if}
+			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
+				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
+					<button 
+						class="circle join"
+						on:click={() => {
+							let existingText = input.value;
+
+							const mentionRegex = /^@\w+\s*/i;
+							const mention = "@" + post.user + " ";
+
+							if (mentionRegex.test(existingText)) {
+								input.value = existingText.trim().replace(
+									mentionRegex,
+									mention
+								);
+							} else {
+								input.value = mention + existingText.trim();
+							}
+
+							input.focus();
+						}}
+					></button>
+				{/if}
+				{#if $user.lvl >= 1 || post.user === $user.name}
+					<button
+						class="circle close"
+						on:click={()=>{
+							if (shiftHeld) {
+								clm.meowerRequest({
+									cmd: "direct",
+									val: {
+										cmd: "delete_post",
+										val: post.post_id,
+									},
+								});
+								return;
+							}
+							postClicked.set(post);
+							modalPage.set("deletePost");
+							modalShown.set(true);
+						}}
+					></button>
+				{:else}
+					<button
+						class="circle report"
+						on:click={()=>{
+							postClicked.set(post);
+							modalPage.set("reportPost");
+							modalShown.set(true);
+						}}
+					></button>
+				{/if}
 			{/if}
 		</div>
-		<button 
+		<button
 			class="pfp" 
 			on:click={()=>{
 				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
@@ -146,14 +113,18 @@
 			}}
 		>
 			<PFP
-				icon={$profileData[post.user] ? $profileData[post.user].pfp_data : -3}
+				icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
 				alt="{post.user}'s profile picture"
 				online={$ulist.includes(post.user)}
 			></PFP>
-		</button>	
+		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
+
 			<FormattedDate date={post.date}></FormattedDate>
+			{#if bridged}
+				<i>[BRIDGED]</i>
+			{/if}
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>

@@ -1,7 +1,5 @@
 <script>
-	import {chatName, chatid, mainPage as page} from "../lib/stores.js";
-
-    import {shiftHeld} from "../lib/keyDetect.js";
+	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatMembers, chatOwner} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
 	import * as clm from "../lib/clmanager.js";
@@ -11,8 +9,11 @@
 	import {flip} from 'svelte/animate';
 
 	import {tick} from "svelte";
+    import Modal from "../lib/Modal.svelte";
 
 	export let chats = [];
+
+	let toLeaveChat = false;
 
 	let pagesLoaded = 0;
 	let pageLoading = false;
@@ -90,7 +91,10 @@
 			<div class="settings-controls">
 				<button
 					class="circle plus"
-					disabled
+					on:click = {()=>{
+						modalPage.set("createChat");
+						modalShown.set(true);
+					}}
 				></button>
 			</div>
 		</Container>
@@ -101,6 +105,8 @@
 					on:click = {()=>{
 						chatName.set("Livechat");
 						chatid.set("livechat");
+						chatMembers.set([]);
+						chatOwner.set("");
 						window.scrollTo(0,0);
 						page.set("blank");
 						tick().then(() => page.set("groupchat"));
@@ -118,19 +124,12 @@
             >
                 <Container>
                     <div class="settings-controls">
-                        <button
+						<button
                             class="circle close"
                             on:click = {()=>{
-                                if (shiftHeld || confirm(`Are you sure you want to leave ${chat.nickname}?`)) {
-                                    clm.meowerRequest({
-                                        cmd: "direct",
-                                        val: {
-                                            cmd: "leave_chat",
-                                            val: chat._id,
-                                        }
-                                    });
-                                    chats = chats.filter(chat1 => chat1._id !== chat._id);
-                                }
+								chatName.set(chat.nickname)
+								chatid.set(chat._id)
+								toLeaveChat = true
                             }}
                         ></button>
                         <button
@@ -138,6 +137,8 @@
                             on:click = {()=>{
 								chatName.set(chat.nickname);
 								chatid.set(chat._id);
+								chatMembers.set(chat.members);
+								chatOwner.set(chat.owner);
                                 window.scrollTo(0,0);
 								page.set("blank");
 								tick().then(() => page.set("groupchat"));
@@ -146,7 +147,11 @@
                     </div>
 
                     <h1>{chat.nickname}</h1>
-                    {"Members: "+chat.members.join(", ")}
+                    Members: {
+						chat.members.length > 100 ? (
+							chat.members.slice(0, 99).join(", ") + "..."
+						) : chat.members.join(", ")
+					}
                 </Container>
             </div>
         {/each}
@@ -164,6 +169,31 @@
 				{/if}
 			{/if}
 		</div>
+	{/if}
+	{#if toLeaveChat}
+		<Modal on:close={() => {toLeaveChat = false}}>
+			<h2 slot="header">Leave Chat</h2>
+			<div slot="default">
+				<span>Are you sure you want to leave {$chatName}?</span>
+				<br /><br />
+				<div class="modal-buttons">
+					<button on:click={() => {
+						toLeaveChat = false;
+					}}>No</button>
+					<button on:click={() => {
+						chats = chats.filter(v => v._id !== $chatid);
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "leave_chat",
+								val: $chatid,
+							}
+						});
+						toLeaveChat = false;
+					}}>Yes</button>
+				</div>
+			</div>
+		</Modal>
 	{/if}
 </div>
 

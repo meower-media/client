@@ -12,7 +12,7 @@
 
 	import Sidebar from "./Sidebar.svelte";
 
-	import {user, mainPage as page} from "../lib/stores.js";
+	import {mainPage as page} from "../lib/stores.js";
 
 	page.set("home");
 </script>
@@ -53,39 +53,47 @@
 <style>
 	.main-screen {
 		box-sizing: border-box;
+
+		display: flex;
+		flex-direction: row;
+		gap: 0;
+
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
 	}
 
 	.sidebar {
-		position: fixed;
-		left: 0;
-		top: 0;
 		width: 3.5em;
-		height: 100%;
+		height: auto;
+
 		z-index: 100;
+		position: relative;
+
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 	.view {
-		margin-left: 3.5em;
+		flex-grow: 1;
+		flex-shrink: 1;
+
 		padding: 0.33em;
+		box-sizing: border-box;
+		overflow: auto;
+
+		--view-height: calc(100vh - 0.66em);
 		
 		background-color: var(--background);
 	}
 
-	@media (max-aspect-ratio: 1/1) {
-		.view {
-			margin-left: 0;
-			margin-top: 3.5em;
-		}
-		.sidebar {
-			width: 100%;
-			height: 3.5em;
-		}
-	}
-	:global(main.layout-old) .view {
-		margin-left: 0;
-		margin-top: 3.5em;
+	:global(main.layout-old) .main-screen {
+		flex-direction: column;
 	}
 	:global(main.layout-old) .sidebar {
-		width: 100%;
+		width: auto;
 		height: 3.5em;
+	}
+	:global(main.layout-old) .view {
+		--view-height: calc(100vh - 3.5em - 0.66em);
 	}
 </style>

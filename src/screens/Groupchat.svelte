@@ -4,14 +4,19 @@
 -->
 
 <script>
-	import {auth_header, user, chatName, chatid, ulist, spinner, mainPage as page} from "../lib/stores.js";
+	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page, modalShown, modalPage, profileClicked_GC, lastTyped} from "../lib/stores.js";
+	import {shiftHeld} from "../lib/keyDetect.js";
     import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
+	import Member from "../lib/Member.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
+	import TypingIndicator from "../lib/TypingIndicator.svelte";
     import * as clm from "../lib/clmanager.js";
 	import {link} from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+
+	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
@@ -24,9 +29,13 @@
 	let numPages = null;
 	let postErrors = "";
 
+	let postInput;
+
 	// As we use a Load More button and the home is sorted newest-first,
 	// we need an offset for posts to be continuous.
 	let postOffset = 0;
+
+	let showMembers = true;
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
@@ -134,7 +143,7 @@
 	}
 
 	/**
-	 * Adds events to listen for live post updates.
+	 * Adds events to listen for live post updates and possible chat deletions.
 	 */
 	function listenOnLink() {
 		link.on("direct", cmd => {
@@ -180,108 +189,176 @@
 	} else {
 		link.ws.addEventListener("open", listenOnLink);
 	}
-
-	let _ulist = $ulist;
-	ulist.subscribe(val => {
-		_ulist = val;
-	})
 </script>
 
-<div class="posts">
+<!--
+	so {cmd: direct, val: {cmd: add_to_chat, val: {chatid: "", username: ""}}}?
+	also  remove_from_chat
+-->
+
+<div class="groupchat">
 	{#await loadPage(1)}
 		<div class="fullcenter">
 			<Loading />
 		</div>
 	{:then}
-		<Container>
-			<h1>{$chatName}</h1>
-            Chat ID: {$chatid}
-		</Container>
-		{#if $user.name}
-			<form
-				class="createpost"
-				on:submit|preventDefault={e => {					
-					postErrors = "";
-					if (!e.target[0].value.trim()) {
-						postErrors = "You cannot send an empty post!";
-						return false;
-					};
+		<div id="chat">
+			<Container>
+				<h1>{$chatName}</h1>
+				Chat ID: {$chatid}
+				{#if $chatid !== "livechat"}
+				<div class="settings-controls">
+					<button
+						class="circle members"
+						on:click = {()=>{
+							showMembers = !showMembers;
+						}}
+					></button>
+				</div>
+				{/if}
+			</Container>
+			{#if $user.name}
+				<form
+					class="createpost"
+					autocomplete="off"
+					on:submit|preventDefault={e => {					
+							postErrors = "";
+							if (!e.target[0].value.trim()) {
+								postErrors = "You cannot send an empty post!";
+								return false;
+							};
 
-					spinner.set(true);
+							spinner.set(true);
 
-					e.target[1].disabled = true;
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_chat",
+						e.target[1].disabled = true;
+						link.send({
+							cmd: "direct",
 							val: {
-								p: e.target[0].value,
-								chatid: $chatid,
+								cmd: "post_chat",
+								val: {
+									p: e.target[0].value,
+									chatid: $chatid,
+								},
 							},
-						},
-						listener: "post_chat",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_chat") return;
-						link.off(postListener);
-						spinner.set(false);
+							listener: "post_chat",
+						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_chat") return;
+							link.off(postListener);
+							spinner.set(false);
 
-						e.target[1].disabled = false;
+							e.target[1].disabled = false;
 
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				}}
-			>
-				<input
-					type="text"
-					class="white"
-					placeholder="Write something..."
+							if (cmd.val === "I:100 | OK") {
+								e.target[0].value = "";
+								e.target[0].rows = "1";
+								e.target[0].style.height = "45px";
+							} else if (cmd.val === "E:106 | Too many requests") {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors = "Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					}}
+				>
+					<textarea
+						type="text"
+						class="white"
+						placeholder="Write something..."
 						id="postinput"
 						name="postinput"
-					autocomplete="off"
-					maxlength="360"
-				>
-				<button>Post</button>
-			</form>
-			<div class="post-errors">{postErrors}</div>
-		{/if}
-		{#if posts.length < 1}
-			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
+						autocomplete="false"
+						maxlength="360"
+						rows= "1"
+						use:autoresize
+						on:input={() => {
+							if ($lastTyped + 1500 < new Date() * 1) {
+								lastTyped.set(new Date() * 1);
+								link.send({
+									cmd: "direct",
+									val: {
+										cmd: "set_chat_state",
+										val: {
+											chatid: $chatid,
+											state: 100
+										},
+									},
+									listener: "typing_indicator",
+								});
+							}
+						}}
+						on:keydown={(event) => {
+							if (event.key == "Enter" && !shiftHeld) {
+								event.preventDefault();
+								document.getElementById("submitpost").click();
+							}
+						}}
+					></textarea>
+					<button id="submitpost">Post</button>
+				</form>
+				<div class="post-errors">{postErrors}</div>
 			{/if}
-		{:else}
-			{#each posts as post (post.id)}
-				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
-				>
-					<Post post={post} />
-				</div>
-			{/each}
-		{/if}
-		<div class="center">
-			{#if pageLoading}
-				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
-					>
-						Load More
-					</button>
+			<TypingIndicator />
+			{#if posts.length < 1}
+				{#if $user.name}
+					No posts here. Check back later or be the first to post!
+				{:else}
+					No posts here. Check back later!
 				{/if}
+			{:else}
+				{#each posts as post (post.id)}
+					<div
+						transition:fly|local="{{y: -50, duration: 250}}"
+						animate:flip="{{duration: 250}}"
+					>
+						<Post post={post} input={postInput} />
+					</div>
+				{/each}
+				
+				<div class="center">
+					{#if pageLoading}
+						<Loading />
+					{:else}
+						{#if numPages && numPages > pagesLoaded}
+							<button 
+								class="load-more"
+								on:click={() => loadPage(pagesLoaded + 1)}
+							>
+								Load More
+							</button>
+						{/if}
+					{/if}
+				</div>
 			{/if}
 		</div>
+		{#if showMembers && $chatid !== "livechat"}
+		<div id="members">
+			<div id="members-inner">
+				{#each $chatMembers as chatmember}
+					<button class="member-button" on:click={()=>{
+						modalPage.set("GC_Member");
+						modalShown.set(true);
+						profileClicked_GC.set(chatmember);
+					}}>
+						<Member member={chatmember} />
+					</button>
+				{/each}
+			</div>
+			<div class="top">
+				<h2 class="members-title">Members</h2>
+				<div class="settings-controls">
+					<button
+						class="circle plus"
+						on:click = {()=>{
+							modalPage.set("AddMember");
+							modalShown.set(true);
+						}}
+					></button>
+				</div>
+			</div>
+		</div>
+		{/if}
 	{:catch error}
 		<Container>
 			<h1>{chatName}</h1>
@@ -292,17 +369,70 @@
 </div>
 
 <style>
+	.member-button {
+		padding: 0;
+        margin: 0;
+
+        width: 100%;
+
+        background-color: transparent;
+		color: var(--foreground);
+        border: none;
+
+        position: relative;
+		text-align: left;
+    }
+
+	/* repetition because of CSS specificity */
+	.member-button.member-button:hover,
+	.member-button.member-button:focus-visible {
+        background-color: #7773;
+    }
+	.member-button.member-button:active {
+        background-color: #7776;
+    }
+
+	.groupchat {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		gap: 0.4em;
+	}
+	#chat {
+		flex-shrink: 1;
+		flex-grow: 1;
+	}
+	#members {
+		height: var(--view-height);
+		width: 12em;
+
+		background-color: var(--background);
+		border: solid 2px var(--orange);
+		border-radius: 1px;
+		box-sizing: border-box;
+
+		position: sticky;
+		top: 0;
+	}
+	#members-inner {
+		position: relative;
+		overflow-y: auto;
+		overflow-x: hidden;
+		height: calc(100% - 2.25em);
+		margin-top: 2.25em;
+	}
+
 	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
 	}
-	.createpost input {
+	.createpost textarea {
 		flex-grow: 1;
 		margin-right: 0.25em;
+		resize: none;
+		max-height: 300px;
 	}
-	.posts {
-		height: 100%;
-	}
+
 	.center {
 		text-align: center;
 	}
@@ -329,5 +459,20 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.top {
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	.settings-controls {
+		position: absolute;
+		top: 0.25em;
+		right: 0.25em;
+	}
+	.members-title {
+		margin: 0.25em;
 	}
 </style>
