@@ -234,6 +234,7 @@
 							document.getElementById("submitpost").click();
 						}
 					}}
+					bind:this={postInput}
 				></textarea>
 				<button id="submitpost">Post</button>
 			</form>
