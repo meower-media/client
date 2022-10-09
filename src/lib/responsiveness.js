@@ -8,8 +8,8 @@ export function update() {
 	width.set(window.innerWidth);
 	height.set(window.innerHeight);
 	mobile.set(
-		window.innerWidth < 250 ||
-		window.innerHeight < 360
+		window.innerWidth < window.innerHeight ||
+		(window.innerWidth < 500 || window.innerHeight < 400)
 	);
 }
 
