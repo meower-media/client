@@ -4,27 +4,29 @@
 	import Main from "./screens/Main.svelte";
 	import Setup from "./screens/Setup.svelte";
 	
-	import Modal from "./lib/Modal.svelte";
-	import LoginModal from "./lib/modals/Login.svelte";
-	import SignupModal from "./lib/modals/Signup.svelte";
-	import BannedModal from "./lib/modals/Banned.svelte";
-	import IPBannedModal from "./lib/modals/IPBanned.svelte";
-	import DeletePostModal from "./lib/modals/DeletePost.svelte";
-	import ReportPostModal from "./lib/modals/ReportPost.svelte";
-	import ReportUserModal from "./lib/modals/ReportUser.svelte";
-	import GC_MemberModal from "./lib/modals/GC_Member.svelte";
-	import AddMemberModal from "./lib/modals/AddMember.svelte";
-	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
-	import CreateChatModal from "./lib/modals/CreateChat.svelte";
-	import SetQuoteModal from "./lib/modals/SetQuote.svelte";
-	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
-	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
-	import LogoutModal from "./lib/modals/Logout.svelte";
-	import ErrorModal from "./lib/modals/Error.svelte";
+	import Modal from "./lib/ui/Modal.svelte";
 
-	import Spinner from "./lib/Spinner.svelte";
-	import {link} from "./lib/clmanager.js";
-	import {mobile} from "./lib/responsiveness.js";
+	import LoginModal from "./lib/ui/modals/Login.svelte";
+	import SignupModal from "./lib/ui/modals/Signup.svelte";
+	import BannedModal from "./lib/ui/modals/Banned.svelte";
+	import IPBannedModal from "./lib/ui/modals/IPBanned.svelte";
+	import DeletePostModal from "./lib/ui/modals/DeletePost.svelte";
+	import ReportPostModal from "./lib/ui/modals/ReportPost.svelte";
+	import ReportUserModal from "./lib/ui/modals/ReportUser.svelte";
+	import GC_MemberModal from "./lib/ui/modals/GC_Member.svelte";
+	import AddMemberModal from "./lib/ui/modals/AddMember.svelte";
+	import RemoveMemberModal from "./lib/ui/modals/RemoveMember.svelte";
+	import CreateChatModal from "./lib/ui/modals/CreateChat.svelte";
+	import SetQuoteModal from "./lib/ui/modals/SetQuote.svelte";
+	import ChangePasswordModal from "./lib/ui/modals/ChangePassword.svelte";
+	import DeleteAccountModal from "./lib/ui/modals/DeleteAccount.svelte";
+	import LogoutModal from "./lib/ui/modals/Logout.svelte";
+	import ErrorModal from "./lib/ui/modals/Error.svelte";
+
+	import Spinner from "./lib/ui/Spinner.svelte";
+	import {mobile} from "./lib/ui/responsiveness.js";
+
+	import {link} from "./lib/networking/clmanager.js";
 
 	import {
 		screen, setupPage,
@@ -32,8 +34,8 @@
 		disconnected, disconnectReason,
 		user, spinner
 	} from "./lib/stores.js";
+
 	import {tick} from "svelte";
-    import SetQuote from "./lib/modals/SetQuote.svelte";
 </script>
 
 <main

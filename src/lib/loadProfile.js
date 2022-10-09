@@ -1,5 +1,5 @@
 import {writable} from "svelte/store";
-import {apiUrl} from "./urls.js";
+import {apiUrl} from "./constants/urls.js";
 
 export const profileCache = writable({});
 

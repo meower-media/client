@@ -1,14 +1,14 @@
 <!-- Where all the actual chatting action is. -->
 
 <script>
-	import Home from "./Home.svelte";
-	import Inbox from "./Inbox.svelte";
-	import Chatlist from "./Chatlist.svelte";
-	import Groupchat from "./Groupchat.svelte";
-	import Profile from "./Profile.svelte";
-	import Recent from "./Recent.svelte";
-	import Settings from "./Settings.svelte";
-	import Groupcat from "./Groupcat.svelte";	
+	import Home from "./main/Home.svelte";
+	import Inbox from "./main/Inbox.svelte";
+	import Chatlist from "./main/ChatList.svelte";
+	import Groupchat from "./main/GroupChat.svelte";
+	import Profile from "./main/Profile.svelte";
+	import Recent from "./main/Recent.svelte";
+	import Settings from "./main/Settings.svelte";
+	import Groupcat from "./main/GroupCat.svelte";	
 
 	import Sidebar from "./Sidebar.svelte";
 

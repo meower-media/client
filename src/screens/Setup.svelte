@@ -1,25 +1,27 @@
 <!-- Boring orange screen with login and signup. -->
 
 <script>
+	import meowerLogo from "../assets/logo.svg";
+	import meowy from "../assets/meowy.svg";
+
 	import
 		{screen, setupPage as page,
 		modalShown, modalPage,
 		auth_header,
 		user
 	} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
+
+	import * as clm from "../lib/networking/clmanager.js";
 	const link = clm.link;
 	// @ts-ignore
 	window.clm = clm;
 
-	import unloadedProfile from "../lib/unloadedprofile.js";
+	import unloadedProfile from "../lib/constants/unloadedprofile.js";
 
-	import meowerLogo from "../assets/logo.svg";
-	import meowy from "../assets/meowy.svg";
-
+	import sleep from "../lib/util/sleep.js";
+	
 	import {tick, onMount} from "svelte";
 	import {fade} from 'svelte/transition';
-	import sleep from "../lib/sleep.js";
 
 	let logo, setup, logoImg, loginStatus = "";
 

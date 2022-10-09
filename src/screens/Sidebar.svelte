@@ -2,20 +2,6 @@
 <!-- RIP -->
 
 <script>
-	import {
-		mainPage as page,
-		user,
-		profileClicked,
-		chatid,
-		modalShown,
-		modalPage,
-	} from "../lib/stores.js";
-	import {shiftHeld} from "../lib/keyDetect.js";
-	
-	import * as clm from "../lib/clmanager.js";
-
-	import {tick} from "svelte";
-
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
 	import gc from "../assets/chat.svg";
@@ -24,6 +10,21 @@
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
+
+	import {
+		mainPage as page,
+		user,
+		profileClicked,
+		chatid,
+		modalShown,
+		modalPage,
+	} from "../lib/stores.js";
+	
+	import {shiftHeld} from "../lib/util/keyDetect.js";
+	
+	import * as clm from "../lib/networking/clmanager.js";
+
+	import {tick} from "svelte";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
