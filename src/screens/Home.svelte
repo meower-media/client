@@ -240,7 +240,7 @@
 			</form>
 			<div class="post-errors">{postErrors}</div>
 		{:else}
-			            <form
+			 <form
                 class="createpost"
                 autocomplete="off"
                 on:submit|preventDefault={e => {
@@ -253,35 +253,61 @@
 
                     e.target[1].disabled = true;
                     
-					fetch("https://webhooks.meower.org", {method:"post", body:JSON.stringify({"post":e.target[0].contents}).then((res) => {
-						e.target[value].disabled = false;
+					fetch("https://webhooks.meower.org/post/home", {
+						method:"post",
+						mode: 'cors',
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+						}, 
+						body: JSON.stringify({"post":e.target[0].contents})}).then( //ignore
+							(res) => {
+								e.target[1].disabled = false;
+								e.target[0].value = "";
+
+								spinner.set(false);
+								if (!res.ok) {
+									postErrors = "Unexpected " + res.status + " error!";
+								}
+								res.json().then((data) => {
+									if (data.error) {
+										postErrors = "Error: " + data.error;
+									}
+								});
+
+					}).catch((err) => {
+						e.target[1].disabled = false;
+						e.target[0].value = "";
+
 						spinner.set(false);
-					})
-
-            >
-                <textarea
-                    type="text"
-                    class="white"
-                    placeholder="Write something..."
-                    id="postinput"
-                    name="postinput"
-                    autocomplete="false"
-                    maxlength="360"
-                    rows="1"
-                    use:autoresize
-                    on:keydown={(event) => {
-                        if (event.key == "Enter" && !shiftHeld) {
-                            event.preventDefault();
-                            document.getElementById("submitpost").click();
-                        }
-                    }}
-                    bind:this={postInput}
-                ></textarea>
-                <button id="submitpost">Post</button>
-				</form>
-            
-
-
+						postErrors = err
+					});
+					
+				}}
+			>
+				<textarea
+					type="text"
+					class="white"
+					placeholder="Write something..."
+					id="postinput"
+					name="postinput"
+					autocomplete="false"
+					maxlength="360"
+					rows="1"
+					use:autoresize
+			
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+					bind:this={postInput}
+				></textarea>
+				<button id="submitpost">Post</button>
+			</form>
+			<div class="post-errors">{postErrors}</div>
+				
 		{/if}
 		<TypingIndicator />
 		{#if posts.length < 1}
