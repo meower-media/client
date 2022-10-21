@@ -239,6 +239,49 @@
 				<button id="submitpost">Post</button>
 			</form>
 			<div class="post-errors">{postErrors}</div>
+		{:else}
+			            <form
+                class="createpost"
+                autocomplete="off"
+                on:submit|preventDefault={e => {
+                    postErrors = "";
+                    if (!e.target[0].value.trim()) {
+                        return false;
+                    };
+
+                    spinner.set(true);
+
+                    e.target[1].disabled = true;
+                    
+					fetch("https://webhooks.meower.org", {method:"post", body:JSON.stringify({"post":e.target[0].contents}).then((res) => {
+						e.target[value].disabled = false;
+						spinner.set(false);
+					})
+
+            >
+                <textarea
+                    type="text"
+                    class="white"
+                    placeholder="Write something..."
+                    id="postinput"
+                    name="postinput"
+                    autocomplete="false"
+                    maxlength="360"
+                    rows="1"
+                    use:autoresize
+                    on:keydown={(event) => {
+                        if (event.key == "Enter" && !shiftHeld) {
+                            event.preventDefault();
+                            document.getElementById("submitpost").click();
+                        }
+                    }}
+                    bind:this={postInput}
+                ></textarea>
+                <button id="submitpost">Post</button>
+				</form>
+            
+
+
 		{/if}
 		<TypingIndicator />
 		{#if posts.length < 1}
