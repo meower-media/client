@@ -66,11 +66,11 @@ input.white::placeholder {
 	opacity: 0.75;
 }
 
-button:not(.circle):not(.white):not(:disabled):hover,
+main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
 button:not(.circle):not(.white):focus-visible,
-input[type="text"]:not(.white):not(:disabled):hover,
+main.input-hover input[type="text"]:not(.white):not(:disabled):hover,
 input[type="text"]:not(.white):focus-visible,
-input[type="password"]:not(.white):not(:disabled):hover,
+main.input-hover input[type="password"]:not(.white):not(:disabled):hover,
 input[type="password"]:not(.white):focus-visible {
     background-color: var(--orange-light);
 }
@@ -103,10 +103,13 @@ button.white {
     color: var(--orange-button);
 }
 
-input[type="text"].white:not(:disabled):hover,
-input[type="password"].white:not(:disabled):hover,
-textarea:not(:disabled):hover,
-button:not(.circle).white:not(:disabled):hover,
+main.input-hover input[type="text"].white:not(:disabled):hover,
+main.input-hover input[type="password"].white:not(:disabled):hover,
+main.input-hover textarea:not(:disabled):hover,
+main.input-touch input[type="text"].white:not(:disabled):active,
+main.input-touch input[type="password"].white:not(:disabled):active,
+main.input-touch textarea:not(:disabled):active,
+main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
 textarea:focus-visible,
@@ -188,8 +191,10 @@ button.members {
 	background-image: url("./members.svg");
     background-size: 50%;
 }
-input[type="checkbox"]:hover:not(:active),
-button.circle:hover:not(:active) {
+main.input-hover input[type="checkbox"]:hover:not(:active),
+main.input-hover button.circle:hover:not(:active),
+main.input-touch input[type="checkbox"]:active,
+main.input-touch button.circle:active {
 	transform: scale(1.2);
 }
 input[type="checkbox"]:checked {

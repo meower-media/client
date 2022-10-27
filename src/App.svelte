@@ -24,7 +24,7 @@
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
-	import {mobile} from "./lib/responsiveness.js";
+	import {mobile, touch} from "./lib/responsiveness.js";
 
 	import {
 		screen, setupPage,
@@ -33,7 +33,6 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-    import SetQuote from "./lib/modals/SetQuote.svelte";
 </script>
 
 <main
@@ -45,6 +44,9 @@
 
 	class:layout-old={$mobile || $user.layout === "old"}
 	class:layout-mobile={$mobile}
+
+	class:input-touch={$touch}
+	class:input-hover={!$touch}
 >
 	{#if $disconnected}
 		<Modal>

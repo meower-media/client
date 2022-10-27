@@ -90,7 +90,7 @@
 				<h2>Profile Picture</h2>
 				<div id="pfp-list">
 					{#each pfps as pfp}
-						<span
+						<button
 							on:click={() => {
 								pfpSwitcher = false;
 								$user.pfp_data = pfp;
@@ -102,7 +102,7 @@
 							online={false}
 							icon={pfp}
 							alt="Profile picture {pfp}"
-						></PFP></span>
+						></PFP></button>
 					{/each}
 				</div>
 			</Container>
@@ -225,11 +225,18 @@
 		margin: 0.2em;
 		border-radius: 1.45em;
 		display: inline-block;
+		background: none;
+		border: none;
 	}
-	.pfp:hover {
+	:global(main.input-hover) .pfp:hover,
+	:global(main.input-touch) .pfp:active {
 		background-color: var(--orange-light);
 	}
-	.pfp.selected {
+	/* cst todo: fix shadow appearing when activating then unhovering because i gtg*/
+	:global(:root main.input-hover) .pfp:active {
+		background-color: var(--orange-dark);
+	}
+	:global(main) .pfp.selected {
 		background-color: var(--orange);
 	}
 	#pfp-list {

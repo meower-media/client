@@ -153,7 +153,9 @@
 		font-size: 200%;
 		margin: 0;
 	}
-	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
+	:global(main.input-hover) .pfp:hover:not(:active) :global(.pfp),
+	:global(main.input-touch) .pfp:active :global(.pfp),
+	.pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
 	}
 	.post-content {
