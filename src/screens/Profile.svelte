@@ -19,7 +19,7 @@
 	import {apiUrl, encodeApiURLParams} from "../lib/urls";
     import { dataset_dev } from "svelte/internal";
 	
-	const pfps = new Array(28).fill().map((_,i) => i+1);
+	const pfps = new Array(33).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
