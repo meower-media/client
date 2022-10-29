@@ -23,6 +23,7 @@
 	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
+	import news from "../assets/news.svg";
 	import logout from "../assets/logout.svg";
 
 	/**
@@ -95,6 +96,15 @@
 		<img
 			src={gc}
 			alt="Group Chats"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("news")} class="news-btn round">
+		<img
+			src={news}
+			alt="News"
 			width="90%"
 			height="auto"
 			draggable={false}
