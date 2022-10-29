@@ -25,7 +25,7 @@
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
 	import {mobile} from "./lib/responsiveness.js";
-	import {newNotification} from "../lib/notifications.js";
+	import {newNotification, requestPermission} from "../lib/notifications.js";
 
 	import {
 		screen, setupPage,
@@ -35,6 +35,8 @@
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
     import SetQuote from "./lib/modals/SetQuote.svelte";
+
+	requestPermission();
 </script>
 
 <main
