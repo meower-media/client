@@ -9,6 +9,7 @@
 	import Recent from "./Recent.svelte";
 	import Settings from "./Settings.svelte";
 	import Groupcat from "./Groupcat.svelte";	
+	import News from "./News.svelte";	
 
 	import Sidebar from "./Sidebar.svelte";
 
