@@ -7,6 +7,7 @@
 	import {user, ulist, spinner, lastTyped, mainPage as page} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
+	import {newNotification} from "../lib/notifications.js";
 	import Post from "../lib/Post.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
@@ -131,6 +132,10 @@
 				posts = posts;
 				if ($user.sfx && cmd.val.u !== $user.name) {
 					playNotification();
+				}
+
+				if ($user.name !== cmd.val.u && !(document.hasFocus())) {
+					newNotification(cmd.val.p, "", cmd.val.u);
 				}
 			}
 			if (cmd.val.mode === "delete") {
