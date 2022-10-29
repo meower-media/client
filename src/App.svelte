@@ -25,7 +25,7 @@
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
 	import {mobile} from "./lib/responsiveness.js";
-	import {newNotification, requestPermission} from "../lib/notifications.js";
+	import {newNotification, requestPermission} from "./lib/notifications.js";
 
 	import {
 		screen, setupPage,
