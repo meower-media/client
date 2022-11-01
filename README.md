@@ -1,5 +1,7 @@
 # BetterMeower
-BetterMeower has new features and enhancements not available in vanilla Meower, such as higher character limit, linebreaks and an emoji picker. Everything posted with BetterMeower can be seen by vanilla users, except emojis on Scratch Meower.
+BetterMeower is a fork of Meower Svelte with some new and improved features!
+
+## [Launch BetterMeower](https://bettermeower.osmanic.co)
 
 ## Features
 BetterMeower contains many new features and improvements over standard Meower, including (but not limited to)
@@ -14,7 +16,7 @@ BetterMeower contains many new features and improvements over standard Meower, i
 
 ✅ Better support for small phones 🙃
 
-# Credits
+## Credits
 **Everyone who contributed to [meower-media-co/Meower-Svelte](https://github.com/meower-media-co/Meower-Svelte)** - Without Meower Svelte and it's contributors, this project wouldn't exist
 
 **[@ArrowAced](https://github.com/ArrowAced)** - For helping me setup Cloudflare Pages
