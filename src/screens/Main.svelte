@@ -31,6 +31,8 @@
 			<Chatlist />
 		{:else if $page === "groupchat"}
 			<Groupchat />
+		{:else if $page === "news"}
+			<News />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}
