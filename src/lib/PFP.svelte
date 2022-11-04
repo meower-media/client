@@ -16,7 +16,7 @@
 			{alt}
 			title={alt}
 			src={new URL(`./../assets/avatars/icon_${
-				icon === -1 ? 21 : (icon === -2 ? "err" : icon - 1)
+				icon === -1 ? 34 : (icon === -2 ? "err" : icon - 1)
 			}.svg`, import.meta.url).href}
 
 			on:error|once={() => icon = -2}
