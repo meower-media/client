@@ -24,6 +24,7 @@
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
+	import search from "../assets/search.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
@@ -95,6 +96,15 @@
 		<img
 			src={gc}
 			alt="Group Chats"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("search")} class="search-btn round">
+		<img
+			src={search}
+			alt="search"
 			width="90%"
 			height="auto"
 			draggable={false}

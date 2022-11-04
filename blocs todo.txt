@@ -1,7 +1,29 @@
-to add to svelte:
-- image links showing as images?
-- search
-- mod panel
+do:
 - statisics
-- Bettermeower pfp support
+- image links showing as images?
+- cubeupload image sharing
+- search page
+
+soon:
+- add to chat button on profiles (for adding users to gc via search)
+
+to add to svelte:
 - BGM
+- mod panel
+- Bettermeower pfp support
+- search users, posts and stuff
+
+
+
+
+
+
+
+
+
+
+
+
+
+maybe:
+- search to add to chat

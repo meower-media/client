@@ -121,16 +121,21 @@
 				}}
 			>{data.quote ? "Update Quote" : "Set Quote"}</button>
 		{/if}
-
+		
 		<button
 			class="long"
-			title="View Recet Posts"
+			title="View Recent Posts"
 			on:click={()=>{
 				window.scrollTo(0,0);
 				page.set("blank");
 				tick().then(() => page.set("recent"));
 			}}
 		>View recent posts</button>
+
+		<button 
+			class="long" 
+			disabled
+		>Add To Chat</button>
 
 		{#if $user.name && $profileClicked !== $user.name}
 			<button
