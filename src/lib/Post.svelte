@@ -18,7 +18,7 @@
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 	
 	import {onMount} from "svelte";
-	import * as emoji from "node-emoji";
+	const emoji = require("node-emoji");
 
 	export let post = {};
 	export let buttons = true;
