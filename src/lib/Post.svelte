@@ -18,6 +18,7 @@
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 	
 	import {onMount} from "svelte";
+	import {emoji} from "node-emoji";
 
 	export let post = {};
 	export let buttons = true;
@@ -127,7 +128,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{post.content}</p>
+	<p class="post-content">{emoji.emojify(post.content)}</p>
 </Container>
 
 <style>
