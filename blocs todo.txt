@@ -1,54 +1,7 @@
-do:
-- bridged tag
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-so ill do:
-- all profile stuff (eg, role. active)
-- mod panel
-- discord stuff
-- post buttons
-
-r7:
-- announcements
+to add to svelte:
+- image links showing as images?
 - search
-- recent msgs
-
-discord stuff:
-- discord based formatting text
-- for discord default emojis,when it comes to posting it will be a list of emoji names and unicode counterparts
-- discord based formatting text ui for posting posts
-
-
-
-
-
-
-
-
-
-
-later:
-- delete post detection
-
-maybe:
-- quotes (when mike fix)
+- mod panel
+- statisics
+- Bettermeower pfp support
+- BGM
