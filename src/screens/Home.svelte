@@ -33,6 +33,10 @@
 
 	let postInput;
 
+	let vbotlist_split;
+	let uvbotlist_split;
+	let userbotlist_split;
+
 	/**
 	 * Loads a page, with offset and overflow calculations.
 	 * 
@@ -54,6 +58,18 @@
 				const resp = await fetch(
 					`${apiUrl}${path}${realPage}`
 				);
+				const vbotlist = await fetch(
+					"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
+				);
+				vbotlist_split = (await vbotlist.text()).split(/\r?\n/);
+				const uvbotlist = await fetch(
+					"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverified-bots.txt"
+				);
+				uvbotlist_split = (await uvbotlist.text()).split(/\r?\n/);
+				const ubotlist = await fetch(
+					"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
+				);
+				userbotlist_split = (await ubotlist.text()).split(/\r?\n/);
 				if (!resp.ok) {
 					throw new Error("Response code is not OK; code is " + resp.status);
 				}
@@ -84,6 +100,9 @@
 				for (const post of realPosts) {
 					posts.push({
 						id: id++,
+						isvbot: vbotlist_split.includes(post.u),
+						ownsbot: userbotlist_split.includes(post.u),
+						isuvbot: uvbotlist_split.includes(post.u),
 						post_id: post.post_id,
 						user: post.u,
 						content: post.p,
@@ -122,6 +141,9 @@
 			if ($page === "home" && cmd.val.mode === 1) {
 				if (!(cmd.val.post_origin === "home")) return;
 				addPost({
+					isvbot: vbotlist_split.includes(cmd.val.u),
+					ownsbot: userbotlist_split.includes(cmd.val.u),
+					isuvbot: uvbotlist_split.includes(cmd.val.u),
 					post_id: cmd.val._id,
 					user: cmd.val.u,
 					content: cmd.val.p,

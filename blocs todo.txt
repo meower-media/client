@@ -2,6 +2,7 @@ done:
 - search page
 - Bettermeower pfp support
 - statisics
+- dynamic txt file of bots
 
 do:
 - image links showing as images?
@@ -14,3 +15,6 @@ to add to svelte:
 - BGM
 - add to chat button on profiles (for adding users to gc via search)
 - search users, posts and stuff
+
+if he cant fix it i wont:
+- webhooks (use showier branch)

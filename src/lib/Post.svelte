@@ -125,6 +125,18 @@
 			{#if bridged}
 				<i>[BRIDGED]</i>
 			{/if}
+
+			{#if post.isvbot}
+				<i>[VERIFIED BOT]</i>
+			{/if}
+
+			{#if post.isuvbot}
+				<i>[UNVERIFIED BOT]</i>
+			{/if}
+
+			{#if post.ownsbot}
+				<i>[BOT OWNER]</i>
+			{/if}
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>
