@@ -25,7 +25,7 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
-	import cubeuploadimg from "../assets/cubeupload.png";
+	import cubeuploadimg from "../assets/cubeupload.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
