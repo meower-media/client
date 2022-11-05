@@ -188,6 +188,10 @@ button.members {
 	background-image: url("./members.svg");
     background-size: 50%;
 }
+button.search {
+	background-image: url("./search.svg");
+    background-size: 50%;
+}
 input[type="checkbox"]:hover:not(:active),
 button.circle:hover:not(:active) {
 	transform: scale(1.2);

@@ -21,6 +21,7 @@
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
+	import StatsModal from "./lib/modals/Stats.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -101,6 +102,8 @@
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
+		{:else if $modalPage === "Stats"}
+			<StatsModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 		{:else if $modalPage === "deleteAccount"}
