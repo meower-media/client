@@ -192,8 +192,8 @@ button.search {
 	background-image: url("./search.svg");
     background-size: 50%;
 }
-input[type="checkbox"]:hover:not(:active),
-button.circle:hover:not(:active) {
+input[type="checkbox"]:hover:not(:active):enabled,
+button.circle:hover:not(:active):enabled {
 	transform: scale(1.2);
 }
 input[type="checkbox"]:checked {

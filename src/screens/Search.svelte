@@ -12,9 +12,7 @@
         <div class="settings-controls">
             <button
                 class="circle search"
-                on:click = {()=>{
-                    
-                }}
+                disabled
             ></button>
         </div>
 
@@ -25,9 +23,7 @@
         <div class="settings-controls">
             <button
                 class="circle search"
-                on:click = {()=>{
-                    
-                }}
+                disabled
             ></button>
         </div>
 
