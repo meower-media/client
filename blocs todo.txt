@@ -1,5 +1,6 @@
 done:
 - search page
+- Bettermeower pfp support
 - statisics
 
 do:
@@ -12,6 +13,4 @@ soon:
 to add to svelte:
 - BGM
 - add to chat button on profiles (for adding users to gc via search)
-- mod panel
-- Bettermeower pfp support
 - search users, posts and stuff
