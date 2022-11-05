@@ -166,6 +166,15 @@ export default class Cloudlink {
 
 					this.log("< incoming", data);
 
+					try {
+						if (typeof data.val == "string") {
+							data.val = JSON.parse(data.val)
+						}
+					} catch {
+						console.log("inval")
+					}
+					console.log(data.val)
+
 					this.emit(data.cmd, data);
 					if (data.listener) {
 						this.emit("__listener_" + data.listener, data);
