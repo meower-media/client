@@ -5,9 +5,9 @@
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
-    <h2 slot="header">Invalid modalPage string</h2>
+    <h2 slot="header">Error Loading Modal</h2>
     <div slot="default">
-		<p>{"Invalid modalPage string for '" + $modalPage + "'"}</p>
+		<p>{"Error loading modal for '" + $modalPage + "'"}</p>
 		<small class="smol">PS to devlopers, Your code may be working!</small>
 	</div>
 </Modal>

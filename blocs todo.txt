@@ -15,6 +15,7 @@ to add to svelte:
 - BGM
 - add to chat button on profiles (for adding users to gc via search)
 - search users, posts and stuff
+- dont allow verified bot posts to be reported
 
 if he cant fix it i wont:
 - webhooks (use showier branch)

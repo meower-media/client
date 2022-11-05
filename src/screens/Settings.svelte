@@ -90,6 +90,22 @@
 </Container>
 <Container>
 	<div class="settings-controls">
+		<button
+			class="circle settings"
+			on:click={()=>{
+				$modalPage = "CubeUploadAuth";
+				$modalShown = true;
+			}}
+		></button>
+	</div>
+
+	<h2>CubeUpload</h2>
+	Link Meower Svelte to your cubeupload account In order to upload images.
+	<br>
+	You may need to re-enter this Info. 
+</Container>
+<Container>
+	<div class="settings-controls">
 		<input
 			type="checkbox"
 			checked={$user.sfx}

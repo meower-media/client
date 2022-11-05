@@ -25,7 +25,6 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
-	import cubeuploadimg from "../assets/cubeupload.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
@@ -81,15 +80,6 @@
 	<button on:click={()=>goto("inbox")} class="gc-btn round">
 		<img
 			src={$user.unread_inbox ? mail_new : mail}
-			alt="Inbox Messages"
-			width="90%"
-			height="auto"
-			draggable={false}
-		/>
-	</button>
-	<button on:click={()=>goto("inbox")} class="gc-btn round">
-		<img
-			src={cubeuploadimg}
 			alt="Inbox Messages"
 			width="90%"
 			height="auto"
