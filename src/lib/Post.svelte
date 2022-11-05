@@ -93,14 +93,16 @@
 						}}
 					></button>
 				{:else}
-					<button
-						class="circle report"
-						on:click={()=>{
-							postClicked.set(post);
-							modalPage.set("reportPost");
-							modalShown.set(true);
-						}}
-					></button>
+					{#if !post.isvbot}
+						<button
+							class="circle report"
+							on:click={()=>{
+								postClicked.set(post);
+								modalPage.set("reportPost");
+								modalShown.set(true);
+							}}
+						></button>
+					{/if}
 				{/if}
 			{/if}
 		</div>
