@@ -54,7 +54,7 @@
 			post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 			var sep_img = img_content.split(": ")
 			var img_url = sep_img[1]
-			var urls = ["go.meower.org","assets.meower.org","api.meower.org","cubeupload.com","imgbb.com","meower.org"]
+			var urls = ["go.meower.org","assets.meower.org","api.meower.org","cubeupload.com","imgbb.com","meower.org","media.tenor.com"]
 			if (urls.some(element => {
 				if (img_url.includes(element)) {
 					return true;

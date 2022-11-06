@@ -106,6 +106,24 @@
 	<h2>Sound Effects</h2>
 	Sound effects are currently {!$user.sfx ? "disabled" : "enabled"}.
 </Container>
+<!--<Container>
+	<div class="settings-controls">
+		<input
+			type="checkbox"
+			checked={$user.bgm}
+			on:change={()=>{
+				const _user = $user;
+				_user.bgm = !_user.bgm;
+				user.set(_user);
+
+				clm.updateProfile();
+			}}
+		>
+	</div>
+
+	<h2>BGM</h2>
+	BGM is currently {!$user.sfx ? "disabled" : "enabled"}.
+</Container>-->
 {#if $user.name}
 <Container>
 	<div class="settings-controls">

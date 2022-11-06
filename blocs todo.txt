@@ -6,19 +6,17 @@ done:
 - dont allow verified bot posts to be reported
 - image links showing as images?
 
-josh or someone does url stuff and fixes image loading code
-
 do:
-- img.bb image sharing
-
-soon:
 - mod panel
 
+soon:
+- img.bb image sharing
+- webhooks (use showier branch)
+
 to add to svelte:
-- BGM
 - add to chat button on profiles (for adding users to gc via search)
 - search users, posts and stuff
 - custom pfp for bots
 
-if he cant fix it i wont:
-- webhooks (use showier branch)
+maybe:
+- BGM
