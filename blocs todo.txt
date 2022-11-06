@@ -6,9 +6,10 @@ done:
 - dont allow verified bot posts to be reported
 - image links showing as images?
 
-do:
+josh or someone does url stuff and fixes image loading code
 
-- cubeupload image sharing
+do:
+- img.bb image sharing
 
 soon:
 - mod panel
