@@ -25,7 +25,11 @@
 
 	let bridged = false;
 
+	let img1;
+
 	// TODO: make bridged tag a setting
+
+	// TODO: more then 1 img + optimize getimgs function
 
 	/**
 	 * Initialize this post's user profile
@@ -40,6 +44,22 @@
 		if (post.user == "Discord" && post.content.includes(":")) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
+		}
+
+		if (post.content.includes("[") && post.content.includes("]")) {
+			var squareb_1 = post.content.indexOf("[")
+			var squareb_2 = post.content.indexOf("]")
+
+			var img_content = post.content.slice(squareb_1+1,squareb_2)
+			post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
+			var sep_img = img_content.split(": ")
+			var img_url = sep_img[1]
+			var img_name = sep_img[0]
+
+			img1.className = "image_1"
+			img1.alt = img_name
+			img1.src = img_url
+			
 		}
 
 		loadProfile(post.user);
@@ -141,6 +161,7 @@
 			{/if}
 		</div>
 	</div>
+	<img src="" alt="hi" class="post-image-hide image_1" bind:this={img1}>
 	<p class="post-content">{post.content}</p>
 </Container>
 
@@ -157,6 +178,8 @@
 		align-items: center;
 		flex-wrap: wrap;
 	}
+	.post-image-hide {position: absolute; visibility: hidden;}
+
 	.creator {
 		display: inline;
 		max-width: 100%;

@@ -26,6 +26,13 @@
     font-display: swap;
 }
 
+.image_1 {
+    margin-top: 0.5em;
+    width: 10em; /* you can use % */
+    height: auto;
+}
+/* THIS IS HERE BECAUSE CSS IS STUPID */
+
 body {
     margin: 0;
     padding: none;

@@ -4,9 +4,10 @@ done:
 - statisics
 - txt file of bots
 - dont allow verified bot posts to be reported
+- image links showing as images?
 
 do:
-- image links showing as images?
+
 - cubeupload image sharing
 
 soon:
