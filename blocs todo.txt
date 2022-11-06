@@ -9,8 +9,31 @@ done:
 do:
 - mod panel
 
+mod panel idea:
+clear latest home posts
+get netlogs of ip and get ip of user
+report queue
+ip ban ip
+moderate user
+
+moderate user:
+ip ban
+ban
+alert
+kick
+view latest posts
+
+
+
+
+
+
+
+
+
+
 soon:
-- img.bb image sharing
+- img.bb image sharing (people need to generate their own api keys)
 - webhooks (use showier branch)
 
 to add to svelte:

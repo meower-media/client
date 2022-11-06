@@ -4,7 +4,7 @@
 -->
 
 <script>
-	import {user, ulist, spinner, lastTyped, mainPage as page} from "../lib/stores.js";
+	import {user, ulist, spinner, lastTyped, mainPage as page, modalPage, modalShown} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
@@ -14,10 +14,12 @@
 	import {link} from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
+	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
+    import { tick } from "svelte";
 
 	let id = 0;
 	export let posts = [];
@@ -63,7 +65,7 @@
 				);
 				vbotlist_split = (await vbotlist.text()).split(/\r?\n/);
 				const uvbotlist = await fetch(
-					"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverified-bots.txt"
+					"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverifed-bots.txt"
 				);
 				uvbotlist_split = (await uvbotlist.text()).split(/\r?\n/);
 				const ubotlist = await fetch(
@@ -170,6 +172,19 @@
 	ulist.subscribe(val => {
 		_ulist = val;
 	})
+
+	function goto(newPage, resetScroll=true) {
+		if (!$user.name && newPage !== "home" && newPage !== "settings") {
+			modalPage.set("signup");
+			modalShown.set(true);
+			return;
+		}
+		if (resetScroll) {
+			window.scrollTo(0,0);
+		}
+		page.set("blank");
+		tick().then(() => page.set(newPage));
+	}
 </script>
 
 <div class="home">
@@ -179,6 +194,14 @@
 		</div>
 	{:then}
 		<Container>
+			<div class="settings-controls">
+				<button
+					class="circle settings"
+					on:click={()=>{
+						goto("Mod_Panel")
+					}}
+				>
+			</div>
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
@@ -322,6 +345,16 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 1.88em;
+	}
+	.settings-controls {
+		position: absolute;
+		top: 0.25em;
+		right: 0.25em;
+	}
+	input[type="checkbox"], button.circle {
+		border: none;
+		margin: 0;
+		margin-left: 0.125em;
 	}
 	.fullcenter {
 		text-align: center;

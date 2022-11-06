@@ -1,6 +1,5 @@
 <!--
-	The typical Meower container, used literally everywhere*.
-	*in the homepage, settings and profile
+	The typical Meower container, used literally everywhere.
 -->
 
 <div><slot /></div>
