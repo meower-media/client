@@ -54,11 +54,20 @@
 			post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 			var sep_img = img_content.split(": ")
 			var img_url = sep_img[1]
-			var img_name = sep_img[0]
+			var urls = ["go.meower.org","assets.meower.org","api.meower.org","cubeupload.com","imgbb.com","meower.org"]
+			if (urls.some(element => {
+				if (img_url.includes(element)) {
+					return true;
+				}
 
-			img1.className = "image_1"
-			img1.alt = img_name
-			img1.src = img_url
+				return false;
+			})) {
+				var img_name = sep_img[0]
+
+				img1.className = "image_1"
+				img1.alt = img_name
+				img1.src = img_url
+			}
 			
 		}
 
