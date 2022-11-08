@@ -198,7 +198,7 @@
 				<button
 					class="circle settings"
 					on:click={()=>{
-						goto("Mod_Panel")
+						goto("groupchat")
 					}}
 				>
 			</div>
@@ -345,11 +345,6 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 1.88em;
-	}
-	.settings-controls {
-		position: absolute;
-		top: 0.25em;
-		right: 0.25em;
 	}
 	input[type="checkbox"], button.circle {
 		border: none;

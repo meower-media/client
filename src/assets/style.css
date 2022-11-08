@@ -26,6 +26,13 @@
     font-display: swap;
 }
 
+.settings-controls {
+    position: absolute;
+    top: 0.25em;
+    right: 0.25em;
+}
+
+
 .image_1 {
     margin-top: 0.5em;
     width: 10em; /* you can use % */

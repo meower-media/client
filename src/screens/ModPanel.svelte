@@ -1,5 +1,7 @@
 <script>
     import Container from "../lib/Container.svelte";
+
+    import {modalShown,modalPage} from "../lib/stores.js";
 </script>
 
 <div class="ModPanel">
@@ -8,9 +10,24 @@
         Hello everyone its THE MOD PANEL HERE back with another youtube video!!!!!!
     </Container>
     <Container>
+        <div class="settings-controls">
+            <button
+                class="circle settings"
+                on:click={()=>{
+                    modalPage.set("Stats");
+					modalShown.set(true);
+                }}
+            >
+        </div>
         <h1>Moderate User</h1>
-        Moderate a certain User
+        Moderate a certain User.
     </Container>
 </div>
 
-<style></style>
+<style>
+    input[type="checkbox"], button.circle {
+		border: none;
+		margin: 0;
+		margin-left: 0.125em;
+	}
+</style>
