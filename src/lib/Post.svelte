@@ -51,10 +51,9 @@
 			var squareb_2 = post.content.indexOf("]")
 
 			var img_content = post.content.slice(squareb_1+1,squareb_2)
-			post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 			var sep_img = img_content.split(": ")
 			var img_url = sep_img[1]
-			var urls = ["assets.meower.org","http.meower.org","api.meower.org","cubeupload.com","imgbb.com","media.tenor.com","tenor.com","c.tenor.com"]
+			var urls = ["http.meower.org","assets.meower.org","http.meower.org","api.meower.org","cubeupload.com","imgbb.com","media.tenor.com","tenor.com","c.tenor.com"]
 			try {
 				if (urls.some(element => {
 					if (img_url.includes(element)) {
@@ -63,6 +62,7 @@
 
 					return false;
 				})) {
+					post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 					var img_name = sep_img[0]
 
 					img1.className = "image_1"
