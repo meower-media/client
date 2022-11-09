@@ -8,6 +8,12 @@
         The Changelog for Svelte
     </Container>
     <Container>
+        <h1>1.5 Dev Preview 2.5</h1>
+        Http.meower.org is an allowed image hosting site
+        <br>
+        Fixed "issue" where images will break if they arent an allowed image hosting site
+    </Container>
+    <Container>
         <h1>1.5 Dev Preview 2</h1>
         Enter user name and go to profile
         <br>
