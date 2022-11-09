@@ -14,7 +14,7 @@
             <button
                 class="circle settings"
                 on:click={()=>{
-                    modalPage.set("Stats");
+                    modalPage.set("Mod_UserInp");
 					modalShown.set(true);
                 }}
             >

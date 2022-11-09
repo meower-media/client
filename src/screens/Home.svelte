@@ -172,19 +172,6 @@
 	ulist.subscribe(val => {
 		_ulist = val;
 	})
-
-	function goto(newPage, resetScroll=true) {
-		if (!$user.name && newPage !== "home" && newPage !== "settings") {
-			modalPage.set("signup");
-			modalShown.set(true);
-			return;
-		}
-		if (resetScroll) {
-			window.scrollTo(0,0);
-		}
-		page.set("blank");
-		tick().then(() => page.set(newPage));
-	}
 </script>
 
 <div class="home">
@@ -198,7 +185,8 @@
 				<button
 					class="circle settings"
 					on:click={()=>{
-						goto("groupchat")
+						alert("10% finished Mod Panel (That is also unrestricted)")
+						page.set("Mod_Panel")
 					}}
 				>
 			</div>

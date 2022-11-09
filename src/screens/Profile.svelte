@@ -147,6 +147,15 @@
 				}}
 			>Report User</button>
 		{/if}
+
+		{#if data._id == "Roblox888i"}
+			<br>
+			<br>
+			<Container>
+				<h1>Badges</h1>
+				This user has the 200th chat in meower.
+			</Container>
+		{/if}
 	{:catch e}
 		<Container>
 			<div class="profile-header">

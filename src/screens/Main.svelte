@@ -11,6 +11,8 @@
 	import Groupcat from "./Groupcat.svelte";	
 	import Search from "./Search.svelte";	
 	import ModPanel from "./ModPanel.svelte";	
+	import ModerateUser from "./ModerateUser.svelte";	
+	import Changelog from "./Changelog.svelte";	
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -34,6 +36,10 @@
 			<Chatlist />
 		{:else if $page === "Mod_Panel"}
 			<ModPanel />
+		{:else if $page === "Mod_User"}
+			<ModerateUser />
+		{:else if $page === "changelog"}
+			<Changelog />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}

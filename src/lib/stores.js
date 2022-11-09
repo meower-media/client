@@ -28,6 +28,9 @@ export const chatOwner = writable("");
 // User list
 export const ulist = writable([]);
 
+// Mod panel Stores
+export const User_ToMod = writable("");
+
 // Last post clicked
 export const postClicked = writable({});
 

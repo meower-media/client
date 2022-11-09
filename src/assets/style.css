@@ -35,8 +35,8 @@
 
 .image_1 {
     margin-top: 0.5em;
-    width: 10em; /* you can use % */
-    height: auto;
+    width: auto; /* you can use % */
+    height: 20em;
 }
 /* THIS IS HERE BECAUSE CSS IS STUPID */
 

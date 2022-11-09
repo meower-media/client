@@ -54,20 +54,23 @@
 			post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 			var sep_img = img_content.split(": ")
 			var img_url = sep_img[1]
-			var urls = ["go.meower.org","assets.meower.org","api.meower.org","cubeupload.com","imgbb.com","meower.org","media.tenor.com"]
-			if (urls.some(element => {
-				if (img_url.includes(element)) {
-					return true;
+			var urls = ["assets.meower.org","http.meower.org","api.meower.org","cubeupload.com","imgbb.com","media.tenor.com","tenor.com","c.tenor.com"]
+			try {
+				if (urls.some(element => {
+					if (img_url.includes(element)) {
+						return true;
+					}
+
+					return false;
+				})) {
+					var img_name = sep_img[0]
+
+					img1.className = "image_1"
+					img1.alt = img_name
+					img1.title = img_name
+					img1.src = img_url
 				}
-
-				return false;
-			})) {
-				var img_name = sep_img[0]
-
-				img1.className = "image_1"
-				img1.alt = img_name
-				img1.src = img_url
-			}
+			} catch {}
 			
 		}
 
@@ -168,9 +171,13 @@
 			{#if post.ownsbot}
 				<i>[BOT OWNER]</i>
 			{/if}
+
+			{#if post.user == "Roblox888i"}
+				<i>[200TH CHAT]</i>
+			{/if}
 		</div>
 	</div>
-	<img src="" alt="hi" class="post-image-hide image_1" bind:this={img1}>
+	<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>
 	<p class="post-content">{post.content}</p>
 </Container>
 

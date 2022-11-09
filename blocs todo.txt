@@ -1,4 +1,4 @@
-done:
+done (preview 1):
 - search page
 - Bettermeower pfp support
 - statisics
@@ -6,8 +6,29 @@ done:
 - dont allow verified bot posts to be reported
 - image links showing as images?
 
+done (preview 2):
+- enter user name and go to profile
+- crash bug fix (hopefully)
+- 10% finished mod panel
+- changelog
+- added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
+- make so you dont have to log in for search bar and changelog
+
+
+
+
+done (release/preview 3 idk):
+
+
+
+
+
+
+
 do:
 - mod panel
+
+for mod panel modals, a system where you can enter a disc, and id (for doing actions) and title or something like that.
 
 mod panel idea:
 clear latest home posts
@@ -16,23 +37,15 @@ report queue
 ip ban ip
 moderate user
 
-moderate user:
+moderate user (make sure you can go back to mod panel):
 ip ban
 ban
 alert
 kick
-view latest posts
-
-
-
-
-
-
-
-
-
+go to profile (make sure you can go back to mod panel)
 
 soon:
+- add badges (tags) to profiles
 - img.bb image sharing (people need to generate their own api keys)
 - webhooks (use showier branch)
 
@@ -40,6 +53,16 @@ to add to svelte:
 - add to chat button on profiles (for adding users to gc via search)
 - search users, posts and stuff
 - custom pfp for bots
+- log out everywhere
+- banned status
+- verified users?
 
 maybe:
 - BGM
+
+cst and tnix (or me) please fix all these bugs:
+- image sizing issues
+- navbar links
+
+oh no josh will get mad at me is i add bettermeower stuff:
+- Emoji shortcodes

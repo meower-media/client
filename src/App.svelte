@@ -22,6 +22,7 @@
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import StatsModal from "./lib/modals/Stats.svelte";
+	import ModerateUserInputModal from "./lib/modals/ModerateUserInput.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -104,6 +105,8 @@
 			<SetQuoteModal />
 		{:else if $modalPage === "Stats"}
 			<StatsModal />
+		{:else if $modalPage === "Mod_UserInp"}
+			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 		{:else if $modalPage === "deleteAccount"}

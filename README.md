@@ -32,3 +32,5 @@ Relevant bit of information from the original readme:
 
 > ## Recommended IDE Setup
 > [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+
+~~CST WE NEED TO WAGE WAR AGAINST BETTERMEOWER, THEY THINK THEY ARE BETTER THEN US~~

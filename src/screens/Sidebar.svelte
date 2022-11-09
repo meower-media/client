@@ -25,12 +25,13 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
+	import changelog from "../assets/changelog.svg";
 
 	/**
 	* @param {any} newPage Goes to a page while also refreshing it.
 	*/
 	function goto(newPage, resetScroll=true) {
-		if (!$user.name && newPage !== "home" && newPage !== "settings") {
+		if (!$user.name && newPage !== "home" && newPage !== "settings" && newPage !== "changelog" && newPage !== "search") {
 			modalPage.set("signup");
 			modalShown.set(true);
 			return;
@@ -105,6 +106,15 @@
 		<img
 			src={search}
 			alt="search"
+			width="90%"
+			height="auto"
+			draggable={false}
+		/>
+	</button>
+	<button on:click={()=>goto("changelog")} class="changelog-btn round">
+		<img
+			src={changelog}
+			alt="changelog"
 			width="90%"
 			height="auto"
 			draggable={false}
