@@ -14,7 +14,20 @@
 
 	import {mainPage as page} from "../lib/stores.js";
 
-	page.set("home");
+	let pathstring = window.location.pathname;
+	let path = pathstring.split("/").filter(i => i != ''); // Filter here removes all empty array items
+	if (path.length > 0) {
+		page.set(path[0]);
+	} else {
+		page.set("home");
+	}
+	function changePageURL(page) {
+		console.log("pls work")
+		if (page !== "blank") {
+			history.pushState(null, null, "/" + page);
+		}
+	}
+	$: changePageURL($page)
 </script>
 
 <div class="main-screen">
@@ -38,14 +51,11 @@
 			<Settings />
 		{:else if $page === "groupcat"}
 			<Groupcat />
-		{:else if $page === "groupchat"}
-			<Groupchat />
 		{:else if $page === "blank"}
 			<div></div>
 		{:else}
-			Somehow, you got to a page that doesn't exist...
-			<br />
-			(Current page: {$page})
+			<h1>404! Page not found</h1>
+			<p>Are you sure the URL is correct?</p>
 		{/if}
 	</div>
 </div>
