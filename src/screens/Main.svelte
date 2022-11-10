@@ -21,12 +21,15 @@
 			page.set(path[0]);
 			switch($page) {
 				case "profile":
+				case "recent":
 					if (path.length > 1) {
 						profileClicked.set(path[1])
 					} else {
 						profileClicked.set($user.name)
 					}
+					break;
 				default: 
+					break;
 			}
 		} else {
 			page.set("home");
@@ -37,6 +40,7 @@
 		if (page !== "blank") {
 			switch(page) {
 				case "profile": 
+				case "recent":
 					history.pushState(null, null, "/" + page + "/" + $profileClicked);
 					break;
 				default: 
@@ -45,7 +49,7 @@
 		}
 	}
 	setScreenToURL();
-	
+
 	addEventListener('popstate', (event) => {setScreenToURL()}); // Everytime user navigates, update screen to be from URL
 	$: changePageURL($page)  // Everytime screen changes, change the url
 </script>
