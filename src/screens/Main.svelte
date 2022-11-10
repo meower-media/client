@@ -12,22 +12,42 @@
 
 	import Sidebar from "./Sidebar.svelte";
 
-	import {mainPage as page} from "../lib/stores.js";
+	import {mainPage as page, profileClicked, user} from "../lib/stores.js";
 
-	let pathstring = window.location.pathname;
-	let path = pathstring.split("/").filter(i => i != ''); // Filter here removes all empty array items
-	if (path.length > 0) {
-		page.set(path[0]);
-	} else {
-		page.set("home");
+	function setScreenToURL() {
+		let pathstring = window.location.pathname;
+		let path = pathstring.split("/").filter(i => i != ''); // Filter here removes all empty array items
+		if (path.length > 0) {
+			page.set(path[0]);
+			switch($page) {
+				case "profile":
+					if (path.length > 1) {
+						profileClicked.set(path[1])
+					} else {
+						profileClicked.set($user.name)
+					}
+				default: 
+			}
+		} else {
+			page.set("home");
+		}
 	}
 	function changePageURL(page) {
 		console.log("pls work")
 		if (page !== "blank") {
-			history.pushState(null, null, "/" + page);
+			switch(page) {
+				case "profile": 
+					history.pushState(null, null, "/" + page + "/" + $profileClicked);
+					break;
+				default: 
+					history.pushState(null, null, "/" + page);
+			}
 		}
 	}
-	$: changePageURL($page)
+	setScreenToURL();
+	
+	addEventListener('popstate', (event) => {setScreenToURL()}); // Everytime user navigates, update screen to be from URL
+	$: changePageURL($page)  // Everytime screen changes, change the url
 </script>
 
 <div class="main-screen">
