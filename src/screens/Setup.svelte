@@ -164,6 +164,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Log In - Meower</title>
+</svelte:head>
+
 <div out:fade={{duration: 300}} bind:this={setup} class="setup white">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">

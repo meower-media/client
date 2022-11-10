@@ -79,6 +79,10 @@
     loadPage(1);
 </script>
 
+<svelte:head>
+	<title>Group Chats - Meower</title>
+</svelte:head>
+
 <div class="chats">
 	{#if pageLoading}
 		<div class="fullcenter">

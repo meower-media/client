@@ -49,6 +49,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{$profileClicked} - Meower</title>
+</svelte:head>
+
 <div class="OtherProfile">
 {#await loadProfile()}
 	<div class="fullcenter">

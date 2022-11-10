@@ -195,6 +195,9 @@
 	so {cmd: direct, val: {cmd: add_to_chat, val: {chatid: "", username: ""}}}?
 	also  remove_from_chat
 -->
+<svelte:head>
+	<title>{$chatName} - Meower</title>
+</svelte:head>
 
 <div class="groupchat">
 	{#await loadPage(1)}

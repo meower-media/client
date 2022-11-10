@@ -7,6 +7,10 @@
 	import * as clm from "../lib/clmanager.js";
 </script>
 
+<svelte:head>
+	<title>Settings - Meower</title>
+</svelte:head>
+
 <!--
 	<p>Quote: {$user.quote}</p>
 	<form 

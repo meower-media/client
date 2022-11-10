@@ -111,6 +111,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{$profileClicked}'s posts - Meower</title>
+</svelte:head>
+
 <div class="posts">
 	{#await loadPage(1)}
 		<div class="fullcenter">

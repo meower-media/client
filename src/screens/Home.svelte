@@ -150,6 +150,10 @@
 	})
 </script>
 
+<svelte:head>
+	<title>Home - Meower</title>
+</svelte:head>
+
 <div class="home">
 	{#await loadPage(1)}
 		<div class="fullcenter">

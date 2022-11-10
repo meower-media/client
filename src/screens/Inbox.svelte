@@ -121,6 +121,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Inbox - Meower</title>
+</svelte:head>
+
 <div class="messages">
 	{#await loadPage(1)}
 		<div class="fullcenter">
