@@ -14,9 +14,6 @@ done (preview 2):
 - added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
 - make so you dont have to log in for search bar and changelog
 
-
-
-
 done (release/preview 3 idk):
 
 
@@ -55,14 +52,18 @@ to add to svelte:
 - custom pfp for bots
 - log out everywhere
 - banned status
-- verified users?
+- make some sort of system for if the username matches another username with l or uppercase i
 
 maybe:
 - BGM
+
+oh no josh will get mad at me is i add bettermeower stuff:
+- Emoji shortcodes
 
 cst and tnix (or me) please fix all these bugs:
 - image sizing issues
 - navbar links
 
-oh no josh will get mad at me is i add bettermeower stuff:
-- Emoji shortcodes
+1.6:
+- custom softcoded badges system (like bot system)
+- verified users?

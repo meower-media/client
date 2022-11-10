@@ -171,10 +171,6 @@
 			{#if post.ownsbot}
 				<i>[BOT OWNER]</i>
 			{/if}
-
-			{#if post.user == "Roblox888i"}
-				<i>[200TH CHAT]</i>
-			{/if}
 		</div>
 	</div>
 	<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>
