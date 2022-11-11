@@ -46,6 +46,7 @@
 	class:mode-dark={$user.mode === false}
 
 	class:layout-old={$mobile || $user.layout === "old"}
+	class:layout-new={$user.layout === "new"}
 	class:layout-mobile={$mobile}
 >
 	{#if $disconnected}

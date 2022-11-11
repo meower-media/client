@@ -76,8 +76,38 @@
 		overflow: hidden;
 	}
 
-	.transition {
-		
+	@keyframes trans {
+		from {width: 100%;}
+		to {width: 3.5em;}
+	}
+
+	@keyframes transold {
+		from {height: 100%;}
+		to {height: 3.5em;}
+	}
+
+	:global(main.layout-new) .transition {
+		background-color: var(--orange);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		animation-name: trans;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease;
+  		animation-duration: 0.7s;
+		z-index: 2;
+	}
+
+	:global(main.layout-old) .transition {
+		background-color: var(--orange);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		animation-name: transold;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease;
+  		animation-duration: 0.6s;
+		z-index: 2;
 	}
 
 	.sidebar {
@@ -89,7 +119,9 @@
 
 		flex-shrink: 0;
 		flex-grow: 0;
+		z-index: 3;
 	}
+
 	.view {
 		flex-grow: 1;
 		flex-shrink: 1;

@@ -15,6 +15,7 @@
 	import * as clm from "../lib/clmanager.js";
 
 	import {tick} from "svelte";
+	import {fade} from 'svelte/transition';
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
@@ -57,7 +58,7 @@
 	}
 </script>
 
-<div class="sidebar">
+<div class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
 		<span class="logo-inner" on:click={()=>goto("home")}>
 			<img

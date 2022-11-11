@@ -164,7 +164,7 @@
 	}
 </script>
 
-<div out:fade={{duration: 300}} bind:this={setup} class="setup white">
+<div bind:this={setup} out:fade={{duration: 500}} class="setup white">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
