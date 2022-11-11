@@ -1,9 +1,9 @@
 <script>	
-	import Modal from "../Modal.svelte";
+	import Modal from "../lib/Modal.svelte";
 
-    import { shiftHeld } from "../keyDetect";
+    import { shiftHeld } from "../lib/keyDetect";
 
-	import {mainPage as page, modalPage, modalShown, User_ToMod} from "../stores.js";
+	import {mainPage as page, modalPage, modalShown, User_ToMod} from "../lib/stores.js";
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>

@@ -20,6 +20,8 @@
 	import {fly} from "svelte/transition";
 	import {flip} from 'svelte/animate';
     import { tick } from "svelte";
+    //import AddMember from "src/lib/modals/AddMember.svelte";
+	//Zed just told me the cl4 port will move the mod panel to a seperate site
 
 	let id = 0;
 	export let posts = [];
@@ -181,7 +183,7 @@
 		</div>
 	{:then}
 		<Container>
-			<div class="settings-controls">
+			<!--<div class="settings-controls">
 				<button
 					class="circle settings"
 					on:click={()=>{
@@ -189,7 +191,8 @@
 						page.set("Mod_Panel")
 					}}
 				>
-			</div>
+			</div>-->
+			<!--Zed just told me the cl4 port will move the mod panel to a seperate site-->
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>

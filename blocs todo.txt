@@ -23,28 +23,11 @@ done (release/preview 3 idk):
 
 
 do:
-- mod panel
-
-for mod panel modals, a system where you can enter a disc, and id (for doing actions) and title or something like that.
-
-mod panel idea:
-clear latest home posts
-get netlogs of ip and get ip of user
-report queue
-ip ban ip
-moderate user
-
-moderate user (make sure you can go back to mod panel):
-ip ban
-ban
-alert
-kick
-go to profile (make sure you can go back to mod panel)
+- webhooks (use showier branch)
+- sidebar transition
 
 soon:
 - img.bb image sharing (people need to generate their own api keys)
-- webhooks (use showier branch)
-- sidebar transition
 
 to add to svelte:
 - add to chat button on profiles (for adding users to gc via search)

@@ -10,8 +10,8 @@
 	import Settings from "./Settings.svelte";
 	import Groupcat from "./Groupcat.svelte";	
 	import Search from "./Search.svelte";	
-	import ModPanel from "./ModPanel.svelte";	
-	import ModerateUser from "./ModerateUser.svelte";	
+	import ModPanel from "../modpanel/ModPanel.svelte";	
+	import ModerateUser from "../modpanel/ModerateUser.svelte";	
 	import Changelog from "./Changelog.svelte";	
 
 	import Sidebar from "./Sidebar.svelte";
@@ -22,6 +22,9 @@
 </script>
 
 <div class="main-screen">
+	<div class="transition">
+
+	</div>	
 	<div class="sidebar">
 		<Sidebar />
 	</div>
@@ -71,6 +74,10 @@
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
+	}
+
+	.transition {
+		
 	}
 
 	.sidebar {
