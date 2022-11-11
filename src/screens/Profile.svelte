@@ -9,6 +9,8 @@
 
 	import {profileCache} from "../lib/loadProfile.js";
 
+	import Profile from "../lib/Profile_View.svelte"
+
     import PFP from "../lib/PFP.svelte";
     import Loading from "../lib/Loading.svelte";
     import Container from "../lib/Container.svelte";
@@ -18,6 +20,7 @@
 	import {tick} from "svelte";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls";
     import { dataset_dev } from "svelte/internal";
+    import ProfileView from "../lib/Profile_View.svelte";
 	
 	const pfps = new Array(34).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
@@ -55,28 +58,7 @@
 		<Loading />
 	</div>
 {:then data}
-		<Container>
-			<div class="profile-header">
-				<PFP
-					online={$ulist.includes(data._id)}
-					icon={
-						$profileClicked === $user.name ?
-							$user.pfp_data : data.pfp_data
-					}
-					alt="{data._id}'s profile picture"
-					size={1.4}
-				></PFP>
-				<div class="profile-header-info">
-					<h1 class="profile-username">{data._id}</h1>
-					<div class="profile-active">{
-						$ulist.includes(data._id) ? "Online" : "Offline"
-					}</div>
-					<div class="profile-role">
-						{levels[data.lvl] || "Unknown"}
-					</div>
-				</div>
-			</div>
-		</Container>
+		<ProfileView username={$profileClicked}></ProfileView>
 
 		{#if data.quote}
 			<Container>
@@ -148,32 +130,7 @@
 			>Report User</button>
 		{/if}
 	{:catch e}
-		<Container>
-			<div class="profile-header">
-				<PFP
-					online={$ulist.includes($profileClicked)}
-					icon={-2}
-					alt="{$profileClicked}'s profile picture"
-					size={1.4}
-				></PFP>
-				<div class="profile-header-info">
-					<h1 class="profile-username">{$profileClicked}</h1>
-					<div class="profile-active">{
-						$ulist.includes($profileClicked) ? "Online" : "Offline"
-					}</div>
-					<div class="profile-role">Unknown</div>
-				</div>
-			</div>
-		</Container>
-		<Container>
-			<h2>Error</h2>
-			We couldn't get this user's profile info.
-			<pre><code>{e}</code></pre>
-			Try again. If this issue persists,
-			<a
-				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
-			>create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
-		</Container>
+		<ProfileView username={$profileClicked}></ProfileView>
 	{/await}
 </div>
 
@@ -190,33 +147,6 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-	}
-
-	.profile-header-info {
-		margin-left: 1em;
-		height: 6em;
-	}
-
-    .profile-active {
-        font-style: italic;
-    }
-
-	.profile-role {
-        position: absolute;
-        font-size: 90%;
-    }
-
-	.profile-username {
-		margin: 0;
-		display: inline-block;
-		max-width: 100%;
-		font-size: 3em;
-	}
-
-	.profile-header {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
 	}
 
     .long {

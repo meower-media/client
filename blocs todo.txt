@@ -42,9 +42,9 @@ kick
 go to profile (make sure you can go back to mod panel)
 
 soon:
-- add badges (tags) to profiles
 - img.bb image sharing (people need to generate their own api keys)
 - webhooks (use showier branch)
+- sidebar transition
 
 to add to svelte:
 - add to chat button on profiles (for adding users to gc via search)
@@ -59,6 +59,13 @@ maybe:
 
 oh no josh will get mad at me is i add bettermeower stuff:
 - Emoji shortcodes
+
+
+
+
+
+
+
 
 cst and tnix (or me) please fix all these bugs:
 - image sizing issues

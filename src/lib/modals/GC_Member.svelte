@@ -16,66 +16,34 @@
     import {levels} from "../formatting.js";
 
 	import {default as loadProfile} from "../loadProfile.js";
+    import ProfileView from "../Profile_View.svelte";
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
     <h2 slot="header">{$profileClicked_GC}'s Profile</h2>
     <div slot="default">
-        {#await loadProfile($profileClicked_GC)}
-            <div class="center">
-                <Loading />
-            </div>
-        {:then data}
-            <Container>
-                <div class="profile-header">
-                    <PFP
-                        online={$ulist.includes($profileClicked_GC)}
-                        icon={
-                            $profileClicked_GC === $user.name ?
-							    $user.pfp_data : data.pfp_data
-                        }
-                        alt="{$profileClicked_GC}'s profile picture"
-                        size={1.4}
-                    ></PFP>
-                    <div class="profile-header-info">
-                        <h1 class="profile-username">{$profileClicked_GC}</h1>
-                        <div class="profile-active">{
-                            $ulist.includes($profileClicked_GC) ? "Online" : "Offline"
-                        }</div>
-						<div class="profile-role">
-							{levels[data.lvl] || "Unknown"}
-						</div>
-                    </div>
-                </div>
-            </Container>
-            <button class="long" on:click={() => {
-				$modalShown = false
-				clm.meowerRequest({
-					cmd: "direct",
+		<ProfileView username={$profileClicked_GC}></ProfileView>
+		<button class="long" on:click={() => {
+			$modalShown = false
+			clm.meowerRequest({
+				cmd: "direct",
+				val: {
+					cmd: "set_chat_state",
 					val: {
-						cmd: "set_chat_state",
-						val: {
-							state: 0,
-							chatid: $chatid
-						},
-					}
-				});
-				profileClicked.set($profileClicked_GC);
-				page.set("profile");
-			}}>View full profile</button>
-			{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}
-				<button class="long" on:click={() => {
-					modalPage.set("removeMember");
-				}}>Remove from chat</button>
-			{/if}
-			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
-		{:catch error}
-			<Container>
-				Error loading user profile.
-				<pre><code>{error}</code></pre>
-			</Container>
-			<button class="long" on:click={() => {$modalShown = false}}>Close</button>
-        {/await}
+						state: 0,
+						chatid: $chatid
+					},
+				}
+			});
+			profileClicked.set($profileClicked_GC);
+			page.set("profile");
+		}}>View full profile</button>
+		{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}
+			<button class="long" on:click={() => {
+				modalPage.set("removeMember");
+			}}>Remove from chat</button>
+		{/if}
+		<button class="long" on:click={() => {$modalShown = false}}>Close</button>
     </div>
 </Modal>
 

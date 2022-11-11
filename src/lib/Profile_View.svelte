@@ -39,5 +39,44 @@
                 </div>
             </div>
         </Container>
+    {:catch e}
+        <Container>
+            <h2>Error</h2>
+            We couldn't get this user's profile info.
+            <pre><code>{e}</code></pre>
+            Try again. If this issue persists,
+            <a
+                href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
+            >create an issue on Meower Svelte's issue tracker</a> with the error code shown above.
+        </Container>
     {/await}
 </div>
+
+<style>
+    .profile-header-info {
+		margin-left: 1em;
+		height: 6em;
+	}
+
+    .profile-active {
+        font-style: italic;
+    }
+
+	.profile-role {
+        position: absolute;
+        font-size: 90%;
+    }
+
+	.profile-username {
+		margin: 0;
+		display: inline-block;
+		max-width: 100%;
+		font-size: 3em;
+	}
+
+	.profile-header {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+</style>
