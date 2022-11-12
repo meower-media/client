@@ -21,11 +21,12 @@ done (release/preview 3 idk):
 
 
 
+needs approval:
+- twemoji 
 
 do:
 - search users, posts and stuff
 - custom pfp for bots
-- twemoji 
 
 soon:
 - webhooks (use showier branch)

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <link rel="stylesheet" href="/src/assets/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="apple-touch-icon" sizes="180x180" href="/manifest/apple-touch-icon.png">
@@ -26,6 +26,16 @@
     </noscript>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <!--<script>
+        parse()
+        function parse() {
+            console.log(document.getElementsByClassName("post-content"))
+            for (let i = 0; i < document.getElementsByClassName("post-content").length; i++) {
+                twemoji.parse(document.getElementsByClassName("post-content")[i])
+            }
+            window.requestAnimationFrame(parse)
+        }
+    </script>-->
 </body>
 
 </html>
