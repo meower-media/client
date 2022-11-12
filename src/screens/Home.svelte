@@ -177,6 +177,17 @@
 </script>
 
 <div class="home">
+	<!--
+		 How do i use webhooks
+
+		send a post request to webhooks.meower.org
+		with the json 
+		json
+		"post":"some_post"
+		
+
+		add a username peram to get use non guest mode
+	-->
 	{#await loadPage(1)}
 		<div class="fullcenter">
 			<Loading />
