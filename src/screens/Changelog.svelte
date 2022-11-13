@@ -8,6 +8,12 @@
         The Changelog for Svelte
     </Container>
     <Container>
+        <h1>1.5 Dev Preview 3</h1>
+        I dont really know
+        <br>
+        Sidebar transition
+    </Container>
+    <Container>
         <h1>1.5 Dev Preview 2.5</h1>
         Http.meower.org is an allowed image hosting site
         <br>
