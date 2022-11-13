@@ -21,38 +21,29 @@ done (release/preview 3 idk):
 
 
 
-needs approval:
-- twemoji 
+
+
 
 do:
-- search users, posts and stuff
-- custom pfp for bots
-
-soon:
 - webhooks (use showier branch)
-- img.bb image sharing (people need to generate their own api keys)
-- add to chat button on profiles (for adding users to gc via search)
-
-to add to svelte:
 - log out everywhere
 - banned status
-
-maybe:
-- BGM
-
-
-
-
-
-
-1.5 or 1.6:
-- oobe
 
 cst and tnix (or me) please fix all these bugs:
 - image sizing issues
 - navbar links
 
-1.6:
+
+
+
+bettermeower:
+- img.bb image sharing (people need to generate their own api keys)
 - custom softcoded badges system (like bot system)
 - verified users?
 - make some sort of system for if the username matches another username with l or uppercase i
+
+1.6 or beta 6:
+- search users, posts and stuff
+- custom pfp for bots
+- BGM
+- add to chat button on profiles (for adding users to gc via search)

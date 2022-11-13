@@ -137,6 +137,23 @@
 		posts = posts;
 	}
 
+	function post(url = '', data = {}) {
+		// Default options are marked with *
+		fetch(url, {
+			method: 'POST', // *GET, POST, PUT, DELETE, etc.
+			mode: 'cors', // no-cors, *cors, same-origin
+			cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: 'same-origin', // include, *same-origin, omit
+			headers: {
+				'Content-Type': 'application/json'
+			// 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			redirect: 'follow', // manual, *follow, error
+			referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			body: JSON.stringify(data) // body data type must match "Content-Type" header
+		});
+	}
+
 	/**
 	 * Adds events to listen for live post updates.
 	 */
@@ -207,20 +224,20 @@
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
-		{#if $user.name}
-			<form 
-				class="createpost"
-				autocomplete="off"
-				on:submit|preventDefault={e => {					
-					postErrors = "";
-					if (!e.target[0].value.trim()) {
-						postErrors = "You cannot send an empty post!";
-						return false;
-					};
+		<form 
+			class="createpost"
+			autocomplete="off"
+			on:submit|preventDefault={e => {			
+				postErrors = "";
+				if (!e.target[0].value.trim()) {
+					postErrors = "You cannot send an empty post!";
+					return false;
+				};
 
-					spinner.set(true);
+				spinner.set(true);
 
-					e.target[1].disabled = true;
+				e.target[1].disabled = true;
+				if ($user.name) {
 					link.send({
 						cmd: "direct",
 						val: {
@@ -247,46 +264,48 @@
 						}
 					});
 					return false;
-				}}
-			>
-				<textarea
-					type="text"
-					class="white"
-					placeholder="Write something..."
-					id="postinput"
-					name="postinput"
-					autocomplete="false"
-					maxlength="360"
-					rows="1"
-					use:autoresize
-					on:input={() => {
-						if ($lastTyped + 1500 < new Date() * 1) {
-							lastTyped.set(new Date() * 1);
-							link.send({
-								cmd: "direct",
+				} else {
+					post("https://webhooks.meower.org",{post:"some_post"})
+				}
+			}}
+		>
+			<textarea
+				type="text"
+				class="white"
+				placeholder="Write something..."
+				id="postinput"
+				name="postinput"
+				autocomplete="false"
+				maxlength="360"
+				rows="1"
+				use:autoresize
+				on:input={() => {
+					if ($lastTyped + 1500 < new Date() * 1) {
+						lastTyped.set(new Date() * 1);
+						link.send({
+							cmd: "direct",
+							val: {
+								cmd: "set_chat_state",
 								val: {
-									cmd: "set_chat_state",
-									val: {
-										chatid: "livechat",
-										state: 101
-									},
+									chatid: "livechat",
+									state: 101
 								},
-								listener: "typing_indicator",
-							});
-						}
-					}}
-					on:keydown={(event) => {
-						if (event.key == "Enter" && !shiftHeld) {
-							event.preventDefault();
-							document.getElementById("submitpost").click();
-						}
-					}}
-					bind:this={postInput}
-				></textarea>
-				<button id="submitpost">Post</button>
-			</form>
-			<div class="post-errors">{postErrors}</div>
-		{/if}
+							},
+							listener: "typing_indicator",
+						});
+					}
+				}}
+				on:keydown={(event) => {
+					if (event.key == "Enter" && !shiftHeld) {
+						event.preventDefault();
+						document.getElementById("submitpost").click();
+					}
+				}}
+				bind:this={postInput}
+			></textarea>
+			<button id="submitpost">Post</button>
+		</form>
+		<div class="post-errors">{postErrors}</div>
 		<TypingIndicator />
 		{#if posts.length < 1}
 			{#if $user.name}
