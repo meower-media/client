@@ -38,11 +38,9 @@
     width: 20em; /* you can use % */
     height: auto;
 }
-/* THIS IS HERE BECAUSE CSS IS STUPID */
 
 body {
     margin: 0;
-    padding: none;
 }
 
 #app, body, :root {
