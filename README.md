@@ -34,3 +34,4 @@ Relevant bit of information from the original readme:
 > [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
 
 ~~CST WE NEED TO WAGE WAR AGAINST BETTERMEOWER, THEY THINK THEY ARE BETTER THEN US~~
+BLOCTANS HOW DARE YOU SAY THAT, BETTERMEOWER IS A GOOD THING AND IS OK TO USE, DONT FREAK OUT OVER THE EXISTANCE OF IT
