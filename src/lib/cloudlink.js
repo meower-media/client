@@ -1,5 +1,5 @@
 /**
- * @file A JavaScript client for CloudLink servers. A very beefed up fork of cloudlinkinabrowser.
+ * @file A JavaScript client for CloudLink servers. Based off of CloudlinkJS.
  */
 
 /**
@@ -36,7 +36,7 @@ import {apiUrl} from "./urls.js";
  */
 
 /**
- * A JavaScript client for CloudLink servers. A very beefed up fork of cloudlinkinabrowser.
+ * A JavaScript client for CloudLink servers. Basde off of CloudlinkJS.
  */
 export default class Cloudlink {
     /**
