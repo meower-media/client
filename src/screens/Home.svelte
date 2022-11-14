@@ -140,17 +140,12 @@
 	function post(url = '', data = {}) {
 		// Default options are marked with *
 		fetch(url, {
-			method: 'POST', // *GET, POST, PUT, DELETE, etc.
-			mode: 'cors', // no-cors, *cors, same-origin
-			cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-			credentials: 'same-origin', // include, *same-origin, omit
+			method: 'POST',
+			//mode: 'no-cors',
 			headers: {
 				'Content-Type': 'application/json'
-			// 'Content-Type': 'application/x-www-form-urlencoded',
 			},
-			redirect: 'follow', // manual, *follow, error
-			referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-			body: JSON.stringify(data) // body data type must match "Content-Type" header
+			body: JSON.stringify(data)
 		});
 	}
 
@@ -224,6 +219,7 @@
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
+		<!-- svelte-ignore missing-declaration -->
 		<form 
 			class="createpost"
 			autocomplete="off"
@@ -265,7 +261,12 @@
 					});
 					return false;
 				} else {
-					post("https://webhooks.meower.org",{post:"some_post"})
+					post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
+					e.target[1].disabled = false;
+					e.target[0].value = "";
+					e.target[0].rows = "1";
+					e.target[0].style.height = "45px";
+					spinner.set(false);
 				}
 			}}
 		>

@@ -8,6 +8,14 @@
         The Changelog for Svelte
     </Container>
     <Container>
+        <h1>1.5 Release</h1>
+        Banned status
+        <br>
+        Webhooks
+        <br>
+        Removed verified bot posts being able to not be reported
+    </Container>
+    <Container>
         <h1>1.5 Dev Preview 3</h1>
         I dont really know
         <br>

@@ -25,14 +25,18 @@
                         username === $user.name ?
                             $user.pfp_data : data.pfp_data
                     }
-                    alt="{data._id}'s profile picture"
+                    alt="{username}'s profile picture"
                     size={1.4}
                 ></PFP>
                 <div class="profile-header-info">
-                    <h1 class="profile-username">{data._id}</h1>
-                    <div class="profile-active">{
-                        $ulist.includes(data._id) ? "Online" : "Offline"
-                    }</div>
+                    <h1 class="profile-username">{username}</h1>
+                    <div class="profile-active">
+                        {#if data.banned == false}
+                            {$ulist.includes(username) ? "Online" : "Offline"}
+                        {:else}
+                            Banned
+                        {/if}
+                    </div>
                     <div class="profile-role">
                         {levels[data.lvl] || "Unknown"}
                     </div>

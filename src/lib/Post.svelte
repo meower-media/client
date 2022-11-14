@@ -53,7 +53,7 @@
 			var img_content = post.content.slice(squareb_1+1,squareb_2)
 			var sep_img = img_content.split(": ")
 			var img_url = sep_img[1]
-			var urls = ["http.meower.org","assets.meower.org","http.meower.org","api.meower.org","cubeupload.com","imgbb.com","media.tenor.com","tenor.com","c.tenor.com"]
+			var urls = ["http.meower.org","assets.meower.org",,"api.meower.org","cubeupload.com","imgbb.com","media.tenor.com","tenor.com","c.tenor.com"]
 			try {
 				if (urls.some(element => {
 					if (img_url.includes(element)) {
@@ -125,16 +125,14 @@
 						}}
 					></button>
 				{:else}
-					{#if !post.isvbot}
-						<button
-							class="circle report"
-							on:click={()=>{
-								postClicked.set(post);
-								modalPage.set("reportPost");
-								modalShown.set(true);
-							}}
-						></button>
-					{/if}
+					<button
+						class="circle report"
+						on:click={()=>{
+							postClicked.set(post);
+							modalPage.set("reportPost");
+							modalShown.set(true);
+						}}
+					></button>
 				{/if}
 			{/if}
 		</div>

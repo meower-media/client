@@ -155,6 +155,10 @@
 </Container>
 {/if}
 
+<!--
+	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
+-->
+
 <div class="eee"></div>
 
 <style>

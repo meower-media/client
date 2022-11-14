@@ -14,24 +14,32 @@ done (preview 2):
 - added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
 - make so you dont have to log in for search bar and changelog
 
-done (release/preview 3 idk):
+done (preview 3):
 - sidebar transition
 
-
-
-
-
-
-
-
-do:
-- webhooks (use showier branch)
-- log out everywhere
+done for release:
 - banned status
+- webhooks (use showier branch)
 
 cst and tnix (or me) please fix all these bugs:
 - image sizing issues
 - navbar links
+
+do:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -41,8 +49,10 @@ bettermeower:
 - custom softcoded badges system (like bot system)
 - verified users?
 - make some sort of system for if the username matches another username with l or uppercase i
+- for image sharing, custom alt text
 
 1.6 or beta 6:
+- log out everywhere
 - search users, posts and stuff
 - custom pfp for bots
 - BGM
