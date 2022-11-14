@@ -62,7 +62,7 @@
 
 					return false;
 				})) {
-					post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
+					//post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
 					var img_name = sep_img[0]
 
 					img1.className = "image_1"
