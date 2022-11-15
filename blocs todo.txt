@@ -25,25 +25,6 @@ cst and tnix (or me) please fix all these bugs:
 - image sizing issues
 - navbar links
 
-do:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 bettermeower:
 - img.bb image sharing (people need to generate their own api keys)
 - custom softcoded badges system (like bot system)
