@@ -31,10 +31,13 @@ bettermeower:
 - verified users?
 - make some sort of system for if the username matches another username with l or uppercase i
 - for image sharing, custom alt text
+- last online and go to last meower msg
+- custom pfp for bots
+- idk like mesage links
 
 1.6 or beta 6:
 - log out everywhere
+- make alert that happens when using webhooks as guest
 - search users, posts and stuff
-- custom pfp for bots
 - BGM
 - add to chat button on profiles (for adding users to gc via search)
