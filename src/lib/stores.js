@@ -16,18 +16,20 @@ export const modalPage = writable("");
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
 
+// Last typed
+export const lastTyped = writable(0);
+
 // Current chat ID
 export const chatName = writable("");
 export const chatid = writable("");
-
-// Current chat Members
 export const chatMembers = writable([]);
-
-// Cached profiles
-export const profileData = writable({});
+export const chatOwner = writable("");
 
 // User list
 export const ulist = writable([]);
+
+// Mod panel Stores
+export const User_ToMod = writable("");
 
 // Last post clicked
 export const postClicked = writable({});
@@ -35,13 +37,8 @@ export const postClicked = writable({});
 // Last profile clicked
 export const profileClicked = writable("");
 
-
-// Last chat clicked
-export const chatClicked = writable("");
-
 // Last group chat profile clicked
 export const profileClicked_GC = writable("");
-
 
 // Current auth header
 export const auth_header = writable({});

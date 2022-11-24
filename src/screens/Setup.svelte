@@ -1,10 +1,18 @@
 <!-- Boring orange screen with login and signup. -->
 
 <script>
-	import {screen, setupPage as page, modalShown, modalPage, auth_header, user} from "../lib/stores.js";
+	import
+		{screen, setupPage as page,
+		modalShown, modalPage,
+		auth_header,
+		user
+	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
-	import unloadedProfile from "../lib/unloadedprofile.js";
 	const link = clm.link;
+	// @ts-ignore
+	window.clm = clm;
+
+	import unloadedProfile from "../lib/unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
@@ -15,8 +23,6 @@
 
 	let logo, setup, logoImg, loginStatus = "";
 
-	let acceptTerms = false;
-
 	async function connect() {
 		await clm.disconnect();
 		clm.connect();
@@ -25,12 +31,12 @@
 	}
 
 	let rememberMe = false;
+	let acceptTerms = false;
 
 	onMount(() => {
 		page.subscribe(async value => {
 			if (!setup) return;
-			rememberMe = false;
-			acceptTerms = false;
+
 			setup.classList.remove("white");
 			if (value === "logo") {
 				clm.disconnect();
@@ -53,13 +59,14 @@
 				await sleep(700);
 				loginStatus = "Connecting...";
 				await connect();
-				await sleep(800);
 
-				loginStatus = "";
-				page.set("blank");
-				await sleep(600);
-				page.set("welcome");
+				if (localStorage.getItem("meower_savedusername") && localStorage.getItem("meower_savedpassword")) {
+					doLogin(localStorage.getItem("meower_savedusername"), localStorage.getItem("meower_savedpassword"), true);
+				} else {
+					await mainSetup();
+				}
 			} else if (value === "reconnect") {
+				loginStatus = "";
 				await connect();
 				await sleep(100);
 				page.set("welcome");
@@ -68,12 +75,24 @@
 	});
 
 	/**
+	 * Goes to main setup screen.
+	*/
+	async function mainSetup() {
+		localStorage.clear();
+		user.set(unloadedProfile());
+		loginStatus = "";
+		page.set("blank");
+		await sleep(600);
+		page.set("welcome");
+	}
+
+	/**
 	 * Logs in.
 	 * 
 	 * @param {string} username
 	 * @param {string} password
 	*/
-	function doLogin(username, password) {
+	function doLogin(username, password, autoLogin = false) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -100,17 +119,19 @@
 					}));
 					auth_header.set({username: val.payload.username, token: val.payload.token});
 
-					if (rememberMe) {
+					if (rememberMe || localStorage.getItem("meower_savedusername") === username) {
 						localStorage.setItem("meower_savedusername", username);
 						localStorage.setItem("meower_savedpassword", val.payload.token);
 					}
 
 					screen.set("main");
 				} catch(e) {
-					console.error(e);
-					loginStatus = "Unexpected " + e + " error getting user data!";
+					localStorage.clear();
+					console.error("Unexpected " + e + " error getting user data!");
+					link.disconnect(1000, "Failed to load userdata");
 				}
 			}).catch(code => {
+				if (autoLogin) return mainSetup();
 				switch (code) {
 					case "E:103 | ID not found":
 						loginStatus = "Invalid username!";
@@ -134,13 +155,15 @@
 				}
 			});
 		} catch(e) {
+			if (autoLogin) return mainSetup();
+
 			console.error(e);
 			loginStatus = "Error logging in: " + e;
 		}
 	}
 </script>
 
-<div out:fade={{duration: 300}} bind:this={setup} class="setup white">
+<div bind:this={setup} out:fade={{duration: 500}} class="setup white">
 	{#if $page === "logo"}
 		<div class="left">
 			<h2 class="welcometo">Connecting to</h2>
@@ -199,29 +222,22 @@
 			<h2 class="selectopt">Please select an option.</h2>
 			{#if localStorage.getItem("meower_savedusername")}
 				<button on:click={() => {
-					rememberMe = true;
-					doLogin(
-						localStorage.getItem("meower_savedusername"),
-						localStorage.getItem("meower_savedpassword"),
-					)
-				}} class="button_welcome_savedlogin button_OOBE_NP">Use saved login</button>
+					loginStatus = "";
+					page.set("blank");
+					screen.set("main");
+				}}>Skip</button>
+				<p class="small">(Several features will be unavailable while not logged in.)</p>
+				<div>
+					<p class="small">
+						Meower Svelte v1.5 Dev Build 3
+					</p>
+					<img
+						src={meowy}
+						alt=""
+						height="64"
+					>
+				</div>
 			{/if}
-			<button on:click={() => page.set("login")} class="button_OOBE">Log in</button> <br />
-			<button on:click={() => page.set("join")} class="button_OOBE">Create an account</button> <br />
-			<button on:click={() => {
-				user.set(unloadedProfile());
-				loginStatus = "";
-				page.set("blank");
-				screen.set("main");
-			}} class="button_OOBE">Explore without an account</button>
-			<div>
-				<h2 class="small sveltever">
-					Meower Svelte v1.5.0 Development_Beta6Design
-				</h2>
-				<p class="small meowerteam">
-					Made with love by the <u>Meower Team</u>
-				</p>
-			</div>
 		</div>
 	{:else if $page === "login"}
 		<div class="left">
@@ -257,9 +273,9 @@
 					return false;
 				}}
 			>
-				<input type="text" placeholder="Username" class="input_OOBE" maxlength="20"> <br />
-				<input type="password" placeholder="Password" class="input_OOBE" maxlength="64">
-				<p class="checkboxes login-save">
+				<input type="text" placeholder="Username" maxlength="20"> <br />
+				<input type="password" placeholder="Password" maxlength="64">
+				<p class="checkboxes">
 					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
 					<label for="remember-me">
 						Save login

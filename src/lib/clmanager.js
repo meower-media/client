@@ -8,7 +8,20 @@ import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
 
 let _user = null;
-user.subscribe(v => _user = v);
+user.subscribe(v => {
+	_user = v;
+	if (_user.name) localStorage.setItem("meower_savedconfig", JSON.stringify({theme: _user.theme, mode: _user.mode}));
+});
+
+// Load saved config from local storage
+if (localStorage.getItem("meower_savedconfig")) {
+	const profile = _user;
+	const savedConfig = JSON.parse(localStorage.getItem("meower_savedconfig"));
+
+	profile.theme = savedConfig.theme;
+	profile.mode = savedConfig.mode;
+	user.set(profile);
+}
 
 /**
  * The single CloudLink instance used by the manager.
@@ -81,6 +94,7 @@ export async function connect() {
 		pingInterval = null;
 	}
 
+	disconnected.set(false);
 	disconnectReason.set("");
 
 	link.once("connectionstart", () => {

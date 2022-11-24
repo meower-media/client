@@ -9,20 +9,24 @@
 	import SignupModal from "./lib/modals/Signup.svelte";
 	import BannedModal from "./lib/modals/Banned.svelte";
 	import IPBannedModal from "./lib/modals/IPBanned.svelte";
-	import ReportPostModal from "./lib/modals/ReportPost.svelte";
 	import DeletePostModal from "./lib/modals/DeletePost.svelte";
+	import ReportPostModal from "./lib/modals/ReportPost.svelte";
+	import ReportUserModal from "./lib/modals/ReportUser.svelte";
 	import GC_MemberModal from "./lib/modals/GC_Member.svelte";
-	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
 	import AddMemberModal from "./lib/modals/AddMember.svelte";
+	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
-	import ChatMembersModal from "./deleted/ChatMembers.svelte";
-	import AddMember_ByNameModal from "./lib/modals/AddMember_ByName.svelte";
-	import ErrorModal from "./lib/modals/Error.svelte";
+	import SetQuoteModal from "./lib/modals/SetQuote.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
+	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
+	import LogoutModal from "./lib/modals/Logout.svelte";
+	import ErrorModal from "./lib/modals/Error.svelte";
+	import StatsModal from "./lib/modals/Stats.svelte";
+	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
-	import {apiUrl} from "./lib/urls.js";
 	import {link} from "./lib/clmanager.js";
+	import {mobile} from "./lib/responsiveness.js";
 
 	import {
 		screen, setupPage,
@@ -31,7 +35,7 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-    import AddMemberByName from "./lib/modals/AddMember_ByName.svelte";
+    import SetQuote from "./lib/modals/SetQuote.svelte";
 </script>
 
 <main
@@ -40,7 +44,10 @@
 	class:theme-blue={$user.theme==="blue"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
-	class:layout-old={$user.layout === "old"}
+
+	class:layout-old={$mobile || $user.layout === "old"}
+	class:layout-new={$user.layout === "new"}
+	class:layout-mobile={$mobile}
 >
 	{#if $disconnected}
 		<Modal>
@@ -51,6 +58,8 @@
 				<p>
 					{#if $disconnectReason === ""}
 						Something went wrong and the connection to Meower was lost.
+					{:else if $disconnectReason === "Failed to load userdata"}
+						An unexpected error occurred while trying to load your userdata! Check console for more information.
 					{:else if $disconnectReason === "E:119 | IP Blocked"}
 						The server has blocked your IP address ({link.ip}).
 					{:else if $disconnectReason == "E:110 | ID conflict"}
@@ -85,24 +94,32 @@
 			<BannedModal />
 		{:else if $modalPage === "ipBanned"}
 			<IPBannedModal />
-		{:else if $modalPage === "reportPost"}
-			<ReportPostModal />
 		{:else if $modalPage === "deletePost"}
 			<DeletePostModal />
+		{:else if $modalPage === "reportPost"}
+			<ReportPostModal />
+		{:else if $modalPage === "reportUser"}
+			<ReportUserModal />
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
-		{:else if $modalPage === "chatMembers"}
-			<ChatMembersModal />
+		{:else if $modalPage === "setQuote"}
+			<SetQuoteModal />
+		{:else if $modalPage === "Stats"}
+			<StatsModal />
+		{:else if $modalPage === "Mod_UserInp"}
+			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
+		{:else if $modalPage === "deleteAccount"}
+			<DeleteAccountModal />
 		{:else if $modalPage === "GC_Member"}
 			<GC_MemberModal />
-		{:else if $modalPage === "Memberem"}
-			<RemoveMemberModal />
 		{:else if $modalPage === "AddMember"}
 			<AddMemberModal />
-		{:else if $modalPage === "AddMemberBN"}
-			<AddMember_ByNameModal />
+		{:else if $modalPage === "removeMember"}
+			<RemoveMemberModal />
+		{:else if $modalPage === "logout"}
+			<LogoutModal />
 		{:else}
 			<ErrorModal />
 		{/if}

@@ -26,9 +26,21 @@
     font-display: swap;
 }
 
+.settings-controls {
+    position: absolute;
+    top: 0.25em;
+    right: 0.25em;
+}
+
+
+.image_1 {
+    margin-top: 0.5em;
+    width: 20em; /* you can use % */
+    height: auto;
+}
+
 body {
     margin: 0;
-    padding: none;
 }
 
 #app, body, :root {
@@ -36,38 +48,9 @@ body {
 	height: 100%;
 }
 
-input::-webkit-input-placeholder {
-    font-style: italic;
-    color: gray;
-}
-input:-moz-placeholder {
-    font-style: italic;  
-    color: gray;
-}
-input::-moz-placeholder {
-    font-style: italic;  
-    color: gray;
-}
-input:-ms-input-placeholder {  
-    font-style: italic; 
-    color: gray;
-}
-
-input[type="text"] {
-    border: solid 2px var(--foreground-orange);
-    border-radius: 22px;
-    outline: none;
-    box-shadow: 0px 4px 0px 0px #575757;
-
-    background-color: var(--foreground-orange);
-    color: var(--foreground);
-
-    padding: 0.5em 1em;
-    box-sizing: border-box;
-    margin-bottom: -0.15rem;
-
-	font-family: inherit;
-    font-size: inherit;
+img.emoji {
+    height: 1em;
+    width: 1em;
 }
 
 button,
@@ -236,12 +219,16 @@ button.profile {
 	background-image: url("./profile.svg");
     background-size: 50%;
 }
-button.delete {
-	background-image: url("./delete.svg");
+button.members {
+	background-image: url("./members.svg");
     background-size: 50%;
 }
-input[type="checkbox"]:hover:not(:active),
-button.circle:hover:not(:active) {
+button.search {
+	background-image: url("./search.svg");
+    background-size: 50%;
+}
+input[type="checkbox"]:hover:not(:active):enabled,
+button.circle:hover:not(:active):enabled {
 	transform: scale(1.2);
 }
 input[type="checkbox"]:checked {

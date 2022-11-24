@@ -1,5 +1,5 @@
 /**
- * @file A JavaScript client for CloudLink servers. A very beefed up fork of cloudlinkinabrowser.
+ * @file A JavaScript client for CloudLink servers. Based off of CloudlinkJS.
  */
 
 /**
@@ -36,7 +36,7 @@ import {apiUrl} from "./urls.js";
  */
 
 /**
- * A JavaScript client for CloudLink servers. A very beefed up fork of cloudlinkinabrowser.
+ * A JavaScript client for CloudLink servers. Basde off of CloudlinkJS.
  */
 export default class Cloudlink {
     /**
@@ -166,6 +166,13 @@ export default class Cloudlink {
 
 					this.log("< incoming", data);
 
+					try {
+						if (typeof data.val == "string") {
+							data.val = JSON.parse(data.val)
+							this.log("< incoming (edited)", data);
+						}
+					} catch {}
+
 					this.emit(data.cmd, data);
 					if (data.listener) {
 						this.emit("__listener_" + data.listener, data);
@@ -288,3 +295,5 @@ export default class Cloudlink {
         this.ws.close(_code, _reason);
     }
 }
+
+// clinabrowserbeefedupforkusedformeowersvelte

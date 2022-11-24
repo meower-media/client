@@ -9,6 +9,10 @@
 	import Recent from "./Recent.svelte";
 	import Settings from "./Settings.svelte";
 	import Groupcat from "./Groupcat.svelte";	
+	import Search from "./Search.svelte";	
+	import ModPanel from "../modpanel/ModPanel.svelte";	
+	import ModerateUser from "../modpanel/ModerateUser.svelte";	
+	import Changelog from "./Changelog.svelte";	
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -18,6 +22,9 @@
 </script>
 
 <div class="main-screen">
+	<div class="transition">
+
+	</div>	
 	<div class="sidebar">
 		<Sidebar />
 	</div>
@@ -26,10 +33,16 @@
 			<Home />
 		{:else if $page === "inbox"}
 			<Inbox />
+		{:else if $page === "search"}
+			<Search />
 		{:else if $page === "chatlist"}
 			<Chatlist />
-		{:else if $page === "groupchat"}
-			<Groupchat />
+		{:else if $page === "Mod_Panel"}
+			<ModPanel />
+		{:else if $page === "Mod_User"}
+			<ModerateUser />
+		{:else if $page === "changelog"}
+			<Changelog />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}
@@ -53,39 +66,84 @@
 <style>
 	.main-screen {
 		box-sizing: border-box;
+
+		display: flex;
+		flex-direction: row;
+		gap: 0;
+
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	@keyframes trans {
+		from {width: 100%;}
+		to {width: 3.5em;}
+	}
+
+	@keyframes transold {
+		from {height: 100%;}
+		to {height: 3.5em;}
+	}
+
+	:global(main.layout-new) .transition {
+		background-color: var(--orange);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		animation-name: trans;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease;
+  		animation-duration: 0.7s;
+		z-index: 2;
+	}
+
+	:global(main.layout-old) .transition {
+		background-color: var(--orange);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		animation-name: transold;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease;
+  		animation-duration: 0.6s;
+		z-index: 2;
 	}
 
 	.sidebar {
-		position: fixed;
-		left: 0;
-		top: 0;
-		width: 4.6em;
-		height: 100%;
+		width: 3.5em;
+		height: auto;
+
 		z-index: 100;
+		position: relative;
+
+		flex-shrink: 0;
+		flex-grow: 0;
+		z-index: 3;
 	}
+
 	.view {
 		margin-left: 5em;
+		flex-grow: 1;
+		flex-shrink: 1;
+
 		padding: 0.33em;
+		box-sizing: border-box;
+		overflow: auto;
+
+		--view-height: calc(100vh - 0.66em);
 		
 		background-color: var(--background);
 	}
 
-	@media (max-aspect-ratio: 1/1) {
-		.view {
-			margin-left: 0;
-			margin-top: 3.5em;
-		}
-		.sidebar {
-			width: 100%;
-			height: 3.5em;
-		}
-	}
-	:global(main.layout-old) .view {
-		margin-left: 0;
-		margin-top: 3.5em;
+	:global(main.layout-old) .main-screen {
+		flex-direction: column;
 	}
 	:global(main.layout-old) .sidebar {
-		width: 100%;
+		width: auto;
 		height: 3.5em;
+	}
+	:global(main.layout-old) .view {
+		--view-height: calc(100vh - 3.5em - 0.66em);
 	}
 </style>
