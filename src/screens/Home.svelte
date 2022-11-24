@@ -305,7 +305,6 @@
 			<button id="submitpost">Post</button>
 		</form>
 		<div class="post-errors">{postErrors}</div>
-		<TypingIndicator />
 		{#if posts.length < 1}
 			{#if $user.name}
 				No posts here. Check back later or be the first to post!
@@ -315,6 +314,7 @@
 		{:else}
 			<div id="fadein"></div>
 			<div id="inner">
+				<TypingIndicator />
 				{#each posts as post (post.id)}
 					<div
 						transition:fly|local="{{y: -50, duration: 250}}"
@@ -405,7 +405,7 @@
 		background: linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--background) 100%);
 		display: flex;
 		height: 2em;
-		top: 0.5em;
+		top: 0.7em;
 		width: 100%;
 	}
 	.post-errors {
