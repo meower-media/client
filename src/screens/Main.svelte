@@ -22,9 +22,9 @@
 </script>
 
 <div class="main-screen">
-	<div class="transition">
+	<!--<div class="transition">
 
-	</div>	
+	</div>-->	
 	<div class="sidebar">
 		<Sidebar />
 	</div>
@@ -111,7 +111,7 @@
 	}
 
 	.sidebar {
-		width: 3.5em;
+		width: 5em;
 		height: auto;
 
 		z-index: 100;
@@ -123,7 +123,6 @@
 	}
 
 	.view {
-		margin-left: 5em;
 		flex-grow: 1;
 		flex-shrink: 1;
 

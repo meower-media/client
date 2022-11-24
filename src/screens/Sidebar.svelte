@@ -173,7 +173,7 @@
 		flex-direction: column;
 		flex-wrap: nowrap;
 
-		gap: 0.5em;
+		gap: 0.8em;
 		box-sizing: border-box;
 		
 		user-select: none;
@@ -187,8 +187,8 @@
 
 	}
 	.sidebar > button {
-		width: 2.8em;
-		height: 2.8em;
+		width: 3.5em;
+		height: 3.5em;
 		margin: 0;
 
 		flex-shrink: 1;

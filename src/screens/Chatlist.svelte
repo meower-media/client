@@ -86,8 +86,10 @@
 		</div>
 	{:else}
 		<Container>
-			<h1>Chats</h1>
-			Here are your chats. Press the chat button to enter a chat.
+			<h1>Trees and clowders</h1>
+			(these are just chats rn)
+			<br>
+			Here are your joined trees and clowders.
 			<div class="settings-controls">
 				<button
 					class="circle plus"
@@ -124,14 +126,6 @@
             >
                 <Container>
                     <div class="settings-controls">
-						<button
-                            class="circle close"
-                            on:click = {()=>{
-								chatName.set(chat.nickname)
-								chatid.set(chat._id)
-								toLeaveChat = true
-                            }}
-                        ></button>
                         <button
                             class="circle join"
                             on:click = {()=>{

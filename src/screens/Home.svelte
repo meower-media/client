@@ -313,29 +313,32 @@
 				No posts here. Check back later!
 			{/if}
 		{:else}
-			{#each posts as post (post.id)}
-				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
-				>
-					<Post post={post} input={postInput} />
-				</div>
-			{/each}
-		{/if}
-		<div class="center">
-			{#if pageLoading}
-				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
+			<div id="fadein"></div>
+			<div id="inner">
+				{#each posts as post (post.id)}
+					<div
+						transition:fly|local="{{y: -50, duration: 250}}"
+						animate:flip="{{duration: 250}}"
 					>
-						Load More
-					</button>
-				{/if}
-			{/if}
-		</div>
+						<Post post={post} input={postInput} />
+					</div>
+				{/each}
+				<div class="center">
+					{#if pageLoading}
+						<Loading />
+					{:else}
+						{#if numPages && numPages > pagesLoaded}
+							<button 
+								class="load-more"
+								on:click={() => loadPage(pagesLoaded + 1)}
+							>
+								Load More
+							</button>
+						{/if}
+					{/if}
+				</div>
+			</div>
+		{/if}
 	{:catch error}
 		<Container>
 			<h1>Home</h1>
@@ -349,6 +352,8 @@
 	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
+		position:relative;
+		z-index: 2;
 	}
 	.createpost textarea {
 		flex-grow: 1;
@@ -358,6 +363,9 @@
 	}
 	.home {
 		height: 100%;
+		display: flex;
+		overflow: none;
+		flex-direction: column;
 	}
 	.center {
 		text-align: center;
@@ -383,6 +391,22 @@
 		position: fixed;
 		top: 0;
 		left: 0;
+	}
+	#inner {
+		overflow-y: scroll;
+		height: 100%;
+		bottom: 0.75em;
+		position: relative;
+		z-index: 0;
+	}
+	#fadein {
+		position: relative;
+		z-index: 1;
+		background: linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--background) 100%);
+		display: flex;
+		height: 2em;
+		top: 0.5em;
+		width: 100%;
 	}
 	.post-errors {
 		color: red;
