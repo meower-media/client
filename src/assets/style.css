@@ -32,6 +32,31 @@
     right: 0.25em;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+    border-radius: 10px;
+    position: relative;
+}
+
+::-webkit-scrollbar-track {
+    background: #A96E20;
+    border-radius: 10px;
+    margin: 0.3em;
+    padding: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #F9A535; 
+    border-radius: 10px;
+    position: relative;
+    left: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #e99525; 
+}
 
 .image_1 {
     margin-top: 0.5em;

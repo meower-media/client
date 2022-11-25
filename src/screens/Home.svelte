@@ -215,96 +215,95 @@
 			</div>-->
 			<!--Zed just told me the cl4 port will move the mod panel to a seperate site-->
 			<h1>Home</h1>
-			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
-		</Container>
-		<!-- svelte-ignore missing-declaration -->
-		<form 
-			class="createpost"
-			autocomplete="off"
-			on:submit|preventDefault={e => {			
-				postErrors = "";
-				if (!e.target[0].value.trim()) {
-					postErrors = "You cannot send an empty post!";
-					return false;
-				};
+			<form 
+				class="createpost"
+				autocomplete="off"
+				on:submit|preventDefault={e => {			
+					postErrors = "";
+					if (!e.target[1].value.trim()) {
+						postErrors = "You cannot send an empty post!";
+						return false;
+					};
 
-				spinner.set(true);
+					spinner.set(true);
 
-				e.target[1].disabled = true;
-				if ($user.name) {
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_home",
-							val: e.target[0].value,
-						},
-						listener: "post_home",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_home") return;
-						link.off(postListener);
-						spinner.set(false);
-
-						e.target[1].disabled = false;
-
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-							e.target[0].rows = "1";
-							e.target[0].style.height = "45px";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				} else {
-					post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
-					e.target[1].disabled = false;
-					e.target[0].value = "";
-					e.target[0].rows = "1";
-					e.target[0].style.height = "45px";
-					spinner.set(false);
-				}
-			}}
-		>
-			<textarea
-				type="text"
-				class="white"
-				placeholder="Write something..."
-				id="postinput"
-				name="postinput"
-				autocomplete="false"
-				maxlength="360"
-				rows="1"
-				use:autoresize
-				on:input={() => {
-					if ($lastTyped + 1500 < new Date() * 1) {
-						lastTyped.set(new Date() * 1);
+					e.target[0].disabled = true;
+					if ($user.name) {
 						link.send({
 							cmd: "direct",
 							val: {
-								cmd: "set_chat_state",
-								val: {
-									chatid: "livechat",
-									state: 101
-								},
+								cmd: "post_home",
+								val: e.target[1].value,
 							},
-							listener: "typing_indicator",
+							listener: "post_home",
 						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_home") return;
+							link.off(postListener);
+							spinner.set(false);
+
+							e.target[0].disabled = false;
+
+							if (cmd.val === "I:100 | OK") {
+								e.target[1].value = "";
+								e.target[1].rows = "1";
+								e.target[1].style.height = "45px";
+							} else if (cmd.val === "E:106 | Too many requests") {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors = "Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					} else {
+						post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
+						e.target[0].disabled = false;
+						e.target[1].value = "";
+						e.target[1].rows = "1";
+						e.target[1].style.height = "45px";
+						spinner.set(false);
 					}
 				}}
-				on:keydown={(event) => {
-					if (event.key == "Enter" && !shiftHeld) {
-						event.preventDefault();
-						document.getElementById("submitpost").click();
-					}
-				}}
-				bind:this={postInput}
-			></textarea>
-			<button id="submitpost">Post</button>
-		</form>
-		<div class="post-errors">{postErrors}</div>
+			>
+				<button id="submitpost">Post</button>
+				<br>
+				<textarea
+					type="text"
+					class="white"
+					placeholder="Type your post here."
+					id="postinput"
+					name="postinput"
+					autocomplete="false"
+					maxlength="360"
+					rows="1"
+					use:autoresize
+					on:input={() => {
+						if ($lastTyped + 1500 < new Date() * 1) {
+							lastTyped.set(new Date() * 1);
+							link.send({
+								cmd: "direct",
+								val: {
+									cmd: "set_chat_state",
+									val: {
+										chatid: "livechat",
+										state: 101
+									},
+								},
+								listener: "typing_indicator",
+							});
+						}
+					}}
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+					bind:this={postInput}
+				></textarea>
+			</form>
+		</Container>
+		<!-- svelte-ignore missing-declaration -->
 		{#if posts.length < 1}
 			{#if $user.name}
 				No posts here. Check back later or be the first to post!
@@ -314,11 +313,13 @@
 		{:else}
 			<div id="fadein"></div>
 			<div id="inner">
+				<div class="post-errors">{postErrors}</div>
 				<TypingIndicator />
 				{#each posts as post (post.id)}
 					<div
 						transition:fly|local="{{y: -50, duration: 250}}"
 						animate:flip="{{duration: 250}}"
+						class="post_scale"
 					>
 						<Post post={post} input={postInput} />
 					</div>
@@ -349,22 +350,26 @@
 </div>
 
 <style>
-	.createpost {
-		display: flex;
-		margin-bottom: 0.5em;
-		position:relative;
-		z-index: 2;
-	}
 	.createpost textarea {
-		flex-grow: 1;
-		margin-right: 0.25em;
 		resize: none;
-		max-height: 300px;
+		background-color: transparent;
+		max-height: 150px;
+		width: 100%;
+		background-color: #E8F3FD;
+		color: var(--background);
+		border: none;
+		box-shadow: 0px 4px 0px 0px #C8CFD6;
+		border-radius: 11px;
+	}
+	#submitpost {
+		margin-bottom: 10px;
+		height: 1em;
+		width: 5em;
+		line-height: 0;
 	}
 	.home {
 		height: 100%;
 		display: flex;
-		overflow: none;
 		flex-direction: column;
 	}
 	.center {
@@ -373,6 +378,9 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 1.88em;
+	}
+	.post_scale {
+		padding-right: 10px;
 	}
 	input[type="checkbox"], button.circle {
 		border: none;
@@ -395,18 +403,20 @@
 	#inner {
 		overflow-y: scroll;
 		height: 100%;
-		bottom: 0.75em;
 		position: relative;
 		z-index: 0;
 	}
 	#fadein {
-		position: relative;
-		z-index: 1;
+		
+		position: absolute;
+		z-index: 2;
 		background: linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--background) 100%);
-		display: flex;
-		height: 2em;
-		top: 0.7em;
-		width: 100%;
+		height: 5%;
+		top: 10em;
+		width: 50%;
+	}
+	#post_btn {
+
 	}
 	.post-errors {
 		color: red;
