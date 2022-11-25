@@ -203,106 +203,108 @@
 			<Loading />
 		</div>
 	{:then}
-		<div class="editedcontainer">
-			<slot />
-			<!--<div class="settings-controls">
-				<button
-					class="circle settings"
-					on:click={()=>{
-						alert("10% finished Mod Panel (That is also unrestricted)")
-						page.set("Mod_Panel")
-					}}
-				>
-			</div>-->
-			<!--Zed just told me the cl4 port will move the mod panel to a seperate site-->
-			<h1>Home</h1>
-			<form 
-				class="createpost"
-				autocomplete="off"
-				on:submit|preventDefault={e => {			
-					postErrors = "";
-					if (!e.target[1].value.trim()) {
-						postErrors = "You cannot send an empty post!";
-						return false;
-					};
+		<div class="relativeec">
+			<div class="editedcontainer">
+				<slot />
+				<!--<div class="settings-controls">
+					<button
+						class="circle settings"
+						on:click={()=>{
+							alert("10% finished Mod Panel (That is also unrestricted)")
+							page.set("Mod_Panel")
+						}}
+					>
+				</div>-->
+				<!--Zed just told me the cl4 port will move the mod panel to a seperate site-->
+				<h1>Home</h1>
+				<form 
+					class="createpost"
+					autocomplete="off"
+					on:submit|preventDefault={e => {			
+						postErrors = "";
+						if (!e.target[1].value.trim()) {
+							postErrors = "You cannot send an empty post!";
+							return false;
+						};
 
-					spinner.set(true);
+						spinner.set(true);
 
-					e.target[0].disabled = true;
-					if ($user.name) {
-						link.send({
-							cmd: "direct",
-							val: {
-								cmd: "post_home",
-								val: e.target[1].value,
-							},
-							listener: "post_home",
-						});
-						const postListener = link.on("statuscode", cmd => {
-							if (cmd.listener !== "post_home") return;
-							link.off(postListener);
-							spinner.set(false);
-
-							e.target[0].disabled = false;
-
-							if (cmd.val === "I:100 | OK") {
-								e.target[1].value = "";
-								e.target[1].rows = "1";
-								e.target[1].style.height = "45px";
-							} else if (cmd.val === "E:106 | Too many requests") {
-								postErrors = "You're posting too fast!";
-							} else {
-								postErrors = "Unexpected " + cmd.val + " error!";
-							}
-						});
-						return false;
-					} else {
-						post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
-						e.target[0].disabled = false;
-						e.target[1].value = "";
-						e.target[1].rows = "1";
-						e.target[1].style.height = "45px";
-						spinner.set(false);
-					}
-				}}
-			>
-				<button id="submitpost">Post</button>
-				<br>
-				<textarea
-					type="text"
-					class="white"
-					placeholder="Type your post here."
-					id="postinput"
-					name="postinput"
-					autocomplete="false"
-					maxlength="360"
-					rows="1"
-					use:autoresize
-					on:input={() => {
-						if ($lastTyped + 1500 < new Date() * 1) {
-							lastTyped.set(new Date() * 1);
+						e.target[0].disabled = true;
+						if ($user.name) {
 							link.send({
 								cmd: "direct",
 								val: {
-									cmd: "set_chat_state",
-									val: {
-										chatid: "livechat",
-										state: 101
-									},
+									cmd: "post_home",
+									val: e.target[1].value,
 								},
-								listener: "typing_indicator",
+								listener: "post_home",
 							});
+							const postListener = link.on("statuscode", cmd => {
+								if (cmd.listener !== "post_home") return;
+								link.off(postListener);
+								spinner.set(false);
+
+								e.target[0].disabled = false;
+
+								if (cmd.val === "I:100 | OK") {
+									e.target[1].value = "";
+									e.target[1].rows = "1";
+									e.target[1].style.height = "45px";
+								} else if (cmd.val === "E:106 | Too many requests") {
+									postErrors = "You're posting too fast!";
+								} else {
+									postErrors = "Unexpected " + cmd.val + " error!";
+								}
+							});
+							return false;
+						} else {
+							post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
+							e.target[0].disabled = false;
+							e.target[1].value = "";
+							e.target[1].rows = "1";
+							e.target[1].style.height = "45px";
+							spinner.set(false);
 						}
 					}}
-					on:keydown={(event) => {
-						if (event.key == "Enter" && !shiftHeld) {
-							event.preventDefault();
-							document.getElementById("submitpost").click();
-						}
-					}}
-					bind:this={postInput}
-				></textarea>
-			</form>
+				>
+					<button id="submitpost">Post</button>
+					<br>
+					<textarea
+						type="text"
+						class="white"
+						placeholder="Type your post here."
+						id="postinput"
+						name="postinput"
+						autocomplete="false"
+						maxlength="360"
+						rows="1"
+						use:autoresize
+						on:input={() => {
+							if ($lastTyped + 1500 < new Date() * 1) {
+								lastTyped.set(new Date() * 1);
+								link.send({
+									cmd: "direct",
+									val: {
+										cmd: "set_chat_state",
+										val: {
+											chatid: "livechat",
+											state: 101
+										},
+									},
+									listener: "typing_indicator",
+								});
+							}
+						}}
+						on:keydown={(event) => {
+							if (event.key == "Enter" && !shiftHeld) {
+								event.preventDefault();
+								document.getElementById("submitpost").click();
+							}
+						}}
+						bind:this={postInput}
+					></textarea>
+				</form>
+			</div>
 		</div>
 		<!-- svelte-ignore missing-declaration -->
 		{#if posts.length < 1}
@@ -370,6 +372,7 @@
 	}
 	.home {
 		height: 100%;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 	}
@@ -383,6 +386,9 @@
 	.post_scale {
 		padding-right: 10px;
 	}
+	.relativeec {
+		position: relative;
+	}
 	.editedcontainer {
 		background-color: var(--background);
 		border: solid 4px var(--orange);
@@ -391,7 +397,6 @@
 		margin-bottom: 0.6em;
 		overflow-wrap: break-word;
 		z-index: 3;
-		position: absolute;
 		box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
 	}
 	input[type="checkbox"], button.circle {
