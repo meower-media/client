@@ -39,7 +39,7 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #A96E20;
+    background: var(--orange-scrollbar-back);
     border-radius: 10px;
     margin: 0.3em;
     padding: 10px;
@@ -47,7 +47,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #F9A535; 
+    background: var(--orange); 
     border-radius: 10px;
     position: relative;
     left: 50px;
@@ -55,7 +55,7 @@
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #e99525; 
+    background: var(--orange-dark); 
 }
 
 .image_1 {

@@ -203,7 +203,8 @@
 			<Loading />
 		</div>
 	{:then}
-		<Container>
+		<div class="editedcontainer">
+			<slot />
 			<!--<div class="settings-controls">
 				<button
 					class="circle settings"
@@ -302,7 +303,7 @@
 					bind:this={postInput}
 				></textarea>
 			</form>
-		</Container>
+		</div>
 		<!-- svelte-ignore missing-declaration -->
 		{#if posts.length < 1}
 			{#if $user.name}
@@ -382,6 +383,17 @@
 	.post_scale {
 		padding-right: 10px;
 	}
+	.editedcontainer {
+		background-color: var(--background);
+		border: solid 4px var(--orange);
+		border-radius: 15px;
+		padding: 0.7em;
+		margin-bottom: 0.6em;
+		overflow-wrap: break-word;
+		z-index: 3;
+		position: absolute;
+		box-shadow: 0px 4px 0px 0px var(--orange-scrollbar-back);
+	}
 	input[type="checkbox"], button.circle {
 		border: none;
 		margin: 0;
@@ -407,14 +419,14 @@
 		z-index: 0;
 	}
 	#fadein {
-		
 		position: absolute;
 		z-index: 2;
 		background: linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--background) 100%);
-		height: 5%;
-		top: 10em;
-		width: 50%;
+		height: 5em;
+		top: 9.3em;
+		width: 90%;
 	}
+	/* TODO: tnix/cst please fix this code */
 	#post_btn {
 
 	}

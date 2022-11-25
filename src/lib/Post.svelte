@@ -81,61 +81,6 @@
 
 <Container>
 	<div class="post-header">
-		<div class="settings-controls">
-			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
-				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
-					<button 
-						class="circle join"
-						on:click={() => {
-							let existingText = input.value;
-
-							const mentionRegex = /^@\w+\s*/i;
-							const mention = "@" + post.user + " ";
-
-							if (mentionRegex.test(existingText)) {
-								input.value = existingText.trim().replace(
-									mentionRegex,
-									mention
-								);
-							} else {
-								input.value = mention + existingText.trim();
-							}
-
-							input.focus();
-						}}
-					></button>
-				{/if}
-				{#if $user.lvl >= 1 || post.user === $user.name}
-					<button
-						class="circle close"
-						on:click={()=>{
-							if (shiftHeld) {
-								clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "delete_post",
-										val: post.post_id,
-									},
-								});
-								return;
-							}
-							postClicked.set(post);
-							modalPage.set("deletePost");
-							modalShown.set(true);
-						}}
-					></button>
-				{:else}
-					<button
-						class="circle report"
-						on:click={()=>{
-							postClicked.set(post);
-							modalPage.set("reportPost");
-							modalShown.set(true);
-						}}
-					></button>
-				{/if}
-			{/if}
-		</div>
 		<button
 			class="pfp" 
 			on:click={()=>{
@@ -173,7 +118,7 @@
 	</div>
 	<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>
 	<p class="post-content">{post.content}</p>
-	<div class="settings-controls">
+	<div>
 		{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
 			{#if post.user !== "Notification" && post.user !== "Announcement"}
 				<button 
