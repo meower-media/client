@@ -46,7 +46,7 @@
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
 
-		if (post.content.includes("[") && post.content.includes("]")) {
+		/* (post.content.includes("[") && post.content.includes("]")) {
 			var squareb_1 = post.content.indexOf("[")
 			var squareb_2 = post.content.indexOf("]")
 
@@ -72,7 +72,7 @@
 				}
 			} catch {}
 			
-		}
+		}*/
 
 		loadProfile(post.user);
 	};
@@ -171,7 +171,7 @@
 			{/if}
 		</div>
 	</div>
-	<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>
+	<!--<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>-->
 	<p class="post-content">{post.content}</p>
 </Container>
 
