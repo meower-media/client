@@ -4,7 +4,7 @@
 -->
 
 <script>
-	import {user, ulist, spinner, lastTyped, mainPage as page, modalPage, modalShown} from "../lib/stores.js";
+	import {auth_header, user, ulist, spinner, lastTyped, mainPage as page, modalPage, modalShown} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
@@ -60,7 +60,8 @@
 				let path = `home?autoget&page=`;
 				if (encodeApiURLParams) path = encodeURIComponent(path);
 				const resp = await fetch(
-					`${apiUrl}${path}${realPage}`
+					`${apiUrl}${path}${realPage}`,
+					{headers: $auth_header}
 				);
 				const vbotlist = await fetch(
 					"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
