@@ -1,3 +1,8 @@
+<!--
+	The chat list
+	The part before the group chats™
+-->
+
 <script>
 	import {chatName, chatid, mainPage as page, modalPage, modalShown, chatMembers, chatOwner} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
