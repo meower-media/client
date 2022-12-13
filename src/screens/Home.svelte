@@ -49,7 +49,7 @@
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
-	 * 
+	 *
 	 * @param {number} [page] The page to load. If not present, simply clears the posts.
 	 * @returns {Promise<array>} The posts array.
 	 */
@@ -140,7 +140,7 @@
 
 	/**
 	 * Adds a post to the list.
-	 * 
+	 *
 	 * @param {object} post
 	 */
 	function addPost(post) {
@@ -207,10 +207,10 @@
 		 How do i use webhooks
 
 		send a post request to webhooks.meower.org
-		with the json 
+		with the json
 		json
 		"post":"some_post"
-		
+
 
 		add a username peram to get use non guest mode
 	-->
@@ -233,93 +233,94 @@
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
-		<!-- svelte-ignore missing-declaration -->
-		<form 
-			class="createpost"
-			autocomplete="off"
-			on:submit|preventDefault={e => {			
-				postErrors = "";
-				if (!e.target[0].value.trim()) {
-					postErrors = "You cannot send an empty post!";
-					return false;
-				};
+		{#if $user.name}
+			<form
+				class="createpost"
+				autocomplete="off"
+				on:submit|preventDefault={e => {
+					postErrors = "";
+					if (!e.target[0].value.trim()) {
+						postErrors = "You cannot send an empty post!";
+						return false;
+					};
 
-				spinner.set(true);
+					spinner.set(true);
 
-				e.target[1].disabled = true;
-				if ($user.name) {
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_home",
-							val: e.target[0].value,
-						},
-						listener: "post_home",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_home") return;
-						link.off(postListener);
-						spinner.set(false);
-
-						e.target[1].disabled = false;
-
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-							e.target[0].rows = "1";
-							e.target[0].style.height = "45px";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				} else {
-					post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
-					e.target[1].disabled = false;
-					e.target[0].value = "";
-					e.target[0].rows = "1";
-					e.target[0].style.height = "45px";
-					spinner.set(false);
-				}
-			}}
-		>
-			<textarea
-				type="text"
-				class="white"
-				placeholder="Write something..."
-				id="postinput"
-				name="postinput"
-				autocomplete="false"
-				maxlength="360"
-				rows="1"
-				use:autoresize
-				on:input={() => {
-					if ($lastTyped + 1500 < +new Date()) {
-						lastTyped.set(+new Date());
+					e.target[1].disabled = true;
+					if ($user.name) {
 						link.send({
 							cmd: "direct",
 							val: {
-								cmd: "set_chat_state",
-								val: {
-									chatid: "livechat",
-									state: 101
-								},
+								cmd: "post_home",
+								val: e.target[0].value,
 							},
-							listener: "typing_indicator",
+							listener: "post_home",
 						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_home") return;
+							link.off(postListener);
+							spinner.set(false);
+
+							e.target[1].disabled = false;
+
+							if (cmd.val === "I:100 | OK") {
+								e.target[0].value = "";
+								e.target[0].rows = "1";
+								e.target[0].style.height = "45px";
+							} else if (cmd.val === "E:106 | Too many requests") {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors = "Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					} else {
+						post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
+						e.target[1].disabled = false;
+						e.target[0].value = "";
+						e.target[0].rows = "1";
+						e.target[0].style.height = "45px";
+						spinner.set(false);
 					}
 				}}
-				on:keydown={(event) => {
-					if (event.key == "Enter" && !shiftHeld) {
-						event.preventDefault();
-						document.getElementById("submitpost").click();
-					}
-				}}
-				bind:this={postInput}
-			></textarea>
-			<button id="submitpost">Post</button>
-		</form>
+			>
+				<textarea
+					type="text"
+					class="white"
+					placeholder="Write something..."
+					id="postinput"
+					name="postinput"
+					autocomplete="false"
+					maxlength="360"
+					rows="1"
+					use:autoresize
+					on:input={() => {
+						if ($lastTyped + 1500 < +new Date()) {
+							lastTyped.set(+new Date());
+							link.send({
+								cmd: "direct",
+								val: {
+									cmd: "set_chat_state",
+									val: {
+										chatid: "livechat",
+										state: 101
+									},
+								},
+								listener: "typing_indicator",
+							});
+						}
+					}}
+					on:keydown={(event) => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+					bind:this={postInput}
+				></textarea>
+				<button id="submitpost">Post</button>
+			</form>
+		{/if}
 		<div class="post-errors">{postErrors}</div>
 		<TypingIndicator />
 		{#if posts.length < 1}
@@ -343,7 +344,7 @@
 				<Loading />
 			{:else}
 				{#if numPages && numPages > pagesLoaded}
-					<button 
+					<button
 						class="load-more"
 						on:click={() => loadPage(pagesLoaded + 1)}
 					>

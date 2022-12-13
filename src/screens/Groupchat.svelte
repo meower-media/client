@@ -48,7 +48,7 @@
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
-	 * 
+	 *
 	 * @param {number} [page] The page to load. If not present, simply clears the posts.
 	 * @returns {Promise<array>} The posts array.
 	 */
@@ -141,7 +141,7 @@
 
 	/**
 	 * Adds a post to the list.
-	 * 
+	 *
 	 * @param {object} post
 	 */
 	function addPost(post) {
@@ -231,7 +231,7 @@
 				<form
 					class="createpost"
 					autocomplete="off"
-					on:submit|preventDefault={e => {					
+					on:submit|preventDefault={e => {
 							postErrors = "";
 							if (!e.target[0].value.trim()) {
 								postErrors = "You cannot send an empty post!";
@@ -326,13 +326,13 @@
 						<Post post={post} input={postInput} />
 					</div>
 				{/each}
-				
+
 				<div class="center">
 					{#if pageLoading}
 						<Loading />
 					{:else}
 						{#if numPages && numPages > pagesLoaded}
-							<button 
+							<button
 								class="load-more"
 								on:click={() => loadPage(pagesLoaded + 1)}
 							>
@@ -348,7 +348,7 @@
 			<div id="members-inner">
 				{#each $chatMembers as chatmember}
 					<button class="member-button" on:click={()=>{
-						modalPage.set("GC_Member");
+						modalPage.set("gcMember");
 						modalShown.set(true);
 						profileClicked_GC.set(chatmember);
 					}}>
@@ -362,7 +362,7 @@
 					<button
 						class="circle plus"
 						on:click = {()=>{
-							modalPage.set("AddMember");
+							modalPage.set("addMember");
 							modalShown.set(true);
 						}}
 					></button>

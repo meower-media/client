@@ -98,9 +98,9 @@ input[type="password"]:not(.white):focus-visible {
 	background-color: var(--orange-light);
 }
 
-button:not(.circle):not(.white):not(:disabled):active,
-input[type="text"]:not(.white):not(:disabled):focus,
-input[type="password"]:not(.white):not(:disabled):focus {
+#main button:not(.circle):not(.white):not(:disabled):active,
+#main input[type="text"]:not(.white):not(:disabled):focus,
+#main input[type="password"]:not(.white):not(:disabled):focus {
 	background-color: var(--orange-dark);
 }
 
@@ -135,14 +135,15 @@ main.input-touch textarea:not(:disabled):active,
 main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
-textarea:focus-visible,
+#main textarea:focus-visible,
+#main textarea:focus-visible,
 button:not(.circle).white:focus-visible {
 	border-color: var(--orange-light);
 }
 
-input[type="text"].white:not(:disabled):focus,
-input[type="password"].white:not(:disabled):focus,
-textarea:focus,
+#main input[type="text"].white:not(:disabled):focus,
+#main input[type="password"].white:not(:disabled):focus,
+#main textarea:focus,
 button:not(.circle).white:active {
 	border-color: var(--orange-dark);
 }
@@ -238,9 +239,9 @@ button.search {
 }
 
 main.input-hover input[type="checkbox"]:hover:not(:active),
-main.input-hover button.circle:hover:not(:active),
+main.input-hover button.circle:not(:disabled):hover:not(:active),
 main.input-touch input[type="checkbox"]:active,
-main.input-touch button.circle:active {
+main.input-touch button.circle:not(:disabled):active {
 	transform: scale(1.2);
 }
 

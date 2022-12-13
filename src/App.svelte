@@ -21,6 +21,7 @@
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
+	import LogoutModal from "./lib/modals/Logout.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -104,6 +105,8 @@
 			<ReportUserModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
+		{:else if $modalPage === "logout"}
+			<LogoutModal />
 		<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />

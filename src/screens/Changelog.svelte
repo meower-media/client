@@ -6,16 +6,32 @@
 	<h1>Changelog</h1>
 </Container>
 <Container>
-	<h2>Release</h2>
+	<h2>1.5</h2>
+	<ul>
+		<li>Beta 4-style sidebar transition (except a bit less cooler due to the logo not moving)</li>
+		<li>Bot badges!</li>
+		<li>Work-in-progress search page</li>
+		<li>New profile pictures from the <a href="https://bettermeower.app">BetterMeower</a> project</li>
+		<li>Badges now also look nicer and are next to the username now</li>
+		<li>Adjusted date styling (no longer underlined, help cursor)</li>
+		<li>Fixes to buttons on touchscreens</li>
+		<li>Fixed the group chat page expanding with long messages</li>
+		<li>Some minor polishing and bugfixes</li>
+	</ul>
+
+	<br />
 
 	<details>
 		<summary> Betas </summary>
 		<h3>Release</h3>
 		<ul>
 			<li>Banned status</li>
-			<li>@Webhooks support</li>
 			<li>Reallow reporting posts from verified bots</li>
 			<li>Made badges look nicer and put then next to the username</li>
+			<li>Fixes to buttons on touchscreens</li>
+			<li>Fixed the group chat page expanding with long messages</li>
+			<li>Adjusted date styling (no longer underlined, help cursor)</li>
+			<li>Disabled several features (rip)</li>
 			<li>Some general polishing and bugfixes</li>
 		</ul>
 

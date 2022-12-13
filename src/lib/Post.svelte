@@ -166,8 +166,9 @@
 
 				{#if post.isvbot}
 					<Badge
-						text="✔ BOT"
+						text="BOT"
 						title="This bot has been verified"
+						checkmark={true}
 					/>
 				{/if}
 

@@ -11,7 +11,7 @@
 		modalPage,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
-	
+
 	import * as clm from "../lib/clmanager.js";
 
 	import {tick} from "svelte";
@@ -21,7 +21,6 @@
 	import home from "../assets/home.svg";
 	import gc from "../assets/chat.svg";
 	import mail from "../assets/mail.svg";
-	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
@@ -79,9 +78,13 @@
 			draggable={false}
 		/>
 	</button>
-	<button on:click={()=>goto("inbox")} class="gc-btn round">
+	<button
+		on:click={()=>goto("inbox")}
+		class="round"
+		class:new-msgs={$user.unread_inbox}
+	>
 		<img
-			src={$user.unread_inbox ? mail_new : mail}
+			src={mail}
 			alt="Inbox Messages"
 			width="90%"
 			height="auto"
@@ -158,13 +161,14 @@
 
 <style>
 	button {
+		position: relative;
 		/* Hack to center icons */
 		line-height: 0;
 	}
 
 	.sidebar {
 		background-color: var(--orange);
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -173,7 +177,7 @@
 
 		gap: 0.5em;
 		box-sizing: border-box;
-		
+
 		user-select: none;
 
 		width: 100%;
@@ -205,6 +209,22 @@
 		padding: 0;
 		margin: 0;
 	}
+
+	.new-msgs::after {
+		content: "";
+		display: inline-block;
+
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 50%;
+
+		position: absolute;
+		right: 0.5em;
+		top: 0.5em;
+
+		background: var(--foreground-orange);
+	}
+
 	:global(main.input-hover) .logo-inner:hover,
 	:global(main.input-touch) .logo-inner:active {
 		background-color: var(--orange-dark);
