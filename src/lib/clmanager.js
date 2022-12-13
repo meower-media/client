@@ -65,7 +65,7 @@ let pingInterval = null;
 
 /**
  * Connect to the server, initializing some other things such as pinging.
- * 
+ *
  * @returns {Promise<string>} statusCode A status code.
  */
 export async function connect() {
@@ -110,6 +110,7 @@ export async function connect() {
 			let tmp_unloaded = unloadedProfile();
 			tmp_unloaded.theme = _user.theme;
 			tmp_unloaded.mode = _user.mode;
+			tmp_unloaded.layout = _user.layout;
 			user.set(tmp_unloaded);
 			if (pingInterval) {
 				clearInterval(pingInterval);
@@ -138,7 +139,7 @@ export async function connect() {
 			}
 		});
 	});
-	
+
 	disconnected.set(false);
 	try {
 		return await link.connect(linkUrl);
@@ -182,7 +183,7 @@ export async function disconnect() {
 
 /**
  * Send a "Meower request" - a packet that makes the server respond with a direct and a statuscode packet.
- * 
+ *
  * @param {object} data
  * @returns {Promise<object | string>} Either an object representing the direct command's val parameter (if it resolves), or an error code as a string (if it rejects).
  */
@@ -219,7 +220,7 @@ export async function meowerRequest(data) {
 
 /**
  * Sends a request to update the user's settings.
- * 
+ *
  * @returns {Promise<object | string>} Either an object or an error code; see meowerRequest.
  */
 export async function updateProfile() {

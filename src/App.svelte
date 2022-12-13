@@ -3,7 +3,7 @@
 <script>
 	import Main from "./screens/Main.svelte";
 	import Setup from "./screens/Setup.svelte";
-	
+
 	import Modal from "./lib/Modal.svelte";
 	import LoginModal from "./lib/modals/Login.svelte";
 	import SignupModal from "./lib/modals/Signup.svelte";
@@ -12,16 +12,14 @@
 	import DeletePostModal from "./lib/modals/DeletePost.svelte";
 	import ReportPostModal from "./lib/modals/ReportPost.svelte";
 	import ReportUserModal from "./lib/modals/ReportUser.svelte";
-	import GC_MemberModal from "./lib/modals/GC_Member.svelte";
+	import GCMemberModal from "./lib/modals/GCMember.svelte";
 	import AddMemberModal from "./lib/modals/AddMember.svelte";
 	import RemoveMemberModal from "./lib/modals/RemoveMember.svelte";
 	import CreateChatModal from "./lib/modals/CreateChat.svelte";
 	import SetQuoteModal from "./lib/modals/SetQuote.svelte";
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
-	import LogoutModal from "./lib/modals/Logout.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
-	import StatsModal from "./lib/modals/Stats.svelte";
 	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
@@ -35,7 +33,6 @@
 		user, spinner
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-    import SetQuote from "./lib/modals/SetQuote.svelte";
 </script>
 
 <main
@@ -46,7 +43,6 @@
 	class:mode-dark={$user.mode === false}
 
 	class:layout-old={$mobile || $user.layout === "old"}
-	class:layout-new={$user.layout === "new"}
 	class:layout-mobile={$mobile}
 >
 	{#if $disconnected}
@@ -86,40 +82,41 @@
 	{/if}
 
 	{#if $modalShown}
+		<!-- Login, signup -->
 		{#if $modalPage === "login"}
 			<LoginModal />
 		{:else if $modalPage === "signup"}
 			<SignupModal />
+		<!-- Bans -->
 		{:else if $modalPage === "banned"}
 			<BannedModal />
 		{:else if $modalPage === "ipBanned"}
 			<IPBannedModal />
+		<!-- Confirmations -->
 		{:else if $modalPage === "deletePost"}
 			<DeletePostModal />
 		{:else if $modalPage === "reportPost"}
 			<ReportPostModal />
 		{:else if $modalPage === "reportUser"}
 			<ReportUserModal />
+		{:else if $modalPage === "deleteAccount"}
+			<DeleteAccountModal />
+		<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
-		{:else if $modalPage === "Stats"}
-			<StatsModal />
-		{:else if $modalPage === "Mod_UserInp"}
+		{:else if $modalPage === "modUserInp"}
 			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
-		{:else if $modalPage === "deleteAccount"}
-			<DeleteAccountModal />
-		{:else if $modalPage === "GC_Member"}
-			<GC_MemberModal />
-		{:else if $modalPage === "AddMember"}
+		<!-- Group chats -->
+		{:else if $modalPage === "gcMember"}
+			<GCMemberModal />
+		{:else if $modalPage === "addMember"}
 			<AddMemberModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
-		{:else if $modalPage === "logout"}
-			<LogoutModal />
 		{:else}
 			<ErrorModal />
 		{/if}

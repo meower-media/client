@@ -4,7 +4,13 @@
 -->
 
 <script>
-	import {auth_header, user, ulist, spinner, lastTyped, mainPage as page, modalPage, modalShown} from "../lib/stores.js";
+	import {
+		authHeader,
+		user, ulist,
+		spinner,
+		lastTyped,
+		mainPage as page
+	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
@@ -61,20 +67,26 @@
 				if (encodeApiURLParams) path = encodeURIComponent(path);
 				const resp = await fetch(
 					`${apiUrl}${path}${realPage}`,
-					{headers: $auth_header}
+					{headers: $authHeader}
 				);
-				const vbotlist = await fetch(
-					"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
-				);
-				vbotlist_split = (await vbotlist.text()).split(/\r?\n/);
+				if (!vbotlist_split) {
+					const vbotlist = await fetch(
+						"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
+					);
+					vbotlist_split = (await vbotlist.text()).split(/\r?\n/);
+				}
+				if (!uvbotlist_split) {
 				const uvbotlist = await fetch(
 					"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverifed-bots.txt"
 				);
 				uvbotlist_split = (await uvbotlist.text()).split(/\r?\n/);
-				const ubotlist = await fetch(
-					"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
-				);
-				userbotlist_split = (await ubotlist.text()).split(/\r?\n/);
+				}
+				if (!userbotlist_split) {
+					const ubotlist = await fetch(
+						"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
+					);
+					userbotlist_split = (await ubotlist.text()).split(/\r?\n/);
+				}
 				if (!resp.ok) {
 					throw new Error("Response code is not OK; code is " + resp.status);
 				}
@@ -88,7 +100,8 @@
 				let overflowResp, overflowJson;
 				if (realOffset > 0 && pagesLoaded < numPages) {
 					overflowResp = await fetch(
-						`${apiUrl}${path}${realPage+1}`
+						`${apiUrl}${path}${realPage+1}`,
+						{headers: $authHeader}
 					);
 					if (!resp.ok) {
 						throw new Error("Overflow response code is not OK; code is " + resp.status);
@@ -282,8 +295,8 @@
 				rows="1"
 				use:autoresize
 				on:input={() => {
-					if ($lastTyped + 1500 < new Date() * 1) {
-						lastTyped.set(new Date() * 1);
+					if ($lastTyped + 1500 < +new Date()) {
+						lastTyped.set(+new Date());
 						link.send({
 							cmd: "direct",
 							val: {
@@ -368,11 +381,6 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 1.88em;
-	}
-	input[type="checkbox"], button.circle {
-		border: none;
-		margin: 0;
-		margin-left: 0.125em;
 	}
 	.fullcenter {
 		text-align: center;

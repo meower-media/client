@@ -1,9 +1,7 @@
 <script>	
 	import Modal from "../lib/Modal.svelte";
-
-    import { shiftHeld } from "../lib/keyDetect";
-
-	import {mainPage as page, modalPage, modalShown, User_ToMod} from "../lib/stores.js";
+    import {shiftHeld} from "../lib/keyDetect.js";
+	import {mainPage as page, modalShown, userToMod} from "../lib/stores.js";
 </script>
 
 <Modal on:close={() => {$modalShown = false}}>
@@ -14,8 +12,8 @@
 				autocomplete="off"
 				on:submit|preventDefault={e => {					
 					$modalShown = false
-					$User_ToMod = e.target[0].value
-					page.set("Mod_User");
+					$userToMod = e.target[0].value
+					page.set("modUser");
 				}}
 			>
 				<input

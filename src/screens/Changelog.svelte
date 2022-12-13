@@ -1,110 +1,119 @@
 <script>
-    import Container from "../lib/Container.svelte";
+	import Container from "../lib/Container.svelte";
 </script>
 
-<div class="Changelog">
-    <Container>
-        <h1>Svelte Changelog</h1>
-        The Changelog for Svelte
-    </Container>
-    <Container>
-        <h1>1.5 Release</h1>
-        Banned status
-        <br>
-        Webhooks
-        <br>
-        Removed verified bot posts being able to not be reported
-    </Container>
-    <Container>
-        <h1>1.5 Dev Preview 3</h1>
-        I dont really know
-        <br>
-        Sidebar transition
-    </Container>
-    <Container>
-        <h1>1.5 Dev Preview 2.5</h1>
-        Http.meower.org is an allowed image hosting site
-        <br>
-        Fixed "issue" where images will break if they arent an allowed image hosting site
-    </Container>
-    <Container>
-        <h1>1.5 Dev Preview 2</h1>
-        Enter user name and go to profile
-        <br>
-        Crash bug fix (hopefully)
-        <br>
-        10% Finished mod panel
-        <br>
-        Changelog
-        <br>
-        Added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
-        <br>
-        Search bar only when logged in fix
-    </Container>
-    <Container>
-        <h1>1.5 Dev Preview 1</h1>
-        Search page
-        <br>
-        Bettermeower pfp support
-        <br>
-        Statisics
-        <br>
-        Bot tags (Verified, Unverified, Bot owner)
-        <br>
-        Don't allow verified bot posts to be reported
-        <br>
-        Image links showing as images
-    </Container>
-    <Container>
-        <h1>1.4 Hotfix</h1>
-        Fix for issue where JSON values will sometimes be stringified, causing the client to not be able to read it, even if you have set your data type as JS
-    </Container>
-    <Container>
-        <h1>1.4</h1>
-        Typing indicators, quotes, and line breaks
-        <br>
-        Fix spam by holding down enter while ratelimited
-        <br>
-        Group chat members, adding and removing
-        <br>
-        Modals, Replies, Tons of other stuff.
-    </Container>
-    <Container>
-        <h1>1.3</h1>
-        Group chats
-        <br>
-        Inbox
-        <br>
-        Discord Support
-    </Container>
-    <Container>
-        <h1>1.2</h1>
-        Mainly profiles
-    </Container>
-    <Container>
-        <h1>1.1.2</h1>
-        Group cat
-    </Container>
-    <Container>
-        <h1>1.1</h1>
-        Account deletion
-        <br>
-        Login saving
-        <br>
-        Fixed only being able to log in once per session
-        <br>
-        Add TOS/PP confirmation when creating an account
-        <br>
-        Fix "Let's go!" text in setup
-    </Container>
-    <Container>
-        <h1>1.0.1</h1>
-        Center login screen
-    </Container>
-    <Container>
-        <h1>1.0</h1>
-        Inital Release.
-    </Container>
-</div>
+<Container>
+	<h1>Changelog</h1>
+</Container>
+<Container>
+	<h2>Release</h2>
 
-<style></style>
+	<details>
+		<summary> Betas </summary>
+		<h3>Release</h3>
+		<ul>
+			<li>Banned status</li>
+			<li>@Webhooks support</li>
+			<li>Reallow reporting posts from verified bots</li>
+			<li>Made badges look nicer and put then next to the username</li>
+			<li>Some general polishing and bugfixes</li>
+		</ul>
+
+		<h3>Dev Preview 3</h3>
+		<ul>
+			<li>I don't really know</li>
+			<li>Sidebar transition</li>
+		</ul>
+
+		<h3>Preview 2.5</h3>
+		<ul>
+			<li>http.meower.org is an allowed image hosting site</li>
+			<li>
+				Fixed an issue where images will break if they aren't on an
+				allowed image hosting site
+			</li>
+		</ul>
+
+		<h3>Preview 2</h3>
+		<ul>
+			<li>Added going to a profile by username</li>
+			<li>Crash bug fix (hopefully)</li>
+			<li>Unfinished mod panel</li>
+			<li>Changelog page (this one!)</li>
+			<!--
+				it's roblox kid
+				<li>
+					Added "Badge" to Roblox888i for 200th chat (please dont beg for
+					badges)
+				</li>
+			-->
+			<li>Search bar only when logged in fix</li>
+		</ul>
+
+		<h3>Dev Preview 1</h3>
+		<ul>
+			<li>Search page</li>
+			<li>BetterMeower profile picture support</li>
+			<li>Statisics</li>
+			<li>Bot tags (verified, unverified, bot owner)</li>
+			<li>Don't allow verified bot posts to be reported</li>
+			<li>Image links showing as images</li>
+		</ul>
+	</details>
+</Container>
+<Container>
+	<h2>Hotfix</h2>
+	<ul>
+		<li>Fixed posts sometimes not showing up in home</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.4</h2>
+	<ul>
+		<li>Typing indicators, quotes, and line breaks</li>
+		<li>Fixed spam by holding down enter while ratelimited</li>
+		<li>Group chat members, adding and removing</li>
+		<li>Modals, replies and a bunch of other stuff</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.3</h2>
+	<ul>
+		<li>Group chats</li>
+		<li>Inbox</li>
+		<li>Discord Support</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.2</h2>
+	<ul><li>Mainly profiles</li></ul>
+</Container>
+<Container>
+	<h2>1.1.2</h2>
+	<ul><li>Group cat</li></ul>
+</Container>
+<Container>
+	<h2>1.1</h2>
+	<ul>
+		<li>Account deletion</li>
+		<li>Login saving</li>
+		<li>Fixed only being able to log in once per session</li>
+		<li>Add TOS/PP confirmation when creating an account</li>
+		<li>Fix "Let's go!" text in setup</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.0.1</h2>
+	<ul><li>Center login screen</li></ul>
+</Container>
+<Container>
+	<h2>1.0</h2>
+	<ul><li>Inital release</li></ul>
+</Container>
+
+<style>
+	h3 {
+		margin-top: 0.5ex;
+		margin-bottom: 0.5ex;
+	}
+</style>

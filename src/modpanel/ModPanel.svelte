@@ -1,7 +1,7 @@
 <script>
     import Container from "../lib/Container.svelte";
 
-    import {modalShown,modalPage} from "../lib/stores.js";
+    import {modalShown, modalPage} from "../lib/stores.js";
 </script>
 
 <div class="ModPanel">
@@ -14,7 +14,7 @@
             <button
                 class="circle settings"
                 on:click={()=>{
-                    modalPage.set("Mod_UserInp");
+                    modalPage.set("modUserInp");
 					modalShown.set(true);
                 }}
             >
@@ -25,7 +25,7 @@
 </div>
 
 <style>
-    input[type="checkbox"], button.circle {
+    button.circle {
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;

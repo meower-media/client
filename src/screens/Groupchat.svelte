@@ -1,10 +1,19 @@
 <!--
-	The groupchat page!
-	It features live post updates and a load more button which is pretty nice.
+	Home, but for group chats.
+	(we should probably move the shared post list stuff into a separate component)
 -->
 
 <script>
-	import {auth_header, user, chatName, chatMembers, chatid, ulist, spinner, mainPage as page, modalShown, modalPage, profileClicked_GC, lastTyped} from "../lib/stores.js";
+	import {
+		authHeader,
+		user,
+		chatName, chatMembers,
+		chatid,
+		spinner,
+		mainPage as page,
+		modalShown, modalPage,
+		profileClicked_GC,
+		lastTyped} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
     import {playNotification} from "../lib/sounds.js";
 	import Post from "../lib/Post.svelte";
@@ -70,7 +79,7 @@
 				if (encodeApiURLParams) path = encodeURIComponent(path);
 				const resp = await fetch(
 					`${apiUrl}${path}${realPage}`,
-					{headers: $auth_header}
+					{headers: $authHeader}
 				);
 				if (!resp.ok) {
 					throw new Error("Response code is not OK; code is " + resp.status);
@@ -85,7 +94,8 @@
 				let overflowResp, overflowJson;
 				if (realOffset > 0 && pagesLoaded < numPages) {
 					overflowResp = await fetch(
-						`${apiUrl}${path}${realPage+1}`
+						`${apiUrl}${path}${realPage+1}`,
+						{headers: $authHeader}
 					);
 					if (!resp.ok) {
 						throw new Error("Overflow response code is not OK; code is " + resp.status);
@@ -273,8 +283,8 @@
 						rows= "1"
 						use:autoresize
 						on:input={() => {
-							if ($lastTyped + 1500 < new Date() * 1) {
-								lastTyped.set(new Date() * 1);
+							if ($lastTyped + 1500 < +new Date()) {
+								lastTyped.set(+new Date());
 								link.send({
 									cmd: "direct",
 									val: {

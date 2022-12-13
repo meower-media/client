@@ -4,7 +4,7 @@
 	import
 		{screen, setupPage as page,
 		modalShown, modalPage,
-		auth_header,
+		authHeader,
 		user
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
@@ -43,10 +43,11 @@
 				loginStatus = "";
 
 				await tick();
+				if (!logoImg) return;
 				setup.classList.add("white");
 				logoImg.height = 0;
 				logo.classList.remove("top");
-				
+
 				await sleep(600);
 				// Directly changing image height instead
 				// of using transforms to prevent blur
@@ -88,7 +89,7 @@
 
 	/**
 	 * Logs in.
-	 * 
+	 *
 	 * @param {string} username
 	 * @param {string} password
 	*/
@@ -117,7 +118,7 @@
 						...profileVal.payload,
 						name: val.payload.username,
 					}));
-					auth_header.set({username: val.payload.username, token: val.payload.token});
+					authHeader.set({username: val.payload.username, token: val.payload.token});
 
 					if (rememberMe || localStorage.getItem("meower_savedusername") === username) {
 						localStorage.setItem("meower_savedusername", username);
@@ -229,7 +230,7 @@
 	{:else if $page === "login"}
 		<div class="fullcenter">
 			<h1>Login to Meower</h1>
-			
+
 			<form class="column-ui"
 				on:submit|preventDefault={e => {
 					if (!(e.target[0].value && e.target[1].value)) {
@@ -301,10 +302,10 @@
 								...profileVal.payload,
 								name: val.payload.username,
 							}));
-							auth_header.set({username: val.payload.username, token: val.payload.token});
+							authHeader.set({username: val.payload.username, token: val.payload.token});
 
 							loginStatus = "";
-							
+
 							if (rememberMe) {
 								localStorage.setItem("meower_savedusername", username);
 								localStorage.setItem("meower_savedpassword", val.payload.token);
@@ -393,12 +394,12 @@
 		font-size: 150%;
 
 		text-align: center;
-		
+
 		position: absolute;
 		top: 0;
 		left: 0;
 		z-index: 1000;
-		
+
 		width: 100%;
 		min-height: 100vh;
 		height: 100%;

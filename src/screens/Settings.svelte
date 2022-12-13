@@ -9,7 +9,7 @@
 
 <!--
 	<p>Quote: {$user.quote}</p>
-	<form 
+	<form
 		class="createpost"
 		on:submit|preventDefault={e => {
 			//spinner.set(true);
@@ -104,7 +104,7 @@
 	</div>
 
 	<h2>Sound Effects</h2>
-	Sound effects are currently {!$user.sfx ? "disabled" : "enabled"}.
+	Sound effects (for new messages) are currently {!$user.sfx ? "disabled" : "enabled"}.
 </Container>
 <!--<Container>
 	<div class="settings-controls">

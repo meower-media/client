@@ -2,7 +2,7 @@
 	import Modal from "../Modal.svelte";
     import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, mainPage, auth_header, user} from "../stores.js";
+	import {modalShown, modalPage, mainPage, authHeader, user} from "../stores.js";
 
     import * as clm from "../clmanager.js";
 
@@ -45,7 +45,7 @@
                         ...profileVal.payload,
                         name: val.payload.username,
                     }));
-                    auth_header.set({username: val.payload.username, token: val.payload.token});
+                    authHeader.set({username: val.payload.username, token: val.payload.token});
 
                     loginStatus = "";
                     

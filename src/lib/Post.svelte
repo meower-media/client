@@ -4,6 +4,7 @@
 	import Container from "../lib/Container.svelte";
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
+	import Badge from "./Badge.svelte";
 
 	import {
 		 profileClicked,
@@ -14,9 +15,9 @@
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-	
+
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
-	
+
 	import {onMount} from "svelte";
 
 	export let post = {};
@@ -71,7 +72,7 @@
 					img1.src = img_url
 				}
 			} catch {}
-			
+
 		}*/
 
 		loadProfile(post.user);
@@ -82,9 +83,9 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
-			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}	
+			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}
 				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
-					<button 
+					<button
 						class="circle join"
 						on:click={() => {
 							let existingText = input.value;
@@ -137,7 +138,7 @@
 			{/if}
 		</div>
 		<button
-			class="pfp" 
+			class="pfp"
 			on:click={()=>{
 				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
 				profileClicked.set(post.user);
@@ -150,25 +151,41 @@
 				online={$ulist.includes(post.user)}
 			></PFP>
 		</button>
-		<div class="creator">
-			<h2 class="creator">{post.user}</h2>
+		<div class="creatordate">
+			<div class="creator">
+				<h2>
+					{post.user}
+				</h2>
+
+				{#if bridged}
+					<Badge
+						text="BRIDGED"
+						title="This post is a post bridged from the Meower Discord server by the @Discord bot"
+					/>
+				{/if}
+
+				{#if post.isvbot}
+					<Badge
+						text="✔ BOT"
+						title="This bot has been verified"
+					/>
+				{/if}
+
+				{#if post.isuvbot}
+					<Badge
+						text="BOT"
+						title="This bot has not been verified"
+					/>
+				{/if}
+
+				{#if post.ownsbot}
+					<Badge
+						text="BOT OWNER"
+					/>
+				{/if}
+			</div>
 
 			<FormattedDate date={post.date}></FormattedDate>
-			{#if bridged}
-				<i>[BRIDGED]</i>
-			{/if}
-
-			{#if post.isvbot}
-				<i>[VERIFIED BOT]</i>
-			{/if}
-
-			{#if post.isuvbot}
-				<i>[UNVERIFIED BOT]</i>
-			{/if}
-
-			{#if post.ownsbot}
-				<i>[BOT OWNER]</i>
-			{/if}
 		</div>
 	</div>
 	<!--<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>-->
@@ -188,15 +205,17 @@
 		align-items: center;
 		flex-wrap: wrap;
 	}
-	.post-image-hide {position: absolute; visibility: hidden;}
 
-	.creator {
-		display: inline;
-		max-width: 100%;
+	.creatordate {
 		margin-left: 0.5em;
 	}
+	.creator {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		max-width: 100%;
+	}
 	.creator h2 {
-		display: block;
 		font-size: 200%;
 		margin: 0;
 	}

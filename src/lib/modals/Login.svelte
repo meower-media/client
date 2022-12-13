@@ -2,11 +2,9 @@
 	import Modal from "../Modal.svelte";
     import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, mainPage, auth_header, user} from "../stores.js";
+	import {modalShown, modalPage, authHeader, user} from "../stores.js";
 
     import * as clm from "../clmanager.js";
-
-	import {tick} from "svelte";
 
     let loading = false;
     let loginStatus = "";
@@ -42,7 +40,7 @@
 						...profileVal.payload,
 						name: val.payload.username,
 					}));
-					auth_header.set({username: val.payload.username, token: val.payload.token});
+					authHeader.set({username: val.payload.username, token: val.payload.token});
 
 					if (rememberMe) {
 						localStorage.setItem("meower_savedusername", username);

@@ -28,20 +28,16 @@ export const chatOwner = writable("");
 // User list
 export const ulist = writable([]);
 
-// Mod panel Stores
-export const User_ToMod = writable("");
+// Mod panel
+export const userToMod = writable("");
 
-// Last post clicked
+// Last (blank) clicked
 export const postClicked = writable({});
-
-// Last profile clicked
 export const profileClicked = writable("");
-
-// Last group chat profile clicked
 export const profileClicked_GC = writable("");
 
 // Current auth header
-export const auth_header = writable({});
+export const authHeader = writable({});
 
 // The current user profile
 export const user = writable({

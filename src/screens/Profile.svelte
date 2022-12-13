@@ -2,26 +2,22 @@
 <script>
 	import {
 		modalPage, modalShown,
-		ulist,
 		profileClicked, user,
 		mainPage as page
 	} from "../lib/stores.js";
 
 	import {profileCache} from "../lib/loadProfile.js";
 
-	import Profile from "../lib/Profile_View.svelte"
+	import ProfileView from "../lib/ProfileView.svelte"
 
     import PFP from "../lib/PFP.svelte";
     import Loading from "../lib/Loading.svelte";
     import Container from "../lib/Container.svelte";
     import * as clm from "../lib/clmanager.js";
-    import {levels} from "../lib/formatting.js";
+	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
 	import {tick} from "svelte";
-	import {apiUrl, encodeApiURLParams} from "../lib/urls";
-    import { dataset_dev } from "svelte/internal";
-    import ProfileView from "../lib/Profile_View.svelte";
-	
+
 	const pfps = new Array(34).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
 
@@ -103,7 +99,7 @@
 				}}
 			>{data.quote ? "Update Quote" : "Set Quote"}</button>
 		{/if}
-		
+
 		<button
 			class="long"
 			title="View Recent Posts"
@@ -114,10 +110,10 @@
 			}}
 		>View recent posts</button>
 
-		<button 
-			class="long" 
+		<button
+			class="long"
 			disabled
-		>Add To Chat</button>
+		>Add to Chat</button>
 
 		{#if $user.name && $profileClicked !== $user.name}
 			<button

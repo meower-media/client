@@ -1,17 +1,16 @@
 <script>
 
-    import loadProfile from "./loadProfile";
-    import {ulist,user} from "./stores.js";
+    import loadProfile from "./loadProfile.js";
+    import {ulist, user} from "./stores.js";
     import Loading from "./Loading.svelte";
     import Container from "./Container.svelte";
     import PFP from "./PFP.svelte";
-    import { levels } from "./formatting";
+    import {levels} from "./formatting.js";
 
     export let username = "";
-
 </script>
 
-<div class="Profile">
+<div>
     {#await loadProfile(username)}
         <div class="center">
             <Loading />

@@ -1,10 +1,9 @@
 <!--
-	The inbox page!
-	It features messages sent to the user's inbox.
+	Home but it's the inbox.
 -->
 
 <script>
-	import {auth_header, user} from "../lib/stores.js";
+	import {authHeader, user} from "../lib/stores.js";
 	import Post from "../lib/Post.svelte";
 	import Container from "../lib/Container.svelte";
 	import Loading from "../lib/Loading.svelte";
@@ -50,7 +49,7 @@
 				if (encodeApiURLParams) path = encodeURIComponent(path);
 				const resp = await fetch(
 					`${apiUrl}${path}${realPage}`,
-					{headers: $auth_header}
+					{headers: $authHeader}
 				);
 				if (!resp.ok) {
 					throw new Error("Response code is not OK; code is " + resp.status);

@@ -1,12 +1,11 @@
 <script>
-    import {User_ToMod,ulist,user,} from "../lib/stores.js";
-
-    import ProfileView from "../lib/Profile_View.svelte";
+    import {userToMod} from "../lib/stores.js";
+    import ProfileView from "../lib/ProfileView.svelte";
     import Container from "../lib/Container.svelte";
 </script>
 
 <div class="ModerateUser">
-    <ProfileView username={$User_ToMod}></ProfileView>
+    <ProfileView username={$userToMod}></ProfileView>
     <Container>
         <div class="settings-controls">
             <button
@@ -17,7 +16,7 @@
             ></button>
         </div>
         <h1>Ban User</h1>
-        This will ban the user that is entered
+        This will ban the user that is entered. <i>*whack*</i>
     </Container>
 </div>
 
