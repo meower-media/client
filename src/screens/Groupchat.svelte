@@ -395,7 +395,7 @@
     }
 
 	/* repetition because of CSS specificity */
-	.member-button.member-button:hover,
+	:global(main.input-hover) .member-button.member-button:hover,
 	.member-button.member-button:focus-visible {
         background-color: #7773;
     }
@@ -412,10 +412,11 @@
 	#chat {
 		flex-shrink: 1;
 		flex-grow: 1;
+		overflow: hidden;
 	}
 	#members {
 		height: var(--view-height);
-		width: 12em;
+		width: min(45%, 12em);
 
 		background-color: var(--background);
 		border: solid 2px var(--orange);
@@ -424,6 +425,9 @@
 
 		position: sticky;
 		top: 0;
+
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 	#members-inner {
 		position: relative;

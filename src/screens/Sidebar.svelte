@@ -60,7 +60,7 @@
 
 <div class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
-		<span class="logo-inner" on:click={()=>goto("home")}>
+		<button class="logo-inner" on:click={()=>goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -68,7 +68,7 @@
 				height="100%"
 				width="auto"
 			/>
-		</span>
+		</button>
 	</div>
 	<button on:click={()=>goto("home")} class="home-btn round">
 		<img
@@ -200,8 +200,13 @@
 	.logo-inner {
 		display: inline-block;
 		height: 100%;
+		background: none;
+		border: none;
+		padding: 0;
+		margin: 0;
 	}
-	.logo-inner:hover {
+	:global(main.input-hover) .logo-inner:hover,
+	:global(main.input-touch) .logo-inner:active {
 		background-color: var(--orange-dark);
 	}
 

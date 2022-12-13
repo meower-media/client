@@ -12,10 +12,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,7 +41,7 @@ import {apiUrl} from "./urls.js";
 export default class Cloudlink {
     /**
 	 * Create the client, and optionally auto-connect to a server.
-	 * 
+	 *
 	 * @param {string | URL} [server] Optional URL to autoconnect to.
 	 */
     constructor(server) {
@@ -58,7 +58,7 @@ export default class Cloudlink {
 
 	/**
 	 * Internal special formatted console function.
-	 * 
+	 *
 	 * @param {string} type The console function to call.
 	 * @param {string} label A label for the log, displayed next to the CL badge.
 	 * @param {...any} _values The values to log.
@@ -71,7 +71,7 @@ export default class Cloudlink {
 	}
 	/**
 	 * Special formatted console log function.
-	 * 
+	 *
 	 * @param {string} _label A label for the log, displayed next to the CL badge.
 	 * @param {...any} _values The values to log.
 	 */
@@ -80,7 +80,7 @@ export default class Cloudlink {
 	}
 	/**
 	 * Special formatted console warn function.
-	 * 
+	 *
 	 * @param {string} _label A label for the log, displayed next to the CL badge.
 	 * @param {...any} _values The values to log.
 	 */
@@ -89,7 +89,7 @@ export default class Cloudlink {
 	}
 	/**
 	 * Special formatted console error function.
-	 * 
+	 *
 	 * @param {string} _label A label for the log, displayed next to the CL badge.
 	 * @param {...any} _values The values to log.
 	 */
@@ -99,7 +99,7 @@ export default class Cloudlink {
 
     /**
 	 * Disconnects if the client is already connected, then connects to a server.
-	 * 
+	 *
 	 * @param {string | URL} server
 	 */
     connect(server) {
@@ -115,14 +115,14 @@ export default class Cloudlink {
 				this.ws.addEventListener("open", async () => {
 					try {
 						this.log("connection", "connected to websockets");
-						
+
 						const _ip = localStorage.getItem("meower_ip");
 						if (_ip || _ip === "") {
 							this.ip = _ip;
 						} else {
 							this.ip = await (await fetch(apiUrl + "ip")).text();
 						}
-						
+
 						this.send({
 							cmd: "direct",
 							val: {
@@ -145,7 +145,7 @@ export default class Cloudlink {
 						}, (cmd) => {
 							if (cmd.cmd === "statuscode") {
 								this.off(tkeyEv);
-										
+
 								if (cmd.val === "I:100 | OK") {
 									resolve();
 									this.log("connection", "successfully connected");
@@ -194,9 +194,9 @@ export default class Cloudlink {
 
     /**
 	 * Send a packet through the link.
-	 * 
+	 *
 	 * @param {object} data
-	 * 
+	 *
 	 * @param {string} data.cmd
 	 * @param {string | object} data.val
 	 * @param {string} [data.listener]
@@ -210,7 +210,7 @@ export default class Cloudlink {
     }
 	/**
 	 * Send a packet through the link and listen for any subsequent packets with the specified listener.
-	 * 
+	 *
 	 * @param {object} data
 	 * @param {string} data.cmd
 	 * @param {string | object} data.val
@@ -227,7 +227,7 @@ export default class Cloudlink {
 
     /**
 	 * Listen for a command or other event.
-	 * 
+	 *
 	 * @param {string} event
 	 * @param {clPacketCallback} cb
 	 */
@@ -243,7 +243,7 @@ export default class Cloudlink {
     }
     /**
 	 * Listen for packets with specific listeners.
-	 * 
+	 *
 	 * @param {string} listener
 	 * @param {clPacketCallback} cb
 	 */
@@ -252,7 +252,7 @@ export default class Cloudlink {
     }
     /**
 	 * Remove a listener with its ID.
-	 * 
+	 *
 	 * @param {any} id
 	 */
     off(id) {
@@ -262,7 +262,7 @@ export default class Cloudlink {
     }
     /**
 	 * Listen for an event, then remove it once it fires the first time.
-	 * 
+	 *
 	 * @param {string} event
 	 * @param {clPacketCallback} cb
 	 */
@@ -274,7 +274,7 @@ export default class Cloudlink {
     }
     /**
 	 * Emit an event, with optional data. Pretty self-explanatory.
-	 * 
+	 *
 	 * @param {string} event
 	 * @param {any} [data]
 	 */
@@ -296,4 +296,4 @@ export default class Cloudlink {
     }
 }
 
-// clinabrowserbeefedupforkusedformeowersvelte
+// cljsforkusedformeowersvelte
