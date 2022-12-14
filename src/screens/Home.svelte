@@ -233,7 +233,6 @@
 			<h1>Home</h1>
 			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
 		</Container>
-		{#if $user.name}
 			<form
 				class="createpost"
 				autocomplete="off"
@@ -320,7 +319,6 @@
 				></textarea>
 				<button id="submitpost">Post</button>
 			</form>
-		{/if}
 		<div class="post-errors">{postErrors}</div>
 		<TypingIndicator />
 		{#if posts.length < 1}
