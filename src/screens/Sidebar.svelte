@@ -71,8 +71,6 @@
 		<img
 			src={home}
 			alt="Home"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -80,8 +78,6 @@
 		<img
 			src={$user.unread_inbox ? mail_new : mail}
 			alt="Inbox Messages"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -95,8 +91,6 @@
 		<img
 			src={gc}
 			alt="Group Chats"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -107,8 +101,6 @@
 		<img
 			src={profile}
 			alt="Profile"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -116,8 +108,6 @@
 		<img
 			src={settings}
 			alt="Settings"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -128,8 +118,6 @@
 		<img
 			src={logout}
 			alt="Log out"
-			width="90%"
-			height="auto"
 			draggable={false}
 		/>
 	</button>
@@ -161,9 +149,18 @@
 	.sidebar > button {
 		width: 2.8em;
 		height: 2.8em;
-		margin: 0;
+		min-width: 0;
+		min-height: 0;
 
+		margin: 0;
 		flex-shrink: 1;
+
+		padding: 0.5em;
+	}
+	.sidebar > button > img {
+		width: 90%;
+		height: 90%;
+		object-fit: contain;
 	}
 
 	.logo {
@@ -197,6 +194,7 @@
 	}
 
 	:global(main.layout-mobile) .sidebar {
-		padding: 0 0.5em;
+		padding: 0;
+		gap: 0.25em;
 	}
 </style>
