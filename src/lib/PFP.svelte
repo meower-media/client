@@ -5,6 +5,13 @@
 	export let alt = "Profile picture";
 	export let online = false;
 	export let size = 1;
+
+	// only respond to `icon` changing
+	let id;
+	function setId(val) {
+		id = val;
+	}
+	$: setId(icon);
 </script>
 
 <span class="pfp-container" style:--size={size}>
@@ -16,10 +23,10 @@
 			{alt}
 			title={alt}
 			src={new URL(`./../assets/avatars/icon_${
-				icon === -1 ? 34 : (icon === -2 ? "err" : icon - 1)
+				id === -1 ? 21 : (id === -2 ? "err" : id - 1)
 			}.svg`, import.meta.url).href}
 
-			on:error|once={() => icon = -2}
+			on:error|once={() => id = -2}
 
 			class:loading={icon === -1}
 			draggable={false}
@@ -52,7 +59,7 @@
 		/* Always make fallback text visible */
 		color: black;
 	}
-	
+
 	.loading {
 		animation: spin 0.5s linear infinite;
 		filter: saturate(0) brightness(1.5);
