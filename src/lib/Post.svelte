@@ -24,6 +24,7 @@
 	export let input = null;
 
 	let bridged = false;
+	let webhook = false;
 
 	// TODO: make bridged tag a setting
 
@@ -33,15 +34,20 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		if (post.user == "Discord" && post.content.includes(":")) {
-			bridged = true;
+		if (post.content.includes(":")) {
+			if (post.user == "Discord") {
+				bridged = true;	
+			}
+			if (post.user == "Webhooks") {
+				webhook = true;
+			}
 		}
-
-		if (post.user == "Discord" && post.content.includes(":")) {
+		
+		if ((post.user == "Discord" || post.user == "Webhooks") && post.content.includes(":")) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
-
+		
 		loadProfile(post.user);
 	};
 	onMount(initPostUser);
@@ -112,11 +118,19 @@
 				page.set("profile");
 			}}
 		>
-			<PFP
-				icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
-				alt="{post.user}'s profile picture"
-				online={$ulist.includes(post.user)}
-			></PFP>
+			{#if webhook}
+				<PFP
+					icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : Math.floor(Math.random * 15 + 1)}
+					alt="{post.user}'s profile picture"
+					online=true
+				></PFP>
+			{:else}
+				<PFP
+					icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				></PFP>
+			{/if}
 		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
@@ -124,6 +138,9 @@
 			<FormattedDate date={post.date}></FormattedDate>
 			{#if bridged}
 				<i>[BRIDGED]</i>
+			{/if}
+			{#if webhook}
+				<i>[WEBHOOK]</i>
 			{/if}
 		</div>
 	</div>
