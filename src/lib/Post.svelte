@@ -118,19 +118,11 @@
 				page.set("profile");
 			}}
 		>
-			{#if webhook}
-				<PFP
-					icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : Math.floor(Math.random * 15 + 1)}
-					alt="{post.user}'s profile picture"
-					online=true
-				></PFP>
-			{:else}
-				<PFP
-					icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
-				></PFP>
-			{/if}
+			<PFP
+				icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
+				alt="{post.user}'s profile picture"
+				online={$ulist.includes(post.user)}
+			></PFP>
 		</button>
 		<div class="creator">
 			<h2 class="creator">{post.user}</h2>
