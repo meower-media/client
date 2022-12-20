@@ -43,7 +43,7 @@
 			}
 		}
 		
-		if ((post.user == "Discord" || post.user == "Webhooks") && post.content.includes(":")) {
+		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
