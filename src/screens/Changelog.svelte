@@ -4,6 +4,7 @@
 
 <Container>
 	<h1>Changelog</h1>
+	What's new?
 </Container>
 <Container>
 	<h2>1.5</h2>
@@ -44,6 +45,7 @@
 			<li>Fixed the group chat page expanding with long messages</li>
 			<li>Adjusted date styling (no longer underlined, help cursor)</li>
 			<li>Disabled several features (rip)</li>
+			<li>Updates to images in posts</li>
 			<li>Some general polishing and bugfixes</li>
 		</ul>
 

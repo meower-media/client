@@ -365,7 +365,11 @@
 					{/each}
 				</div>
 				<div class="top">
-					<h2 class="members-title">Members <span class="small">({$chatMembers.length})</span></h2>
+					<h2 class="members-title">
+						Members <span class="small"
+							>({$chatMembers.length})</span
+						>
+					</h2>
 					<div class="settings-controls">
 						<button
 							class="circle plus"

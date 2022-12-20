@@ -63,7 +63,6 @@
 
 <!-- Wait, isn't it a topbar on old layout? -->
 
-
 <div class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
 		<button class="logo-inner" on:click={() => goto("home")}>
