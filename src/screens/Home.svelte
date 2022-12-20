@@ -2,14 +2,14 @@
 	The home page!
 	It features live post updates and a load more button which is pretty nice.
 -->
-
 <script>
 	import {
 		authHeader,
-		user, ulist,
+		user,
+		ulist,
 		spinner,
 		lastTyped,
-		mainPage as page
+		mainPage as page,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
@@ -24,10 +24,11 @@
 	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
-	import {flip} from 'svelte/animate';
-    import { tick } from "svelte";
-    //import AddMember from "src/lib/modals/AddMember.svelte";
-	//Zed just told me the cl4 port will move the mod panel to a seperate site
+	import {flip} from "svelte/animate";
+	import {tick} from "svelte";
+	// comments probably from blocs:
+	// import AddMember from "src/lib/modals/AddMember.svelte";
+	// Zed just told me the cl4 port will move the mod panel to a seperate site
 
 	let id = 0;
 	export let posts = [];
@@ -43,9 +44,7 @@
 
 	let postInput;
 
-	let vbotlist_split;
-	let uvbotlist_split;
-	let userbotlist_split;
+	let bots;
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
@@ -55,6 +54,31 @@
 	 */
 	async function loadPage(page) {
 		pageLoading = true;
+
+		// Load bot lists
+		if (!bots) {
+			bots = new Map();
+
+			const setBotStatuses = (text, status) => {
+				text.split(/\r?\n/).forEach((user) => bots.set(user, status));
+			};
+
+			const uvbotlist = await fetch(
+				"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverifed-bots.txt"
+			);
+			setBotStatuses(await uvbotlist.text(), "unverified");
+
+			const vbotlist = await fetch(
+				"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
+			);
+			setBotStatuses(await vbotlist.text(), "verified");
+
+			const ubotlist = await fetch(
+				"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
+			);
+			setBotStatuses(await ubotlist.text(), "owner");
+		}
+
 		if (page === undefined) {
 			posts = [];
 		} else {
@@ -65,30 +89,14 @@
 			try {
 				let path = `home?autoget&page=`;
 				if (encodeApiURLParams) path = encodeURIComponent(path);
-				const resp = await fetch(
-					`${apiUrl}${path}${realPage}`,
-					{headers: $authHeader}
-				);
-				if (!vbotlist_split) {
-					const vbotlist = await fetch(
-						"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
-					);
-					vbotlist_split = (await vbotlist.text()).split(/\r?\n/);
-				}
-				if (!uvbotlist_split) {
-				const uvbotlist = await fetch(
-					"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverifed-bots.txt"
-				);
-				uvbotlist_split = (await uvbotlist.text()).split(/\r?\n/);
-				}
-				if (!userbotlist_split) {
-					const ubotlist = await fetch(
-						"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
-					);
-					userbotlist_split = (await ubotlist.text()).split(/\r?\n/);
-				}
+				const resp = await fetch(`${apiUrl}${path}${realPage}`, {
+					headers: $authHeader,
+				});
+
 				if (!resp.ok) {
-					throw new Error("Response code is not OK; code is " + resp.status);
+					throw new Error(
+						"Response code is not OK; code is " + resp.status
+					);
 				}
 				const json = await resp.json();
 
@@ -100,27 +108,28 @@
 				let overflowResp, overflowJson;
 				if (realOffset > 0 && pagesLoaded < numPages) {
 					overflowResp = await fetch(
-						`${apiUrl}${path}${realPage+1}`,
+						`${apiUrl}${path}${realPage + 1}`,
 						{headers: $authHeader}
 					);
 					if (!resp.ok) {
-						throw new Error("Overflow response code is not OK; code is " + resp.status);
+						throw new Error(
+							"Overflow response code is not OK; code is " +
+								resp.status
+						);
 					}
 					overflowJson = await overflowResp.json();
 
 					realPosts = realPosts.concat(
-						overflowJson.autoget.slice(
-							0, realOffset
-						)
+						overflowJson.autoget.slice(0, realOffset)
 					);
 				}
 
 				for (const post of realPosts) {
 					posts.push({
 						id: id++,
-						isvbot: vbotlist_split.includes(post.u),
-						ownsbot: userbotlist_split.includes(post.u),
-						isuvbot: uvbotlist_split.includes(post.u),
+						isuvbot: bots.get(post.u) === "unverified",
+						isvbot: bots.get(post.u) === "verified",
+						ownsbot: bots.get(post.u) === "owner",
 						post_id: post.post_id,
 						user: post.u,
 						content: post.p,
@@ -128,7 +137,7 @@
 					});
 				}
 				pagesLoaded = page;
-			} catch(e) {
+			} catch (e) {
 				pageLoading = false;
 				throw e;
 			}
@@ -146,20 +155,20 @@
 	function addPost(post) {
 		posts.unshift({
 			id: id++,
-			...post
+			...post,
 		});
 		posts = posts;
 	}
 
-	function post(url = '', data = {}) {
+	function post(url = "", data = {}) {
 		// Default options are marked with *
 		fetch(url, {
-			method: 'POST',
+			method: "POST",
 			//mode: 'no-cors',
 			headers: {
-				'Content-Type': 'application/json'
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data)
+			body: JSON.stringify(data),
 		});
 	}
 
@@ -167,13 +176,13 @@
 	 * Adds events to listen for live post updates.
 	 */
 	function listenOnLink() {
-		link.on("direct", cmd => {
+		link.on("direct", (cmd) => {
 			if ($page === "home" && cmd.val.mode === 1) {
 				if (!(cmd.val.post_origin === "home")) return;
 				addPost({
-					isvbot: vbotlist_split.includes(cmd.val.u),
-					ownsbot: userbotlist_split.includes(cmd.val.u),
-					isuvbot: uvbotlist_split.includes(cmd.val.u),
+					isuvbot: bots.get(cmd.val.u) === "unverified",
+					isvbot: bots.get(cmd.val.u) === "verified",
+					ownsbot: bots.get(cmd.val.u) === "owner",
 					post_id: cmd.val._id,
 					user: cmd.val.u,
 					content: cmd.val.p,
@@ -186,7 +195,7 @@
 				}
 			}
 			if (cmd.val.mode === "delete") {
-				posts = posts.filter(post => post.post_id !== cmd.val.id);
+				posts = posts.filter((post) => post.post_id !== cmd.val.id);
 			}
 		});
 	}
@@ -197,12 +206,13 @@
 	}
 
 	let _ulist = $ulist;
-	ulist.subscribe(val => {
+	ulist.subscribe((val) => {
 		_ulist = val;
-	})
+	});
 </script>
 
 <div class="home">
+	<!-- cst: comments probably from blocs: -->
 	<!--
 		 How do i use webhooks
 
@@ -220,7 +230,8 @@
 		</div>
 	{:then}
 		<Container>
-			<!--<div class="settings-controls">
+			<!-- cst: comments probably from blocs: -->
+			<!-- <div class="settings-controls">
 				<button
 					class="circle settings"
 					on:click={()=>{
@@ -228,97 +239,101 @@
 						page.set("Mod_Panel")
 					}}
 				>
-			</div>-->
-			<!--Zed just told me the cl4 port will move the mod panel to a seperate site-->
+			</div> -->
+			<!-- Zed just told me the cl4 port will move the mod panel to a seperate site -->
 			<h1>Home</h1>
-			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(", ")}){/if}.
+			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(
+					", "
+				)}){/if}.
 		</Container>
-			<form
-				class="createpost"
-				autocomplete="off"
-				on:submit|preventDefault={e => {
-					postErrors = "";
-					if (!e.target[0].value.trim()) {
-						postErrors = "You cannot send an empty post!";
-						return false;
-					};
+		<form
+			class="createpost"
+			autocomplete="off"
+			on:submit|preventDefault={(e) => {
+				postErrors = "";
+				if (!e.target[0].value.trim()) {
+					postErrors = "You cannot send an empty post!";
+					return false;
+				}
 
-					spinner.set(true);
+				spinner.set(true);
 
-					e.target[1].disabled = true;
-					if ($user.name) {
+				e.target[1].disabled = true;
+				if ($user.name) {
+					link.send({
+						cmd: "direct",
+						val: {
+							cmd: "post_home",
+							val: e.target[0].value,
+						},
+						listener: "post_home",
+					});
+					const postListener = link.on("statuscode", (cmd) => {
+						if (cmd.listener !== "post_home") return;
+						link.off(postListener);
+						spinner.set(false);
+
+						e.target[1].disabled = false;
+
+						if (cmd.val === "I:100 | OK") {
+							e.target[0].value = "";
+							e.target[0].rows = "1";
+							e.target[0].style.height = "45px";
+						} else if (cmd.val === "E:106 | Too many requests") {
+							postErrors = "You're posting too fast!";
+						} else {
+							postErrors = "Unexpected " + cmd.val + " error!";
+						}
+					});
+					return false;
+				} else {
+					post("https://webhooks.meower.org/post/home", {
+						post: e.target[0].value,
+					});
+					e.target[1].disabled = false;
+					e.target[0].value = "";
+					e.target[0].rows = "1";
+					e.target[0].style.height = "45px";
+					spinner.set(false);
+				}
+			}}
+		>
+			<textarea
+				type="text"
+				class="white"
+				placeholder="Write something..."
+				id="postinput"
+				name="postinput"
+				autocomplete="false"
+				maxlength="360"
+				rows="1"
+				use:autoresize
+				on:input={() => {
+					if ($lastTyped + 1500 < +new Date()) {
+						lastTyped.set(+new Date());
 						link.send({
 							cmd: "direct",
 							val: {
-								cmd: "post_home",
-								val: e.target[0].value,
+								cmd: "set_chat_state",
+								val: {
+									chatid: "livechat",
+									state: 101,
+								},
 							},
-							listener: "post_home",
+							listener: "typing_indicator",
 						});
-						const postListener = link.on("statuscode", cmd => {
-							if (cmd.listener !== "post_home") return;
-							link.off(postListener);
-							spinner.set(false);
-
-							e.target[1].disabled = false;
-
-							if (cmd.val === "I:100 | OK") {
-								e.target[0].value = "";
-								e.target[0].rows = "1";
-								e.target[0].style.height = "45px";
-							} else if (cmd.val === "E:106 | Too many requests") {
-								postErrors = "You're posting too fast!";
-							} else {
-								postErrors = "Unexpected " + cmd.val + " error!";
-							}
-						});
-						return false;
-					} else {
-						post("https://webhooks.meower.org/post/home",{post: e.target[0].value})
-						e.target[1].disabled = false;
-						e.target[0].value = "";
-						e.target[0].rows = "1";
-						e.target[0].style.height = "45px";
-						spinner.set(false);
 					}
 				}}
-			>
-				<textarea
-					type="text"
-					class="white"
-					placeholder="Write something..."
-					id="postinput"
-					name="postinput"
-					autocomplete="false"
-					maxlength="360"
-					rows="1"
-					use:autoresize
-					on:input={() => {
-						if ($lastTyped + 1500 < +new Date()) {
-							lastTyped.set(+new Date());
-							link.send({
-								cmd: "direct",
-								val: {
-									cmd: "set_chat_state",
-									val: {
-										chatid: "livechat",
-										state: 101
-									},
-								},
-								listener: "typing_indicator",
-							});
-						}
-					}}
-					on:keydown={(event) => {
-						if (event.key == "Enter" && !shiftHeld) {
-							event.preventDefault();
-							document.getElementById("submitpost").click();
-						}
-					}}
-					bind:this={postInput}
-				></textarea>
-				<button id="submitpost">Post</button>
-			</form>
+				on:keydown={(event) => {
+					if (event.key == "Enter" && !shiftHeld) {
+						event.preventDefault();
+						document.getElementById("submitpost").click();
+					}
+				}}
+				bind:this={postInput}
+			/>
+			<button id="submitpost">Post</button>
+		</form>
 		<div class="post-errors">{postErrors}</div>
 		<TypingIndicator />
 		{#if posts.length < 1}
@@ -330,25 +345,23 @@
 		{:else}
 			{#each posts as post (post.id)}
 				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
+					transition:fly|local={{y: -50, duration: 250}}
+					animate:flip={{duration: 250}}
 				>
-					<Post post={post} input={postInput} />
+					<Post {post} input={postInput} />
 				</div>
 			{/each}
 		{/if}
 		<div class="center">
 			{#if pageLoading}
 				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
-					>
-						Load More
-					</button>
-				{/if}
+			{:else if numPages && numPages > pagesLoaded}
+				<button
+					class="load-more"
+					on:click={() => loadPage(pagesLoaded + 1)}
+				>
+					Load More
+				</button>
 			{/if}
 		</div>
 	{:catch error}
