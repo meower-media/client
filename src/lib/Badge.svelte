@@ -9,7 +9,7 @@
 	alt="({text})"
 	class:hastitle={title}
 	{title}
-	class:checkmark={checkmark}
+	class:checkmark
 >
 	{text}
 </span>
@@ -42,5 +42,4 @@
 		/* weird height trickery to align the checkmark */
 		height: 1.5em;
 	}
-
 </style>

@@ -1,5 +1,4 @@
 <!-- Where all the actual chatting action is. -->
-
 <script>
 	import Home from "./Home.svelte";
 	import Inbox from "./Inbox.svelte";
@@ -8,11 +7,11 @@
 	import Profile from "./Profile.svelte";
 	import Recent from "./Recent.svelte";
 	import Settings from "./Settings.svelte";
-	import Groupcat from "./Groupcat.svelte";	
-	import Search from "./Search.svelte";	
-	import ModPanel from "../modpanel/ModPanel.svelte";	
-	import ModerateUser from "../modpanel/ModerateUser.svelte";	
-	import Changelog from "./Changelog.svelte";	
+	import Groupcat from "./Groupcat.svelte";
+	import Search from "./Search.svelte";
+	import ModPanel from "../modpanel/ModPanel.svelte";
+	import ModerateUser from "../modpanel/ModerateUser.svelte";
+	import Changelog from "./Changelog.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -22,13 +21,11 @@
 </script>
 
 <div class="main-screen">
-	<div class="transition">
-
-	</div>	
+	<div class="transition" />
 	<div class="sidebar">
 		<Sidebar />
 	</div>
-	<div class="view"> 
+	<div class="view">
 		{#if $page === "home"}
 			<Home />
 		{:else if $page === "inbox"}
@@ -54,7 +51,7 @@
 		{:else if $page === "groupchat"}
 			<Groupchat />
 		{:else if $page === "blank"}
-			<div></div>
+			<div />
 		{:else}
 			Somehow, you got to a page that doesn't exist...
 			<br />
@@ -88,22 +85,30 @@
 
 	:global(main:not(layout-old)) .transition {
 		animation-name: transition;
-  		animation-duration: 0.7s;
+		animation-duration: 0.7s;
 	}
 
 	:global(main.layout-old) .transition {
 		animation-name: transitionOld;
-  		animation-duration: 0.6s;
+		animation-duration: 0.6s;
 	}
 
 	@keyframes transition {
-		from {width: 100%;}
-		to {width: 3.5em;}
+		from {
+			width: 100%;
+		}
+		to {
+			width: 3.5em;
+		}
 	}
-	
+
 	@keyframes transitionOld {
-		from {height: 100%;}
-		to {height: 3.5em;}
+		from {
+			height: 100%;
+		}
+		to {
+			height: 3.5em;
+		}
 	}
 
 	.sidebar {
@@ -127,7 +132,7 @@
 		overflow: auto;
 
 		--view-height: calc(100vh - 0.66em);
-		
+
 		background-color: var(--background);
 	}
 

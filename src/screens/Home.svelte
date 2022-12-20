@@ -25,7 +25,7 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
-	import {tick} from "svelte";
+
 	// comments probably from blocs:
 	// import AddMember from "src/lib/modals/AddMember.svelte";
 	// Zed just told me the cl4 port will move the mod panel to a seperate site
@@ -60,7 +60,7 @@
 			bots = new Map();
 
 			const setBotStatuses = (text, status) => {
-				text.split(/\r?\n/).forEach((user) => bots.set(user, status));
+				text.split(/\r?\n/).forEach(user => bots.set(user, status));
 			};
 
 			const uvbotlist = await fetch(
@@ -176,7 +176,7 @@
 	 * Adds events to listen for live post updates.
 	 */
 	function listenOnLink() {
-		link.on("direct", (cmd) => {
+		link.on("direct", cmd => {
 			if ($page === "home" && cmd.val.mode === 1) {
 				if (!(cmd.val.post_origin === "home")) return;
 				addPost({
@@ -195,7 +195,7 @@
 				}
 			}
 			if (cmd.val.mode === "delete") {
-				posts = posts.filter((post) => post.post_id !== cmd.val.id);
+				posts = posts.filter(post => post.post_id !== cmd.val.id);
 			}
 		});
 	}
@@ -206,7 +206,7 @@
 	}
 
 	let _ulist = $ulist;
-	ulist.subscribe((val) => {
+	ulist.subscribe(val => {
 		_ulist = val;
 	});
 </script>
@@ -249,7 +249,7 @@
 		<form
 			class="createpost"
 			autocomplete="off"
-			on:submit|preventDefault={(e) => {
+			on:submit|preventDefault={e => {
 				postErrors = "";
 				if (!e.target[0].value.trim()) {
 					postErrors = "You cannot send an empty post!";
@@ -268,7 +268,7 @@
 						},
 						listener: "post_home",
 					});
-					const postListener = link.on("statuscode", (cmd) => {
+					const postListener = link.on("statuscode", cmd => {
 						if (cmd.listener !== "post_home") return;
 						link.off(postListener);
 						spinner.set(false);
@@ -324,7 +324,7 @@
 						});
 					}
 				}}
-				on:keydown={(event) => {
+				on:keydown={event => {
 					if (event.key == "Enter" && !shiftHeld) {
 						event.preventDefault();
 						document.getElementById("submitpost").click();

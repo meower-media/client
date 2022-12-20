@@ -1,6 +1,4 @@
-<!-- Wait, isn't it a topbar on old layout? -->
 <!-- RIP -->
-
 <script>
 	import {
 		mainPage as page,
@@ -15,7 +13,7 @@
 	import * as clm from "../lib/clmanager.js";
 
 	import {tick} from "svelte";
-	import {fade} from 'svelte/transition';
+	import {fade} from "svelte/transition";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
@@ -28,16 +26,22 @@
 	import changelog from "../assets/changelog.svg";
 
 	/**
-	* @param {any} newPage Goes to a page while also refreshing it.
-	*/
-	function goto(newPage, resetScroll=true) {
-		if (!$user.name && newPage !== "home" && newPage !== "settings" && newPage !== "changelog" && newPage !== "search") {
+	 * @param {any} newPage Goes to a page while also refreshing it.
+	 */
+	function goto(newPage, resetScroll = true) {
+		if (
+			!$user.name &&
+			newPage !== "home" &&
+			newPage !== "settings" &&
+			newPage !== "changelog" &&
+			newPage !== "search"
+		) {
 			modalPage.set("signup");
 			modalShown.set(true);
 			return;
 		}
 		if (resetScroll) {
-			window.scrollTo(0,0);
+			window.scrollTo(0, 0);
 		}
 		if ($page === "groupchat") {
 			clm.meowerRequest({
@@ -46,9 +50,9 @@
 					cmd: "set_chat_state",
 					val: {
 						state: 0,
-						chatid: $chatid
+						chatid: $chatid,
 					},
-				}
+				},
 			});
 		}
 		chatid.set("");
@@ -57,9 +61,12 @@
 	}
 </script>
 
+<!-- Wait, isn't it a topbar on old layout? -->
+
+
 <div class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
-		<button class="logo-inner" on:click={()=>goto("home")}>
+		<button class="logo-inner" on:click={() => goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -69,38 +76,29 @@
 			/>
 		</button>
 	</div>
-	<button on:click={()=>goto("home")} class="home-btn round">
-		<img
-			src={home}
-			alt="Home"
-			draggable={false}
-		/>
+	<button on:click={() => goto("home")} class="home-btn round">
+		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
-		on:click={()=>goto("inbox")}
+		on:click={() => goto("inbox")}
 		class="round"
 		class:new-msgs={$user.unread_inbox}
 	>
-		<img
-			src={mail}
-			alt="Inbox Messages"
-			draggable={false}
-		/>
+		<img src={mail} alt="Inbox Messages" draggable={false} />
 	</button>
-	<button on:click={()=>{
-		if (shiftHeld) {
-			goto("groupcat");
-		} else {
-			goto("chatlist");
-		}
-	}} class="gc-btn round">
-		<img
-			src={gc}
-			alt="Group Chats"
-			draggable={false}
-		/>
+	<button
+		on:click={() => {
+			if (shiftHeld) {
+				goto("groupcat");
+			} else {
+				goto("chatlist");
+			}
+		}}
+		class="gc-btn round"
+	>
+		<img src={gc} alt="Group Chats" draggable={false} />
 	</button>
-	<button on:click={()=>goto("search")} class="search-btn round">
+	<button on:click={() => goto("search")} class="search-btn round">
 		<img
 			src={search}
 			alt="search"
@@ -109,7 +107,7 @@
 			draggable={false}
 		/>
 	</button>
-	<button on:click={()=>goto("changelog")} class="changelog-btn round">
+	<button on:click={() => goto("changelog")} class="changelog-btn round">
 		<img
 			src={changelog}
 			alt="changelog"
@@ -118,32 +116,26 @@
 			draggable={false}
 		/>
 	</button>
-	<button on:click={() => {
-		$profileClicked = $user.name;
-		goto("profile");
-	}} class="profile-btn round">
-		<img
-			src={profile}
-			alt="Profile"
-			draggable={false}
-		/>
+	<button
+		on:click={() => {
+			$profileClicked = $user.name;
+			goto("profile");
+		}}
+		class="profile-btn round"
+	>
+		<img src={profile} alt="Profile" draggable={false} />
 	</button>
-	<button on:click={()=>goto("settings")} class="settings-btn round">
-		<img
-			src={settings}
-			alt="Settings"
-			draggable={false}
-		/>
+	<button on:click={() => goto("settings")} class="settings-btn round">
+		<img src={settings} alt="Settings" draggable={false} />
 	</button>
-	<button on:click={() => {
-		modalPage.set("logout");
-		modalShown.set(true);
-	}} class="logout-btn round">
-		<img
-			src={logout}
-			alt="Log out"
-			draggable={false}
-		/>
+	<button
+		on:click={() => {
+			modalPage.set("logout");
+			modalShown.set(true);
+		}}
+		class="logout-btn round"
+	>
+		<img src={logout} alt="Log out" draggable={false} />
 	</button>
 </div>
 
@@ -226,7 +218,6 @@
 	:global(main.input-touch) .logo-inner:active {
 		background-color: var(--orange-dark);
 	}
-
 
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;

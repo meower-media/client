@@ -8,10 +8,22 @@
 <Container>
 	<h2>1.5</h2>
 	<ul>
-		<li>Beta 4-style sidebar transition (except a bit less cooler due to the logo not moving)</li>
+		<li>
+			Beta 4-style sidebar transition (except a bit less cooler due to the
+			logo not moving)
+		</li>
 		<li>Bot badges!</li>
 		<li>Work-in-progress search page</li>
-		<li>New profile pictures from the <a href="https://bettermeower.app">BetterMeower</a> project</li>
+		<li>
+			Images now show up in posts (like [title: https://url]). There is an
+			image host whitelist of a few sites (Meower, Tenor, Scratch,
+			cubeupload and imgBB)
+		</li>
+		<li>
+			New profile pictures from the <a href="https://bettermeower.app"
+				>BetterMeower</a
+			> project
+		</li>
 		<li>Badges now also look nicer and are next to the username now</li>
 		<li>Adjusted date styling (no longer underlined, help cursor)</li>
 		<li>Fixes to buttons on touchscreens</li>
@@ -43,7 +55,7 @@
 
 		<h3>Preview 2.5</h3>
 		<ul>
-			<li>http.meower.org is an allowed image hosting site</li>
+			<li>Added http.meower.org as an allowed image hosting site</li>
 			<li>
 				Fixed an issue where images will break if they aren't on an
 				allowed image hosting site
@@ -86,13 +98,19 @@
 <Container>
 	<h2>1.4.2</h2>
 	<ul>
-		<li>Allow the sidebar to show on mobile (you can restore the old behavior by switching to old layout)</li>
+		<li>
+			Allow the sidebar to show on mobile (you can restore the old
+			behavior by switching to old layout)
+		</li>
 	</ul>
 	(these changes were made before, but are considered part of 1.4.2:)
 	<ul>
 		<li>Fix an issue that caused posts to sometimes not show up in home</li>
 		<li>Add credentials when fetching home (to view pages past 1)</li>
-		<li>Rename page title from "Meower Svelte" to "Meower" to reflect it becoming the official main client</li>
+		<li>
+			Rename page title from "Meower Svelte" to "Meower" to reflect it
+			becoming the official main client
+		</li>
 	</ul>
 </Container>
 <Container>

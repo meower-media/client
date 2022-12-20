@@ -1,5 +1,4 @@
 <!-- A post. Profile pictures not appearing while not logged in is intentional. -->
-
 <script>
 	import Container from "../lib/Container.svelte";
 	import PFP from "../lib/PFP.svelte";
@@ -7,11 +6,14 @@
 	import Badge from "./Badge.svelte";
 
 	import {
-		 profileClicked,
-		postClicked, user,
-		chatid, ulist,
+		profileClicked,
+		postClicked,
+		user,
+		chatid,
+		ulist,
 		mainPage as page,
-		modalShown, modalPage
+		modalShown,
+		modalPage,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
@@ -27,14 +29,44 @@
 	let bridged = false;
 	let webhook = false;
 
-	let img1;
+	let images = [];
+
+	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
+	// WARNING: Put a / at the end of each URL so it can't be bypassed
+	// (like https://http.meower.org@evilsite.bad)!
+	const IMAGE_HOST_WHITELIST = [
+		// Meower
+		"https://http.meower.org/",
+		"https://assets.meower.org/",
+		"https://api.meower.org/",
+		// not everyone can add urls to go.meower.org, should be fine
+		"https://go.meower.org/",
+
+		// cubeupload
+		"https://u.cubeupload.com/",
+		"https://cubeupload.com/",
+
+		// imgBB
+		"https://i.ibb.co/",
+
+		// Tenor
+		"https://media.tenor.com/",
+		"https://tenor.com/",
+		"https://c.tenor.com/",
+
+		// Scratch (assets file uploading exists)
+		"https://assets.scratch.mit.edu/",
+		"https://cdn2.scratch.mit.edu/",
+		"https://cdn.scratch.mit.edu/",
+		"https://uploads.scratch.mit.edu/",
+	];
 
 	// TODO: make bridged tag a setting
 
 	// TODO: more then 1 img + optimize getimgs function
 
 	/**
-	 * Initialize this post's user profile
+	 * Initialize this post's special behavior (user profile, images)).
 	 */
 	function initPostUser() {
 		if (!post.user) return;
@@ -46,39 +78,36 @@
 
 		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
-			post.content = post.content.slice(post.content.indexOf(": ")+1);
+			post.content = post.content.slice(post.content.indexOf(": ") + 1);
 		}
 
-		/* (post.content.includes("[") && post.content.includes("]")) {
-			var squareb_1 = post.content.indexOf("[")
-			var squareb_2 = post.content.indexOf("]")
+		// Match image syntax
+		// ([title: https://url])
+		const iterator = post.content.matchAll(
+			/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs
+		);
+		images = [];
+		while (true) {
+			const result = iterator.next();
+			if (result.done) break;
 
-			var img_content = post.content.slice(squareb_1+1,squareb_2)
-			var sep_img = img_content.split(": ")
-			var img_url = sep_img[1]
-			var urls = ["http.meower.org","assets.meower.org",,"api.meower.org","cubeupload.com","i.ibb.co","media.tenor.com","tenor.com","c.tenor.com"]
 			try {
-				if (urls.some(element => {
-					if (img_url.includes(element)) {
-						return true;
-					}
+				new URL(result.value[2]);
+			} catch (e) {
+				continue;
+			}
 
-					return false;
-				})) {
-					//post.content = post.content.replace(post.content.slice(squareb_1,squareb_2+1),'')
-					var img_name = sep_img[0]
+			images.push({
+				title: result.value[1],
+				url: result.value[2],
+			});
+			// Prevent flooding
+			if (images.length >= 3) break;
+		}
+		images = images;
 
-					img1.className = "image_1"
-					img1.alt = img_name
-					img1.title = img_name
-					img1.src = img_url
-				}
-			} catch {}
-
-		}*/
-
-		loadProfile(post.user);
-	};
+		if (!webhook) loadProfile(post.user);
+	}
 	onMount(initPostUser);
 </script>
 
@@ -96,22 +125,21 @@
 							const mention = "@" + post.user + " ";
 
 							if (mentionRegex.test(existingText)) {
-								input.value = existingText.trim().replace(
-									mentionRegex,
-									mention
-								);
+								input.value = existingText
+									.trim()
+									.replace(mentionRegex, mention);
 							} else {
 								input.value = mention + existingText.trim();
 							}
 
 							input.focus();
 						}}
-					></button>
+					/>
 				{/if}
 				{#if $user.lvl >= 1 || post.user === $user.name}
 					<button
 						class="circle close"
-						on:click={()=>{
+						on:click={() => {
 							if (shiftHeld) {
 								clm.meowerRequest({
 									cmd: "direct",
@@ -126,32 +154,40 @@
 							modalPage.set("deletePost");
 							modalShown.set(true);
 						}}
-					></button>
+					/>
 				{:else}
 					<button
 						class="circle report"
-						on:click={()=>{
+						on:click={() => {
 							postClicked.set(post);
 							modalPage.set("reportPost");
 							modalShown.set(true);
 						}}
-					></button>
+					/>
 				{/if}
 			{/if}
 		</div>
 		<button
 			class="pfp"
-			on:click={()=>{
-				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server" || webhook) return;
+			on:click={() => {
+				if (
+					post.user === "Notification" ||
+					post.user === "Announcement" ||
+					post.user === "Server" ||
+					webhook
+				)
+					return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
 			<PFP
-				icon={$profileCache[post.user] ? $profileCache[post.user].pfp_data : -3}
+				icon={$profileCache[post.user] && !webhook
+					? $profileCache[post.user].pfp_data
+					: -3}
 				alt="{post.user}'s profile picture"
 				online={$ulist.includes(post.user)}
-			></PFP>
+			/>
 		</button>
 		<div class="creatordate">
 			<div class="creator">
@@ -173,7 +209,7 @@
 					/>
 				{/if}
 
-				{#if post.isvbot}
+				{#if post.isvbot && !webhook}
 					<Badge
 						text="BOT"
 						title="This bot has been verified"
@@ -181,28 +217,29 @@
 					/>
 				{/if}
 
-				{#if post.isuvbot}
-					<Badge
-						text="BOT"
-						title="This bot has not been verified"
-					/>
+				{#if post.isuvbot && !webhook}
+					<Badge text="BOT" title="This bot has not been verified" />
 				{/if}
 
-				{#if post.ownsbot}
-					<Badge
-						text="BOT OWNER"
-					/>
-				{/if}
-				{#if webhook}
-					<i>[WEBHOOK]</i>
+				{#if post.ownsbot && !webhook}
+					<Badge text="BOT OWNER" />
 				{/if}
 			</div>
 
-			<FormattedDate date={post.date}></FormattedDate>
+			<FormattedDate date={post.date} />
 		</div>
 	</div>
-	<!--<img src="" alt="hi" title="image" class="post-image-hide image_1" bind:this={img1}>-->
 	<p class="post-content">{post.content}</p>
+	{#each images as { title, url }}
+		<a href={url} target="_blank">
+			<img
+				src={url}
+				alt={title}
+				title="{title} ({url})"
+				class="post-image"
+			/>
+		</a>
+	{/each}
 </Container>
 
 <style>
@@ -249,5 +286,10 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+	}
+
+	.post-image {
+		max-width: 12em;
+		max-height: 12em;
 	}
 </style>

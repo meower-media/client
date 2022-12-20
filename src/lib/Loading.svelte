@@ -3,7 +3,11 @@
 	*from Beta 4 and before, Beta 5 dropped this in favor of Meowy.
 -->
 
-<span class="loading"><span class="circle circle1"></span><span class="circle circle2"></span><span class="circle circle3"></span></span>
+<span class="loading"
+	><span class="circle circle1" /><span class="circle circle2" /><span
+		class="circle circle3"
+	/></span
+>
 
 <style>
 	.loading {
@@ -21,7 +25,8 @@
 		background: var(--orange-button);
 		margin-right: 1em;
 
-		animation: jump 0.5s infinite cubic-bezier(.45,.05,.55,.95) alternate;
+		animation: jump 0.5s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95)
+			alternate;
 	}
 
 	.circle1 {

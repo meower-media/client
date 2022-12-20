@@ -1,7 +1,5 @@
 <script></script>
 
-<div class="SearchResults">
-
-</div>
+<div class="SearchResults" />
 
 <style></style>

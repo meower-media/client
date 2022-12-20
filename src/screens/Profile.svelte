@@ -1,34 +1,34 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
-		modalPage, modalShown,
-		profileClicked, user,
-		mainPage as page
+		modalPage,
+		modalShown,
+		profileClicked,
+		user,
+		mainPage as page,
 	} from "../lib/stores.js";
 
 	import {profileCache} from "../lib/loadProfile.js";
 
-	import ProfileView from "../lib/ProfileView.svelte"
+	import ProfileView from "../lib/ProfileView.svelte";
 
-    import PFP from "../lib/PFP.svelte";
-    import Loading from "../lib/Loading.svelte";
-    import Container from "../lib/Container.svelte";
-    import * as clm from "../lib/clmanager.js";
+	import PFP from "../lib/PFP.svelte";
+	import Loading from "../lib/Loading.svelte";
+	import Container from "../lib/Container.svelte";
+	import * as clm from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
 	import {tick} from "svelte";
-	
+
 	const PFP_COUNT = 34;
 
-	const pfps = new Array(PFP_COUNT).fill().map((_,i) => i+1);
+	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
 		let path = `users/${$profileClicked}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = await fetch(
-			`${apiUrl}${path}`
-		);
+		const resp = await fetch(`${apiUrl}${path}`);
 		if (!resp.ok) {
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
@@ -48,7 +48,7 @@
 
 		clm.updateProfile();
 	}
-	
+
 	let pfpOverflow = false;
 	$: {
 		const pfp = $user.pfp_data;
@@ -57,12 +57,12 @@
 </script>
 
 <div class="OtherProfile">
-{#await loadProfile()}
-	<div class="fullcenter">
-		<Loading />
-	</div>
-{:then data}
-		<ProfileView username={$profileClicked}></ProfileView>
+	{#await loadProfile()}
+		<div class="fullcenter">
+			<Loading />
+		</div>
+	{:then data}
+		<ProfileView username={$profileClicked} />
 
 		{#if data.quote}
 			<Container>
@@ -79,15 +79,14 @@
 						<button
 							on:click={() => {
 								pfpSwitcher = false;
-								$user.pfp_data = pfp;
-								save();
 							}}
 							class="pfp selected"
-						><PFP
-							online={false}
-							icon={$user.pfp_data}
-							alt="Profile picture {$user.pfp_data}"
-						></PFP></button>
+							><PFP
+								online={false}
+								icon={$user.pfp_data}
+								alt="Profile picture {$user.pfp_data}"
+							/></button
+						>
 					{/if}
 					{#each pfps as pfp}
 						<button
@@ -98,25 +97,25 @@
 							}}
 							class="pfp"
 							class:selected={$user.pfp_data === pfp}
-						><PFP
-							online={false}
-							icon={pfp}
-							alt="Profile picture {pfp}"
-						></PFP></button>
+							><PFP
+								online={false}
+								icon={pfp}
+								alt="Profile picture {pfp}"
+							/></button
+						>
 					{/each}
 					{#if pfpOverflow && $user.pfp_data > 0}
 						<button
 							on:click={() => {
 								pfpSwitcher = false;
-								$user.pfp_data = pfp;
-								save();
 							}}
 							class="pfp selected"
-						><PFP
-							online={false}
-							icon={$user.pfp_data}
-							alt="Profile picture {$user.pfp_data}"
-						></PFP></button>
+							><PFP
+								online={false}
+								icon={$user.pfp_data}
+								alt="Profile picture {$user.pfp_data}"
+							/></button
+						>
 					{/if}
 				</div>
 			</Container>
@@ -124,50 +123,48 @@
 			<button
 				class="long"
 				title="Change Profile Picture"
-				on:click={() => pfpSwitcher = true}
-			>Change Profile Picture</button>
+				on:click={() => (pfpSwitcher = true)}
+				>Change Profile Picture</button
+			>
 			<button
 				class="long"
 				title={data.quote ? "Update Quote" : "Set Quote"}
 				on:click={() => {
 					modalPage.set("setQuote");
 					modalShown.set(true);
-				}}
-			>{data.quote ? "Update Quote" : "Set Quote"}</button>
+				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
+			>
 		{/if}
 
 		<button
 			class="long"
 			title="View Recent Posts"
-			on:click={()=>{
-				window.scrollTo(0,0);
+			on:click={() => {
+				window.scrollTo(0, 0);
 				page.set("blank");
 				tick().then(() => page.set("recent"));
-			}}
-		>View recent posts</button>
+			}}>View recent posts</button
+		>
 
-		<button
-			class="long"
-			disabled
-		>Add to Chat</button>
+		<button class="long" disabled>Add to Chat</button>
 
 		{#if $user.name && $profileClicked !== $user.name}
 			<button
 				class="long"
 				title="Report User"
-				on:click={()=>{
+				on:click={() => {
 					modalPage.set("reportUser");
 					modalShown.set(true);
-				}}
-			>Report User</button>
+				}}>Report User</button
+			>
 		{/if}
 	{:catch e}
-		<ProfileView username={$profileClicked}></ProfileView>
+		<ProfileView username={$profileClicked} />
 	{/await}
 </div>
 
 <style>
-    .fullcenter {
+	.fullcenter {
 		text-align: center;
 		display: flex;
 		justify-content: center;
@@ -181,11 +178,11 @@
 		left: 0;
 	}
 
-    .long {
-        width: 100%;
-        margin: 0;
+	.long {
+		width: 100%;
+		margin: 0;
 		margin-bottom: -2px;
-    }
+	}
 
 	.pfp {
 		padding: 0.2em;

@@ -30,7 +30,7 @@ link.on("direct", cmd => {
 });
 
 function startTyping(chat, user) {
-	let typingStart = new Date() * 1;
+	let typingStart = +new Date();
 	if (!typingSince[chat]) typingSince[chat] = {};
 	typingSince[chat][user] = typingStart;
 

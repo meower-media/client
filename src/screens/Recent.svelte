@@ -2,7 +2,6 @@
 	The recent posts page!
 	It features a user's recent posts.
 -->
-
 <script>
 	import {profileClicked} from "../lib/stores.js";
 	import Post from "../lib/Post.svelte";
@@ -12,7 +11,7 @@
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
 	import {fly} from "svelte/transition";
-	import {flip} from 'svelte/animate';
+	import {flip} from "svelte/animate";
 
 	let id = 0;
 	export let posts = [];
@@ -28,7 +27,7 @@
 
 	/**
 	 * Loads a page, with offset and overflow calculations.
-	 * 
+	 *
 	 * @param {number} [page] The page to load. If not present, simply clears the posts.
 	 * @returns {Promise<array>} The posts array.
 	 */
@@ -44,11 +43,11 @@
 			try {
 				let path = `users/${$profileClicked}/posts?autoget&page=`;
 				if (encodeApiURLParams) path = encodeURIComponent(path);
-				const resp = await fetch(
-					`${apiUrl}${path}${realPage}`
-				);
+				const resp = await fetch(`${apiUrl}${path}${realPage}`);
 				if (!resp.ok) {
-					throw new Error("Response code is not OK; code is " + resp.status);
+					throw new Error(
+						"Response code is not OK; code is " + resp.status
+					);
 				}
 				const json = await resp.json();
 
@@ -60,17 +59,18 @@
 				let overflowResp, overflowJson;
 				if (realOffset > 0 && pagesLoaded < numPages) {
 					overflowResp = await fetch(
-						`${apiUrl}${path}${realPage+1}`
+						`${apiUrl}${path}${realPage + 1}`
 					);
 					if (!resp.ok) {
-						throw new Error("Overflow response code is not OK; code is " + resp.status);
+						throw new Error(
+							"Overflow response code is not OK; code is " +
+								resp.status
+						);
 					}
 					overflowJson = await overflowResp.json();
 
 					realPosts = realPosts.concat(
-						overflowJson.autoget.slice(
-							0, realOffset
-						)
+						overflowJson.autoget.slice(0, realOffset)
 					);
 				}
 
@@ -84,7 +84,7 @@
 					});
 				}
 				pagesLoaded = page;
-			} catch(e) {
+			} catch (e) {
 				pageLoading = false;
 				throw e;
 			}
@@ -126,25 +126,23 @@
 		{:else}
 			{#each posts as post (post.id)}
 				<div
-					transition:fly|local="{{y: -50, duration: 250}}"
-					animate:flip="{{duration: 250}}"
+					transition:fly|local={{y: -50, duration: 250}}
+					animate:flip={{duration: 250}}
 				>
-					<Post post={post} />
+					<Post {post} />
 				</div>
 			{/each}
 		{/if}
 		<div class="center">
 			{#if pageLoading}
 				<Loading />
-			{:else}
-				{#if numPages && numPages > pagesLoaded}
-					<button 
-						class="load-more"
-						on:click={() => loadPage(pagesLoaded + 1)}
-					>
-						Load More
-					</button>
-				{/if}
+			{:else if numPages && numPages > pagesLoaded}
+				<button
+					class="load-more"
+					on:click={() => loadPage(pagesLoaded + 1)}
+				>
+					Load More
+				</button>
 			{/if}
 		</div>
 	{:catch error}

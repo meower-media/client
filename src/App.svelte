@@ -1,5 +1,4 @@
 <!-- Meower Svelte, the app itself. -->
-
 <script>
 	import Main from "./screens/Main.svelte";
 	import Setup from "./screens/Setup.svelte";
@@ -28,44 +27,48 @@
 	import {mobile, touch} from "./lib/responsiveness.js";
 
 	import {
-		screen, setupPage,
-		modalShown, modalPage,
-		disconnected, disconnectReason,
-		user, spinner
+		screen,
+		setupPage,
+		modalShown,
+		modalPage,
+		disconnected,
+		disconnectReason,
+		user,
+		spinner,
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
 
 <main
 	id="main"
-	class:theme-orange={$user.theme==="orange"}
-	class:theme-blue={$user.theme==="blue"}
+	class:theme-orange={$user.theme === "orange"}
+	class:theme-blue={$user.theme === "blue"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
-
 	class:layout-old={$user.layout === "old"}
 	class:layout-mobile={$mobile}
-
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
 >
 	{#if $disconnected}
 		<Modal>
-			<h2 slot="header">
-				Me-owch.
-			</h2>
+			<h2 slot="header">Me-owch.</h2>
 			<div slot="default">
 				<p>
 					{#if $disconnectReason === ""}
-						Something went wrong and the connection to Meower was lost.
+						Something went wrong and the connection to Meower was
+						lost.
 					{:else if $disconnectReason === "Failed to load userdata"}
-						An unexpected error occurred while trying to load your userdata! Check console for more information.
+						An unexpected error occurred while trying to load your
+						userdata! Check console for more information.
 					{:else if $disconnectReason === "E:119 | IP Blocked"}
 						The server has blocked your IP address ({link.ip}).
 					{:else if $disconnectReason == "E:110 | ID conflict"}
-						There has been a hiccup! Looks like you logged into Meower from another device.
+						There has been a hiccup! Looks like you logged into
+						Meower from another device.
 						<br /><br />
-						Please check any devices currently logged into Meower and try again.
+						Please check any devices currently logged into Meower and
+						try again.
 					{:else if $disconnectReason == "E:018 | Account Banned"}
 						You have been banned by a moderator.
 					{:else if $disconnectReason == "E:020 | Kicked"}
@@ -75,12 +78,14 @@
 						<pre><code>{$disconnectReason}</code></pre>
 					{/if}
 				</p>
-				<button on:click={async () => {
-					screen.set("setup");
-					disconnected.set(false);
-					await tick();
-					setupPage.set("reconnect");
-				}}>Reconnect</button>
+				<button
+					on:click={async () => {
+						screen.set("setup");
+						disconnected.set(false);
+						await tick();
+						setupPage.set("reconnect");
+					}}>Reconnect</button
+				>
 			</div>
 		</Modal>
 	{/if}
@@ -91,12 +96,12 @@
 			<LoginModal />
 		{:else if $modalPage === "signup"}
 			<SignupModal />
-		<!-- Bans -->
+			<!-- Bans -->
 		{:else if $modalPage === "banned"}
 			<BannedModal />
 		{:else if $modalPage === "ipBanned"}
 			<IPBannedModal />
-		<!-- Confirmations -->
+			<!-- Confirmations -->
 		{:else if $modalPage === "deletePost"}
 			<DeletePostModal />
 		{:else if $modalPage === "reportPost"}
@@ -107,7 +112,7 @@
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
-		<!-- Text inputs -->
+			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
@@ -116,7 +121,7 @@
 			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
-		<!-- Group chats -->
+			<!-- Group chats -->
 		{:else if $modalPage === "gcMember"}
 			<GCMemberModal />
 		{:else if $modalPage === "addMember"}

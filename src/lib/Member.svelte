@@ -2,7 +2,7 @@
 	import PFP from "../lib/PFP.svelte";
 
 	import {ulist} from "../lib/stores.js";
-	
+
 	import {onMount} from "svelte";
 	import loadProfile from "./loadProfile.js";
 	export let member = "";
@@ -19,11 +19,11 @@
 	async function initPostUser() {
 		try {
 			pfp = (await loadProfile(member)).pfp_data;
-		} catch(e) {
+		} catch (e) {
 			error = e;
-			pfp = -2
+			pfp = -2;
 		}
-	};
+	}
 	onMount(initPostUser);
 </script>
 
@@ -35,7 +35,7 @@
 				alt="{member}'s profile picture"
 				online={$ulist.includes(member)}
 				size={0.5}
-			></PFP>
+			/>
 		</div>
 		<p class="member-name">{member}</p>
 	</div>
@@ -49,7 +49,7 @@
 		flex-wrap: nowrap;
 		flex-direction: row;
 		align-items: center;
-		
+
 		width: 100%;
 		height: 2.5em;
 		gap: 0.5em;
@@ -57,14 +57,14 @@
 		box-sizing: border-box;
 	}
 
-    .member-name {
+	.member-name {
 		flex-grow: 1;
 		flex-shrink: 1;
 
-        text-align: left;
-        text-overflow: clip;
-        overflow: hidden;
-    }
+		text-align: left;
+		text-overflow: clip;
+		overflow: hidden;
+	}
 
 	.error {
 		padding: 0.25em;

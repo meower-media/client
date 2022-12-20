@@ -1,5 +1,4 @@
 <!-- To nobody's surprise, a profile picture! -->
-
 <script>
 	export let icon = -1;
 	export let alt = "Profile picture";
@@ -16,23 +15,24 @@
 
 <span class="pfp-container" style:--size={size}>
 	{#if online}
-		<span class="online"></span>
+		<span class="online" />
 	{/if}
 	<span class="pfp">
 		<img
 			{alt}
 			title={alt}
-			src={new URL(`./../assets/avatars/icon_${
-				id === -1 ? 21 : (id === -2 ? "err" : id - 1)
-			}.svg`, import.meta.url).href}
-
-			on:error|once={() => id = -2}
-
+			src={new URL(
+				`./../assets/avatars/icon_${
+					id === -1 ? 21 : id === -2 ? "err" : id - 1
+				}.svg`,
+				import.meta.url
+			).href}
+			on:error|once={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
 			height="100%"
-		>
+		/>
 	</span>
 </span>
 
@@ -65,8 +65,12 @@
 		filter: saturate(0) brightness(1.5);
 	}
 	@keyframes spin {
-		from {transform: rotate(0turn);}
-		to {transform: rotate(1turn);}
+		from {
+			transform: rotate(0turn);
+		}
+		to {
+			transform: rotate(1turn);
+		}
 	}
 
 	.online {
