@@ -246,94 +246,100 @@
 					", "
 				)}){/if}.
 		</Container>
-		<form
-			class="createpost"
-			autocomplete="off"
-			on:submit|preventDefault={e => {
-				postErrors = "";
-				if (!e.target[0].value.trim()) {
-					postErrors = "You cannot send an empty post!";
-					return false;
-				}
+		<!-- I think we discussed that guest posting will not be in the official client, due to moderation reasons -->
+		{#if $user.name}
+			<form
+				class="createpost"
+				autocomplete="off"
+				on:submit|preventDefault={e => {
+					postErrors = "";
+					if (!e.target[0].value.trim()) {
+						postErrors = "You cannot send an empty post!";
+						return false;
+					}
 
-				spinner.set(true);
+					spinner.set(true);
 
-				e.target[1].disabled = true;
-				if ($user.name) {
-					link.send({
-						cmd: "direct",
-						val: {
-							cmd: "post_home",
-							val: e.target[0].value,
-						},
-						listener: "post_home",
-					});
-					const postListener = link.on("statuscode", cmd => {
-						if (cmd.listener !== "post_home") return;
-						link.off(postListener);
-						spinner.set(false);
-
-						e.target[1].disabled = false;
-
-						if (cmd.val === "I:100 | OK") {
-							e.target[0].value = "";
-							e.target[0].rows = "1";
-							e.target[0].style.height = "45px";
-						} else if (cmd.val === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + cmd.val + " error!";
-						}
-					});
-					return false;
-				} else {
-					post("https://webhooks.meower.org/post/home", {
-						post: e.target[0].value,
-					});
-					e.target[1].disabled = false;
-					e.target[0].value = "";
-					e.target[0].rows = "1";
-					e.target[0].style.height = "45px";
-					spinner.set(false);
-				}
-			}}
-		>
-			<textarea
-				type="text"
-				class="white"
-				placeholder="Write something..."
-				id="postinput"
-				name="postinput"
-				autocomplete="false"
-				maxlength="360"
-				rows="1"
-				use:autoresize
-				on:input={() => {
-					if ($lastTyped + 1500 < +new Date()) {
-						lastTyped.set(+new Date());
+					e.target[1].disabled = true;
+					if ($user.name) {
 						link.send({
 							cmd: "direct",
 							val: {
-								cmd: "set_chat_state",
-								val: {
-									chatid: "livechat",
-									state: 101,
-								},
+								cmd: "post_home",
+								val: e.target[0].value,
 							},
-							listener: "typing_indicator",
+							listener: "post_home",
 						});
+						const postListener = link.on("statuscode", cmd => {
+							if (cmd.listener !== "post_home") return;
+							link.off(postListener);
+							spinner.set(false);
+
+							e.target[1].disabled = false;
+
+							if (cmd.val === "I:100 | OK") {
+								e.target[0].value = "";
+								e.target[0].rows = "1";
+								e.target[0].style.height = "45px";
+							} else if (
+								cmd.val === "E:106 | Too many requests"
+							) {
+								postErrors = "You're posting too fast!";
+							} else {
+								postErrors =
+									"Unexpected " + cmd.val + " error!";
+							}
+						});
+						return false;
+					} else {
+						post("https://webhooks.meower.org/post/home", {
+							post: e.target[0].value,
+						});
+						e.target[1].disabled = false;
+						e.target[0].value = "";
+						e.target[0].rows = "1";
+						e.target[0].style.height = "45px";
+						spinner.set(false);
 					}
 				}}
-				on:keydown={event => {
-					if (event.key == "Enter" && !shiftHeld) {
-						event.preventDefault();
-						document.getElementById("submitpost").click();
-					}
-				}}
-				bind:this={postInput}
-			/>
-			<button id="submitpost">Post</button>
-		</form>
+			>
+				<textarea
+					type="text"
+					class="white"
+					placeholder="Write something..."
+					id="postinput"
+					name="postinput"
+					autocomplete="false"
+					maxlength="360"
+					rows="1"
+					use:autoresize
+					on:input={() => {
+						if ($lastTyped + 1500 < +new Date()) {
+							lastTyped.set(+new Date());
+							link.send({
+								cmd: "direct",
+								val: {
+									cmd: "set_chat_state",
+									val: {
+										chatid: "livechat",
+										state: 101,
+									},
+								},
+								listener: "typing_indicator",
+							});
+						}
+					}}
+					on:keydown={event => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							document.getElementById("submitpost").click();
+						}
+					}}
+					bind:this={postInput}
+				/>
+				<button id="submitpost">Post</button>
+			</form>
+		{/if}
 		<div class="post-errors">{postErrors}</div>
 		<TypingIndicator />
 		{#if posts.length < 1}
