@@ -59,6 +59,9 @@
 		"https://cdn2.scratch.mit.edu/",
 		"https://cdn.scratch.mit.edu/",
 		"https://uploads.scratch.mit.edu/",
+
+		// Discord
+		"https://cdn.discordapp.com/",
 	];
 
 	// TODO: make bridged tag a setting
@@ -230,16 +233,18 @@
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>
-	{#each images as { title, url }}
-		<a href={url} target="_blank">
-			<img
-				src={url}
-				alt={title}
-				title="{title} ({url})"
-				class="post-image"
-			/>
-		</a>
-	{/each}
+	<div class="post-images">
+		{#each images as { title, url }}
+			<a href={url} target="_blank"
+				><img
+					src={url}
+					alt={title}
+					title="{title} ({url})"
+					class="post-image"
+				/></a
+			>
+		{/each}
+	</div>
 </Container>
 
 <style>
@@ -289,7 +294,13 @@
 	}
 
 	.post-image {
-		max-width: 12em;
 		max-height: 12em;
+		max-width: 100%;
+	}
+
+	.post-images {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25em;
 	}
 </style>

@@ -17,7 +17,7 @@
 		<li>
 			Images now show up in posts (like [title: https://url]). There is an
 			image host whitelist of a few sites (Meower, Tenor, Scratch,
-			cubeupload and imgBB)
+			cubeupload, Discord and imgBB)
 		</li>
 		<li>
 			New profile pictures from the <a href="https://bettermeower.app"
