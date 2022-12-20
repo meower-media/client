@@ -24,6 +24,7 @@
 	export let input = null;
 
 	let bridged = false;
+	let webhook = false;
 
 	// TODO: make bridged tag a setting
 
@@ -33,15 +34,20 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		if (post.user == "Discord" && post.content.includes(":")) {
-			bridged = true;
+		if (post.content.includes(":")) {
+			if (post.user == "Discord") {
+				bridged = true;	
+			}
+			if (post.user == "Webhooks") {
+				webhook = true;
+			}
 		}
-
-		if (post.user == "Discord" && post.content.includes(":")) {
+		
+		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
-
+		
 		loadProfile(post.user);
 	};
 	onMount(initPostUser);
@@ -107,7 +113,7 @@
 		<button
 			class="pfp" 
 			on:click={()=>{
-				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
+				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server" || webhook) return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
@@ -124,6 +130,9 @@
 			<FormattedDate date={post.date}></FormattedDate>
 			{#if bridged}
 				<i>[BRIDGED]</i>
+			{/if}
+			{#if webhook}
+				<i>[WEBHOOK]</i>
 			{/if}
 		</div>
 	</div>
