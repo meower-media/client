@@ -1,31 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="/src/assets/style.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/manifest/apple-touch-icon.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="/manifest/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="/manifest/favicon-16x16.png"
+		/>
+		<link rel="manifest" href="/manifest/manifest.webmanifest" />
+		<link
+			rel="mask-icon"
+			href="/manifest/safari-pinned-tab.svg"
+			color="#ff7432"
+		/>
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<meta name="apple-mobile-web-app-title" content="Meower" />
+		<meta name="application-name" content="Meower" />
+		<meta name="msapplication-TileColor" content="#ff7432" />
+		<meta
+			name="msapplication-TileImage"
+			content="/manifest/mstile-144x144.png"
+		/>
+		<meta name="theme-color" content="#ff7432" />
+		<title>Meower</title>
+	</head>
 
-<head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/src/assets/style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/manifest/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/manifest/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/manifest/favicon-16x16.png">
-    <link rel="manifest" href="/manifest/manifest.webmanifest">
-    <link rel="mask-icon" href="/manifest/safari-pinned-tab.svg" color="#ff7432">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Meower">
-    <meta name="application-name" content="Meower">
-    <meta name="msapplication-TileColor" content="#ff7432">
-    <meta name="msapplication-TileImage" content="/manifest/mstile-144x144.png">
-    <meta name="theme-color" content="#ff7432">
-    <title>Meower</title>
-</head>
-
-<body>
-    <noscript>
-        Enable JavaScript
-    </noscript>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-    <!--<script>
+	<body>
+		<noscript> Enable JavaScript </noscript>
+		<div id="app"></div>
+		<script type="module" src="/src/main.js"></script>
+		<!--<script>
         parse()
         function parse() {
             console.log(document.getElementsByClassName("post-content"))
@@ -35,6 +53,5 @@
             window.requestAnimationFrame(parse)
         }
     </script>-->
-</body>
-
+	</body>
 </html>

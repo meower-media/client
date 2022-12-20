@@ -32,7 +32,6 @@
 	right: 0.25em;
 }
 
-
 .image_1 {
 	margin-top: 0.5em;
 	width: 20em;
@@ -75,7 +74,7 @@ textarea {
 	font-size: inherit;
 }
 
-button+button {
+button + button {
 	margin-left: -0.15rem;
 }
 
@@ -163,7 +162,8 @@ h6 {
 	margin-bottom: 1ex;
 }
 
-ul, ol {
+ul,
+ol {
 	margin: 0;
 }
 

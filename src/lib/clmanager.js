@@ -3,14 +3,24 @@
  */
 
 import Cloudlink from "./cloudlink.js";
-import {ulist, user, spinner, disconnected, disconnectReason} from "./stores.js";
+import {
+	ulist,
+	user,
+	spinner,
+	disconnected,
+	disconnectReason,
+} from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
 
 let _user = null;
 user.subscribe(v => {
 	_user = v;
-	if (_user.name) localStorage.setItem("meower_savedconfig", JSON.stringify({theme: _user.theme, mode: _user.mode}));
+	if (_user.name)
+		localStorage.setItem(
+			"meower_savedconfig",
+			JSON.stringify({theme: _user.theme, mode: _user.mode})
+		);
 });
 
 // Load saved config from local storage
@@ -51,7 +61,7 @@ let ulistEvent = null;
  * A variable used to keep track of new inbox messages.
  * @type any
  */
- let inboxMessageEvent = null;
+let inboxMessageEvent = null;
 /**
  * A variable used to keep track of any disconnection requests.
  * @type any
@@ -100,11 +110,11 @@ export async function connect() {
 	link.once("connectionstart", () => {
 		connectEvent = link.on("connected", () => {
 			disconnected.set(false);
-            pingInterval = setInterval(() => {
-                link.send({ cmd: "ping", val: "" });
-            }, 10000);
+			pingInterval = setInterval(() => {
+				link.send({cmd: "ping", val: ""});
+			}, 10000);
 		});
-		disconnectEvent = link.on("disconnected", (e) => {
+		disconnectEvent = link.on("disconnected", e => {
 			ulist.set([]);
 			if (e.reason !== "Intentional disconnect") disconnected.set(true);
 			let tmp_unloaded = unloadedProfile();
@@ -131,7 +141,12 @@ export async function connect() {
 			}
 		});
 		disconnectRequest = link.on("direct", cmd => {
-			if (cmd.val == "E:018 | Account Banned" || cmd.val == "E:020 | Kicked" || cmd.val == "E:110 | ID conflict" || cmd.val == "E:119 | IP Blocked") {
+			if (
+				cmd.val == "E:018 | Account Banned" ||
+				cmd.val == "E:020 | Kicked" ||
+				cmd.val == "E:110 | ID conflict" ||
+				cmd.val == "E:119 | IP Blocked"
+			) {
 				link.disconnect();
 				disconnectReason.set(cmd.val);
 				disconnected.set(true);
@@ -143,7 +158,7 @@ export async function connect() {
 	disconnected.set(false);
 	try {
 		return await link.connect(linkUrl);
-	} catch(e) {
+	} catch (e) {
 		link.disconnect();
 		disconnectReason.set(e);
 		disconnected.set(true);
@@ -157,11 +172,17 @@ export async function connect() {
  */
 export async function disconnect() {
 	if (!link.ws) {
-		link.log("manager", "websocket not present, cancelling safe disconnect");
+		link.log(
+			"manager",
+			"websocket not present, cancelling safe disconnect"
+		);
 		return new Promise(r => r());
 	}
 	if (link.ws.readyState !== 1) {
-		link.log("manager", "already disconnected or disconnecting, cancelling safe disconnect");
+		link.log(
+			"manager",
+			"already disconnected or disconnecting, cancelling safe disconnect"
+		);
 		return new Promise(r => r());
 	}
 	link.log("manager", "safely disconnecting");
@@ -196,25 +217,28 @@ export async function meowerRequest(data) {
 			reject("Timed out");
 			spinner.set(false);
 		}, 10000);
-		const ev = link.sendListener({
-			...data,
-			listener: "listener_" + Math.floor(Math.random()*10000000),
-		}, cmd => {
-			if (cmd.cmd === "statuscode") {
-				link.off(ev);
-				spinner.set(false);
+		const ev = link.sendListener(
+			{
+				...data,
+				listener: "listener_" + Math.floor(Math.random() * 10000000),
+			},
+			cmd => {
+				if (cmd.cmd === "statuscode") {
+					link.off(ev);
+					spinner.set(false);
 
-				clearTimeout(timer);
+					clearTimeout(timer);
 
-				if (cmd.val === "I:100 | OK") {
-					resolve(returnData);
-				} else {
-					reject(cmd.val);
+					if (cmd.val === "I:100 | OK") {
+						resolve(returnData);
+					} else {
+						reject(cmd.val);
+					}
+				} else if (cmd.cmd === "direct") {
+					returnData = cmd.val;
 				}
-			} else if (cmd.cmd === "direct") {
-				returnData = cmd.val;
 			}
-		});
+		);
 	});
 }
 

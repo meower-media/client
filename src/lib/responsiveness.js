@@ -1,4 +1,4 @@
-import {writable} from "svelte/store";;
+import {writable} from "svelte/store";
 
 export const width = writable(0);
 export const height = writable(0);
@@ -9,7 +9,8 @@ export function updateSize() {
 	height.set(window.innerHeight);
 	mobile.set(
 		window.innerWidth < window.innerHeight ||
-		(window.innerWidth < 500 || window.innerHeight < 400)
+			window.innerWidth < 500 ||
+			window.innerHeight < 400
 	);
 }
 
