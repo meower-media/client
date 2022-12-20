@@ -80,6 +80,12 @@
 <Container>
 	<h2>1.4.2</h2>
 	<ul>
+		<li>Support webhook posts from @Webhooks bot</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.4.2</h2>
+	<ul>
 		<li>Allow the sidebar to show on mobile (you can restore the old behavior by switching to old layout)</li>
 	</ul>
 	(these changes were made before, but are considered part of 1.4.2:)

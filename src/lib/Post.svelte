@@ -25,6 +25,7 @@
 	export let input = null;
 
 	let bridged = false;
+	let webhook = false;
 
 	let img1;
 
@@ -38,11 +39,12 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		if (post.user == "Discord" && post.content.includes(":")) {
-			bridged = true;
+		if (post.content.includes(":")) {
+			bridged = post.user === "Discord";
+			webhook = post.user == "Webhooks";
 		}
 
-		if (post.user == "Discord" && post.content.includes(":")) {
+		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ")+1);
 		}
@@ -140,7 +142,7 @@
 		<button
 			class="pfp"
 			on:click={()=>{
-				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server") return;
+				if (post.user === "Notification" || post.user === "Announcement" || post.user === "Server" || webhook) return;
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
@@ -164,6 +166,13 @@
 					/>
 				{/if}
 
+				{#if webhook}
+					<Badge
+						text="WEBHOOK"
+						title="This post was posted by the @Webhooks bot. The username may not mean the user actually posted it!"
+					/>
+				{/if}
+
 				{#if post.isvbot}
 					<Badge
 						text="BOT"
@@ -183,6 +192,9 @@
 					<Badge
 						text="BOT OWNER"
 					/>
+				{/if}
+				{#if webhook}
+					<i>[WEBHOOK]</i>
 				{/if}
 			</div>
 
