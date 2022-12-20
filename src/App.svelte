@@ -43,7 +43,7 @@
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
 
-	class:layout-old={$mobile || $user.layout === "old"}
+	class:layout-old={$user.layout === "old"}
 	class:layout-mobile={$mobile}
 
 	class:input-touch={$touch}

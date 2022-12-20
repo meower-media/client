@@ -217,7 +217,7 @@
 				<p class="small">(Several features will be unavailable while not logged in.)</p>
 				<div>
 					<p class="small">
-						Meower Svelte v1.5 Dev Build 3
+						Meower Svelte v1.5
 					</p>
 					<img
 						src={meowy}
