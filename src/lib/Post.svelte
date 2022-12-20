@@ -259,6 +259,7 @@
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+		max-width: 100%;
 	}
 
 	.creatordate {
@@ -266,13 +267,14 @@
 	}
 	.creator {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.5em;
-		max-width: 100%;
 	}
 	.creator h2 {
 		font-size: 200%;
 		margin: 0;
+		overflow-wrap: anywhere;
 	}
 	:global(main.input-hover) .pfp:hover:not(:active) :global(.pfp),
 	:global(main.input-touch) .pfp:active :global(.pfp),

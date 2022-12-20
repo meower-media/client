@@ -365,7 +365,7 @@
 					{/each}
 				</div>
 				<div class="top">
-					<h2 class="members-title">Members</h2>
+					<h2 class="members-title">Members <span class="small">({$chatMembers.length})</span></h2>
 					<div class="settings-controls">
 						<button
 							class="circle plus"
@@ -407,7 +407,7 @@
 	.member-button.member-button:focus-visible {
 		background-color: #7773;
 	}
-	.member-button.member-button:active {
+	:global(#main) .member-button.member-button:active {
 		background-color: #7776;
 	}
 
@@ -497,5 +497,9 @@
 	}
 	.members-title {
 		margin: 0.25em;
+	}
+
+	.small {
+		font-size: 75%;
 	}
 </style>
