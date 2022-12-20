@@ -22,7 +22,7 @@
 	<br />
 
 	<details>
-		<summary> Betas </summary>
+		<summary>Betas</summary>
 		<h3>Release</h3>
 		<ul>
 			<li>Banned status</li>
@@ -78,7 +78,19 @@
 	</details>
 </Container>
 <Container>
-	<h2>Hotfix</h2>
+	<h2>1.4.2</h2>
+	<ul>
+		<li>Allow the sidebar to show on mobile (you can restore the old behavior by switching to old layout)</li>
+	</ul>
+	(these changes were made before, but are considered part of 1.4.2:)
+	<ul>
+		<li>Fix an issue that caused posts to sometimes not show up in home</li>
+		<li>Add credentials when fetching home (to view pages past 1)</li>
+		<li>Rename page title from "Meower Svelte" to "Meower" to reflect it becoming the official main client</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.4.1</h2>
 	<ul>
 		<li>Fixed posts sometimes not showing up in home</li>
 	</ul>
