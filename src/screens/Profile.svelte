@@ -17,8 +17,10 @@
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
 	import {tick} from "svelte";
+	
+	const PFP_COUNT = 34;
 
-	const pfps = new Array(34).fill().map((_,i) => i+1);
+	const pfps = new Array(PFP_COUNT).fill().map((_,i) => i+1);
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
@@ -46,6 +48,12 @@
 
 		clm.updateProfile();
 	}
+	
+	let pfpOverflow = false;
+	$: {
+		const pfp = $user.pfp_data;
+		pfpOverflow = pfp < 0 || pfp >= PFP_COUNT;
+	}
 </script>
 
 <div class="OtherProfile">
@@ -67,6 +75,20 @@
 			<Container>
 				<h2>Profile Picture</h2>
 				<div id="pfp-list">
+					{#if pfpOverflow && $user.pfp_data < 0}
+						<button
+							on:click={() => {
+								pfpSwitcher = false;
+								$user.pfp_data = pfp;
+								save();
+							}}
+							class="pfp selected"
+						><PFP
+							online={false}
+							icon={$user.pfp_data}
+							alt="Profile picture {$user.pfp_data}"
+						></PFP></button>
+					{/if}
 					{#each pfps as pfp}
 						<button
 							on:click={() => {
@@ -82,6 +104,20 @@
 							alt="Profile picture {pfp}"
 						></PFP></button>
 					{/each}
+					{#if pfpOverflow && $user.pfp_data > 0}
+						<button
+							on:click={() => {
+								pfpSwitcher = false;
+								$user.pfp_data = pfp;
+								save();
+							}}
+							class="pfp selected"
+						><PFP
+							online={false}
+							icon={$user.pfp_data}
+							alt="Profile picture {$user.pfp_data}"
+						></PFP></button>
+					{/if}
 				</div>
 			</Container>
 		{:else if $profileClicked === $user.name}
