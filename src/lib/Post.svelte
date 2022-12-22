@@ -14,7 +14,7 @@
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import * as clm from "./clmanager.js";
-	import parseMarkdown, {doMentionsFor} from "./markdown.js";
+	import markdown from "./markdown.js";
 	
 	import {default as loadProfile, profileCache} from "./loadProfile.js";
 	
@@ -26,9 +26,6 @@
 
 	let bridged = false;
 	let webhook = false;
-	
-	let content;
-	$: if (content) doMentionsFor(content);
 
 	// TODO: make bridged tag a setting
 
@@ -140,7 +137,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content" bind:this={content}>{@html parseMarkdown(post.content)}</p>
+	<p class="post-content" use:markdown={post.content}></p>
 </Container>
 
 <style>

@@ -1,4 +1,19 @@
-/** @file Provides a function for parsing Markdown. */
+/**
+	@file Provides functions for parsing Markdown.
+	
+	Svelte action:
+	
+		<script>
+			import markdown from "./markdown.js";
+		</script>
+		<p use:markdown={"Markdown text"}></p>
+	
+	
+	Vanilla JavaScript:
+		
+		import markdown from  "./markdown.js";
+		markdown(document.body, "Markdown text");
+*/
 
 import {marked} from "marked";
 import DOMPurify from "dompurify";
@@ -44,7 +59,12 @@ dp.addHook("afterSanitizeAttributes", function(node) {
 	}
 });
 
-export default function(md) {
+export default function action(node, md) {
+	node.innerHTML = parseMarkdown(md);
+	doMentionsFor(node);
+}
+
+export function parseMarkdown(md) {
 	try {
 		return dp.sanitize(marked.parse(md), config);
 	} catch(e) {
