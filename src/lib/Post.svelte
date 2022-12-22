@@ -178,7 +178,7 @@
 	}
 	
 	.post-content {
-		white-space: pre;
+		white-space: pre-wrap;
 	}
 	.post-content :global(img) {
 		max-width: 40em;
