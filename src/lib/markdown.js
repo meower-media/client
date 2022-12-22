@@ -23,7 +23,7 @@ const dp = new DOMPurify();
 
 const config = {
 	// form elements don't have much use anyways
-	FORBID_TAGS: ["style", "head", "body", "svg", "form", "button", "input", "textarea", "progress", "select",],
+	FORBID_TAGS: ["style", "head", "body", "svg", "form", "button", "input", "textarea", "select",],
 	// also forbid `class` and `id` if you want to go ultra strict mode
 	FORBID_ATTR: ["style", 'action', 'background', "poster",],
 };
