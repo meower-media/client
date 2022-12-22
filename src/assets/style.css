@@ -219,6 +219,3 @@ blockquote {
 	margin: 0.5em 0;
 	padding: 0.5em 0 0.5em 0.5em;
 }
-blockquote > p {
-	margin: 0;
-}

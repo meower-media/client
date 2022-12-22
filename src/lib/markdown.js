@@ -66,7 +66,7 @@ export default function action(node, md) {
 
 export function parseMarkdown(md) {
 	try {
-		return dp.sanitize(marked.parse(md), config).trimEnd();
+		return dp.sanitize(marked.parse(md), config);
 	} catch(e) {
 		return `Error rendering post: <pre><code>${
 			md.replaceAll("<", "&lt;")
