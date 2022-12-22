@@ -177,6 +177,9 @@
 		margin-left: 0.125em;
 	}
 	
+	.post-content {
+		white-space: pre;
+	}
 	.post-content :global(img) {
 		max-width: 40em;
 		max-height: 15em;
