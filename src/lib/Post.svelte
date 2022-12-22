@@ -137,7 +137,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content" use:markdown={post.content}></p>
+	<div class="post-content" use:markdown={post.content}></div>
 </Container>
 
 <style>
