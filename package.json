@@ -16,6 +16,8 @@
     },
     "dependencies": {
         "@rollup/plugin-replace": "^4.0.0",
+        "dompurify": "^2.4.1",
+        "marked": "^4.2.4",
         "rollup-plugin-workbox": "^6.2.0",
         "svelte-textarea-autoresize": "^1.0.0"
     }

@@ -1,8 +1,8 @@
 <!-- A post. Profile pictures not appearing while not logged in is intentional. -->
 
 <script>
-	import Container from "../lib/Container.svelte";
-	import PFP from "../lib/PFP.svelte";
+	import Container from "./Container.svelte";
+	import PFP from "./PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 
 	import {
@@ -11,11 +11,12 @@
 		chatid, ulist,
 		mainPage as page,
 		modalShown, modalPage
-	} from "../lib/stores.js";
-	import {shiftHeld} from "../lib/keyDetect.js";
-	import * as clm from "../lib/clmanager.js";
+	} from "./stores.js";
+	import {shiftHeld} from "./keyDetect.js";
+	import * as clm from "./clmanager.js";
+	import parseMarkdown, {doMentionsFor} from "./markdown.js";
 	
-	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
+	import {default as loadProfile, profileCache} from "./loadProfile.js";
 	
 	import {onMount} from "svelte";
 
@@ -25,6 +26,9 @@
 
 	let bridged = false;
 	let webhook = false;
+	
+	let content;
+	$: if (content) doMentionsFor(content);
 
 	// TODO: make bridged tag a setting
 
@@ -136,7 +140,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{post.content}</p>
+	<p class="post-content" bind:this={content}>{@html parseMarkdown(post.content)}</p>
 </Container>
 
 <style>
@@ -164,9 +168,6 @@
 	}
 	.pfp:hover:not(:active) :global(.pfp), .pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
-	}
-	.post-content {
-		white-space: pre-wrap;
 	}
 	.settings-controls {
 		position: absolute;
