@@ -179,4 +179,9 @@
 		margin: 0;
 		margin-left: 0.125em;
 	}
+	
+	.post-content :global(img) {
+		max-width: 40em;
+		max-height: 15em;
+	}
 </style>
