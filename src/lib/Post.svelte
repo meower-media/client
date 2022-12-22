@@ -178,7 +178,7 @@
 	}
 	
 	.post-content :global(img) {
-		max-width: 40em;
-		max-height: 15em;
+		max-width: 10em;
+		max-height: 10em;
 	}
 </style>
