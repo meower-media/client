@@ -22,7 +22,9 @@ import {mainPage, profileClicked} from "./stores.js";
 const dp = new DOMPurify();
 
 const config = {
+	// also forbid `button`, `input` and `textarea` if you want to go ultra strict mode
 	FORBID_TAGS: ["style", "head", "body", "svg", "form",],
+	// also forbid `class` and `id` if you want to go ultra strict mode
 	FORBID_ATTR: ["style", 'action', 'background', "poster",],
 };
 
