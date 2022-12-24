@@ -59,6 +59,19 @@ dp.addHook("afterSanitizeAttributes", function(node) {
 			}`
 		);
 	}
+	
+	// Limit <font> siez
+	if (node.hasAttribute("size") && node.tagName === "FONT") {
+		const size = Number(node.getAttribute("size"));
+		if (isNaN(size)) {
+			node.removeAttribute("size");
+		} else {
+			node.setAttribute(
+				"size",
+				Math.min(Math.max(size, 1), 7)
+			);
+		}
+	}
 });
 
 export default function action(node, md) {
