@@ -245,7 +245,6 @@
 			>
 		{/each}
 	</div>
->>>>>>> master
 </Container>
 
 <style>
