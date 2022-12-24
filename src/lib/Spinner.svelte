@@ -1,6 +1,6 @@
 <!-- You spin me right round baby right round... -->
 
-<div class="spinner check"></div>
+<div class="spinner check" />
 
 <style>
 	.spinner {
@@ -11,16 +11,14 @@
 		border: solid 0.25em var(--orange);
 		border-right-color: transparent;
 
-		filter:
-			drop-shadow(-1px -1px 0 var(--foreground))
-			drop-shadow( 1px -1px 0 var(--foreground))
-			drop-shadow(-1px  1px 0 var(--foreground))
-			drop-shadow( 1px  1px 0 var(--foreground))
-			drop-shadow( 0px -1px 0 var(--foreground))
-			drop-shadow( 0px  1px 0 var(--foreground))
-			drop-shadow(-1px  0px 0 var(--foreground))
-			drop-shadow( 1px  0px 0 var(--foreground))
-		;
+		filter: drop-shadow(-1px -1px 0 var(--foreground))
+			drop-shadow(1px -1px 0 var(--foreground))
+			drop-shadow(-1px 1px 0 var(--foreground))
+			drop-shadow(1px 1px 0 var(--foreground))
+			drop-shadow(0px -1px 0 var(--foreground))
+			drop-shadow(0px 1px 0 var(--foreground))
+			drop-shadow(-1px 0px 0 var(--foreground))
+			drop-shadow(1px 0px 0 var(--foreground));
 
 		border-radius: 50%;
 

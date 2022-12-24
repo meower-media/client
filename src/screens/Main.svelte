@@ -1,5 +1,4 @@
 <!-- Where all the actual chatting action is. -->
-
 <script>
 	import Home from "./Home.svelte";
 	import Inbox from "./Inbox.svelte";
@@ -8,7 +7,11 @@
 	import Profile from "./Profile.svelte";
 	import Recent from "./Recent.svelte";
 	import Settings from "./Settings.svelte";
-	import Groupcat from "./Groupcat.svelte";	
+	import Groupcat from "./Groupcat.svelte";
+	import Search from "./Search.svelte";
+	import ModPanel from "../modpanel/ModPanel.svelte";
+	import ModerateUser from "../modpanel/ModerateUser.svelte";
+	import Changelog from "./Changelog.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -18,18 +21,25 @@
 </script>
 
 <div class="main-screen">
+	<div class="transition" />
 	<div class="sidebar">
 		<Sidebar />
 	</div>
-	<div class="view"> 
+	<div class="view">
 		{#if $page === "home"}
 			<Home />
 		{:else if $page === "inbox"}
 			<Inbox />
+		{:else if $page === "search"}
+			<Search />
 		{:else if $page === "chatlist"}
 			<Chatlist />
-		{:else if $page === "groupchat"}
-			<Groupchat />
+		{:else if $page === "Mod_Panel"}
+			<ModPanel />
+		{:else if $page === "Mod_User"}
+			<ModerateUser />
+		{:else if $page === "changelog"}
+			<Changelog />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}
@@ -41,7 +51,7 @@
 		{:else if $page === "groupchat"}
 			<Groupchat />
 		{:else if $page === "blank"}
-			<div></div>
+			<div />
 		{:else}
 			Somehow, you got to a page that doesn't exist...
 			<br />
@@ -63,6 +73,44 @@
 		overflow: hidden;
 	}
 
+	.transition {
+		background-color: var(--orange);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease;
+		z-index: 2;
+	}
+
+	:global(main:not(layout-old)) .transition {
+		animation-name: transition;
+		animation-duration: 0.7s;
+	}
+
+	:global(main.layout-old) .transition {
+		animation-name: transitionOld;
+		animation-duration: 0.6s;
+	}
+
+	@keyframes transition {
+		from {
+			width: 100%;
+		}
+		to {
+			width: 3.5em;
+		}
+	}
+
+	@keyframes transitionOld {
+		from {
+			height: 100%;
+		}
+		to {
+			height: 3.5em;
+		}
+	}
+
 	.sidebar {
 		width: 3.5em;
 		height: auto;
@@ -72,7 +120,9 @@
 
 		flex-shrink: 0;
 		flex-grow: 0;
+		z-index: 3;
 	}
+
 	.view {
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -82,7 +132,7 @@
 		overflow: auto;
 
 		--view-height: calc(100vh - 0.66em);
-		
+
 		background-color: var(--background);
 	}
 

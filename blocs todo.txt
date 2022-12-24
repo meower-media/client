@@ -1,54 +1,43 @@
-do:
-- bridged tag
+done (preview 1):
+- search page
+- Bettermeower pfp support
+- statisics
+- txt file of bots
+- dont allow verified bot posts to be reported
+- image links showing as images?
 
+done (preview 2):
+- enter user name and go to profile
+- crash bug fix (hopefully)
+- 10% finished mod panel
+- changelog
+- added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
+- make so you dont have to log in for search bar and changelog
 
+done (preview 3):
+- sidebar transition
 
+done for release:
+- banned status
+- webhooks (use showier branch)
 
+cst and tnix (or me) please fix all these bugs:
+- image sizing issues
+- navbar links
 
+bettermeower:
+- img.bb image sharing (people need to generate their own api keys)
+- custom softcoded badges system (like bot system)
+- verified users?
+- make some sort of system for if the username matches another username with l or uppercase i
+- for image sharing, custom alt text
+- last online and go to last meower msg
+- custom pfp for bots
+- idk like mesage links
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-so ill do:
-- all profile stuff (eg, role. active)
-- mod panel
-- discord stuff
-- post buttons
-
-r7:
-- announcements
-- search
-- recent msgs
-
-discord stuff:
-- discord based formatting text
-- for discord default emojis,when it comes to posting it will be a list of emoji names and unicode counterparts
-- discord based formatting text ui for posting posts
-
-
-
-
-
-
-
-
-
-
-later:
-- delete post detection
-
-maybe:
-- quotes (when mike fix)
+1.6 or beta 6:
+- log out everywhere
+- make alert that happens when using webhooks as guest
+- search users, posts and stuff
+- BGM
+- add to chat button on profiles (for adding users to gc via search)

@@ -1,11 +1,12 @@
 <!-- Boring orange screen with login and signup. -->
-
 <script>
-	import
-		{screen, setupPage as page,
-		modalShown, modalPage,
-		auth_header,
-		user
+	import {
+		screen,
+		setupPage as page,
+		modalShown,
+		modalPage,
+		authHeader,
+		user,
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
@@ -18,10 +19,13 @@
 	import meowy from "../assets/meowy.svg";
 
 	import {tick, onMount} from "svelte";
-	import {fade} from 'svelte/transition';
+	import {fade} from "svelte/transition";
 	import sleep from "../lib/sleep.js";
 
-	let logo, setup, logoImg, loginStatus = "";
+	let logo,
+		setup,
+		logoImg,
+		loginStatus = "";
 
 	async function connect() {
 		await clm.disconnect();
@@ -43,10 +47,11 @@
 				loginStatus = "";
 
 				await tick();
+				if (!logoImg) return;
 				setup.classList.add("white");
 				logoImg.height = 0;
 				logo.classList.remove("top");
-				
+
 				await sleep(600);
 				// Directly changing image height instead
 				// of using transforms to prevent blur
@@ -60,8 +65,15 @@
 				loginStatus = "Connecting...";
 				await connect();
 
-				if (localStorage.getItem("meower_savedusername") && localStorage.getItem("meower_savedpassword")) {
-					doLogin(localStorage.getItem("meower_savedusername"), localStorage.getItem("meower_savedpassword"), true);
+				if (
+					localStorage.getItem("meower_savedusername") &&
+					localStorage.getItem("meower_savedpassword")
+				) {
+					doLogin(
+						localStorage.getItem("meower_savedusername"),
+						localStorage.getItem("meower_savedpassword"),
+						true
+					);
 				} else {
 					await mainSetup();
 				}
@@ -76,7 +88,7 @@
 
 	/**
 	 * Goes to main setup screen.
-	*/
+	 */
 	async function mainSetup() {
 		localStorage.clear();
 		user.set(unloadedProfile());
@@ -88,10 +100,10 @@
 
 	/**
 	 * Logs in.
-	 * 
+	 *
 	 * @param {string} username
 	 * @param {string} password
-	*/
+	 */
 	function doLogin(username, password, autoLogin = false) {
 		try {
 			loginStatus = "Logging in...";
@@ -104,58 +116,79 @@
 						pswd: password,
 					},
 				},
-			}).then(async val => {
-				try {
-					const profileVal = await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "get_profile",
-							val: val.payload.username,
-						},
-					});
-					user.update(v => Object.assign(v, {
-						...profileVal.payload,
-						name: val.payload.username,
-					}));
-					auth_header.set({username: val.payload.username, token: val.payload.token});
+			})
+				.then(async val => {
+					try {
+						const profileVal = await clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "get_profile",
+								val: val.payload.username,
+							},
+						});
+						user.update(v =>
+							Object.assign(v, {
+								...profileVal.payload,
+								name: val.payload.username,
+							})
+						);
+						authHeader.set({
+							username: val.payload.username,
+							token: val.payload.token,
+						});
 
-					if (rememberMe || localStorage.getItem("meower_savedusername") === username) {
-						localStorage.setItem("meower_savedusername", username);
-						localStorage.setItem("meower_savedpassword", val.payload.token);
+						if (
+							rememberMe ||
+							localStorage.getItem("meower_savedusername") ===
+								username
+						) {
+							localStorage.setItem(
+								"meower_savedusername",
+								username
+							);
+							localStorage.setItem(
+								"meower_savedpassword",
+								val.payload.token
+							);
+						}
+
+						screen.set("main");
+					} catch (e) {
+						localStorage.clear();
+						console.error(
+							"Unexpected " + e + " error getting user data!"
+						);
+						link.disconnect(1000, "Failed to load userdata");
 					}
+				})
+				.catch(code => {
+					if (autoLogin) return mainSetup();
 
-					screen.set("main");
-				} catch(e) {
-					localStorage.clear();
-					console.error("Unexpected " + e + " error getting user data!");
-					link.disconnect(1000, "Failed to load userdata");
-				}
-			}).catch(code => {
-				if (autoLogin) return mainSetup();
-
-				switch (code) {
-					case "E:103 | ID not found":
-						loginStatus = "Invalid username!";
-						break;
-					case "I:011 | Invalid Password":
-						loginStatus = "Invalid password!";
-						break;
-					case "E:018 | Account Banned":
-						$modalPage = "banned";
-						$modalShown = true;
-						loginStatus = "";
-						break;
-					case "E:019 | Illegal characters detected":
-						loginStatus = "Usernames must not have spaces or other special characters!";
-						break;
-					case "E:106 | Too many requests":
-						loginStatus = "Too many requests! Please try again later.";
-						break;
-					default:
-						loginStatus = `Unexpected ${code} error!`;
-				}
-			});
-		} catch(e) {
+					switch (code) {
+						case "E:103 | ID not found":
+							loginStatus = "Invalid username!";
+							break;
+						case "I:011 | Invalid Password":
+							loginStatus = "Invalid password!";
+							break;
+						case "E:018 | Account Banned":
+							$modalPage = "banned";
+							$modalShown = true;
+							loginStatus = "";
+							break;
+						case "E:019 | Illegal characters detected":
+							loginStatus =
+								"Usernames must not have spaces or other special characters!";
+							break;
+						case "E:106 | Too many requests":
+							loginStatus =
+								"Too many requests! Please try again later.";
+							break;
+						default:
+							loginStatus = `Unexpected ${code} error!`;
+					}
+				});
+		} catch (e) {
 			if (autoLogin) return mainSetup();
 
 			console.error(e);
@@ -164,7 +197,7 @@
 	}
 </script>
 
-<div out:fade={{duration: 300}} bind:this={setup} class="setup white">
+<div bind:this={setup} out:fade={{duration: 500}} class="setup white">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
@@ -181,9 +214,7 @@
 			</div>
 		</div>
 	{:else if $page === "reconnect"}
-		<div class="fullcenter">
-			Reconnecting...
-		</div>
+		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
 		<div class="fullcenter">
 			<div class="column-ui">
@@ -196,68 +227,79 @@
 					/>
 					<br /><br />
 				</div>
-				<button on:click={() => page.set("login")}>Log in</button> <br />
-				<button on:click={() => page.set("join")}>Create an account</button> <br />
+				<button on:click={() => page.set("login")}>Log in</button>
+				<br />
+				<button on:click={() => page.set("join")}
+					>Create an account</button
+				> <br />
 				{#if localStorage.getItem("meower_savedusername")}
-					<button on:click={() => {
-						rememberMe = true;
-						doLogin(
-							localStorage.getItem("meower_savedusername"),
-							localStorage.getItem("meower_savedpassword"),
-						)
-					}}>Use saved login ({localStorage.getItem("meower_savedusername")})</button>
+					<button
+						on:click={() => {
+							rememberMe = true;
+							doLogin(
+								localStorage.getItem("meower_savedusername"),
+								localStorage.getItem("meower_savedpassword")
+							);
+						}}
+						>Use saved login ({localStorage.getItem(
+							"meower_savedusername"
+						)})</button
+					>
 					<p class="small">{loginStatus}</p>
 				{/if}
-				<button on:click={() => {
-					loginStatus = "";
-					page.set("blank");
-					screen.set("main");
-				}}>Skip</button>
-				<p class="small">(Several features will be unavailable while not logged in.)</p>
+				<button
+					on:click={() => {
+						loginStatus = "";
+						page.set("blank");
+						screen.set("main");
+					}}>Skip</button
+				>
+				<p class="small">
+					(Several features will be unavailable while not logged in.)
+				</p>
 				<div>
-					<p class="small">
-						Meower Svelte v1.4.3
-					</p>
-					<img
-						src={meowy}
-						alt=""
-						height="64"
-					>
+					<p class="small">Meower Svelte v1.5</p>
+					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
 		</div>
 	{:else if $page === "login"}
 		<div class="fullcenter">
 			<h1>Login to Meower</h1>
-			
-			<form class="column-ui"
+
+			<form
+				class="column-ui"
 				on:submit|preventDefault={e => {
 					if (!(e.target[0].value && e.target[1].value)) {
-						loginStatus = "You must specify a username and a password to login!";
+						loginStatus =
+							"You must specify a username and a password to login!";
 						return false;
 					}
-					doLogin(
-						e.target[0].value,
-						e.target[1].value,
-					);
+					doLogin(e.target[0].value, e.target[1].value);
 					return false;
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="64">
+				<input type="text" placeholder="Username" maxlength="20" />
+				<br />
+				<input type="password" placeholder="Password" maxlength="64" />
 				<p class="checkboxes">
-					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
-					<label for="remember-me">
-						Save this login
-					</label>
+					<input
+						id="remember-me"
+						type="checkbox"
+						bind:checked={rememberMe}
+					/>
+					<label for="remember-me"> Save this login </label>
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button type="button" on:click|preventDefault={()=>{
-						page.set("welcome");
-						loginStatus = "";
-						return false;
-					}}>Go back</button>
+					<button
+						type="button"
+						on:click|preventDefault={() => {
+							page.set("welcome");
+							loginStatus = "";
+							return false;
+						}}>Go back</button
+					>
 					<button type="submit">Log in</button>
 				</div>
 			</form>
@@ -266,16 +308,18 @@
 		<div class="fullcenter">
 			<h1>Welcome to Meower</h1>
 
-			<form class="column-ui"
+			<form
+				class="column-ui"
 				on:submit|preventDefault={e => {
 					const username = e.target[0].value;
 					const password = e.target[1].value;
 					if (!(username && password)) {
-						loginStatus = "You must specify a username and a password to create an account!";
+						loginStatus =
+							"You must specify a username and a password to create an account!";
 						return false;
 					}
 
-					loginStatus = "Creating account..."
+					loginStatus = "Creating account...";
 
 					clm.meowerRequest({
 						cmd: "direct",
@@ -287,88 +331,119 @@
 							},
 						},
 						listener: "join",
-					}).then(async val => {
-						if (val.mode === "auth" && val.payload.username === username) {
-							loginStatus = "Getting user data...";
-							const profileVal = await clm.meowerRequest({
-								cmd: "direct",
-								val: {
-									cmd: "get_profile",
-									val: val.payload.username,
-								},
-							});
-							user.update(v => Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							}));
-							auth_header.set({username: val.payload.username, token: val.payload.token});
+					})
+						.then(async val => {
+							if (
+								val.mode === "auth" &&
+								val.payload.username === username
+							) {
+								loginStatus = "Getting user data...";
+								const profileVal = await clm.meowerRequest({
+									cmd: "direct",
+									val: {
+										cmd: "get_profile",
+										val: val.payload.username,
+									},
+								});
+								user.update(v =>
+									Object.assign(v, {
+										...profileVal.payload,
+										name: val.payload.username,
+									})
+								);
+								authHeader.set({
+									username: val.payload.username,
+									token: val.payload.token,
+								});
 
-							loginStatus = "";
-							
-							if (rememberMe) {
-								localStorage.setItem("meower_savedusername", username);
-								localStorage.setItem("meower_savedpassword", val.payload.token);
-							}
-
-							page.set("go");
-							await sleep(1000);
-							screen.set("main");
-						} else {
-							loginStatus = "Unexpected error logging in!";
-						}
-					}).catch(code => {
-						switch (code) {
-							case "I:015 | Account exists":
-								loginStatus = "That username already exists!";
-								break;
-							case "I:011 | Invalid Password":
-								loginStatus = "Invalid password!";
-								break;
-							case "E:119 | IP Blocked":
-								$modalPage = "ipBanned";
-								$modalShown = true;
 								loginStatus = "";
-								break;
-							case "E:019 | Illegal characters detected":
-								loginStatus = "Usernames must not have spaces or other special characters!";
-								break;
-							case "E:106 | Too many requests":
-								loginStatus = "Too many requests! Please try again later.";
-								break;
-							default:
-								loginStatus = `Unexpected ${code} error!`;
-						}
-					});
+
+								if (rememberMe) {
+									localStorage.setItem(
+										"meower_savedusername",
+										username
+									);
+									localStorage.setItem(
+										"meower_savedpassword",
+										val.payload.token
+									);
+								}
+
+								page.set("go");
+								await sleep(1000);
+								screen.set("main");
+							} else {
+								loginStatus = "Unexpected error logging in!";
+							}
+						})
+						.catch(code => {
+							switch (code) {
+								case "I:015 | Account exists":
+									loginStatus =
+										"That username already exists!";
+									break;
+								case "I:011 | Invalid Password":
+									loginStatus = "Invalid password!";
+									break;
+								case "E:119 | IP Blocked":
+									$modalPage = "ipBanned";
+									$modalShown = true;
+									loginStatus = "";
+									break;
+								case "E:019 | Illegal characters detected":
+									loginStatus =
+										"Usernames must not have spaces or other special characters!";
+									break;
+								case "E:106 | Too many requests":
+									loginStatus =
+										"Too many requests! Please try again later.";
+									break;
+								default:
+									loginStatus = `Unexpected ${code} error!`;
+							}
+						});
 				}}
 			>
-				<input type="text" placeholder="Username" maxlength="20"> <br />
-				<input type="password" placeholder="Password" maxlength="64">
+				<input type="text" placeholder="Username" maxlength="20" />
+				<br />
+				<input type="password" placeholder="Password" maxlength="64" />
 				<p class="checkboxes">
-					<input id="remember-me" type="checkbox" bind:checked={rememberMe}>
-					<label for="remember-me">
-						Save this login
-					</label>
+					<input
+						id="remember-me"
+						type="checkbox"
+						bind:checked={rememberMe}
+					/>
+					<label for="remember-me"> Save this login </label>
 					<br />
-					<input id="accept-terms" type="checkbox" bind:checked={acceptTerms}>
+					<input
+						id="accept-terms"
+						type="checkbox"
+						bind:checked={acceptTerms}
+					/>
 					<label for="accept-terms">
 						I agree to <a
-							href="https://meower.org/legal" target="_blank"
-						>Meower's Terms of Service and Privacy Policy</a>
+							href="https://meower.org/legal"
+							target="_blank"
+							>Meower's Terms of Service and Privacy Policy</a
+						>
 					</label>
 				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
-					<button type="button" on:click|preventDefault={()=>{
-						page.set("welcome");
-						loginStatus = "";
-						return false;
-					}}>Go back</button>
+					<button
+						type="button"
+						on:click|preventDefault={() => {
+							page.set("welcome");
+							loginStatus = "";
+							return false;
+						}}>Go back</button
+					>
 					<button type="submit" disabled={!acceptTerms}>Join!</button>
 				</div>
 			</form>
 		</div>
 	{:else if $page === "blank"}
-		<div></div>
+		<div />
 	{:else if $page === "go"}
 		<div class="fullcenter">Let's go!</div>
 	{:else}
@@ -379,7 +454,7 @@
 				(Current page: {$page})
 
 				<div class="buttons">
-					<button on:click={()=>page.set("logo")}>Go back!</button>
+					<button on:click={() => page.set("logo")}>Go back!</button>
 				</div>
 			</div>
 		</div>
@@ -393,12 +468,12 @@
 		font-size: 150%;
 
 		text-align: center;
-		
+
 		position: absolute;
 		top: 0;
 		left: 0;
 		z-index: 1000;
-		
+
 		width: 100%;
 		min-height: 100vh;
 		height: 100%;
@@ -426,12 +501,10 @@
 	.logo {
 		position: relative;
 		bottom: 0px;
-		transition:
-			bottom 0.3s cubic-bezier(0,1,1,1);
+		transition: bottom 0.3s cubic-bezier(0, 1, 1, 1);
 	}
 	.logo-img {
-		transition:
-			height 0.3s cubic-bezier(0,1,1,1);
+		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
 	}
 	.logo.top {
 		bottom: 10px;
@@ -481,7 +554,8 @@
 		overflow: visible;
 	}
 
-	label, .checkboxes input {
+	label,
+	.checkboxes input {
 		vertical-align: middle;
 	}
 

@@ -1,197 +1,250 @@
 @font-face {
-    font-family: simvoni;
-    src: url(./font/Simvoni.ttf);
-    font-display: swap;
+	font-family: simvoni;
+	src: url(./font/Simvoni.ttf);
+	font-display: swap;
 }
 
 @font-face {
-    font-family: simvoni-bold;
-    src: url(./font/Simvoni-Bold.ttf);
-	font-weight: normal;
-    font-display: swap;
+	font-family: simvoni;
+	src: url(./font/Simvoni-Bold.ttf);
+	font-weight: bold;
+	font-display: swap;
 }
 
 @font-face {
-    font-family: simvoni-bolditalic;
-    src: url(./font/Simvoni-BoldItalic.ttf);
-	font-style: normal;
-	font-weight: normal;
-    font-display: swap;
+	font-family: simvoni;
+	src: url(./font/Simvoni-BoldItalic.ttf);
+	font-weight: bold;
+	font-style: italic;
+	font-display: swap;
 }
 
 @font-face {
-    font-family: simvoni-italic;
-    src: url(./font/Simvoni-Italic.ttf);
-	font-style: normal;
-    font-display: swap;
+	font-family: simvoni;
+	src: url(./font/Simvoni-Italic.ttf);
+	font-style: italic;
+	font-display: swap;
+}
+
+.settings-controls {
+	position: absolute;
+	top: 0.25em;
+	right: 0.25em;
+}
+
+.image_1 {
+	margin-top: 0.5em;
+	width: 20em;
+	/* you can use % */
+	height: auto;
 }
 
 body {
-    margin: 0;
-    padding: none;
+	margin: 0;
 }
 
-#app, body, :root {
+#app,
+body,
+:root {
 	width: 100%;
 	height: 100%;
+}
+
+img.emoji {
+	height: 1em;
+	width: 1em;
 }
 
 button,
 input[type="text"],
 input[type="password"],
 textarea {
-    border: solid 2px var(--foreground-orange);
-    border-radius: 1px;
-    outline: none;
+	border: solid 2px var(--foreground-orange);
+	border-radius: 1px;
+	outline: none;
 
-    background-color: var(--orange);
-    color: var(--foreground-orange);
+	background-color: var(--orange);
+	color: var(--foreground-orange);
 
-    padding: 0.5em 1em;
-    box-sizing: border-box;
-    margin-bottom: -0.15rem;
+	padding: 0.5em 1em;
+	box-sizing: border-box;
+	margin-bottom: -0.15rem;
 
 	font-family: inherit;
-    font-size: inherit;
+	font-size: inherit;
 }
+
 button + button {
 	margin-left: -0.15rem;
 }
+
 input:not(.white)::placeholder {
 	color: var(--foreground-orange);
 	opacity: 0.75;
 }
+
 input.white::placeholder {
 	color: var(--foreground);
 	opacity: 0.75;
 }
 
-button:not(.circle):not(.white):not(:disabled):hover,
+main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
 button:not(.circle):not(.white):focus-visible,
-input[type="text"]:not(.white):not(:disabled):hover,
+main.input-hover input[type="text"]:not(.white):not(:disabled):hover,
 input[type="text"]:not(.white):focus-visible,
-input[type="password"]:not(.white):not(:disabled):hover,
+main.input-hover input[type="password"]:not(.white):not(:disabled):hover,
 input[type="password"]:not(.white):focus-visible {
-    background-color: var(--orange-light);
+	background-color: var(--orange-light);
 }
 
-button:not(.circle):not(.white):not(:disabled):active,
-input[type="text"]:not(.white):not(:disabled):focus,
-input[type="password"]:not(.white):not(:disabled):focus {
-    background-color: var(--orange-dark);
+#main button:not(.circle):not(.white):not(:disabled):active,
+#main input[type="text"]:not(.white):not(:disabled):focus,
+#main input[type="password"]:not(.white):not(:disabled):focus {
+	background-color: var(--orange-dark);
 }
 
 button.round {
-    border-radius: 0.75em;
-    border-bottom-width: 5px;
-    padding: 0.5em;
-    overflow-wrap: break-word;
+	border-radius: 0.75em;
+	border-bottom-width: 5px;
+	padding: 0.5em;
+	overflow-wrap: break-word;
 }
 
 input[type="text"].white,
 input[type="password"].white,
 textarea {
-    background-color: var(--background);
-    border-color: var(--orange);
-    color: var(--foreground);
-    font-weight: normal;
+	background-color: var(--background);
+	border-color: var(--orange);
+	color: var(--foreground);
+	font-weight: normal;
 }
 
 button.white {
-    background-color: var(--background);
-    border-color: var(--orange);
-    color: var(--orange-button);
+	background-color: var(--background);
+	border-color: var(--orange);
+	color: var(--orange-button);
 }
 
-input[type="text"].white:not(:disabled):hover,
-input[type="password"].white:not(:disabled):hover,
-textarea:not(:disabled):hover,
-button:not(.circle).white:not(:disabled):hover,
+main.input-hover input[type="text"].white:not(:disabled):hover,
+main.input-hover input[type="password"].white:not(:disabled):hover,
+main.input-hover textarea:not(:disabled):hover,
+main.input-touch input[type="text"].white:not(:disabled):active,
+main.input-touch input[type="password"].white:not(:disabled):active,
+main.input-touch textarea:not(:disabled):active,
+main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
-textarea:focus-visible,
+#main textarea:focus-visible,
+#main textarea:focus-visible,
 button:not(.circle).white:focus-visible {
-    border-color: var(--orange-light);
+	border-color: var(--orange-light);
 }
 
-input[type="text"].white:not(:disabled):focus,
-input[type="password"].white:not(:disabled):focus,
-textarea:focus,
+#main input[type="text"].white:not(:disabled):focus,
+#main input[type="password"].white:not(:disabled):focus,
+#main textarea:focus,
 button:not(.circle).white:active {
-    border-color: var(--orange-dark);
+	border-color: var(--orange-dark);
 }
 
 textarea {
-    resize: vertical;
-    font-family: inherit;
+	resize: vertical;
+	font-family: inherit;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-top: 0;
 	margin-bottom: 1ex;
 }
-h1, h2, h3, h4, h5, h6, b {
-	font-family: Simvoni-Bold, sans-serif;
-	font-weight: normal;
-}
-h1.nobold, h2.nobold, h3.nobold, h4.nobold, h5.nobold, h6.nobold {
-	font-family: Simvoni, sans-serif;
-	font-weight: bold;
+
+ul,
+ol {
+	margin: 0;
 }
 
-button.circle, input[type="checkbox"] {
-    border: solid 2px var(--foreground-orange);
+details {
+	margin-left: 0.5em;
+}
+details > summary {
+	margin-left: -0.5em;
+}
+
+button.circle,
+input[type="checkbox"] {
+	border: solid 2px var(--foreground-orange);
 	border-radius: 100%;
-    outline: none;
+	outline: none;
 
-    background-color: var(--orange);
-    color: var(--foreground-orange);
+	background-color: var(--orange);
+	color: var(--foreground-orange);
 
 	width: 1.6em;
 	height: 1.6em;
 	padding: 0;
-	
+
 	font: inherit;
 
 	background-position: center;
 	background-size: 1.3em;
 	background-repeat: no-repeat;
 }
+
 input[type="checkbox"] {
 	background-image: url("./off.svg");
-    appearance: none;
+	appearance: none;
 }
+
 button.settings {
 	background-image: url("./settings.svg");
 }
+
 button.plus {
 	background-image: url("./plus.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
+
 button.close {
 	background-image: url("./close.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
+
 button.report {
 	background-image: url("./report.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
+
 button.join {
 	background-image: url("./chat_join.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
+
 button.profile {
 	background-image: url("./profile.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
+
 button.members {
 	background-image: url("./members.svg");
-    background-size: 50%;
+	background-size: 50%;
 }
-input[type="checkbox"]:hover:not(:active),
-button.circle:hover:not(:active) {
+
+button.search {
+	background-image: url("./search.svg");
+	background-size: 50%;
+}
+
+main.input-hover input[type="checkbox"]:hover:not(:active),
+main.input-hover button.circle:not(:disabled):hover:not(:active),
+main.input-touch input[type="checkbox"]:active,
+main.input-touch button.circle:not(:disabled):active {
 	transform: scale(1.2);
 }
+
 input[type="checkbox"]:checked {
 	background-image: url("./on.svg");
 }
@@ -205,11 +258,11 @@ a {
 }
 
 .modal-input {
-    position: relative;
-    width: 100%;
+	position: relative;
+	width: 100%;
 }
 
 .modal-buttons {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }

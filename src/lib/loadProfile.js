@@ -4,32 +4,29 @@ import {apiUrl} from "./urls.js";
 export const profileCache = writable({});
 
 let _profileCache;
-profileCache.subscribe(v => _profileCache = v);
+profileCache.subscribe(v => (_profileCache = v));
 
 export default async function loadProfile(username) {
-	if (
-		_profileCache[username] &&
-		!_profileCache[username].temporary
-	) {
+	if (_profileCache[username] && !_profileCache[username].temporary) {
 		return _profileCache[username];
 	}
-	
+
 	if (username === "Notification") {
 		_profileCache[username] = {
-			pfp_data: 101
-		}
+			pfp_data: 101,
+		};
 		profileCache.set(_profileCache);
 		return _profileCache[username];
 	} else if (username === "Announcement") {
 		_profileCache[username] = {
-			pfp_data: 102
-		}
+			pfp_data: 102,
+		};
 		profileCache.set(_profileCache);
 		return _profileCache[username];
 	} else if (username === "Server") {
 		_profileCache[username] = {
-			pfp_data: 102
-		}
+			pfp_data: 102,
+		};
 		profileCache.set(_profileCache);
 		return _profileCache[username];
 	}
@@ -49,7 +46,7 @@ export default async function loadProfile(username) {
 		const json = await resp.json();
 		_profileCache[username] = json;
 		profileCache.set(_profileCache);
-	} catch(e) {
+	} catch (e) {
 		console.log(e);
 		_profileCache[username] = {
 			error: true,
