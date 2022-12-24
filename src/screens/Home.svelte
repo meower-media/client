@@ -44,8 +44,6 @@
 
 	let postInput;
 
-	let bots;
-
 	/**
 	 * Loads a page, with offset and overflow calculations.
 	 *
@@ -54,30 +52,6 @@
 	 */
 	async function loadPage(page) {
 		pageLoading = true;
-
-		// Load bot lists
-		if (!bots) {
-			bots = new Map();
-
-			const setBotStatuses = (text, status) => {
-				text.split(/\r?\n/).forEach(user => bots.set(user, status));
-			};
-
-			const uvbotlist = await fetch(
-				"https://raw.githubusercontent.com/MeowerBots/BotList/main/unverifed-bots.txt"
-			);
-			setBotStatuses(await uvbotlist.text(), "unverified");
-
-			const vbotlist = await fetch(
-				"https://raw.githubusercontent.com/MeowerBots/BotList/main/verified-bots.txt"
-			);
-			setBotStatuses(await vbotlist.text(), "verified");
-
-			const ubotlist = await fetch(
-				"https://raw.githubusercontent.com/MeowerBots/BotList/main/bot-owners.txt"
-			);
-			setBotStatuses(await ubotlist.text(), "owner");
-		}
 
 		if (page === undefined) {
 			posts = [];
@@ -127,9 +101,6 @@
 				for (const post of realPosts) {
 					posts.push({
 						id: id++,
-						isuvbot: bots.get(post.u) === "unverified",
-						isvbot: bots.get(post.u) === "verified",
-						ownsbot: bots.get(post.u) === "owner",
 						post_id: post.post_id,
 						user: post.u,
 						content: post.p,
@@ -180,9 +151,6 @@
 			if ($page === "home" && cmd.val.mode === 1) {
 				if (!(cmd.val.post_origin === "home")) return;
 				addPost({
-					isuvbot: bots.get(cmd.val.u) === "unverified",
-					isvbot: bots.get(cmd.val.u) === "verified",
-					ownsbot: bots.get(cmd.val.u) === "owner",
 					post_id: cmd.val._id,
 					user: cmd.val.u,
 					content: cmd.val.p,
