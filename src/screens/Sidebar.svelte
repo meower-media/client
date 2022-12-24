@@ -1,6 +1,4 @@
-<!-- Wait, isn't it a topbar on old layout? -->
 <!-- RIP -->
-
 <script>
 	import {
 		mainPage as page,
@@ -11,31 +9,39 @@
 		modalPage,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
-	
+
 	import * as clm from "../lib/clmanager.js";
 
 	import {tick} from "svelte";
+	import {fade} from "svelte/transition";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
 	import gc from "../assets/chat.svg";
 	import mail from "../assets/mail.svg";
-	import mail_new from "../assets/mail_new.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
+	import search from "../assets/search.svg";
+	import changelog from "../assets/changelog.svg";
 
 	/**
-	* @param {any} newPage Goes to a page while also refreshing it.
-	*/
-	function goto(newPage, resetScroll=true) {
-		if (!$user.name && newPage !== "home" && newPage !== "settings") {
+	 * @param {any} newPage Goes to a page while also refreshing it.
+	 */
+	function goto(newPage, resetScroll = true) {
+		if (
+			!$user.name &&
+			newPage !== "home" &&
+			newPage !== "settings" &&
+			newPage !== "changelog" &&
+			newPage !== "search"
+		) {
 			modalPage.set("signup");
 			modalShown.set(true);
 			return;
 		}
 		if (resetScroll) {
-			window.scrollTo(0,0);
+			window.scrollTo(0, 0);
 		}
 		if ($page === "groupchat") {
 			clm.meowerRequest({
@@ -44,9 +50,9 @@
 					cmd: "set_chat_state",
 					val: {
 						state: 0,
-						chatid: $chatid
+						chatid: $chatid,
 					},
-				}
+				},
 			});
 		}
 		chatid.set("");
@@ -55,9 +61,11 @@
 	}
 </script>
 
-<div class="sidebar">
+<!-- Wait, isn't it a topbar on old layout? -->
+
+<div class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
-		<span class="logo-inner" on:click={()=>goto("home")}>
+		<button class="logo-inner" on:click={() => goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -65,73 +73,81 @@
 				height="100%"
 				width="auto"
 			/>
-		</span>
+		</button>
 	</div>
-	<button on:click={()=>goto("home")} class="home-btn round">
+	<button on:click={() => goto("home")} class="home-btn round">
+		<img src={home} alt="Home" draggable={false} />
+	</button>
+	<button
+		on:click={() => goto("inbox")}
+		class="round"
+		class:new-msgs={$user.unread_inbox}
+	>
+		<img src={mail} alt="Inbox Messages" draggable={false} />
+	</button>
+	<button
+		on:click={() => {
+			if (shiftHeld) {
+				goto("groupcat");
+			} else {
+				goto("chatlist");
+			}
+		}}
+		class="gc-btn round"
+	>
+		<img src={gc} alt="Group Chats" draggable={false} />
+	</button>
+	<button on:click={() => goto("search")} class="search-btn round">
 		<img
-			src={home}
-			alt="Home"
+			src={search}
+			alt="search"
+			width="90%"
+			height="auto"
 			draggable={false}
 		/>
 	</button>
-	<button on:click={()=>goto("inbox")} class="gc-btn round">
+	<button on:click={() => goto("changelog")} class="changelog-btn round">
 		<img
-			src={$user.unread_inbox ? mail_new : mail}
-			alt="Inbox Messages"
+			src={changelog}
+			alt="changelog"
+			width="90%"
+			height="auto"
 			draggable={false}
 		/>
 	</button>
-	<button on:click={()=>{
-		if (shiftHeld) {
-			goto("groupcat");
-		} else {
-			goto("chatlist");
-		}
-	}} class="gc-btn round">
-		<img
-			src={gc}
-			alt="Group Chats"
-			draggable={false}
-		/>
+	<button
+		on:click={() => {
+			$profileClicked = $user.name;
+			goto("profile");
+		}}
+		class="profile-btn round"
+	>
+		<img src={profile} alt="Profile" draggable={false} />
 	</button>
-	<button on:click={() => {
-		$profileClicked = $user.name;
-		goto("profile");
-	}} class="profile-btn round">
-		<img
-			src={profile}
-			alt="Profile"
-			draggable={false}
-		/>
+	<button on:click={() => goto("settings")} class="settings-btn round">
+		<img src={settings} alt="Settings" draggable={false} />
 	</button>
-	<button on:click={()=>goto("settings")} class="settings-btn round">
-		<img
-			src={settings}
-			alt="Settings"
-			draggable={false}
-		/>
-	</button>
-	<button on:click={() => {
-		modalPage.set("logout");
-		modalShown.set(true);
-	}} class="logout-btn round">
-		<img
-			src={logout}
-			alt="Log out"
-			draggable={false}
-		/>
+	<button
+		on:click={() => {
+			modalPage.set("logout");
+			modalShown.set(true);
+		}}
+		class="logout-btn round"
+	>
+		<img src={logout} alt="Log out" draggable={false} />
 	</button>
 </div>
 
 <style>
 	button {
+		position: relative;
 		/* Hack to center icons */
 		line-height: 0;
 	}
 
 	.sidebar {
 		background-color: var(--orange);
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -140,7 +156,7 @@
 
 		gap: 0.5em;
 		box-sizing: border-box;
-		
+
 		user-select: none;
 
 		width: 100%;
@@ -176,11 +192,31 @@
 	.logo-inner {
 		display: inline-block;
 		height: 100%;
-	}
-	.logo-inner:hover {
-		background-color: var(--orange-dark);
+		background: none;
+		border: none;
+		padding: 0;
+		margin: 0;
 	}
 
+	.new-msgs::after {
+		content: "";
+		display: inline-block;
+
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 50%;
+
+		position: absolute;
+		right: 0.5em;
+		top: 0.5em;
+
+		background: var(--foreground-orange);
+	}
+
+	:global(main.input-hover) .logo-inner:hover,
+	:global(main.input-touch) .logo-inner:active {
+		background-color: var(--orange-dark);
+	}
 
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;

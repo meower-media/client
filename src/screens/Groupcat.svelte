@@ -1,10 +1,10 @@
 <script>
-    import Cats from "../lib/MEOW.svelte";
+	import Cats from "../lib/MEOW.svelte";
 </script>
 
 <div>
-    <div class="message">GROUP CAT 2.0!!!!</div>
-    <Cats />
+	<div class="message">GROUP CAT 2.0!!!!</div>
+	<Cats />
 </div>
 
 <style>

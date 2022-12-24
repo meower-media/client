@@ -2,7 +2,6 @@
 	Formatted date display with hover text.
 	Mostly taken straight from Appel Level Database.
 -->
-
 <script>
 	/**
 	 * @file good thing I had already made a date display for appel level database
@@ -17,7 +16,9 @@
 	$: {
 		const _date = new Date(date * 1000);
 		text = _date.toLocaleString();
-		title = `Time is in your local timezone (UTC+${-(_date.getTimezoneOffset()/60)}).
+		title = `Time is in your local timezone (UTC+${-(
+			_date.getTimezoneOffset() / 60
+		)}).
 12-hour time: ${_date.toLocaleString([], {hourCycle: "h11"})}
 24-hour time: ${_date.toLocaleString([], {hourCycle: "h23"})}
 ISO: ${_date.toISOString()}`;
@@ -30,7 +31,7 @@ ISO: ${_date.toISOString()}`;
 
 <style>
 	.date {
-		font-family: Simvoni-Italic, sans-serif;
-		text-decoration: 2px underline dotted;
+		font-style: italic;
+		cursor: help;
 	}
 </style>

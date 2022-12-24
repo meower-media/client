@@ -1,10 +1,10 @@
 /**
  * Returns the "default" profile, used when logged out.
- * 
+ *
  * @returns {object} The unloaded profile.
  */
 export default function unloadedProfile() {
-	return ({
+	return {
 		name: null,
 		theme: "orange",
 		mode: true,
@@ -14,5 +14,5 @@ export default function unloadedProfile() {
 		layout: "new",
 		pfp_data: 1,
 		quote: "",
-	});
+	};
 }

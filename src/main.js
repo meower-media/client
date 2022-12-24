@@ -2,18 +2,18 @@ import App from "./App.svelte";
 
 try {
 	if (navigator.serviceWorker) {
-		navigator.serviceWorker.getRegistration().then((registration) => {
+		navigator.serviceWorker.getRegistration().then(registration => {
 			if (registration) {
-		 		registration.unregister();
+				registration.unregister();
 			}
 		});
 	}
-} catch(e) {
+} catch (e) {
 	console.error(e);
 }
 
 const app = new App({
-    target: document.getElementById("app")
+	target: document.getElementById("app"),
 });
 
 export default app;

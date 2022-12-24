@@ -7,6 +7,6 @@
  * @param {number} ms
  * @returns {Promise}
  */
-export default function(ms) {
-    return new Promise(r => setTimeout(r, ms));
+export default function (ms) {
+	return new Promise(r => setTimeout(r, ms));
 }
