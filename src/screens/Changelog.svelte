@@ -13,7 +13,6 @@
 			Beta 4-style sidebar transition (except a bit less cooler due to the
 			logo not moving)
 		</li>
-		<li>Bot badges!</li>
 		<li>Work-in-progress search page</li>
 		<li>
 			Images now show up in posts (like [title: https://url]). There is an
@@ -36,6 +35,11 @@
 
 	<details>
 		<summary>Betas</summary>
+		<h3>Hotfix</h3>
+		<ul>
+			<li>Disable bot badges (they aren't officially supported, and the CL4 port will add them)</li>
+		</ul>
+		
 		<h3>Release</h3>
 		<ul>
 			<li>Banned status</li>

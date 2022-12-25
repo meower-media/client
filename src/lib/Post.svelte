@@ -212,6 +212,7 @@
 					/>
 				{/if}
 
+				<!-- disabled until proper bot badges are added
 				{#if post.isvbot && !webhook}
 					<Badge
 						text="BOT"
@@ -223,10 +224,7 @@
 				{#if post.isuvbot && !webhook}
 					<Badge text="BOT" title="This bot has not been verified" />
 				{/if}
-
-				{#if post.ownsbot && !webhook}
-					<Badge text="BOT OWNER" />
-				{/if}
+				-->
 			</div>
 
 			<FormattedDate date={post.date} />
