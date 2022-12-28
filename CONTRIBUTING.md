@@ -21,6 +21,13 @@ npm install
 npm run dev
 ```
 
+(Typically you usually also create a new branch for your work:)
+
+```
+git branch person-branch
+git checkout person-branch
+```
+
 For one-time building:
 
 ```
