@@ -1,10 +1,16 @@
 # Contributing to Meower
 
+## Branch information
+
+The main branch where development takes place is `develop`. The `master` branch is what you see at https://app.meower.org, and is merged into for each release.
+
+## Setting up your development environment
+
 Requirements:
 
 -   node.js and npm or some other package manager
--   git (optional, for cloning the repo)
--   Preferably understanding of JavaScript and node.js, among other things
+-   git and some knowledge of it
+-   Preferably understanding of JavaScript and node.js, among ~~us~~ other things
 
 To clone and run a development server on your machine (that autoupdates when you modify files):
 
@@ -21,8 +27,12 @@ For one-time building:
 npm run build
 ```
 
-(Note: A GitHub Action will usually do this for you when you push to the repo.)
+If your branch is online (not local), it will also be available in built form at `[branchname].meower-svelte.pages.dev`. A bot will post a comment about it when creating a PR.
 
-## Pull Requests/Commits
+---
 
-If you are planning to pull or commit to the Meower-Svelte repo, please use the `develop` branch as this keeps things nice and organized for future releases and to prevent bugs. 
+Relevant bit of information from the original readme:
+
+> ## Recommended IDE Setup
+>
+> [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
