@@ -2,7 +2,7 @@
 	import Loading from "./Loading.svelte";
 
 	/**
-	 * @type {array}
+	 * @type {Array<Object>}
 	 */
 	export let items = [];
 	/**
@@ -17,12 +17,18 @@
 	 * @param {*} item
 	 */
 	export const addItem = function(item) {
-		items.unshift(item);
+		id++;
+		items.unshift({
+			id,
+			...item
+		});
 		items = items;
 		itemOffset++;
 	}
 
 	export let itemsPerPage = 25;
+
+	let id = 0;
 
 	async function loadPageWithOverflow(page) {
 		pageLoading = true;
@@ -50,7 +56,13 @@
 
 			items = items.concat(realItems);
 			pagesLoaded = page;
-			return items;
+			return items.map(o => {
+				id++;
+				return {
+					id,
+					...o
+				};
+			});
 		} finally {
 			pageLoading = false;
 		}
@@ -67,7 +79,7 @@
 
 <div>
 	{#await loadPageWithOverflow(1)}
-		<div class="fullcenter">
+		<div class="center">
 			<Loading />
 		</div>
 	{:then}
@@ -83,7 +95,7 @@
 			<div class="center">
 				{#if pageLoading}
 					<Loading />
-				{:else if numPages && numPages > pagesLoaded}
+				{:else if numPages && numPages > pagesLoaded || true}
 					<button
 						class="load-more"
 						on:click={() => loadPageWithOverflow(pagesLoaded + 1)}
@@ -102,7 +114,9 @@
 	.center {
 		text-align: center;
 	}
+
 	.load-more {
 		width: 100%;
+		margin-bottom: 2em;
 	}
 </style>

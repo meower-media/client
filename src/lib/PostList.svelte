@@ -39,9 +39,8 @@
 
 	let postInput;
 
-	// Set by PagedList
-	let addItem = (_) => {};
-	// Used by PagedList
+	// PagedList stuff
+	let list;
 	let items = [];
 
 	/**
@@ -112,7 +111,7 @@
 			if (!cmd.val.mode || !cmd.val.post_id) return;
 			if (cmd.val.post_origin !== postOrigin) return;
 
-			addItem({
+			list.addItem({
 				post_id: cmd.val._id,
 				user: cmd.val.u,
 				content: cmd.val.p,
@@ -236,7 +235,7 @@
 	<PagedList
 		bind:items
 		{loadPage}
-		bind:addItem
+		bind:this={list}
 	>
 		<svelte:fragment slot="loaded" let:items>
 			{#each items as post (post.id)}
