@@ -9,7 +9,7 @@
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import {playNotification} from "../lib/sounds.js";
-	import PagedList from "../lib/Post.svelte";
+	import PagedList from "../lib/PagedList.svelte";
 	import Post from "../lib/Post.svelte";
 	import TypingIndicator from "../lib/TypingIndicator.svelte";
 	import * as clm from "../lib/clmanager.js";
