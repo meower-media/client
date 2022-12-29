@@ -7,6 +7,12 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.5.1</h2>
+	<ul>
+		<li>Fix the dango profile picture appearing twice when you have it selected</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.5</h2>
 	<ul>
 		<li>
