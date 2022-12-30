@@ -79,7 +79,7 @@
 
 <div>
 	{#await loadPageWithOverflow(1)}
-		<div class="center">
+		<div class="center loading-start">
 			<Loading />
 		</div>
 	{:then}
@@ -94,7 +94,9 @@
 
 			<div class="center">
 				{#if pageLoading}
-					<Loading />
+					<div class="loading-page">
+						<Loading />
+					</div>
 				{:else if numPages && numPages > pagesLoaded || true}
 					<button
 						class="load-more"
@@ -118,5 +120,13 @@
 	.load-more {
 		width: 100%;
 		margin-bottom: 2em;
+	}
+
+	.loading-start {
+		margin-top: 2em;
+	}
+
+	.loading-page {
+		margin-bottom: 0.5em;
 	}
 </style>

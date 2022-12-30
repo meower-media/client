@@ -142,35 +142,48 @@
 </script>
 
 <div>
-	<!-- I think we discussed that guest posting will not be in the official client, due to moderation reasons -->
+	<!-- I think we discussed that guest posting will not be in
+		the official client, due to moderation reasons -->
 	{#if canPost && $user.name}
 		<form
 			class="createpost"
 			autocomplete="off"
-			on:submit|preventDefault={e => {
+			on:submit|preventDefault={/** @type {SubmitEvent} */e => {
 				postErrors = "";
-				if (!e.target[0].value.trim()) {
+
+				// @ts-ignore
+				const input = e.target.elements.input;
+				// @ts-ignore
+				const content = e.target.elements.input.value;
+				// @ts-ignore
+				const submitBtn = e.target.elements.submit;
+
+				if (!content.trim()) {
 					postErrors = "You cannot send an empty post!";
 					return false;
 				}
 
 				spinner.set(true);
 
-				e.target[1].disabled = true;
+
+				submitBtn.disabled = true;
 				if ($user.name) {
 					clm.meowerRequest({
 						cmd: "direct",
 						val: {
-							cmd: "post_home",
-							val: e.target[0].value,
+							cmd: postOrigin === "home" ? "post_home" : "post_chat",
+							val: postOrigin === "home" ? content : {
+								p: content,
+								chatiFd: postOrigin
+							},
 						},
 					}).then(data => {
-						e.target[1].disabled = false;
+						submitBtn.disabled = false;
 
 						if (data === "I:100 | OK" || !data) {
-							e.target[0].value = "";
-							e.target[0].rows = "1";
-							e.target[0].style.height = "45px";
+							input.value = "";
+							input.rows = "1";
+							input.style.height = "45px";
 						} else if (
 							data === "E:106 | Too many requests"
 						) {
@@ -183,12 +196,12 @@
 					return false;
 				} else {
 					post("https://webhooks.meower.org/post/home", {
-						post: e.target[0].value,
+						post: content
 					});
-					e.target[1].disabled = false;
-					e.target[0].value = "";
-					e.target[0].rows = "1";
-					e.target[0].style.height = "45px";
+					submitBtn.disabled = false;
+					input.value = "";
+					input.rows = "1";
+					input.style.height = "45px";
 					spinner.set(false);
 				}
 			}}
@@ -197,8 +210,7 @@
 				type="text"
 				class="white"
 				placeholder="Write something..."
-				id="postinput"
-				name="postinput"
+				name="input"
 				autocomplete="false"
 				maxlength="360"
 				rows="1"
@@ -227,7 +239,7 @@
 				}}
 				bind:this={postInput}
 			/>
-			<button id="submitpost">Post</button>
+			<button name="submit">Post</button>
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
