@@ -20,7 +20,7 @@
 
 	import {tick} from "svelte";
 
-	const PFP_COUNT = 47;
+	const PFP_COUNT = 52;
 
 	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
 	let pfpSwitcher = false;
