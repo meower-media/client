@@ -11,7 +11,6 @@
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
 		<li>Fixed misspelling error within Update Quote</li>
-		<li>Fixed capitalization error within search</li>
 	</ul>
 </Container>
 <Container>
