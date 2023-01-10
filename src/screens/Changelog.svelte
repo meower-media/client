@@ -7,6 +7,14 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.5.3</h2>
+	<ul>
+		<li>Changing your password now also logs you out of every device</li>
+		<li>Fixed misspelling error within Update Quote</li>
+		<li>Fixed capitalization error within search</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.5.2</h2>
 	<ul>
 		<li>Add https://forums.meower.org/ to the image host whitelist</li>
