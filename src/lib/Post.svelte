@@ -42,6 +42,7 @@
 		"https://forums.meower.org/",
 		// not everyone can add urls to go.meower.org, should be fine
 		"https://go.meower.org/",
+		"https://nextcloud.meower.org/",
 
 		// cubeupload
 		"https://u.cubeupload.com/",
