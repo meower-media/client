@@ -93,13 +93,15 @@
 		images = [];
 		while (true) {
 			const result = iterator.next();
-			if (result.done) break;
-
+			if (result.done) break
+			
 			try {
 				new URL(result.value[2]);
 			} catch (e) {
 				continue;
-			}
+			};
+			
+			if (!IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) return;
 
 			images.push({
 				title: result.value[1],
