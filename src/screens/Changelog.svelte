@@ -11,7 +11,7 @@
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
 		<li>Fixed misspelling error within Update Quote</li>
-		<li>Add https://forums.meower.org/ to the image host whitelist</li>
+		<li>Add https://forums.meower.org/ and https://nextcloud.meower.org/ to the image host whitelist</li>
 	</ul>
 	</Container>
 <Container>
