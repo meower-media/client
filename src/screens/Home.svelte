@@ -318,9 +318,13 @@
 		<TypingIndicator />
 		{#if posts.length < 1}
 			{#if $user.name}
-				No posts here. Check back later or be the first to post!
+                <Container>
+				    No posts here. Check back later or be the first to post!
+                </Container>
 			{:else}
-				No posts here. Check back later!
+                <Container>
+				    No posts here. Check back later!
+                </Container>
 			{/if}
 		{:else}
 			{#each posts as post (post.id)}

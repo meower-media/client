@@ -1,6 +1,7 @@
 <script>
 	import {createEventDispatcher, onDestroy} from "svelte";
-	import {scale} from "svelte/transition";
+	import {fly} from "svelte/transition";
+	import {flip} from "svelte/animate";
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch("close");
@@ -48,7 +49,7 @@
 	role="dialog"
 	aria-modal="true"
 	bind:this={modal}
-	transition:scale={{duration: 200}}
+	transition:fly|local={{y: -50, duration: 250}}
 >
 	<slot name="header" />
 	<hr />
