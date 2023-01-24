@@ -41,7 +41,7 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
-<div class="modal-background" on:click={close} in:fade out:fade />
+<div class="modal-background" on:click={close} in:fade="{{duration: 250}}" out:fade="{{duration: 250}}" />
 
 <div
 	class="modal"
