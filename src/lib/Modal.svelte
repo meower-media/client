@@ -1,6 +1,6 @@
 <script>
 	import {createEventDispatcher, onDestroy} from "svelte";
-	import {fly} from "svelte/transition";
+	import {fly, fade} from "svelte/transition";
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch("close");
@@ -41,7 +41,7 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
-<div class="modal-background" on:click={close} />
+<div class="modal-background" on:click={close} in:fade out:fade />
 
 <div
 	class="modal"
