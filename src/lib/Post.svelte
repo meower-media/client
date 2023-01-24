@@ -236,14 +236,14 @@
 	<p class="post-content">{post.content}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank"
-				><img
+			<a href={url} target="_blank">
+                <img
 					src={url}
 					alt={title}
-					title="{title} ({url})"
+					title={title}
 					class="post-image"
-				/></a
-			>
+				/>
+            </a>
 		{/each}
 	</div>
 </Container>
