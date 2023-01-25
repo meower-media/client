@@ -48,7 +48,7 @@
 	role="dialog"
 	aria-modal="true"
 	bind:this={modal}
-	transition:scale="{{duration: 50}}"
+	transition:scale="{{duration: 200}}"
 >
 	<slot name="header" />
 	<hr />
