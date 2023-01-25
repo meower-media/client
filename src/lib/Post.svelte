@@ -43,7 +43,7 @@
 		"https://go.meower.org/",
 		"https://nextcloud.meower.org/",
 
-		// Cubeupload
+		// cubeupload
 		"https://u.cubeupload.com/",
 		"https://cubeupload.com/",
 
