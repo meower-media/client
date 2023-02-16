@@ -7,15 +7,14 @@ assignees: ''
 
 ---
 
-<!-- MEOWER BUG REPORT INSTRUCTIONS
+<!-- MEOWER CLIENT BUG REPORT INSTRUCTIONS
 Before you continue, please read the following instructions provided:
 
 Replace the title of your issue with the name of the branch and version of the server you are using, and a brief summary of the issue, and then fill out the form below.
 
 What to report:
 - Unexpected behavior
-- Endpoint malfunction
-- Server errors
+- Graphical glitches
 
 What NOT to report:
 - Bugs in unofficial client builds or anything not from our official source repo.
