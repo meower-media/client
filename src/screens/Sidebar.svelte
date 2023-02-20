@@ -80,7 +80,7 @@
 	</button>
 	<button
 		on:click={() => goto("inbox")}
-		class="round"
+		class="inbox-btn round"
 		class:new-msgs={$user.unread_inbox}
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />
@@ -246,7 +246,9 @@
 		.home-btn:hover > img {
 			transform: rotateY(180deg) rotateX(360deg) scale(1.1);
 		}
-		/* mail would go here */
+		.inbox-btn:hover > img {
+			transform: perspective(2em) rotateX(360deg) scale(1.1);
+		}
 		.gc-btn:hover > img {
 			transform: skewY(175deg) scale(1.1);
 		}
@@ -259,7 +261,9 @@
 		.settings-btn:hover > img {
 			transform: rotate(360deg) scale(1.1);
 		}
-		/* profile would go here **/
+		.profile-btn:hover > img {
+			transform: rotate(360deg) scale(1.1);
+		}
 		.logout-btn:hover > img {
 			transform: perspective(2em) rotateY(380deg) scale(1.1);
 		}
