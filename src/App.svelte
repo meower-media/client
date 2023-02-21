@@ -19,7 +19,6 @@
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
-	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
@@ -117,8 +116,6 @@
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
-		{:else if $modalPage === "modUserInp"}
-			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 			<!-- Group chats -->
