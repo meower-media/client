@@ -1,13 +1,13 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, user, modalShown} from "../stores.js";
+	import {screen, setupPage, modalShown} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
 
 	import {tick} from "svelte";
 
-	let typedUsername = "";
+	let deleteStatus = "";
 </script>
 
 <Modal
@@ -19,18 +19,38 @@
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async e => {
+				if (!e.target[0].value) {
+					deleteStatus = "Invalid password!";
+					return false;
+				}
+
+				e.target[2].disabled = true;
+
 				await clm.meowerRequest({
 					cmd: "direct",
-					val: {cmd: "del_account", val: ""},
+					val: {cmd: "del_account", val: e.target[0].value},
+				}).then(async () => {
+					$modalShown = false;
+
+					localStorage.clear();
+
+					screen.set("setup");
+					await tick();
+					setupPage.set("reconnect");
+				}).catch(code => {
+					e.target[2].disabled = false;
+					switch (code) {
+						case "I:011 | Invalid Password":
+							deleteStatus = "Invalid password!";
+							break;
+						case "E:106 | Too many requests":
+							deleteStatus =
+								"Too many requests! Please try again later.";
+							break;
+						default:
+							deleteStatus = `Unexpected ${code} error!`;
+					}
 				});
-
-				$modalShown = false;
-
-				localStorage.clear();
-
-				screen.set("setup");
-				await tick();
-				setupPage.set("reconnect");
 			}}
 		>
 			<span style="color: red;"
@@ -38,16 +58,17 @@
 				this action is irreversible! Are you absolutely sure you would
 				like to permanently delete your account?</span
 			><br /><br />
-			<span
-				>Please confirm your username below to be able to delete your
-				account:</span
-			><br />
+			{#if deleteStatus}
+				<label for="password-input" style="color: red;"
+					>{deleteStatus}</label
+				>
+			{/if}
 			<input
-				type="text"
+				id="password-input"
+				type="password"
 				class="modal-input white"
-				placeholder="Username"
-				maxlength="20"
-				bind:value={typedUsername}
+				placeholder="Password"
+				maxlength="255"
 			/><br /><br />
 			<div class="modal-buttons">
 				<button
@@ -56,9 +77,7 @@
 						$modalShown = false;
 					}}>Cancel</button
 				>
-				<button type="submit" disabled={!(typedUsername === $user.name)}
-					>Delete Account</button
-				>
+				<button type="submit">Delete Account</button>
 			</div>
 		</form>
 	</div>
