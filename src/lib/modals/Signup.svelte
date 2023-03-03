@@ -153,7 +153,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
-					maxlength="64"
+					maxlength="255"
 					value={password}
 				/><br />
 				<p class="checkboxes">
