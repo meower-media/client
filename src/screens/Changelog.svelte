@@ -7,6 +7,19 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.5.4</h2>
+	<ul>
+		<li>Require password confirmation for changing account password</li>
+		<li>Require password confirmation for deleting account</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.5.3</h2>
+	<ul>
+		<li>Replace the grey cat profile picture per request of the original artist</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.5.2</h2>
 	<ul>
 		<li>Fix the image host whitelist not working</li>

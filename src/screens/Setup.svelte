@@ -258,7 +258,7 @@
 					(Several features will be unavailable while not logged in.)
 				</p>
 				<div>
-					<p class="small">Meower Svelte v1.5.2</p>
+					<p class="small">Meower Svelte v1.5.4</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
@@ -281,7 +281,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="64" />
+				<input type="password" placeholder="Password" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"
@@ -406,7 +406,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="64" />
+				<input type="password" placeholder="Password" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"
