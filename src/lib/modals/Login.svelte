@@ -76,10 +76,6 @@
 						case "E:018 | Account Banned":
 							modalPage.set("banned");
 							break;
-						case "E:107 | Packet too large":
-							loginStatus =
-								"The username and/or password is too long!";
-							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =
 								"Usernames must not have spaces or other special characters!";
@@ -140,7 +136,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
-					maxlength="64"
+					maxlength="255"
 					value={password}
 				/><br />
 				<p class="checkboxes">

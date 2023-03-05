@@ -281,7 +281,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="64" />
+				<input type="password" placeholder="Password" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"
@@ -406,7 +406,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="64" />
+				<input type="password" placeholder="Password" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"

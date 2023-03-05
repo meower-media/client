@@ -10,10 +10,22 @@
 	<h2>1.6</h2>
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
-		<li>Fixed misspelling error within Update Quote</li>
 		<li>Add https://forums.meower.org/ and https://nextcloud.meower.org/ to the image host whitelist</li>
 	</ul>
 	</Container>
+<Container>
+	<h2>1.5.4</h2>
+	<ul>
+		<li>Require password confirmation for changing account password</li>
+		<li>Require password confirmation for deleting account</li>
+	</ul>
+</Container>
+<Container>
+	<h2>1.5.3</h2>
+	<ul>
+		<li>Replace the grey cat profile picture per request of the original artist</li>
+	</ul>
+</Container>
 <Container>
 	<h2>1.5.2</h2>
 	<ul>
