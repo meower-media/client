@@ -5,7 +5,6 @@
 <script>
 	import {
 		ulist,
-		mainPage as page,
 	} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";

@@ -6,29 +6,26 @@ export const profileCache = writable({});
 let _profileCache;
 profileCache.subscribe(v => (_profileCache = v));
 
-export default async function loadProfile(username) {
-	if (_profileCache[username] && !_profileCache[username].temporary) {
-		return _profileCache[username];
-	}
+const SPECIAL_USERS = {
+	Notification: 101,
+	Announcement: 102,
+	Server: 102,
+};
 
-	if (username === "Notification") {
-		_profileCache[username] = {
-			pfp_data: 101,
+function getCache(username, ignoreSpecialUsers) {
+	if (!_profileCache[username]) return undefined;
+	if (!ignoreSpecialUsers && (username in SPECIAL_USERS)) {
+		return {
+			..._profileCache[username],
+			pfp_data: SPECIAL_USERS[username],
 		};
-		profileCache.set(_profileCache);
-		return _profileCache[username];
-	} else if (username === "Announcement") {
-		_profileCache[username] = {
-			pfp_data: 102,
-		};
-		profileCache.set(_profileCache);
-		return _profileCache[username];
-	} else if (username === "Server") {
-		_profileCache[username] = {
-			pfp_data: 102,
-		};
-		profileCache.set(_profileCache);
-		return _profileCache[username];
+	}
+	return _profileCache[username];
+}
+
+export default async function loadProfile(username, ignoreSpecialUsers) {
+	if (_profileCache[username] && !_profileCache[username].temporary) {
+		return getCache(username, ignoreSpecialUsers);
 	}
 
 	_profileCache[username] = {
@@ -56,5 +53,5 @@ export default async function loadProfile(username) {
 		profileCache.set(_profileCache);
 		throw e;
 	}
-	return _profileCache[username];
+	return getCache(username, ignoreSpecialUsers);
 }

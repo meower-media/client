@@ -35,7 +35,6 @@
 
 		try {
 			// 25 posts per page...
-			let realPage = page + Math.floor(itemOffset / itemsPerPage);
 			let realOffset = itemOffset % itemsPerPage;
 
 			const first = await loadPage(page);
@@ -48,6 +47,7 @@
 			let overflow;
 			if (realOffset > 0 && pagesLoaded < numPages) {
 				overflow = await loadPage(page + 1);
+				numPages = first.numPages;
 
 				realItems = realItems.concat(
 					overflow.result.slice(0, realOffset)
@@ -97,7 +97,7 @@
 					<div class="loading-page">
 						<Loading />
 					</div>
-				{:else if numPages && numPages > pagesLoaded || true}
+				{:else if numPages && (numPages > pagesLoaded)}
 					<button
 						class="load-more"
 						on:click={() => loadPageWithOverflow(pagesLoaded + 1)}

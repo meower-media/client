@@ -188,13 +188,25 @@
 				page.set("profile");
 			}}
 		>
-			<PFP
-				icon={$profileCache[post.user] && !webhook
-					? $profileCache[post.user].pfp_data
-					: -3}
-				alt="{post.user}'s profile picture"
-				online={$ulist.includes(post.user)}
-			/>
+			{#await webhook || loadProfile(post.user)}
+				<PFP
+					icon={-2}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:then profile}
+				<PFP
+					icon={webhook ? -3 : profile.pfp_data}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:catch}
+				<PFP
+					icon={-3}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{/await}
 		</button>
 		<div class="creatordate">
 			<div class="creator">
@@ -237,7 +249,7 @@
 	<p class="post-content">{post.content}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank"
+			<a href={url} target="_blank" rel="noreferrer"
 				><img
 					src={url}
 					alt={title}

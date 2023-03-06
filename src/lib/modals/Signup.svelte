@@ -172,7 +172,7 @@
 					<label for="accept-terms">
 						I agree to <a
 							href="https://meower.org/legal"
-							target="_blank"
+							target="_blank" rel="noreferrer"
 							>Meower's Terms of Service and Privacy Policy</a
 						>
 					</label>

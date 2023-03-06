@@ -6,17 +6,22 @@
 		spinner,
 		lastTyped,
 		mainPage as page,
-	} from "../lib/stores.js";
-	import {shiftHeld} from "../lib/keyDetect.js";
-	import {playNotification} from "../lib/sounds.js";
-	import PagedList from "../lib/PagedList.svelte";
-	import Post from "../lib/Post.svelte";
-	import TypingIndicator from "../lib/TypingIndicator.svelte";
-	import * as clm from "../lib/clmanager.js";
-	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+	} from "./stores.js";
+	import {shiftHeld} from "./keyDetect.js";
+	import {playNotification} from "./sounds.js";
+	import PagedList from "./PagedList.svelte";
+	import Container from "./Container.svelte";
+	import Post from "./Post.svelte";
+	import TypingIndicator from "./TypingIndicator.svelte";
+	import * as clm from "./clmanager.js";
+	import {apiUrl, encodeApiURLParams} from "./urls.js";
+
+	import {createEventDispatcher} from "svelte";
+	const dispatch = createEventDispatcher();
 
 	export let fetchUrl = "home";
 	export let postOrigin = "home";
+	export let chatName = "Home";
 	export let canPost = true;
 
 	// @ts-ignore
@@ -26,22 +31,16 @@
 	import {flip} from "svelte/animate";
 	import {onDestroy} from "svelte";
 
-	// comments probably from blocs:
-	// import AddMember from "src/lib/modals/AddMember.svelte";
-	// Zed just told me the cl4 port will move the mod panel to a seperate site
-
 	let id = 0;
 	let postErrors = "";
 
-	// As we use a Load More button and the home is sorted newest-first,
-	// we need an offset for posts to be continuous.
-	let postOffset = 0;
-
-	let postInput;
+	let postInput, submitBtn;
 
 	// PagedList stuff
 	let list;
 	let items = [];
+
+	let firstLoad = true;
 
 	/**
 	 * Loads a page.
@@ -52,40 +51,60 @@
 	 * }>}
 	 */
 	async function loadPage(page = 1) {
+		if (!fetchUrl) {
+			// don't load anything
+			if (firstLoad) dispatch("loaded");
+			firstLoad = true;
+			return {
+				numPages: 1,
+				result: [],
+			};
+		}
+
 		let result;
 
-		let numPages = 0;
-
-		let path = `${fetchUrl}?page=`;
+		let path = `${fetchUrl}?autoget&page=`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
 		const resp = await fetch(`${apiUrl}${path}${page}`, {
 			headers: $authHeader,
 		});
 
 		if (!resp.ok) {
-			throw new Error(
-				"Response code is not OK; code is " + resp.status
-			);
+			throw new Error("Response code is not OK; code is " + resp.status);
 		}
 		/**
 		 * @type {import("./types.js").ServerPostList}
 		 */
 		const json = await resp.json();
 
+		const isInbox = fetchUrl === "inbox";
+
 		/**
 		 * @type {Array<import("./types.js").ListPost>}
 		 */
-		result = json.autoget.map(post => ({
-			id: id++,
-			post_id: post.post_id,
-			user: post.u,
-			content: post.p,
-			date: post.t.e,
-		}));
-
+		result = json.autoget.map(post => {
+			if (isInbox) {
+				if (post.u === "Server") {
+					post.u = "Announcement";
+				} else {
+					post.u = "Notification";
+				}
+			}
+			return {
+				id: id++,
+				post_id: post.post_id,
+				user: post.u,
+				content: post.p,
+				date: post.t.e,
+			};
+		});
+		const numPages = json["pages"];
+		
+		if (firstLoad) dispatch("loaded");
+		firstLoad = true;
 		return {
 			numPages,
-			result
+			result,
 		};
 	}
 
@@ -108,18 +127,41 @@
 	function listenOnLink() {
 		const evId = clm.link.on("direct", cmd => {
 			if (!cmd.val) return;
-			if (!cmd.val.mode || !cmd.val.post_id) return;
-			if (cmd.val.post_origin !== postOrigin) return;
 
-			list.addItem({
-				post_id: cmd.val._id,
-				user: cmd.val.u,
-				content: cmd.val.p,
-				date: cmd.val.t.e,
-			});
+			const isGC = postOrigin !== "home";
+			if (!isGC || cmd.val.state === 2) {
+				if (!cmd.val.post_id) return;
+				if (cmd.val.post_origin !== postOrigin) return;
+
+				list.addItem({
+					id: id++,
+					post_id: cmd.val._id,
+					user: cmd.val.u,
+					content: cmd.val.p,
+					date: cmd.val.t.e,
+				});
+			}
 
 			if ($user.sfx && cmd.val.u !== $user.name) {
 				playNotification();
+			}
+			if (isGC && cmd.val.state === 0) {
+				list.addItem({
+					id: id++,
+					post_id: "",
+					user: "Server",
+					content: `${cmd.val.u} left ${chatName}.`,
+					date: new Date().getTime() / 1000,
+				});
+			}
+			if (isGC && cmd.val.state === 1) {
+				list.addItem({
+					id: id++,
+					post_id: "",
+					user: "Server",
+					content: `${cmd.val.u} joined ${chatName}!`,
+					date: new Date().getTime() / 1000,
+				});
 			}
 			if (cmd.val.mode === "delete") {
 				items = items.filter(post => post.post_id !== cmd.val.id);
@@ -148,15 +190,13 @@
 		<form
 			class="createpost"
 			autocomplete="off"
-			on:submit|preventDefault={/** @type {SubmitEvent} */e => {
+			on:submit|preventDefault={/** @type {SubmitEvent} */ e => {
 				postErrors = "";
 
 				// @ts-ignore
 				const input = e.target.elements.input;
 				// @ts-ignore
 				const content = e.target.elements.input.value;
-				// @ts-ignore
-				const submitBtn = e.target.elements.submit;
 
 				if (!content.trim()) {
 					postErrors = "You cannot send an empty post!";
@@ -165,17 +205,22 @@
 
 				spinner.set(true);
 
-
 				submitBtn.disabled = true;
 				if ($user.name) {
 					clm.meowerRequest({
 						cmd: "direct",
 						val: {
-							cmd: postOrigin === "home" ? "post_home" : "post_chat",
-							val: postOrigin === "home" ? content : {
-								p: content,
-								chatiFd: postOrigin
-							},
+							cmd:
+								postOrigin === "home"
+									? "post_home"
+									: "post_chat",
+							val:
+								postOrigin === "home"
+									? content
+									: {
+											p: content,
+											chatid: postOrigin,
+									  },
 						},
 					}).then(data => {
 						submitBtn.disabled = false;
@@ -184,19 +229,16 @@
 							input.value = "";
 							input.rows = "1";
 							input.style.height = "45px";
-						} else if (
-							data === "E:106 | Too many requests"
-						) {
+						} else if (data === "E:106 | Too many requests") {
 							postErrors = "You're posting too fast!";
 						} else {
-							postErrors =
-								"Unexpected " + data + " error!";
+							postErrors = "Unexpected " + data + " error!";
 						}
 					});
 					return false;
 				} else {
 					post("https://webhooks.meower.org/post/home", {
-						post: content
+						post: content,
 					});
 					submitBtn.disabled = false;
 					input.value = "";
@@ -223,8 +265,11 @@
 							val: {
 								cmd: "set_chat_state",
 								val: {
-									chatid: "livechat",
-									state: 101,
+									chatid:
+										postOrigin === "home"
+											? "livechat"
+											: postOrigin,
+									state: postOrigin === "home" ? 101 : 100,
 								},
 							},
 							listener: "typing_indicator",
@@ -234,21 +279,17 @@
 				on:keydown={event => {
 					if (event.key == "Enter" && !shiftHeld) {
 						event.preventDefault();
-						document.getElementById("submitpost").click();
+						submitBtn.click();
 					}
 				}}
 				bind:this={postInput}
 			/>
-			<button name="submit">Post</button>
+			<button bind:this={submitBtn} name="submit">Post</button>
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
 	<TypingIndicator />
-	<PagedList
-		bind:items
-		{loadPage}
-		bind:this={list}
-	>
+	<PagedList bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items>
 			{#each items as post (post.id)}
 				<div
@@ -259,17 +300,23 @@
 				</div>
 			{/each}
 		</svelte:fragment>
-		<svelte:fragment slot="error" let:error>
-			Error loading posts. Please try again.
-			<pre><code>{error}</code></pre>
-		</svelte:fragment>
-		<svelte:fragment slot="empty">
-			{#if $user.name}
-				No posts here. Check back later or be the first to post!
-			{:else}
-				No posts here. Check back later!
-			{/if}
-		</svelte:fragment>
+		<slot name="error" slot="error" let:error error={error}>
+			<Container>
+				Error loading posts. Please try again.
+				<pre><code>{error}</code></pre>
+			</Container>
+		</slot>
+		<slot name="empty" slot="empty">
+			<Container>
+				{#if postOrigin === "livechat"}
+					{""}
+				{:else if $user.name}
+					No posts here. Check back later or be the first to post!
+				{:else}
+					No posts here. Check back later!
+				{/if}
+			</Container>
+		</slot>
 	</PagedList>
 </div>
 

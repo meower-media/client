@@ -5,6 +5,15 @@
 	export let online = false;
 	export let size = 1;
 
+	import errorIcon from "../assets/avatars/icon_err.svg";
+	/**
+	 * @type {*}
+	 */
+	const icons = import.meta.glob("../assets/avatars/*.svg", {
+		import: "default",
+		eager: true,
+	});
+
 	// only respond to `icon` changing
 	let id;
 	function setId(val) {
@@ -21,13 +30,12 @@
 		<img
 			{alt}
 			title={alt}
-			src={new URL(
-				`./../assets/avatars/icon_${
+			src={icons[
+				`../assets/avatars/icon_${
 					id === -1 ? 21 : id === -2 ? "err" : id - 1
-				}.svg`,
-				import.meta.url
-			).href}
-			on:error|once={() => (id = -2)}
+				}.svg`
+			] || errorIcon}
+			on:error={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
