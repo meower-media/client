@@ -4,7 +4,7 @@
 
 	Parameters:
 	- fetchUrl: The API path to fetch (like "home" for /home). Adds ?autoget and ?page= by default.
-		If falsy, a page won't be fetched by default.
+		If falsy, a page won't be fetched by default (the list will start empty).
 	- postOrigin: A post_origin to listen to for live post updates
 		(for example, posts from home have the origin "home").
 		If falsy, posts will not be listened to.
