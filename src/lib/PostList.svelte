@@ -1,3 +1,24 @@
+<!--
+	Component that powers lists of posts like home.
+	Also customizable!
+
+	Parameters:
+	- fetchUrl: The API path to fetch (like "home" for /home). Adds ?autoget and ?page= by default.
+		If falsy, a page won't be fetched by default.
+	- postOrigin: A post_origin to listen to for live post updates
+		(for example, posts from home have the origin "home").
+		If falsy, posts will not be listened to.
+	- chatName: Only needed for group chats. Used for join/leave messages.
+	- canPost: A boolean which indicates if this list can be posted in or not.
+
+	Slots:
+	- error and empty: These slots unction the same as PagedList (see its comment).
+		There are no "loaded" or "item" slots.
+	
+	Events:
+	- loaded: Fired when the list loads for the first time.
+-->
+
 <script>
 	import {
 		authHeader,

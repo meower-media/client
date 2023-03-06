@@ -1,3 +1,22 @@
+<!--
+	Component that powers load more-able lists like home.
+	Customizable!
+
+	Parameters:
+	- items: An array of items, which can be modified if you want.
+	- loadPage: A function that takes a (page: number) and should return a {numPages: number, result: *[]}.
+		The component will call this multiple times if needed.
+	- addItem (const): A function that can be called to add an item to the front of the list,
+		incrementing the offset.
+	- itemsPerPage: The number of items per page (default 25).
+	Slots:
+	- empty: Shown if the list has no items.
+	- loaded: Shown if the list has items. Has an (items: *[]) parameter.
+	- item: If `loaded` is not specified, shown for each item of the list. 
+		Has the parameters (items: *[], item: *).
+	- error: Shown if an error occurs while loading the list.
+-->
+
 <script>
 	import Loading from "./Loading.svelte";
 
@@ -34,7 +53,7 @@
 		pageLoading = true;
 
 		try {
-			// 25 posts per page...
+			// Some amount of items per page...
 			let realOffset = itemOffset % itemsPerPage;
 
 			const first = await loadPage(page);
@@ -45,9 +64,13 @@
 			numPages = first.numPages;
 
 			let overflow;
+			// Occasionally, 2 pages will have to be loaded
+			// so Load More loads {itemsPerPage} posts
+			// This happens if an item is dynamically
+			// added to the list
 			if (realOffset > 0 && pagesLoaded < numPages) {
 				overflow = await loadPage(page + 1);
-				numPages = first.numPages;
+				numPages = overflow.numPages;
 
 				realItems = realItems.concat(
 					overflow.result.slice(0, realOffset)
@@ -72,8 +95,9 @@
 	let pageLoading = false;
 	let numPages = null;
 
-	// As we use a Load More button and the home is sorted newest-first,
-	// we need an offset for posts to be continuous.
+	// Some pages add items dynamically.
+	// Store the offset of dynamically added items
+	// so Load More loads the right page(s)
 	let itemOffset = 0;
 </script>
 
@@ -84,10 +108,10 @@
 		</div>
 	{:then}
 		{#if !items || items.length === 0}
-			<slot name="empty" {items} />
+			<slot name="empty"/>
 		{:else}
 			<slot name="loaded" {items}>
-				{#each items as item (item.id)}
+				{#each items as item}
 					<slot name="item" {item} {items} />
 				{/each}
 			</slot>
