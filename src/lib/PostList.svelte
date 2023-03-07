@@ -18,7 +18,6 @@
 	Events:
 	- loaded: Fired when the list loads for the first time.
 -->
-
 <script>
 	import {
 		authHeader,
@@ -120,7 +119,7 @@
 			};
 		});
 		const numPages = json["pages"];
-		
+
 		if (firstLoad) dispatch("loaded");
 		firstLoad = true;
 		return {
@@ -321,22 +320,24 @@
 				</div>
 			{/each}
 		</svelte:fragment>
-		<slot name="error" slot="error" let:error error={error}>
+		<slot name="error" slot="error" let:error {error}>
 			<Container>
 				Error loading posts. Please try again.
 				<pre><code>{error}</code></pre>
 			</Container>
 		</slot>
 		<slot name="empty" slot="empty">
-			<Container>
-				{#if postOrigin === "livechat"}
-					{""}
-				{:else if $user.name}
-					No posts here. Check back later or be the first to post!
-				{:else}
-					No posts here. Check back later!
-				{/if}
-			</Container>
+			{#if postOrigin === "livechat"}
+				{""}
+			{:else}
+				<Container>
+					{#if $user.name}
+						No posts here. Check back later or be the first to post!
+					{:else}
+						No posts here. Check back later!
+					{/if}
+				</Container>
+			{/if}
 		</slot>
 	</PagedList>
 </div>
