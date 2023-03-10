@@ -10,7 +10,7 @@
 <div class="Search">
 	<Container>
 		<h1>Search</h1>
-		Meower search, statistics and more!
+		meower search, statistics and more!
 	</Container>
 	<Container>
 		<div class="settings-controls">
@@ -29,7 +29,7 @@
 		Find all the legit users, memes, bots and namesnipes. Coming Soon™
 	</Container>
 	<Container>
-		<h1>Search for user</h1>
+		<h1>Go to User</h1>
 		<form
 			class="createpost"
 			autocomplete="off"
@@ -89,7 +89,7 @@
 					}
 				}}
 			/>
-			<button>Search</button>
+			<button>Go to User</button>
 		</form>
 		<div class="errors">{errors}</div>
 	</Container>
