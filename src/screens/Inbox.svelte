@@ -129,8 +129,8 @@
 	{:then}
 		<Container>
 			<h1>Inbox Messages</h1>
-			Here are your latest inbox messages. We will send announcements and moderator
-			messages to here!
+			Here are your latest inbox messages. Announcements and moderator
+			messages will be shown here!
 		</Container>
 		{#if posts.length < 1}
 			No messages yet. Check back later!
