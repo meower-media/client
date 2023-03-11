@@ -77,7 +77,7 @@
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
-			bridged = post.user === "Discord";
+			bridged = (post.user === "Discord") || (post.user === "revolt") || (post.user === "Revower");
 			webhook = post.user == "Webhooks";
 		}
 

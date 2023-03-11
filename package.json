@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"svelte-textarea-autoresize": "^1.0.0",
-		"svelte-twemoji": "^1.0.4"
+		"svelte-twemoji": "^1.0.4",
+		"workbox-precaching": "^6.5.4"
 	}
 }
