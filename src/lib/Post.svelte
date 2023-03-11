@@ -205,7 +205,7 @@
 				{#if bridged}
 					<Badge
 						text="BRIDGED"
-						title="This post is bridged from a external service by a bot"
+						title="This post is bridged from an external service by a bot"
 					/>
 				{/if}
 
