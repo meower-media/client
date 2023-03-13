@@ -21,6 +21,7 @@
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
+	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -128,6 +129,8 @@
 			<AddMemberModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
+		{:else if $modalPage === "linkDiscord"}
+			<LinkDiscord />
 		{:else}
 			<ErrorModal />
 		{/if}
