@@ -134,6 +134,15 @@
 					modalShown.set(true);
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
 			>
+		{:else if $profileClicked === "Discord"}
+			<button
+				class="long"
+				title="Link Discord Account"
+				on:click={() => {
+					modalPage.set("linkDiscord");
+					modalShown.set(true);
+				}}>Link Discord Account</button
+			>
 		{/if}
 
 		<button
@@ -143,7 +152,7 @@
 				window.scrollTo(0, 0);
 				page.set("blank");
 				tick().then(() => page.set("recent"));
-			}}>View recent posts</button
+			}}>View Recent Posts</button
 		>
 
 		<button class="long" disabled>Add to Chat</button>
