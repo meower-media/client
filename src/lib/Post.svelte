@@ -75,7 +75,7 @@
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
-			bridged = post.user === "Discord";
+			bridged = (post.user === "Discord") || (post.user === "revolt") || (post.user === "Revower");
 			webhook = post.user == "Webhooks";
 		}
 
@@ -203,7 +203,7 @@
 				{#if bridged}
 					<Badge
 						text="BRIDGED"
-						title="This post is a post bridged from a Discord server by the @Discord bot"
+						title="This post is bridged from an external service by a bot"
 					/>
 				{/if}
 
