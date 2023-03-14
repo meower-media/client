@@ -38,17 +38,15 @@
 		// Meower
 		"https://http.meower.org/",
 		"https://assets.meower.org/",
-		"https://api.meower.org/",
 		"https://forums.meower.org/",
-		// not everyone can add urls to go.meower.org, should be fine
-		"https://go.meower.org/",
+		"https://go.meower.org/", // not everyone can add urls to go.meower.org, should be fine
 		"https://nextcloud.meower.org/",
 
 		// cubeupload
 		"https://u.cubeupload.com/",
 		"https://cubeupload.com/",
 
-		// imgBB
+		// ImgBB
 		"https://i.ibb.co/",
 
 		// Tenor
@@ -237,14 +235,14 @@
 	<p class="post-content">{post.content}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank"
-				><img
+			<a href={url} target="_blank">
+                <img
 					src={url}
 					alt={title}
-					title="{title} ({url})"
+					title={title}
 					class="post-image"
-				/></a
-			>
+				/>
+            </a>
 		{/each}
 	</div>
 </Container>

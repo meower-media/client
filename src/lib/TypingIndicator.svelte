@@ -1,6 +1,5 @@
 <!--
-	The Meower*-style loading animaion, as opposed to YOU SPIN ME RIGHT ROUND-
-	*from Beta 4 and before, Beta 5 dropped this in favor of Meowy.
+	Shows you who's typing.
 -->
 <script>
 	import Container from "../lib/Container.svelte";
@@ -25,7 +24,7 @@
 			{#if _typing.length === 1}
 				<span class="text"><b>{_typing[0]}</b> is typing...</span>
 			{:else if _typing.length >= 5}
-				<span class="text">5 or more people are typing..</span>
+				<span class="text"><b>5 or more people</b> are typing..</span>
 			{:else}
 				<span class="text"
 					><b

@@ -210,9 +210,15 @@
 			</div> -->
 			<!-- Zed just told me the cl4 port will move the mod panel to a seperate site -->
 			<h1>Home</h1>
-			There are currently {_ulist.length} user(s) online{#if _ulist.length}{" "}({_ulist.join(
+            {#if _ulist.length == 1}
+                You are the only user online.
+            {:else if _ulist.length == 0}
+                Nobody is online.
+            {:else}
+			    There are currently {_ulist.length} users online{#if _ulist.length}{" "}({_ulist.join(
 					", "
 				)}){/if}.
+            {/if}
 		</Container>
 		<!-- I think we discussed that guest posting will not be in the official client, due to moderation reasons -->
 		{#if $user.name}
@@ -312,9 +318,13 @@
 		<TypingIndicator />
 		{#if posts.length < 1}
 			{#if $user.name}
-				No posts here. Check back later or be the first to post!
+                <Container>
+				    No posts here. Check back later or be the first to post!
+                </Container>
 			{:else}
-				No posts here. Check back later!
+                <Container>
+				    No posts here. Check back later!
+                </Container>
 			{/if}
 		{:else}
 			{#each posts as post (post.id)}
