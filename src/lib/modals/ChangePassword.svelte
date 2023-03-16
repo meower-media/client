@@ -35,36 +35,45 @@
 
 				e.target[4].disabled = true;
 
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "change_pswd", val: {old: e.target[0].value, new: e.target[1].value}},
-				}).then(async () => {
-					$modalShown = false;
-
-					await clm.meowerRequest({
+				await clm
+					.meowerRequest({
 						cmd: "direct",
-						val: {cmd: "del_tokens", val: ""},
-					});
-					
-					localStorage.clear();
+						val: {
+							cmd: "change_pswd",
+							val: {
+								old: e.target[0].value,
+								new: e.target[1].value,
+							},
+						},
+					})
+					.then(async () => {
+						$modalShown = false;
 
-					screen.set("setup");
-					await tick();
-					setupPage.set("reconnect");
-				}).catch(code => {
-					e.target[4].disabled = false;
-					switch (code) {
-						case "I:011 | Invalid Password":
-							changeStatus = "Current password is invalid!";
-							break;
-						case "E:106 | Too many requests":
-							changeStatus =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							changeStatus = `Unexpected ${code} error!`;
-					}
-				});
+						await clm.meowerRequest({
+							cmd: "direct",
+							val: {cmd: "del_tokens", val: ""},
+						});
+
+						localStorage.clear();
+
+						screen.set("setup");
+						await tick();
+						setupPage.set("reconnect");
+					})
+					.catch(code => {
+						e.target[4].disabled = false;
+						switch (code) {
+							case "I:011 | Invalid Password":
+								changeStatus = "Current password is invalid!";
+								break;
+							case "E:106 | Too many requests":
+								changeStatus =
+									"Too many requests! Please try again later.";
+								break;
+							default:
+								changeStatus = `Unexpected ${code} error!`;
+						}
+					});
 			}}
 		>
 			{#if changeStatus}

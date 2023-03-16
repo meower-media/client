@@ -27,7 +27,7 @@
  * 	type: number,
  * 	u: string
  * }} ServerPost
-*/
+ */
 
 /**
  * @typedef {{
@@ -36,7 +36,7 @@
  * 	"page#":  number,
  * 	pages: number
  * }} ServerPostList
-*/
+ */
 
 // make vscode recognize this as a module
 export {};

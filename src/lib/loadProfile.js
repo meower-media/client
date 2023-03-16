@@ -14,7 +14,7 @@ const SPECIAL_USERS = {
 
 function getCache(username, ignoreSpecialUsers) {
 	if (!_profileCache[username]) return undefined;
-	if (!ignoreSpecialUsers && (username in SPECIAL_USERS)) {
+	if (!ignoreSpecialUsers && username in SPECIAL_USERS) {
 		return {
 			..._profileCache[username],
 			pfp_data: SPECIAL_USERS[username],

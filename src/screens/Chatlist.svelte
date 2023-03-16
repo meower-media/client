@@ -26,7 +26,6 @@
 	import {tick} from "svelte";
 	import Modal from "../lib/Modal.svelte";
 
-
 	let items;
 	let toLeaveChat = false;
 
@@ -41,7 +40,7 @@
 	async function loadPage(page) {
 		if (page !== undefined) {
 			let ev, result, numPages;
-			
+
 			try {
 				ev = clm.link.on("direct", cmd => {
 					if (cmd.val.mode === "chats") {
@@ -58,7 +57,8 @@
 						},
 					},
 				});
-				if (!result || numPages === undefined) throw "This message should not appear";
+				if (!result || numPages === undefined)
+					throw "This message should not appear";
 				return {result, numPages};
 			} finally {
 				if (ev) clm.link.off(ev);
@@ -66,7 +66,7 @@
 		}
 		return {
 			numPages: 1,
-			result: []
+			result: [],
 		};
 	}
 </script>
@@ -134,7 +134,7 @@
 								}}
 							/>
 						</div>
-	
+
 						<h1>{chat.nickname}</h1>
 						Members: {chat.members.length > 100
 							? chat.members.slice(0, 99).join(", ") + "..."

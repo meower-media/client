@@ -12,18 +12,12 @@
 		Here are your latest inbox messages. We will send announcements and moderator
 		messages to here!
 	</Container>
-	<PostList
-		fetchUrl={"inbox"}
-		postOrigin={null}
-		canPost={false}
-	>
+	<PostList fetchUrl={"inbox"} postOrigin={null} canPost={false}>
 		<Container slot="error" let:error>
 			Error loading messages. Please try again.
 			<pre><code>{error}</code></pre>
 		</Container>
-		<Container slot="empty">
-			No messages here... somehow.
-		</Container>
+		<Container slot="empty">No messages here... somehow.</Container>
 	</PostList>
 </div>
 

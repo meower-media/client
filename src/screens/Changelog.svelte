@@ -10,9 +10,12 @@
 	<h2>1.6</h2>
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
-		<li>Add https://forums.meower.org/ and https://nextcloud.meower.org/ to the image host whitelist</li>
+		<li>
+			Add https://forums.meower.org/ and https://nextcloud.meower.org/ to
+			the image host whitelist
+		</li>
 	</ul>
-	</Container>
+</Container>
 <Container>
 	<h2>1.5.4</h2>
 	<ul>
@@ -23,7 +26,10 @@
 <Container>
 	<h2>1.5.3</h2>
 	<ul>
-		<li>Replace the grey cat profile picture per request of the original artist</li>
+		<li>
+			Replace the grey cat profile picture per request of the original
+			artist
+		</li>
 	</ul>
 </Container>
 <Container>
@@ -35,7 +41,10 @@
 <Container>
 	<h2>1.5.1</h2>
 	<ul>
-		<li>Fix the dango profile picture appearing twice when you have it selected</li>
+		<li>
+			Fix the dango profile picture appearing twice when you have it
+			selected
+		</li>
 	</ul>
 </Container>
 <Container>
@@ -69,9 +78,12 @@
 		<summary>Betas</summary>
 		<h3>Hotfix</h3>
 		<ul>
-			<li>Disable bot badges (they aren't officially supported, and the CL4 port will add them)</li>
+			<li>
+				Disable bot badges (they aren't officially supported, and the
+				CL4 port will add them)
+			</li>
 		</ul>
-		
+
 		<h3>Release</h3>
 		<ul>
 			<li>Banned status</li>

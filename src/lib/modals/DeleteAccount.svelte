@@ -26,31 +26,34 @@
 
 				e.target[2].disabled = true;
 
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "del_account", val: e.target[0].value},
-				}).then(async () => {
-					$modalShown = false;
+				await clm
+					.meowerRequest({
+						cmd: "direct",
+						val: {cmd: "del_account", val: e.target[0].value},
+					})
+					.then(async () => {
+						$modalShown = false;
 
-					localStorage.clear();
+						localStorage.clear();
 
-					screen.set("setup");
-					await tick();
-					setupPage.set("reconnect");
-				}).catch(code => {
-					e.target[2].disabled = false;
-					switch (code) {
-						case "I:011 | Invalid Password":
-							deleteStatus = "Invalid password!";
-							break;
-						case "E:106 | Too many requests":
-							deleteStatus =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							deleteStatus = `Unexpected ${code} error!`;
-					}
-				});
+						screen.set("setup");
+						await tick();
+						setupPage.set("reconnect");
+					})
+					.catch(code => {
+						e.target[2].disabled = false;
+						switch (code) {
+							case "I:011 | Invalid Password":
+								deleteStatus = "Invalid password!";
+								break;
+							case "E:106 | Too many requests":
+								deleteStatus =
+									"Too many requests! Please try again later.";
+								break;
+							default:
+								deleteStatus = `Unexpected ${code} error!`;
+						}
+					});
 			}}
 		>
 			<span style="color: red;"

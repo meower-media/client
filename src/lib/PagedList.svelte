@@ -16,7 +16,6 @@
 		Has the parameters (items: *[], item: *).
 	- error: Shown if an error occurs while loading the list.
 -->
-
 <script>
 	import Loading from "./Loading.svelte";
 
@@ -35,15 +34,15 @@
 	 *
 	 * @param {*} item
 	 */
-	export const addItem = function(item) {
+	export const addItem = function (item) {
 		id++;
 		items.unshift({
 			id,
-			...item
+			...item,
 		});
 		items = items;
 		itemOffset++;
-	}
+	};
 
 	export let itemsPerPage = 25;
 
@@ -83,7 +82,7 @@
 				id++;
 				return {
 					id,
-					...o
+					...o,
 				};
 			});
 		} finally {
@@ -108,7 +107,7 @@
 		</div>
 	{:then}
 		{#if !items || items.length === 0}
-			<slot name="empty"/>
+			<slot name="empty" />
 		{:else}
 			<slot name="loaded" {items}>
 				{#each items as item}
@@ -121,7 +120,7 @@
 					<div class="loading-page">
 						<Loading />
 					</div>
-				{:else if numPages && (numPages > pagesLoaded)}
+				{:else if numPages && numPages > pagesLoaded}
 					<button
 						class="load-more"
 						on:click={() => loadPageWithOverflow(pagesLoaded + 1)}

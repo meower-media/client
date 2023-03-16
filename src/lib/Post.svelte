@@ -75,7 +75,10 @@
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
-			bridged = (post.user === "Discord") || (post.user === "revolt") || (post.user === "Revower");
+			bridged =
+				post.user === "Discord" ||
+				post.user === "revolt" ||
+				post.user === "Revower";
 			webhook = post.user == "Webhooks";
 		}
 
@@ -92,15 +95,20 @@
 		images = [];
 		while (true) {
 			const result = iterator.next();
-			if (result.done) break
-			
+			if (result.done) break;
+
 			try {
 				new URL(result.value[2]);
 			} catch (e) {
 				continue;
-			};
-			
-			if (!IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) return;
+			}
+
+			if (
+				!IMAGE_HOST_WHITELIST.some(o =>
+					result.value[2].toLowerCase().startsWith(o.toLowerCase())
+				)
+			)
+				return;
 
 			images.push({
 				title: result.value[1],
@@ -248,13 +256,8 @@
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"
-				><img
-					src={url}
-					alt={title}
-					title={title}
-					class="post-image"
-				/>
-            </a>
+				><img src={url} alt={title} {title} class="post-image" />
+			</a>
 		{/each}
 	</div>
 </Container>
