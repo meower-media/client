@@ -129,6 +129,10 @@
 			...post,
 		});
 		posts = posts;
+		if (posts.length >= 50) {
+			posts.pop();
+			postOffset -= 1;
+		};
 	}
 
 	function post(url = "", data = {}) {
