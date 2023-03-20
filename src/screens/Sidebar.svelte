@@ -149,6 +149,7 @@
 		</button>
 		<button
 			on:click={() => {
+				popupShown = true;
 				modalPage.set("logout");
 				modalShown.set(true);
 			}}
