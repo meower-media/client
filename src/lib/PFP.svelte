@@ -4,6 +4,7 @@
 	export let alt = "Profile picture";
 	export let online = false;
 	export let size = 1;
+	export let raw = false;
 
 	import errorIcon from "../assets/avatars/icon_err.svg";
 	/**
@@ -22,11 +23,11 @@
 	$: setId(icon);
 </script>
 
-<span class="pfp-container" style:--size={size}>
-	{#if online}
+<span class:pfp-container={!raw} style:--size={size}>
+	{#if online && !raw}
 		<span class="online" />
 	{/if}
-	<span class="pfp">
+	<span class:pfp={!raw} class:raw-pfp={raw}>
 		<img
 			{alt}
 			title={alt}
@@ -48,6 +49,10 @@
 	.pfp-container {
 		display: inline-block;
 		position: relative;
+	}
+	.raw-pfp {
+		width: calc(var(--size) * 3.75em);
+		height: calc(var(--size) * 3.75em);
 	}
 	.pfp {
 		width: calc(var(--size) * 3.75em);
