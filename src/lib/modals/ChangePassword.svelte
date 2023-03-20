@@ -20,37 +20,60 @@
 		<form
 			on:submit|preventDefault={async e => {
 				if (!e.target[0].value) {
-					changeStatus = "You must specify your current password";
+					changeStatus = "Current password is invalid!";
 					return false;
 				}
 				if (!e.target[1].value) {
 					changeStatus =
-						"You must specify a new password to change your password";
+						"You must specify a new password to change your password!";
 					return false;
 				}
 				if (e.target[1].value !== e.target[2].value) {
-					changeStatus = "New passwords do not match";
+					changeStatus = "New passwords do not match!";
 					return false;
 				}
 
 				e.target[4].disabled = true;
 
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "change_pswd", val: e.target[1].value},
-				});
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "del_tokens", val: ""},
-				});
+				await clm
+					.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "change_pswd",
+							val: {
+								old: e.target[0].value,
+								new: e.target[1].value,
+							},
+						},
+					})
+					.then(async () => {
+						$modalShown = false;
 
-				$modalShown = false;
+						await clm.meowerRequest({
+							cmd: "direct",
+							val: {cmd: "del_tokens", val: ""},
+						});
 
-				localStorage.clear();
+						localStorage.clear();
 
-				screen.set("setup");
-				await tick();
-				setupPage.set("reconnect");
+						screen.set("setup");
+						await tick();
+						setupPage.set("reconnect");
+					})
+					.catch(code => {
+						e.target[4].disabled = false;
+						switch (code) {
+							case "I:011 | Invalid Password":
+								changeStatus = "Current password is invalid!";
+								break;
+							case "E:106 | Too many requests":
+								changeStatus =
+									"Too many requests! Please try again later.";
+								break;
+							default:
+								changeStatus = `Unexpected ${code} error!`;
+						}
+					});
 			}}
 		>
 			{#if changeStatus}
@@ -63,20 +86,20 @@
 				type="password"
 				class="modal-input white"
 				placeholder="Current Password"
-				maxlength="64"
+				maxlength="255"
 			/><br /><br />
 			<input
 				id="new-password-input"
 				type="password"
 				class="modal-input white"
 				placeholder="New Password"
-				maxlength="64"
+				maxlength="255"
 			/><br /><br />
 			<input
 				type="password"
 				class="modal-input white"
 				placeholder="Confirm New Password"
-				maxlength="64"
+				maxlength="255"
 			/><br /><br />
 			<div class="modal-buttons">
 				<button

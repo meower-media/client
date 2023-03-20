@@ -75,7 +75,10 @@
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
-			bridged = (post.user === "Discord") || (post.user === "revolt") || (post.user === "Revower");
+			bridged =
+				post.user === "Discord" ||
+				post.user === "revolt" ||
+				post.user === "Revower";
 			webhook = post.user == "Webhooks";
 		}
 
@@ -92,15 +95,20 @@
 		images = [];
 		while (true) {
 			const result = iterator.next();
-			if (result.done) break
-			
+			if (result.done) break;
+
 			try {
 				new URL(result.value[2]);
 			} catch (e) {
 				continue;
-			};
-			
-			if (!IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) return;
+			}
+
+			if (
+				!IMAGE_HOST_WHITELIST.some(o =>
+					result.value[2].toLowerCase().startsWith(o.toLowerCase())
+				)
+			)
+				return;
 
 			images.push({
 				title: result.value[1],
@@ -186,13 +194,25 @@
 				page.set("profile");
 			}}
 		>
-			<PFP
-				icon={$profileCache[post.user] && !webhook
-					? $profileCache[post.user].pfp_data
-					: -3}
-				alt="{post.user}'s profile picture"
-				online={$ulist.includes(post.user)}
-			/>
+			{#await webhook || loadProfile(post.user)}
+				<PFP
+					icon={-2}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:then profile}
+				<PFP
+					icon={webhook ? -3 : profile.pfp_data}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:catch}
+				<PFP
+					icon={-3}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{/await}
 		</button>
 		<div class="creatordate">
 			<div class="creator">
@@ -235,14 +255,9 @@
 	<p class="post-content">{post.content}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank">
-                <img
-					src={url}
-					alt={title}
-					title={title}
-					class="post-image"
-				/>
-            </a>
+			<a href={url} target="_blank" rel="noreferrer"
+				><img src={url} alt={title} {title} class="post-image" />
+			</a>
 		{/each}
 	</div>
 </Container>
