@@ -309,7 +309,7 @@
 	{/if}
 	<div class="post-errors">{postErrors}</div>
 	<TypingIndicator />
-	<PagedList bind:items {loadPage} bind:this={list}>
+	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items>
 			{#each items as post (post.id)}
 				<div

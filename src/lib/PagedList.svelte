@@ -30,6 +30,11 @@
 	export let loadPage = async _page => {};
 
 	/**
+	 * @type {number}
+	 */
+	export let maxItems = Infinity;
+
+	/**
 	 * Adds a item to the list.
 	 *
 	 * @param {*} item
@@ -40,6 +45,12 @@
 			id,
 			...item,
 		});
+
+		if (items.length > maxItems) {
+			items.pop();
+			itemOffset--;
+		}
+
 		items = items;
 		itemOffset++;
 	};
