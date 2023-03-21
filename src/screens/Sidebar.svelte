@@ -12,6 +12,7 @@
 	import {shiftHeld} from "../lib/keyDetect.js";
 
 	import * as clm from "../lib/clmanager.js";
+	import PFP from "../lib/PFP.svelte";
 
 	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
@@ -26,7 +27,7 @@
 	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
 	import shield from "../assets/shield.svg";
-	import PFP from "../lib/PFP.svelte";
+	import info from "../assets/info.svg";
 
 	let popupShown = false;
 	let popupDebounce = false;
@@ -41,6 +42,7 @@
 			newPage !== "home" &&
 			newPage !== "settings" &&
 			newPage !== "changelog" &&
+			newPage !== "about" &&
 			newPage !== "search"
 		) {
 			modalPage.set("signup");
@@ -156,6 +158,12 @@
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
+		<!-- still WIP
+		<button on:click={() => goto("about")} class="about-btn round">
+			<img src={info} alt="About" draggable={false} />
+			<span class="label">About</span>
+		</button>
+	-->
 		<button on:click={() => goto("changelog")} class="changelog-btn round">
 			<img
 				src={changelog}

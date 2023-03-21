@@ -10,10 +10,11 @@
 	import Groupcat from "./Groupcat.svelte";
 	import Search from "./Search.svelte";
 	import Changelog from "./Changelog.svelte";
+	import About from "./About.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
-	import {mainPage as page, modPanelOpen} from "../lib/stores.js";
+	import {mainPage as page} from "../lib/stores.js";
 
 	page.set("home");
 </script>
@@ -34,6 +35,8 @@
 			<Chatlist />
 		{:else if $page === "changelog"}
 			<Changelog />
+		{:else if $page === "about"}
+			<About />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}
