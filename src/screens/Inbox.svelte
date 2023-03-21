@@ -4,6 +4,8 @@
 <script>
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
+	import {user} from "../lib/stores.js";
+	import * as clm from "../lib/clmanager.js";
 </script>
 
 <div class="messages">
@@ -12,7 +14,16 @@
 		Here are your latest inbox messages. We will send announcements and moderator
 		messages to here!
 	</Container>
-	<PostList fetchUrl={"inbox"} postOrigin={null} canPost={false}>
+	<PostList
+		on:loaded={() => {
+			// Mark inbox as read
+			$user.unread_inbox = false;
+			clm.updateProfile();
+		}}
+		fetchUrl={"inbox"}
+		postOrigin={null}
+		canPost={false}
+	>
 		<Container slot="error" let:error>
 			Error loading messages. Please try again.
 			<pre><code>{error}</code></pre>
