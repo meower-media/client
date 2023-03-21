@@ -29,6 +29,7 @@
 	import PFP from "../lib/PFP.svelte";
 
 	let popupShown = false;
+	let popupDebounce = false;
 
 	/**
 	 * @param {any} newPage Goes to a page while also refreshing it.
@@ -128,9 +129,14 @@
 	<div class="padding"></div>
 	<button
 		class="toggle-popup round"
-		on:click={() => popupShown = !popupShown}
+		on:click={() => {
+			if (popupDebounce) return;
+			popupShown = !popupShown
+			popupDebounce = true;
+			setTimeout(() => popupDebounce = false, 150);
+		}}
 	>
-		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.pfp_data} />
+		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.name ? $user.pfp_data : -2} />
 	</button>
 </div>
 {#if popupShown}
