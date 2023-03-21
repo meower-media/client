@@ -165,7 +165,7 @@
 					post_id: "",
 					user: "Server",
 					content: `${cmd.val.u} left ${chatName}.`,
-					date: new Date().getTime() / 1000,
+					date: Date.now() / 1000,
 				});
 			}
 			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
