@@ -22,10 +22,8 @@
 	import {
 		authHeader,
 		user,
-		ulist,
 		spinner,
-		lastTyped,
-		mainPage as page,
+		lastTyped
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
@@ -49,7 +47,7 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
-	import {onDestroy} from "svelte";
+	import {onDestroy, onMount} from "svelte";
 
 	let id = 0;
 	let postErrors = "";
@@ -161,11 +159,7 @@
 					date: cmd.val.t.e,
 				});
 			}
-
-			if ($user.sfx && cmd.val.u !== $user.name) {
-				playNotification();
-			}
-			if (isGC && cmd.val.state === 0) {
+			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
 				list.addItem({
 					id: id++,
 					post_id: "",
@@ -174,14 +168,17 @@
 					date: new Date().getTime() / 1000,
 				});
 			}
-			if (isGC && cmd.val.state === 1) {
+			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
 				list.addItem({
 					id: id++,
 					post_id: "",
 					user: "Server",
 					content: `${cmd.val.u} joined ${chatName}!`,
-					date: new Date().getTime() / 1000,
+					date: Date.now() / 1000,
 				});
+			}
+			if ($user.sfx && cmd.val.u !== $user.name && cmd.val.mode !== "delete") {
+				playNotification();
 			}
 			if (cmd.val.mode === "delete") {
 				items = items.filter(post => post.post_id !== cmd.val.id);
@@ -189,17 +186,15 @@
 		});
 		destroy = () => clm.link.off(evId);
 	}
-	if (postOrigin) {
-		if (clm.link.ws.readyState === 1) {
-			listenOnLink();
-		} else {
-			clm.link.once("connected", listenOnLink);
+	onMount(() => {
+		if (postOrigin) {
+			if (clm.link.ws.readyState === 1) {
+				listenOnLink();
+			} else {
+				clm.link.once("connected", listenOnLink);
+			}
 		}
-	}
-
-	let _ulist = $ulist;
-	ulist.subscribe(val => {
-		_ulist = val;
+		if (!fetchUrl) dispatch("loaded");
 	});
 </script>
 
