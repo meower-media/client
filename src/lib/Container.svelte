@@ -13,5 +13,6 @@
 		margin-bottom: 0.4em;
 		overflow-wrap: break-word;
 		position: relative;
+		overflow: auto;
 	}
 </style>
