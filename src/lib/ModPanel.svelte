@@ -1,7 +1,7 @@
 <script>
-	import PostList from "../PostList.svelte";
-	import * as clm from "../clmanager.js";
-	import {mainPage as page, profileClicked, user} from "../stores";
+	import PostList from "./PostList.svelte";
+	import * as clm from "./clmanager.js";
+	import {mainPage as page, profileClicked, user} from "./stores";
 	import {tick} from "svelte";
 
 	let ipData = null;
@@ -52,7 +52,7 @@
 		},
 		{
 			cmd: "terminate",
-			name: "Terminate/Purge",
+			name: "Terminate",
 			description: "Ban the user and delete all of their posts.",
 			level: 3,
 		},

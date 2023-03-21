@@ -22,7 +22,7 @@
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
 
-	import ModPanel from "./lib/modpanel/ModPanel.svelte";
+	import ModPanel from "./lib/ModPanel.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
