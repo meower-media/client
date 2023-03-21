@@ -136,7 +136,7 @@
 			setTimeout(() => popupDebounce = false, 150);
 		}}
 	>
-		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.name ? $user.pfp_data : -2} />
+		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.name ? $user.pfp_data : -3} />
 	</button>
 </div>
 {#if popupShown}
