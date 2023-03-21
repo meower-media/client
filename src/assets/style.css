@@ -70,6 +70,7 @@ textarea {
 	padding: 0.5em 1em;
 	box-sizing: border-box;
 	margin-bottom: -0.15rem;
+	margin-top: 0;
 
 	font-family: inherit;
 	font-size: inherit;

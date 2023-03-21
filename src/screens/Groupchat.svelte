@@ -10,12 +10,13 @@
 		modalPage,
 		profileClicked_GC,
 	} from "../lib/stores.js";
+	import {mobile} from "../lib/responsiveness.js";
 	import Member from "../lib/Member.svelte";
 	import Container from "../lib/Container.svelte";
 	import * as clm from "../lib/clmanager.js";
 	import PostList from "../lib/PostList.svelte";
 
-	let showMembers = true;
+	let showMembers = !$mobile;
 </script>
 
 <!--
@@ -24,7 +25,7 @@
 -->
 
 <div class="groupchat">
-	<div id="chat">
+	<div id="chat" class:active={!showMembers}>
 		<Container>
 			<h1 class="chat-name">
 				{$chatName}
@@ -101,6 +102,14 @@
 							modalShown.set(true);
 						}}
 					/>
+					{#if $mobile && $chatid !== "livechat"}
+							<button
+								class="circle join"
+								on:click={() => {
+									showMembers = !showMembers;
+								}}
+							/>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -130,6 +139,9 @@
 	:global(#main) .member-button.member-button:active {
 		background-color: #7776;
 	}
+	:global(#main.layout-mobile) #chat:not(.active) {
+		display: none;
+	}
 
 	.groupchat {
 		display: flex;
@@ -156,6 +168,9 @@
 
 		flex-shrink: 0;
 		flex-grow: 0;
+	}
+	:global(#main.layout-mobile) #members {
+		width: 100%;
 	}
 	#members-inner {
 		position: relative;
