@@ -19,9 +19,10 @@
 	import ChangePasswordModal from "./lib/modals/ChangePassword.svelte";
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
-	import ModerateUserInputModal from "./modpanel/ModerateUserInput.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
+
+	import ModPanel from "./lib/modpanel/ModPanel.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
@@ -36,6 +37,7 @@
 		disconnectReason,
 		user,
 		spinner,
+		modPanelOpen,
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
@@ -51,6 +53,21 @@
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
 >
+	{#if $modPanelOpen}
+		<div class="mod-panel">
+			<Modal
+				on:close={() => {
+					$modPanelOpen = false;
+				}}
+			>
+				<div slot="header">
+					<h1>Moderation Panel</h1>
+				</div>
+				<ModPanel />
+			</Modal>
+		</div>
+	{/if}
+
 	{#if $disconnected}
 		<Modal>
 			<h2 slot="header">Me-owch.</h2>
@@ -118,8 +135,6 @@
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
-		{:else if $modalPage === "modUserInp"}
-			<ModerateUserInputModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 			<!-- Group chats -->

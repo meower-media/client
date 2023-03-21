@@ -59,7 +59,8 @@ img.emoji {
 button,
 input[type="text"],
 input[type="password"],
-textarea {
+textarea,
+select {
 	border: solid 2px var(--foreground-orange);
 	border-radius: 1px;
 	outline: none;
@@ -113,7 +114,8 @@ button.round {
 
 input[type="text"].white,
 input[type="password"].white,
-textarea {
+textarea,
+select.white {
 	background-color: var(--background);
 	border-color: var(--orange);
 	color: var(--foreground);

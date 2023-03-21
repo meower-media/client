@@ -20,11 +20,12 @@
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
-	import {onMount} from "svelte";
+	import {onMount, tick} from "svelte";
 
 	export let post = {};
 	export let buttons = true;
 	export let input = null;
+	export let canDoActions = true;
 
 	let bridged = false;
 	let webhook = false;
@@ -65,8 +66,6 @@
 	];
 
 	// TODO: make bridged tag a setting
-
-	// TODO: more then 1 img + optimize getimgs function
 
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
@@ -149,40 +148,42 @@
 						}}
 					/>
 				{/if}
-				{#if $user.lvl >= 1 || post.user === $user.name}
-					<button
-						class="circle close"
-						on:click={() => {
-							if (shiftHeld) {
-								clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "delete_post",
-										val: post.post_id,
-									},
-								});
-								return;
-							}
-							postClicked.set(post);
-							modalPage.set("deletePost");
-							modalShown.set(true);
-						}}
-					/>
-				{:else}
-					<button
-						class="circle report"
-						on:click={() => {
-							postClicked.set(post);
-							modalPage.set("reportPost");
-							modalShown.set(true);
-						}}
-					/>
+				{#if canDoActions}
+					{#if $user.lvl >= 1 || post.user === $user.name}
+						<button
+							class="circle close"
+							on:click={() => {
+								if (shiftHeld) {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "delete_post",
+											val: post.post_id,
+										},
+									});
+									return;
+								}
+								postClicked.set(post);
+								modalPage.set("deletePost");
+								modalShown.set(true);
+							}}
+						/>
+					{:else}
+						<button
+							class="circle report"
+							on:click={() => {
+								postClicked.set(post);
+								modalPage.set("reportPost");
+								modalShown.set(true);
+							}}
+						/>
+					{/if}
 				{/if}
 			{/if}
 		</div>
 		<button
 			class="pfp"
-			on:click={() => {
+			on:click={async () => {
 				if (
 					post.user === "Notification" ||
 					post.user === "Announcement" ||
@@ -190,6 +191,8 @@
 					webhook
 				)
 					return;
+				page.set("");
+				await tick();
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}

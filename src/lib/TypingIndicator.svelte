@@ -3,13 +3,14 @@
 -->
 <script>
 	import Container from "../lib/Container.svelte";
-	import {mainPage as page, user, chatid} from "../lib/stores.js";
+	import {mainPage as page, user} from "../lib/stores.js";
 	import {typing} from "../lib/typingIndicator.js";
+
+	export let forPage = "home";
 
 	let _typing = [];
 	typing.subscribe(val => {
-		if ($page === "home") _typing = val["home"];
-		if ($page === "groupchat") _typing = val[$chatid];
+		_typing = val[forPage];
 		if (_typing === undefined) _typing = [];
 		_typing = _typing.filter(selectedUser => selectedUser !== $user.name);
 	});

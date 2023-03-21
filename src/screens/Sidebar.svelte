@@ -7,6 +7,7 @@
 		chatid,
 		modalShown,
 		modalPage,
+		modPanelOpen,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 
@@ -24,6 +25,7 @@
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
+	import shield from "../assets/shield.svg";
 	import PFP from "../lib/PFP.svelte";
 
 	let popupShown = false;
@@ -107,12 +109,22 @@
 	<button on:click={() => goto("search")} class="search-btn round">
 		<img
 			src={search}
-			alt="search"
+			alt="Search"
 			width="90%"
 			height="auto"
 			draggable={false}
 		/>
 	</button>
+	{#if $user.lvl >= 1}
+		<button on:click={() => $modPanelOpen = !$modPanelOpen} class="modpanel-btn round">
+			<img
+				src={shield}
+				alt="Open/close moderator panel"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+	{/if}
 	<div class="padding"></div>
 	<button
 		class="toggle-popup round"
