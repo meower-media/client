@@ -9,9 +9,9 @@
 </script>
 
 <div class="home">
-	<div class="overflow">
-		<Container>
-			<h1>Home</h1>
+	<Container>
+		<h1>Home</h1>
+		<div class="overflow">
 			{#if $ulist.length == 1}
 				You are the only user online.
 			{:else if $ulist.length == 0}
@@ -21,8 +21,8 @@
 						", "
 					)}){/if}.
 			{/if}
-		</Container>
-	</div>
+		</div>
+	</Container>
 	<PostList fetchUrl="home" postOrigin="home" canPost={true} />
 </div>
 
@@ -31,6 +31,8 @@
 		height: 100%;
 	}
 	.overflow {
-		overflow: scroll
+		overflow-x: hidden;
+		overflow-y: scroll;
+		max-height: 4em;
 	}
 </style>
