@@ -72,8 +72,8 @@
 
 <div class="ModPanel">
 	<p>
-		Be careful, most of these actions have no confirmation.<br />Also,
-		performing an action on a user also closes that user's report, if
+		Be careful, these actions have no confirmation.<br />Also,
+		performing an action on a user/post also closes that user/post's report, if
 		there's one.
 	</p>
 	<h2>Get User Info</h2>
