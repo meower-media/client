@@ -91,9 +91,9 @@
 	<h3>Other Contributors</h3>
 	<ul>
 		<li>
-			<a
-				href="https://scratch.mit.edu/users/trappist-1e">@trappist-1e</a
-			> on Scratch - <img src={meowy} alt="Meowy" height="20"> Meowy's original creator
+			<a href="https://scratch.mit.edu/users/trappist-1e">@trappist-1e</a>
+			on Scratch - <img src={meowy} alt="Meowy" height="20" /> Meowy's original
+			creator
 		</li>
 	</ul>
 </Container>

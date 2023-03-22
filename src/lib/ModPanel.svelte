@@ -157,7 +157,7 @@
 				<b>Quote:</b>
 				<i>"{ipData.user.quote}"</i><br />
 				<b>Created:</b>
-				<FormattedDate date={ipData.user.created}/><br />
+				<FormattedDate date={ipData.user.created} /><br />
 				<b>Level:</b>
 				{ipData.user.lvl} - {levels[ipData.user.lvl] || "Unknown"}<br />
 				<b>Banned?</b>
@@ -175,11 +175,13 @@
 				<b>Users on IP:</b>
 				<ul>
 					{#each ipData.users as username}
-						<li><a
-							href="/"
-							on:click|preventDefault={() =>
-								gotoProfile(username)}>{username}</a
-						></li>
+						<li>
+							<a
+								href="/"
+								on:click|preventDefault={() =>
+									gotoProfile(username)}>{username}</a
+							>
+						</li>
 					{/each}
 				</ul>
 			</div>
@@ -318,9 +320,7 @@
 			Error loading the mod panel. Please close and reopen it.
 			<pre><code>{error}</code></pre>
 		</div>
-		<div slot="empty">
-			Yay, the report queue is empty!
-		</div>
+		<div slot="empty">Yay, the report queue is empty!</div>
 	</PostList>
 </div>
 

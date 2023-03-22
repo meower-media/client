@@ -72,7 +72,7 @@
 
 <!-- Wait, isn't it a topbar on old layout? -->
 
-<svelte:body on:click={() => popupShown = false}></svelte:body>
+<svelte:body on:click={() => (popupShown = false)} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
@@ -119,7 +119,10 @@
 		/>
 	</button>
 	{#if $user.lvl >= 1}
-		<button on:click={() => $modPanelOpen = !$modPanelOpen} class="modpanel-btn round">
+		<button
+			on:click={() => ($modPanelOpen = !$modPanelOpen)}
+			class="modpanel-btn round"
+		>
 			<img
 				src={shield}
 				alt="Open/close moderator panel"
@@ -128,22 +131,31 @@
 			/>
 		</button>
 	{/if}
-	<div class="padding"></div>
+	<div class="padding" />
 	<button
 		class="toggle-popup round"
 		on:click={() => {
 			if (popupDebounce) return;
-			popupShown = !popupShown
+			popupShown = !popupShown;
 			popupDebounce = true;
-			setTimeout(() => popupDebounce = false, 150);
+			setTimeout(() => (popupDebounce = false), 150);
 		}}
 	>
-		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.name ? $user.pfp_data : -3} />
+		<PFP
+			raw={true}
+			size={1}
+			alt="Open/close more options"
+			icon={$user.name ? $user.pfp_data : -3}
+		/>
 	</button>
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div on:click|stopPropagation class="popup" transition:fade={{duration: 20}}>
+	<div
+		on:click|stopPropagation
+		class="popup"
+		transition:fade={{duration: 20}}
+	>
 		<button
 			on:click={() => {
 				$profileClicked = $user.name;
@@ -310,7 +322,6 @@
 		overflow: hidden;
 	}
 
-	
 	:global(main.input-hover) button.toggle-popup:hover:not(:active),
 	:global(main.input-touch) button.toggle-popup:active,
 	button.toggle-popup:focus-visible {

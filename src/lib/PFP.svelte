@@ -34,7 +34,13 @@
 			title={alt}
 			src={icons[
 				`../assets/avatars/icon_${
-					id === -1 ? 21 : id === -2 ? "err" : id === -3 ? "guest" : id - 1
+					id === -1
+						? 21
+						: id === -2
+						? "err"
+						: id === -3
+						? "guest"
+						: id - 1
 				}.svg`
 			] || errorIcon}
 			on:error={() => (id = -2)}
