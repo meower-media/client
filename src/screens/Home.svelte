@@ -282,7 +282,7 @@
 					id="postinput"
 					name="postinput"
 					autocomplete="false"
-					maxlength="360"
+					maxlength="4000"
 					rows="1"
 					use:autoresize
 					on:input={() => {

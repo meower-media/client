@@ -44,7 +44,7 @@
 				id="userinput"
 				name="userinput"
 				autocomplete="false"
-				maxlength="360"
+				maxlength="20"
 				bind:value={username}
 			/>
 			<br /><br />
