@@ -85,7 +85,8 @@ input:not(.white)::placeholder {
 	opacity: 0.75;
 }
 
-input.white::placeholder {
+input.white::placeholder,
+textarea::placeholder {
 	color: var(--foreground);
 	opacity: 0.75;
 }
