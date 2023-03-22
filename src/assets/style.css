@@ -88,7 +88,7 @@ input:not(.white)::placeholder {
 input.white::placeholder,
 textarea::placeholder {
 	color: var(--foreground);
-	opacity: 0.75;
+	opacity: 0.5;
 }
 
 main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
