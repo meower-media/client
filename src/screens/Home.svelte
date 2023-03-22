@@ -9,23 +9,28 @@
 </script>
 
 <div class="home">
-	<Container>
-		<h1>Home</h1>
-		{#if $ulist.length == 1}
-			You are the only user online.
-		{:else if $ulist.length == 0}
-			Nobody is online.
-		{:else}
-			There are currently {$ulist.length} users online{#if $ulist.length}{" "}({$ulist.join(
-					", "
-				)}){/if}.
-		{/if}
-	</Container>
+	<div class="overflow">
+		<Container>
+			<h1>Home</h1>
+			{#if $ulist.length == 1}
+				You are the only user online.
+			{:else if $ulist.length == 0}
+				Nobody is online.
+			{:else}
+				There are currently {$ulist.length} users online{#if $ulist.length}{" "}({$ulist.join(
+						", "
+					)}){/if}.
+			{/if}
+		</Container>
+	</div>
 	<PostList fetchUrl="home" postOrigin="home" canPost={true} />
 </div>
 
 <style>
 	.home {
 		height: 100%;
+	}
+	.overflow {
+		overflow: scroll
 	}
 </style>
