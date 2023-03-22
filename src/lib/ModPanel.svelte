@@ -3,13 +3,21 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import * as clm from "./clmanager.js";
 	import {levels} from "./formatting.js";
-	import {mainPage as page, profileClicked, user} from "./stores";
+	import {
+		mainPage as page,
+		modalPage,
+		modalShown,
+		announcementToSend,
+		profileClicked,
+		user,
+	} from "./stores";
 	import {tick} from "svelte";
 
 	let ipData = null;
 	let infoMsg = "";
 	let alertMsg = "";
 	let actionMsg = "";
+	let announceMsg = "";
 
 	let actionType = "kick";
 
@@ -72,9 +80,9 @@
 
 <div class="ModPanel">
 	<p>
-		Be careful, these actions have no confirmation.<br />Also,
-		performing an action on a user/post also closes that user/post's report, if
-		there's one.
+		Be careful, these actions have no confirmation.<br />Also, performing an
+		action on a user/post also closes that user/post's report, if there's
+		one.
 	</p>
 	<h2>Get User Info</h2>
 	{#if $user.lvl < 2}
@@ -234,6 +242,40 @@
 			<div class="msg">{alertMsg}</div>
 		{/if}
 	</form>
+	<h2>Send Announcement</h2>
+	{#if $user.lvl < 3}
+		<p>Level 3+ ({levels[23]} and above) only.</p>
+	{:else}
+		<form
+			on:submit|preventDefault={async e => {
+				/** @type {HTMLFormElement} */
+				// @ts-ignore
+				const f = e.target;
+				// @ts-ignore
+				const text = f.elements[0].value;
+
+				if (!text) {
+					announceMsg = "You need to enter some text!";
+					return;
+				}
+				announceMsg = "";
+				$announcementToSend = text;
+				$modalPage = "announce";
+				$modalShown = true;
+			}}
+		>
+			<textarea
+				class="announce-textarea white"
+				placeholder="Announcement text here..."
+			/>
+			<div class="announce-buttons">
+				<button class="align-right">Send</button>
+				{#if announceMsg}
+					<div class="msg">{announceMsg}</div>
+				{/if}
+			</div>
+		</form>
+	{/if}
 	<h2>Moderate User</h2>
 	<form
 		on:submit|preventDefault={async e => {
@@ -335,6 +377,13 @@
 		resize: vertical;
 		width: 100%;
 	}
+
+	.announce-textarea {
+		display: block;
+		margin-bottom: 0.25em;
+		resize: vertical;
+		width: 100%;
+	}
 	.input-row {
 		display: flex;
 		flex-direction: row;
@@ -359,5 +408,13 @@
 
 	.ip-info {
 		margin: 0.5em 0;
+	}
+
+	.announce-buttons {
+		min-height: 2em;
+	}
+
+	.align-right {
+		float: right;
 	}
 </style>

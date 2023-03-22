@@ -21,6 +21,7 @@
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
+	import AnnounceModal from "./lib/modals/Announce.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -130,6 +131,8 @@
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
+			{:else if $modalPage === "announce"}
+				<AnnounceModal />
 			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />

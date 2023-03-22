@@ -35,6 +35,7 @@ export const userToMod = writable("");
 export const postClicked = writable({});
 export const profileClicked = writable("");
 export const profileClicked_GC = writable("");
+export const announcementToSend = writable("");
 
 // Current auth header
 export const authHeader = writable({});
