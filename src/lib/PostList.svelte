@@ -339,6 +339,28 @@
 					{/if}
 					{#if fetchUrl === "reports"}
 						<div class="settings-controls">
+							{#if !post.lower_username}
+								<button
+									class="circle trash"
+									title="Delete post"
+									on:click={async () => {
+										try {
+											await clm.meowerRequest({
+												cmd: "direct",
+												val: {
+													cmd: "delete_post",
+													val: post.post_id,
+												},
+											});
+											items = items.filter(
+												p => p._id !== post._id
+											);
+										} catch (e) {
+											console.error(e);
+										}
+									}}
+								/>
+							{/if}
 							<button
 								class="circle close"
 								title="Close report"
@@ -348,11 +370,13 @@
 											cmd: "direct",
 											val: {
 												cmd: "close_report",
-												val: post._id
-											}
+												val: post._id,
+											},
 										});
-										items = items.filter((p) => p._id !== post._id);
-									} catch(e) {
+										items = items.filter(
+											p => p._id !== post._id
+										);
+									} catch (e) {
 										console.error(e);
 									}
 								}}

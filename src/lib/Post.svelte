@@ -151,7 +151,7 @@
 				{#if canDoActions}
 					{#if $user.lvl >= 1 || post.user === $user.name}
 						<button
-							class="circle close"
+							class="circle trash"
 							on:click={() => {
 								if (shiftHeld) {
 									clm.meowerRequest({

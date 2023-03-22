@@ -1,6 +1,8 @@
 <script>
 	import PostList from "./PostList.svelte";
+	import FormattedDate from "./FormattedDate.svelte";
 	import * as clm from "./clmanager.js";
+	import {levels} from "./formatting.js";
 	import {mainPage as page, profileClicked, user} from "./stores";
 	import {tick} from "svelte";
 
@@ -76,7 +78,7 @@
 	</p>
 	<h2>Get User Info</h2>
 	{#if $user.lvl < 2}
-		<p>Level 2+ only.</p>
+		<p>Level 2+ ({levels[2]} and above) only.</p>
 	{:else}
 		<form
 			on:submit|preventDefault={async e => {
@@ -109,7 +111,7 @@
 							})
 						).payload.ip;
 					}
-					ipData = (
+					const _ipData = (
 						await clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -118,7 +120,18 @@
 							},
 						})
 					).payload;
+					_ipData.user = (
+						await clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "get_user_data",
+								val: isIP ? _ipData.last_user : user,
+							},
+						})
+					).payload;
+					ipData = _ipData;
 					infoMsg = "";
+					console.log(ipData);
 				} catch (e) {
 					console.error(e);
 					infoMsg = "Error: " + e;
@@ -139,6 +152,16 @@
 		</form>
 		{#if ipData}
 			<div class="ip-info">
+				<b>Username:</b>
+				{ipData.user.username}<br />
+				<b>Quote:</b>
+				<i>"{ipData.user.quote}"</i><br />
+				<b>Created:</b>
+				<FormattedDate date={ipData.user.created}/><br />
+				<b>Level:</b>
+				{ipData.user.lvl} - {levels[ipData.user.lvl] || "Unknown"}<br />
+				<b>Banned?</b>
+				{ipData.user.banned ? "Yes" : "No"}<br />
 				<b>IP:</b>
 				{ipData.ip}<br />
 				<b>IP banned?</b>
@@ -290,7 +313,15 @@
 		{/if}
 	</form>
 	<h2>Reports</h2>
-	<PostList bind:items fetchUrl="reports" postOrigin="" canPost={false} />
+	<PostList bind:items fetchUrl="reports" postOrigin="" canPost={false}>
+		<div slot="error" let:error>
+			Error loading the mod panel. Please close and reopen it.
+			<pre><code>{error}</code></pre>
+		</div>
+		<div slot="empty">
+			Yay, the report queue is empty!
+		</div>
+	</PostList>
 </div>
 
 <style>

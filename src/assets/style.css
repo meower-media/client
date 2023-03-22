@@ -216,6 +216,11 @@ button.close {
 	background-size: 50%;
 }
 
+button.trash {
+	background-image: url("./trash.svg");
+	background-size: 50%;
+}
+
 button.report {
 	background-image: url("./report.svg");
 	background-size: 50%;
