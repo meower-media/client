@@ -91,8 +91,6 @@
 		 */
 		const json = await resp.json();
 
-		const isInbox = fetchUrl === "inbox";
-
 		/**
 		 * @type {Array<import("./types.js").ListPost | import("./types.js").User>}
 		 */
@@ -106,11 +104,11 @@
 				};
 				return user;
 			}
-			if (isInbox) {
+			if (post.post_origin === "inbox") {
 				if (post.u === "Server") {
 					post.u = "Announcement";
 				} else {
-					post.u = "Notification";
+					post.u = fetchUrl === "inbox" ? "Notification" : `Notification to ${post.u}`;
 				}
 			}
 			return {
@@ -120,6 +118,7 @@
 				user: post.u,
 				content: post.p,
 				date: post.t.e,
+				isDeleted: post.isDeleted,
 			};
 		});
 		const numPages = json["pages"];
@@ -163,6 +162,7 @@
 					user: cmd.val.u,
 					content: cmd.val.p,
 					date: cmd.val.t.e,
+					isDeleted: cmd.val.isDeleted,
 				});
 			}
 			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
@@ -172,6 +172,7 @@
 					user: "Server",
 					content: `${cmd.val.u} left ${chatName}.`,
 					date: Date.now() / 1000,
+					isDeleted: cmd.val.isDeleted,
 				});
 			}
 			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
@@ -181,6 +182,7 @@
 					user: "Server",
 					content: `${cmd.val.u} joined ${chatName}!`,
 					date: Date.now() / 1000,
+					isDeleted: cmd.val.isDeleted,
 				});
 			}
 			if (
@@ -341,6 +343,7 @@
 						<div class="settings-controls">
 							{#if !post.lower_username}
 								<button
+									disabled={post.deleted}
 									class="circle trash"
 									title="Delete post"
 									on:click={async () => {
@@ -352,6 +355,15 @@
 													val: post.post_id,
 												},
 											});
+											if (post.post_origin === "inbox") {
+												await clm.meowerRequest({
+													cmd: "direct",
+													val: {
+														cmd: "close_report",
+														val: post._id,
+													},
+												});
+											}
 											items = items.filter(
 												p => p._id !== post._id
 											);

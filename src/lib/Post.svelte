@@ -121,6 +121,13 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+
+	$: noPFP =
+		post.user === "Notification" ||
+		post.user.startsWith("Notification to ") ||
+		post.user === "Announcement" ||
+		post.user === "Server" ||
+		webhook;
 </script>
 
 <Container>
@@ -184,20 +191,14 @@
 		<button
 			class="pfp"
 			on:click={async () => {
-				if (
-					post.user === "Notification" ||
-					post.user === "Announcement" ||
-					post.user === "Server" ||
-					webhook
-				)
-					return;
+				if (noPFP) return;
 				page.set("");
 				await tick();
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
-			{#await webhook || loadProfile(post.user)}
+			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
 				<PFP
 					icon={-2}
 					alt="{post.user}'s profile picture"
@@ -205,13 +206,22 @@
 				/>
 			{:then profile}
 				<PFP
-					icon={webhook ? -3 : profile.pfp_data}
+					icon={noPFP
+						? post.user === "Server"
+							? 102
+							: post.post_origin === "inbox" &&
+							  (post.user === "Announcement" ||
+									post.user === "Notification" ||
+									post.user.startsWith("Notification to"))
+							? 101
+							: -2
+						: profile.pfp_data}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
 			{:catch}
 				<PFP
-					icon={-3}
+					icon={-2}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
@@ -253,6 +263,9 @@
 			</div>
 
 			<FormattedDate date={post.date} />
+			{#if post.isDeleted}
+				<i>(deleted)</i>
+			{/if}
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>
