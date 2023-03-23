@@ -108,7 +108,10 @@
 				if (post.u === "Server") {
 					post.u = "Announcement";
 				} else {
-					post.u = fetchUrl === "inbox" ? "Notification" : `Notification to ${post.u}`;
+					post.u =
+						fetchUrl === "inbox"
+							? "Notification"
+							: `Notification to ${post.u}`;
 				}
 			}
 			return {
@@ -118,6 +121,7 @@
 				user: post.u,
 				content: post.p,
 				date: post.t.e,
+				post_origin: post.post_origin,
 				isDeleted: post.isDeleted,
 			};
 		});
@@ -162,6 +166,7 @@
 					user: cmd.val.u,
 					content: cmd.val.p,
 					date: cmd.val.t.e,
+					post_origin: cmd.val.post_origin,
 					isDeleted: cmd.val.isDeleted,
 				});
 			}
@@ -172,7 +177,8 @@
 					user: "Server",
 					content: `${cmd.val.u} left ${chatName}.`,
 					date: Date.now() / 1000,
-					isDeleted: cmd.val.isDeleted,
+					post_origin: postOrigin || fetchUrl,
+					isDeleted: false,
 				});
 			}
 			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
@@ -182,7 +188,8 @@
 					user: "Server",
 					content: `${cmd.val.u} joined ${chatName}!`,
 					date: Date.now() / 1000,
-					isDeleted: cmd.val.isDeleted,
+					post_origin: postOrigin || fetchUrl,
+					isDeleted: false,
 				});
 			}
 			if (
