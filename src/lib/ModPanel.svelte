@@ -75,6 +75,8 @@
 		page.set("profile");
 	}
 
+	const _user = user;
+
 	let items = [];
 </script>
 
@@ -85,91 +87,100 @@
 		closes that user/post's report, if there's one.
 	</p>
 	<h2>Get User Info</h2>
-	{#if $user.lvl < 2}
-		<p>Level 2+ ({levels[2]} and above) only.</p>
-	{:else}
-		<form
-			on:submit|preventDefault={async e => {
-				/** @type {HTMLFormElement} */
-				// @ts-ignore
-				const f = e.target;
-				// @ts-ignore
-				const user = f.elements[0].value;
+	<form
+		on:submit|preventDefault={async e => {
+			/** @type {HTMLFormElement} */
+			// @ts-ignore
+			const f = e.target;
+			// @ts-ignore
+			const user = f.elements[0].value;
 
-				const isIP = user.includes(".") || user.includes(":");
+			const isIP =
+				(user.includes(".") || user.includes(":")) && $_user.lvl >= 2;
 
-				if (!user) {
-					infoMsg = "You need to enter a username or IP!";
-					return;
-				}
+			if (!user) {
+				infoMsg = "You need to enter a username or IP!";
+				return;
+			}
 
-				ipData = null;
+			ipData = null;
 
-				try {
-					infoMsg = "Submitting...";
-					let ip = user;
-					if (!isIP) {
-						ip = (
-							await clm.meowerRequest({
-								cmd: "direct",
-								val: {
-									cmd: "get_user_ip",
-									val: user,
-								},
-							})
-						).payload.ip;
-					}
-					const _ipData = (
+			try {
+				infoMsg = "Submitting...";
+				let ip = user;
+				if (!isIP) {
+					ip = (
 						await clm.meowerRequest({
 							cmd: "direct",
 							val: {
-								cmd: "get_ip_data",
-								val: ip,
+								cmd: "get_user_ip",
+								val: user,
 							},
 						})
-					).payload;
-					_ipData.user = (
-						await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_user_data",
-								val: isIP ? _ipData.last_user : user,
-							},
-						})
-					).payload;
-					ipData = _ipData;
-					infoMsg = "";
-					console.log(ipData);
-				} catch (e) {
-					console.error(e);
-					infoMsg = "Error: " + e;
+					).payload.ip;
 				}
-			}}
-		>
-			<div class="input-row">
-				<input
-					class="grow white"
-					type="text"
-					placeholder="Username or IP address..."
-				/>
-				<button class="static">Submit</button>
-			</div>
-			{#if infoMsg}
-				<div class="msg">{infoMsg}</div>
-			{/if}
-		</form>
-		{#if ipData}
-			<div class="ip-info">
-				<b>Username:</b>
-				{ipData.user.username}<br />
-				<b>Quote:</b>
-				<i>"{ipData.user.quote}"</i><br />
-				<b>Created:</b>
-				<FormattedDate date={ipData.user.created} /><br />
-				<b>Level:</b>
-				{ipData.user.lvl} - {levels[ipData.user.lvl] || "Unknown"}<br />
-				<b>Banned?</b>
-				{ipData.user.banned ? "Yes" : "No"}<br />
+				const _ipData =
+					$_user.lvl >= 2
+						? (
+								await clm.meowerRequest({
+									cmd: "direct",
+									val: {
+										cmd: "get_ip_data",
+										val: ip,
+									},
+								})
+						  ).payload
+						: {};
+				_ipData.user = (
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "get_user_data",
+							val: isIP ? _ipData.last_user : user,
+						},
+					})
+				).payload;
+				ipData = _ipData;
+				infoMsg = "";
+				console.log(ipData);
+			} catch (e) {
+				console.error(e);
+				infoMsg = "Error: " + e;
+			}
+		}}
+	>
+		<div class="input-row">
+			<input
+				class="grow white"
+				type="text"
+				placeholder="Username or IP address..."
+			/>
+			<button class="static">Submit</button>
+		</div>
+		{#if infoMsg}
+			<div class="msg">{infoMsg}</div>
+		{/if}
+	</form>
+	{#if ipData}
+		<div class="ip-info">
+			{#if $user.lvl < 2}<i
+					>Note: IP information is level 2+ ({levels[2]} and above) only.</i
+				><br />{/if}
+			<b>Username:</b>
+			<a
+				href="/"
+				on:click|preventDefault={() =>
+					gotoProfile(ipData.user.username)}>{ipData.user.username}</a
+			><br />
+			<b>Quote:</b>
+			<i>"{ipData.user.quote}"</i><br />
+			<b>Created:</b>
+			<FormattedDate date={ipData.user.created} /><br />
+			<b>Level:</b>
+			{ipData.user.lvl} - {levels[ipData.user.lvl] || "Unknown"}<br />
+			<b>Banned?</b>
+			{ipData.user.banned ? "Yes" : "No"}<br />
+			{#if $user.lvl >= 2}
 				<b>IP:</b>
 				{ipData.ip}<br />
 				<b>IP banned?</b>
@@ -192,8 +203,8 @@
 						</li>
 					{/each}
 				</ul>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	{/if}
 	<h2>Send Alert</h2>
 	<form
@@ -244,7 +255,7 @@
 	</form>
 	<h2>Send Announcement</h2>
 	{#if $user.lvl < 3}
-		<p>Level 3+ ({levels[23]} and above) only.</p>
+		<p>Level 3+ ({levels[3]} and above) only.</p>
 	{:else}
 		<form
 			on:submit|preventDefault={async e => {
