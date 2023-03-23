@@ -75,8 +75,6 @@
 		page.set("profile");
 	}
 
-	const _user = user;
-
 	let items = [];
 </script>
 
@@ -93,12 +91,13 @@
 			// @ts-ignore
 			const f = e.target;
 			// @ts-ignore
-			const user = f.elements[0].value;
+			const username = f.elements[0].value;
 
-			const isIP =
-				(user.includes(".") || user.includes(":")) && $_user.lvl >= 2;
+			const isL2 = $user.lvl >= 2;
 
-			if (!user) {
+			const isIP = username.includes(".") || username.includes(":");
+
+			if (!username) {
 				infoMsg = "You need to enter a username or IP!";
 				return;
 			}
@@ -107,42 +106,41 @@
 
 			try {
 				infoMsg = "Submitting...";
-				let ip = user;
-				if (!isIP) {
-					ip = (
+				let _ipData = {};
+				let ip = username;
+				if (isL2) {
+					if (!isIP) {
+						ip = (
+							await clm.meowerRequest({
+								cmd: "direct",
+								val: {
+									cmd: "get_user_ip",
+									val: username,
+								},
+							})
+						).payload.ip;
+					}
+					_ipData = (
 						await clm.meowerRequest({
 							cmd: "direct",
 							val: {
-								cmd: "get_user_ip",
-								val: user,
+								cmd: "get_ip_data",
+								val: ip,
 							},
 						})
-					).payload.ip;
+					).payload;
 				}
-				const _ipData =
-					$_user.lvl >= 2
-						? (
-								await clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "get_ip_data",
-										val: ip,
-									},
-								})
-						  ).payload
-						: {};
 				_ipData.user = (
 					await clm.meowerRequest({
 						cmd: "direct",
 						val: {
 							cmd: "get_user_data",
-							val: isIP ? _ipData.last_user : user,
+							val: isIP && isL2 ? _ipData.last_user : username,
 						},
 					})
 				).payload;
 				ipData = _ipData;
 				infoMsg = "";
-				console.log(ipData);
 			} catch (e) {
 				console.error(e);
 				infoMsg = "Error: " + e;
