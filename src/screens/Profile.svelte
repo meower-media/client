@@ -145,15 +145,17 @@
 			>
 		{/if}
 
-		<button
-			class="long"
-			title="View Recent Posts"
-			on:click={() => {
-				window.scrollTo(0, 0);
-				page.set("blank");
-				tick().then(() => page.set("recent"));
-			}}>View Recent Posts</button
-		>
+		{if $profileClicked !== "Discord"}
+			<button
+				class="long"
+				title="View Recent Posts"
+				on:click={() => {
+					window.scrollTo(0, 0);
+					page.set("blank");
+					tick().then(() => page.set("recent"));
+				}}>View Recent Posts</button
+			>
+		{/if}
 
 		<button class="long" disabled>Add to Chat</button>
 
