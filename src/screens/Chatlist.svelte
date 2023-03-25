@@ -102,7 +102,7 @@
 		</div>
 
 		<h1>Livechat</h1>
-		This is the public livechat. Messages in this chat don't save.
+		This is livechat. Post history isn't saved here.
 	</Container>
 	<PagedList bind:items {loadPage}>
 		<svelte:fragment slot="loaded" let:items>
