@@ -17,7 +17,7 @@
 			Error loading messages. Please try again.
 			<pre><code>{error}</code></pre>
 		</Container>
-		<Container slot="empty">No messages here... somehow.</Container>
+		<Container slot="empty">No messages here Check back later!</Container>
 	</PostList>
 </div>
 
