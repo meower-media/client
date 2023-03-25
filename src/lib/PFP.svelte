@@ -4,6 +4,16 @@
 	export let alt = "Profile picture";
 	export let online = false;
 	export let size = 1;
+	export let raw = false;
+
+	import errorIcon from "../assets/avatars/icon_err.svg";
+	/**
+	 * @type {*}
+	 */
+	const icons = import.meta.glob("../assets/avatars/*.svg", {
+		import: "default",
+		eager: true,
+	});
 
 	// only respond to `icon` changing
 	let id;
@@ -13,21 +23,20 @@
 	$: setId(icon);
 </script>
 
-<span class="pfp-container" style:--size={size}>
-	{#if online}
+<span class:pfp-container={!raw} style:--size={size}>
+	{#if online && !raw}
 		<span class="online" />
 	{/if}
-	<span class="pfp">
+	<span class:pfp={!raw} class:raw-pfp={raw}>
 		<img
 			{alt}
 			title={alt}
-			src={new URL(
-				`./../assets/avatars/icon_${
+			src={icons[
+				`../assets/avatars/icon_${
 					id === -1 ? 21 : id === -2 ? "err" : id - 1
-				}.svg`,
-				import.meta.url
-			).href}
-			on:error|once={() => (id = -2)}
+				}.svg`
+			] || errorIcon}
+			on:error={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
@@ -40,6 +49,10 @@
 	.pfp-container {
 		display: inline-block;
 		position: relative;
+	}
+	.raw-pfp {
+		width: calc(var(--size) * 3.75em);
+		height: calc(var(--size) * 3.75em);
 	}
 	.pfp {
 		width: calc(var(--size) * 3.75em);

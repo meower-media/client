@@ -10,7 +10,7 @@
 </script>
 
 <div>
-	{#await loadProfile(username)}
+	{#await loadProfile(username, true)}
 		<div class="center">
 			<Loading />
 		</div>

@@ -153,7 +153,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
-					maxlength="64"
+					maxlength="255"
 					value={password}
 				/><br />
 				<p class="checkboxes">
@@ -173,6 +173,7 @@
 						I agree to <a
 							href="https://meower.org/legal"
 							target="_blank"
+							rel="noreferrer"
 							>Meower's Terms of Service and Privacy Policy</a
 						>
 					</label>

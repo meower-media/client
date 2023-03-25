@@ -24,11 +24,15 @@
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
+	import PFP from "../lib/PFP.svelte";
+
+	let popupShown = false;
 
 	/**
 	 * @param {any} newPage Goes to a page while also refreshing it.
 	 */
 	function goto(newPage, resetScroll = true) {
+		popupShown = false;
 		if (
 			!$user.name &&
 			newPage !== "home" &&
@@ -63,7 +67,10 @@
 
 <!-- Wait, isn't it a topbar on old layout? -->
 
-<div class="sidebar" in:fade={{duration: 800}}>
+<svelte:body on:click={() => popupShown = false}></svelte:body>
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
 	<div class="logo">
 		<button class="logo-inner" on:click={() => goto("home")}>
 			<img
@@ -95,7 +102,7 @@
 		}}
 		class="gc-btn round"
 	>
-		<img src={gc} alt="Group Chats" draggable={false} />
+		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
 	<button on:click={() => goto("search")} class="search-btn round">
 		<img
@@ -106,37 +113,53 @@
 			draggable={false}
 		/>
 	</button>
-	<button on:click={() => goto("changelog")} class="changelog-btn round">
-		<img
-			src={changelog}
-			alt="changelog"
-			width="90%"
-			height="auto"
-			draggable={false}
-		/>
-	</button>
+	<div class="padding"></div>
 	<button
-		on:click={() => {
-			$profileClicked = $user.name;
-			goto("profile");
-		}}
-		class="profile-btn round"
+		class="toggle-popup round"
+		on:click={() => popupShown = !popupShown}
 	>
-		<img src={profile} alt="Profile" draggable={false} />
-	</button>
-	<button on:click={() => goto("settings")} class="settings-btn round">
-		<img src={settings} alt="Settings" draggable={false} />
-	</button>
-	<button
-		on:click={() => {
-			modalPage.set("logout");
-			modalShown.set(true);
-		}}
-		class="logout-btn round"
-	>
-		<img src={logout} alt="Log out" draggable={false} />
+		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.pfp_data} />
 	</button>
 </div>
+{#if popupShown}
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<div on:click|stopPropagation class="popup" transition:fade={{duration: 20}}>
+		<button
+			on:click={() => {
+				$profileClicked = $user.name;
+				goto("profile");
+			}}
+			class="profile-btn round"
+		>
+			<img src={profile} alt="Profile" draggable={false} />
+			<span class="label">Profile</span>
+		</button>
+		<button on:click={() => goto("settings")} class="settings-btn round">
+			<img src={settings} alt="Settings" draggable={false} />
+			<span class="label">Settings</span>
+		</button>
+		<button on:click={() => goto("changelog")} class="changelog-btn round">
+			<img
+				src={changelog}
+				alt="changelog"
+				height="auto"
+				draggable={false}
+			/>
+			<span class="label">Changelog</span>
+		</button>
+		<button
+			on:click={() => {
+				popupShown = true;
+				modalPage.set("logout");
+				modalShown.set(true);
+			}}
+			class="logout-btn round"
+		>
+			<img src={logout} alt="Log out" draggable={false} />
+			<span class="label">Log out</span>
+		</button>
+	</div>
+{/if}
 
 <style>
 	button {
@@ -155,6 +178,8 @@
 		flex-wrap: nowrap;
 
 		gap: 0.5em;
+		padding-block-start: 0.5em;
+		padding-block-end: 0.5em;
 		box-sizing: border-box;
 
 		user-select: none;
@@ -183,6 +208,10 @@
 		display: none;
 		flex-grow: 1;
 		height: 100%;
+	}
+	.padding {
+		flex-grow: 1;
+		display: none;
 	}
 	.logo img {
 		box-sizing: border-box;
@@ -218,9 +247,15 @@
 		background-color: var(--orange-dark);
 	}
 
+	:global(main:not(.layout-old)) .padding,
+	:global(main.layout-mobile) .padding {
+		display: block;
+	}
+
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;
-		padding-right: 0.5em;
+		padding: 0;
+		padding-inline-end: 0.5em;
 	}
 	:global(main.layout-old:not(.layout-mobile)) .logo {
 		display: block;
@@ -230,7 +265,71 @@
 	}
 
 	:global(main.layout-mobile) .sidebar {
-		padding: 0;
+		padding-inline-start: 0.5em;
+		padding-inline-end: 0.5em;
 		gap: 0.25em;
+	}
+	:global(main.layout-mobile:not(.layout-old)) .sidebar {
+		padding: 0;
+		padding-block-start: 0.5em;
+		padding-block-end: 0.5em;
+		gap: 0.25em;
+	}
+
+	button.toggle-popup {
+		padding: 0.1em;
+		background-color: var(--pfp-bg) !important;
+		border: solid 1.5px var(--pfp-outline);
+		border-bottom-width: 5px;
+		overflow: hidden;
+	}
+
+	
+	:global(main.input-hover) button.toggle-popup:hover:not(:active),
+	:global(main.input-touch) button.toggle-popup:active,
+	button.toggle-popup:focus-visible {
+		transform: scale(1.1);
+	}
+
+	.popup {
+		background: var(--orange);
+		padding: 0.5em;
+		padding-top: 0.25em;
+		border-radius: 0 0 0 0.5em;
+
+		position: absolute;
+		right: 0;
+		z-index: -1;
+
+		display: inline-flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.4em;
+	}
+	:global(main:not(.layout-old)) .popup {
+		right: unset;
+		left: 100%;
+		bottom: 0;
+
+		border-radius: 0 0.5em 0 0;
+		padding-top: 0.5em;
+		padding-left: 0.25em;
+	}
+	.popup > button {
+		text-align: left;
+		line-height: normal;
+
+		padding: 0.3em 0.5em;
+		margin: 0;
+		box-sizing: border-box;
+
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+	}
+	.popup > button > img {
+		width: 1.5em;
+		height: 1.5em;
+		object-fit: contain;
 	}
 </style>
