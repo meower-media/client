@@ -74,7 +74,7 @@
 <div class="chats">
 	<Container>
 		<h1>Chats</h1>
-		Here are your chats. Press the chat button to enter a chat.
+		Here are your chats. Press the chat button to enter a chat, and the plus to create one.
 		<div class="settings-controls">
 			<button
 				class="circle plus"
