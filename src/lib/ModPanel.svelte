@@ -151,7 +151,7 @@
 			<input
 				class="grow white"
 				type="text"
-				placeholder="Username or IP address..."
+				placeholder="Username/IP..."
 			/>
 			<button class="static">Submit</button>
 		</div>
@@ -317,30 +317,32 @@
 			}
 		}}
 	>
-		<div class="input-row">
+		<div class="input-row wrap">
 			<input
-				class="grow white"
+				class="grow white moderate-user-input"
 				type="text"
 				placeholder={["block", "unblock"].includes(actionType)
 					? "IP address..."
 					: "Username..."}
 			/>
-			<select
-				class="static"
-				on:change={e => {
-					// @ts-ignore
-					actionType = e.target.value;
-				}}
-			>
-				{#each modTypes as a}
-					<option
-						disabled={a.level > $user.lvl}
-						selected={a.cmd === "kick"}
-						value={a.cmd}>{a.name}</option
-					>
-				{/each}
-			</select>
-			<button class="static">Do it!</button>
+			<div class="input-row grow">
+				<select
+					class="grow"
+					on:change={e => {
+						// @ts-ignore
+						actionType = e.target.value;
+					}}
+				>
+					{#each modTypes as a}
+						<option
+							disabled={a.level > $user.lvl}
+							selected={a.cmd === "kick"}
+							value={a.cmd}>{a.name}</option
+						>
+					{/each}
+				</select>
+				<button class="static">Do it!</button>
+			</div>
 		</div>
 		{#if actionType}<p>
 				{(modTypes.find(o => o.cmd == actionType) || {}).description ||
@@ -398,6 +400,10 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		gap: 0.25em;
+		justify-content: stretch;
+	}
+	.wrap {
+		flex-wrap: wrap;
 	}
 	.grow {
 		flex-grow: 1;
@@ -417,6 +423,10 @@
 
 	.ip-info {
 		margin: 0.5em 0;
+	}
+
+	.moderate-user-input {
+		flex-basis: 15em;
 	}
 
 	.announce-buttons {

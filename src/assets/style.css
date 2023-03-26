@@ -76,6 +76,12 @@ select {
 	font-size: inherit;
 }
 
+input[type="text"],
+input[type="password"],
+textarea {
+	min-width: 5em;
+}
+
 button + button {
 	margin-left: -0.15rem;
 }
