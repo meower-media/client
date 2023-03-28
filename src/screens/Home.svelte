@@ -29,9 +29,4 @@
 	.home {
 		height: 100%;
 	}
-	.overflow {
-		overflow-x: hidden;
-		overflow-y: scroll;
-		max-height: 4em;
-	}
 </style>
