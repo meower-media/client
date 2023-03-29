@@ -20,11 +20,12 @@
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
-	import {onMount} from "svelte";
+	import {onMount, tick} from "svelte";
 
 	export let post = {};
 	export let buttons = true;
 	export let input = null;
+	export let canDoActions = true;
 
 	let bridged = false;
 	let webhook = false;
@@ -65,8 +66,6 @@
 	];
 
 	// TODO: make bridged tag a setting
-
-	// TODO: more then 1 img + optimize getimgs function
 
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
@@ -122,6 +121,13 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+
+	$: noPFP =
+		post.user === "Notification" ||
+		post.user.startsWith("Notification to ") ||
+		post.user === "Announcement" ||
+		post.user === "Server" ||
+		webhook;
 </script>
 
 <Container>
@@ -149,52 +155,50 @@
 						}}
 					/>
 				{/if}
-				{#if $user.lvl >= 1 || post.user === $user.name}
-					<button
-						class="circle close"
-						on:click={() => {
-							if (shiftHeld) {
-								clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "delete_post",
-										val: post.post_id,
-									},
-								});
-								return;
-							}
-							postClicked.set(post);
-							modalPage.set("deletePost");
-							modalShown.set(true);
-						}}
-					/>
-				{:else}
-					<button
-						class="circle report"
-						on:click={() => {
-							postClicked.set(post);
-							modalPage.set("reportPost");
-							modalShown.set(true);
-						}}
-					/>
+				{#if canDoActions}
+					{#if $user.lvl >= 1 || post.user === $user.name}
+						<button
+							class="circle trash"
+							on:click={() => {
+								if (shiftHeld) {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "delete_post",
+											val: post.post_id,
+										},
+									});
+									return;
+								}
+								postClicked.set(post);
+								modalPage.set("deletePost");
+								modalShown.set(true);
+							}}
+						/>
+					{:else}
+						<button
+							class="circle report"
+							on:click={() => {
+								postClicked.set(post);
+								modalPage.set("reportPost");
+								modalShown.set(true);
+							}}
+						/>
+					{/if}
 				{/if}
 			{/if}
 		</div>
 		<button
 			class="pfp"
-			on:click={() => {
-				if (
-					post.user === "Notification" ||
-					post.user === "Announcement" ||
-					post.user === "Server" ||
-					webhook
-				)
-					return;
+			on:click={async () => {
+				if (noPFP) return;
+				page.set("");
+				await tick();
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
-			{#await webhook || loadProfile(post.user)}
+			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
 				<PFP
 					icon={-2}
 					alt="{post.user}'s profile picture"
@@ -202,13 +206,22 @@
 				/>
 			{:then profile}
 				<PFP
-					icon={webhook ? -3 : profile.pfp_data}
+					icon={noPFP
+						? post.user === "Server"
+							? 102
+							: post.post_origin === "inbox" &&
+							  (post.user === "Announcement" ||
+									post.user === "Notification" ||
+									post.user.startsWith("Notification to"))
+							? 101
+							: -2
+						: profile.pfp_data}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
 			{:catch}
 				<PFP
-					icon={-3}
+					icon={-2}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
@@ -250,6 +263,9 @@
 			</div>
 
 			<FormattedDate date={post.date} />
+			{#if post.isDeleted}
+				<i>(deleted)</i>
+			{/if}
 		</div>
 	</div>
 	<p class="post-content">{post.content}</p>

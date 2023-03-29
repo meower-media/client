@@ -21,6 +21,7 @@
 	import {tick, onMount} from "svelte";
 	import {fade} from "svelte/transition";
 	import sleep from "../lib/sleep.js";
+	import version from "../lib/version.js";
 
 	let logo,
 		setup,
@@ -258,7 +259,7 @@
 					(Several features will be unavailable while not logged in.)
 				</p>
 				<div>
-					<p class="small">Meower Svelte v1.6</p>
+					<p class="small">Meower Svelte v{version}</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>

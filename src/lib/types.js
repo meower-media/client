@@ -38,5 +38,20 @@
  * }} ServerPostList
  */
 
+/**
+ * @typedef {{
+ * 	_id: string,
+ * 	id: any,
+ * 	banned: boolean,
+ * 	created: number,
+ * 	lower_username: string,
+ * 	lvl: number,
+ * 	pfp_data: number,
+ * 	quote: string,
+ * 	type: number,
+ * 	uuid: string
+ * }} User
+ */
+
 // make vscode recognize this as a module
 export {};

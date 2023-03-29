@@ -59,7 +59,8 @@ img.emoji {
 button,
 input[type="text"],
 input[type="password"],
-textarea {
+textarea,
+select {
 	border: solid 2px var(--foreground-orange);
 	border-radius: 1px;
 	outline: none;
@@ -76,6 +77,12 @@ textarea {
 	font-size: inherit;
 }
 
+input[type="text"],
+input[type="password"],
+textarea {
+	min-width: 5em;
+}
+
 button + button {
 	margin-left: -0.15rem;
 }
@@ -85,9 +92,10 @@ input:not(.white)::placeholder {
 	opacity: 0.75;
 }
 
-input.white::placeholder {
+input.white::placeholder,
+textarea::placeholder {
 	color: var(--foreground);
-	opacity: 0.75;
+	opacity: 0.5;
 }
 
 main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
@@ -114,7 +122,8 @@ button.round {
 
 input[type="text"].white,
 input[type="password"].white,
-textarea {
+textarea,
+select.white {
 	background-color: var(--background);
 	border-color: var(--orange);
 	color: var(--foreground);
@@ -213,6 +222,11 @@ button.plus {
 button.close {
 	background-image: url("./close.svg");
 	background-size: 50%;
+}
+
+button.trash {
+	background-image: url("./trash.svg");
+	background-size: 56%;
 }
 
 button.report {

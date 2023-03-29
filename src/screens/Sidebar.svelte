@@ -7,10 +7,12 @@
 		chatid,
 		modalShown,
 		modalPage,
+		modPanelOpen,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 
 	import * as clm from "../lib/clmanager.js";
+	import PFP from "../lib/PFP.svelte";
 
 	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
@@ -24,9 +26,11 @@
 	import logout from "../assets/logout.svg";
 	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
-	import PFP from "../lib/PFP.svelte";
+	import shield from "../assets/shield.svg";
+	import info from "../assets/info.svg";
 
 	let popupShown = false;
+	let popupDebounce = false;
 
 	/**
 	 * @param {any} newPage Goes to a page while also refreshing it.
@@ -38,6 +42,7 @@
 			newPage !== "home" &&
 			newPage !== "settings" &&
 			newPage !== "changelog" &&
+			newPage !== "about" &&
 			newPage !== "search"
 		) {
 			modalPage.set("signup");
@@ -67,7 +72,7 @@
 
 <!-- Wait, isn't it a topbar on old layout? -->
 
-<svelte:body on:click={() => popupShown = false}></svelte:body>
+<svelte:body on:click={() => (popupShown = false)} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
@@ -107,23 +112,50 @@
 	<button on:click={() => goto("search")} class="search-btn round">
 		<img
 			src={search}
-			alt="search"
+			alt="Search"
 			width="90%"
 			height="auto"
 			draggable={false}
 		/>
 	</button>
-	<div class="padding"></div>
+	{#if $user.lvl >= 1}
+		<button
+			on:click={() => ($modPanelOpen = !$modPanelOpen)}
+			class="modpanel-btn round"
+		>
+			<img
+				src={shield}
+				alt="Open/close moderator panel"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+	{/if}
+	<div class="padding" />
 	<button
 		class="toggle-popup round"
-		on:click={() => popupShown = !popupShown}
+		on:click={() => {
+			if (popupDebounce) return;
+			popupShown = !popupShown;
+			popupDebounce = true;
+			setTimeout(() => (popupDebounce = false), 150);
+		}}
 	>
-		<PFP raw={true} size={1} alt="Open/close more options" icon={$user.pfp_data} />
+		<PFP
+			raw={true}
+			size={1}
+			alt="Open/close more options"
+			icon={$user.name ? $user.pfp_data : -3}
+		/>
 	</button>
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div on:click|stopPropagation class="popup" transition:fade={{duration: 20}}>
+	<div
+		on:click|stopPropagation
+		class="popup"
+		transition:fade={{duration: 20}}
+	>
 		<button
 			on:click={() => {
 				$profileClicked = $user.name;
@@ -138,6 +170,12 @@
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
+		<!-- still WIP
+		<button on:click={() => goto("about")} class="about-btn round">
+			<img src={info} alt="About" draggable={false} />
+			<span class="label">About</span>
+		</button>
+	-->
 		<button on:click={() => goto("changelog")} class="changelog-btn round">
 			<img
 				src={changelog}
@@ -284,7 +322,6 @@
 		overflow: hidden;
 	}
 
-	
 	:global(main.input-hover) button.toggle-popup:hover:not(:active),
 	:global(main.input-touch) button.toggle-popup:active,
 	button.toggle-popup:focus-visible {

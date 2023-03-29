@@ -19,18 +19,14 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import {
-		authHeader,
-		user,
-		spinner,
-		lastTyped
-	} from "./stores.js";
+	import {authHeader, user, spinner, lastTyped} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
 	import TypingIndicator from "./TypingIndicator.svelte";
+	import ProfileView from "./ProfileView.svelte";
 	import * as clm from "./clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "./urls.js";
 
@@ -56,7 +52,7 @@
 
 	// PagedList stuff
 	let list;
-	let items = [];
+	export let items = [];
 
 	let firstLoad = true;
 
@@ -65,7 +61,7 @@
 	 * @param {number} page
 	 * @returns {Promise<{
 	 * 	numPages: number,
-	 * 	result: Array<import("./types.js").ListPost>
+	 * 	result: Array<import("./types.js").ListPost | import("./types.js").User>
 	 * }>}
 	 */
 	async function loadPage(page = 1) {
@@ -95,25 +91,38 @@
 		 */
 		const json = await resp.json();
 
-		const isInbox = fetchUrl === "inbox";
-
 		/**
-		 * @type {Array<import("./types.js").ListPost>}
+		 * @type {Array<import("./types.js").ListPost | import("./types.js").User>}
 		 */
 		result = json.autoget.map(post => {
-			if (isInbox) {
+			if ("lower_username" in post) {
+				/** @type import("./types.js").User */
+				// @ts-ignore
+				const user = {
+					id: id++,
+					...post,
+				};
+				return user;
+			}
+			if (post.post_origin === "inbox") {
 				if (post.u === "Server") {
 					post.u = "Announcement";
 				} else {
-					post.u = "Notification";
+					post.u =
+						fetchUrl === "inbox"
+							? "Notification"
+							: `Notification to ${post.u}`;
 				}
 			}
 			return {
 				id: id++,
+				_id: post._id,
 				post_id: post.post_id,
 				user: post.u,
 				content: post.p,
 				date: post.t.e,
+				post_origin: post.post_origin,
+				isDeleted: post.isDeleted,
 			};
 		});
 		const numPages = json["pages"];
@@ -157,6 +166,8 @@
 					user: cmd.val.u,
 					content: cmd.val.p,
 					date: cmd.val.t.e,
+					post_origin: cmd.val.post_origin,
+					isDeleted: cmd.val.isDeleted,
 				});
 			}
 			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
@@ -166,6 +177,8 @@
 					user: "Server",
 					content: `${cmd.val.u} left ${chatName}.`,
 					date: Date.now() / 1000,
+					post_origin: postOrigin || fetchUrl,
+					isDeleted: false,
 				});
 			}
 			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
@@ -175,9 +188,15 @@
 					user: "Server",
 					content: `${cmd.val.u} joined ${chatName}!`,
 					date: Date.now() / 1000,
+					post_origin: postOrigin || fetchUrl,
+					isDeleted: false,
 				});
 			}
-			if ($user.sfx && cmd.val.u !== $user.name && cmd.val.mode !== "delete") {
+			if (
+				$user.sfx &&
+				cmd.val.u !== $user.name &&
+				cmd.val.mode !== "delete"
+			) {
 				playNotification();
 			}
 			if (cmd.val.mode === "delete") {
@@ -303,15 +322,86 @@
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
-	<TypingIndicator />
+	{#if postOrigin}
+		<TypingIndicator forPage={postOrigin} />
+	{/if}
 	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
-		<svelte:fragment slot="loaded" let:items>
-			{#each items as post (post.id)}
+		<svelte:fragment slot="loaded" let:items={_items}>
+			{#each _items as post (post.id)}
 				<div
+					class="item"
 					transition:fly|local={{y: -50, duration: 250}}
 					animate:flip={{duration: 250}}
 				>
-					<Post {post} input={postInput} />
+					{#if post.lower_username}
+						<ProfileView
+							canClick={true}
+							small={true}
+							profile={post}
+						/>
+					{:else}
+						<Post
+							canDoActions={fetchUrl !== "reports"}
+							{post}
+							input={postInput}
+						/>
+					{/if}
+					{#if fetchUrl === "reports"}
+						<div class="settings-controls">
+							{#if !post.lower_username}
+								<button
+									disabled={post.deleted}
+									class="circle trash"
+									title="Delete post"
+									on:click={async () => {
+										try {
+											await clm.meowerRequest({
+												cmd: "direct",
+												val: {
+													cmd: "delete_post",
+													val: post.post_id,
+												},
+											});
+											if (post.post_origin === "inbox") {
+												await clm.meowerRequest({
+													cmd: "direct",
+													val: {
+														cmd: "close_report",
+														val: post._id,
+													},
+												});
+											}
+											items = items.filter(
+												p => p._id !== post._id
+											);
+										} catch (e) {
+											console.error(e);
+										}
+									}}
+								/>
+							{/if}
+							<button
+								class="circle close"
+								title="Close report"
+								on:click={async () => {
+									try {
+										await clm.meowerRequest({
+											cmd: "direct",
+											val: {
+												cmd: "close_report",
+												val: post._id,
+											},
+										});
+										items = items.filter(
+											p => p._id !== post._id
+										);
+									} catch (e) {
+										console.error(e);
+									}
+								}}
+							/>
+						</div>
+					{/if}
 				</div>
 			{/each}
 		</svelte:fragment>
@@ -354,5 +444,21 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.settings-controls {
+		position: absolute;
+		top: 0.5em;
+		right: 0.5em;
+	}
+
+	.item {
+		position: relative;
+	}
+
+	button.circle {
+		border: none;
+		margin: 0;
+		margin-left: 0.125em;
 	}
 </style>
