@@ -74,7 +74,7 @@
 <div class="chats">
 	<Container>
 		<h1>Chats</h1>
-		Here are your chats. Press the chat button to enter a chat.
+		Here are your chats. Press the chat button to enter a chat, and the plus to create one.
 		<div class="settings-controls">
 			<button
 				class="circle plus"
@@ -102,7 +102,8 @@
 		</div>
 
 		<h1>Livechat</h1>
-		This is the public livechat. Messages in this chat don't save.
+		Post history isn't saved here.
+
 	</Container>
 	<PagedList bind:items {loadPage}>
 		<svelte:fragment slot="loaded" let:items>

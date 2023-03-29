@@ -153,7 +153,7 @@
 		</div>
 
 		<h2>Delete Account</h2>
-		Permanently delete your Meower account. <b style="color: red;">THIS CANNOT BE UNDONE!</b>.
+		Permanently delete your Meower account. <b class="important">THIS CANNOT BE UNDONE!</b>
 	</Container>
 {/if}
 
@@ -175,5 +175,8 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+	}
+	.important {
+		color: crimson;
 	}
 </style>
