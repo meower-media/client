@@ -102,7 +102,8 @@
 		</div>
 
 		<h1>Livechat</h1>
-		This is livechat. Post history isn't saved here.
+		Post history isn't saved here.
+
 	</Container>
 	<PagedList bind:items {loadPage}>
 		<svelte:fragment slot="loaded" let:items>
