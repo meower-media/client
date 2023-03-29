@@ -18,7 +18,6 @@
 				Nobody is online.
 			{:else}
 				There are currently {$ulist.length} users online.
-				{/if}
 			{/if}
 		</div>
 	</Container>
