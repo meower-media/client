@@ -17,8 +17,7 @@
 			{:else if $ulist.length == 0}
 				Nobody is online.
 			{:else}
-				There are currently {$ulist.length} users online{#if $ulist.length}{" "}({$ulist.join(
-				", "
+				There are currently {$ulist.length} users online.
 			)}){/if}.
 		{/if}
 		</div>
