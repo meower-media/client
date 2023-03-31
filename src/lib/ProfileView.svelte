@@ -5,6 +5,7 @@
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
 	import {levels} from "./formatting.js";
+	import LiText from "./LiText.svelte";
 
 	export let username = "";
 </script>
@@ -26,7 +27,7 @@
 					size={1.4}
 				/>
 				<div class="profile-header-info">
-					<h1 class="profile-username">{username}</h1>
+					<h1 class="profile-username"><LiText text={username} /></h1>
 					<div class="profile-active">
 						{#if data.banned == false}
 							{$ulist.includes(username) ? "Online" : "Offline"}
