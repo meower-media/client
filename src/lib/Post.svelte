@@ -5,6 +5,8 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
 
+	import LiText from "./LiText.svelte";
+
 	import {
 		profileClicked,
 		postClicked,
@@ -92,15 +94,20 @@
 		images = [];
 		while (true) {
 			const result = iterator.next();
-			if (result.done) break
-			
+			if (result.done) break;
+
 			try {
 				new URL(result.value[2]);
 			} catch (e) {
 				continue;
-			};
-			
-			if (!IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) return;
+			}
+
+			if (
+				!IMAGE_HOST_WHITELIST.some(o =>
+					result.value[2].toLowerCase().startsWith(o.toLowerCase())
+				)
+			)
+				return;
 
 			images.push({
 				title: result.value[1],
@@ -197,7 +204,7 @@
 		<div class="creatordate">
 			<div class="creator">
 				<h2>
-					{post.user}
+					<LiText text={post.user} />
 				</h2>
 
 				{#if bridged}
