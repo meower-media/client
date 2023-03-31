@@ -5,6 +5,8 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
 
+	import LiText from "./LiText.svelte";
+
 	import {
 		profileClicked,
 		postClicked,
@@ -230,7 +232,7 @@
 		<div class="creatordate">
 			<div class="creator">
 				<h2>
-					{post.user}
+					<LiText text={post.user} />
 				</h2>
 
 				{#if bridged}
