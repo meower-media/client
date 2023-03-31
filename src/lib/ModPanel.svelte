@@ -12,7 +12,6 @@
 		user,
 	} from "./stores";
 	import {tick} from "svelte";
-	import {ulist} from "./stores.js";
 	import Container from "./Container.svelte";
 
 	let ipData = null;
@@ -86,12 +85,6 @@
 		no confirmation.<br />Also, performing an action on a user/post also
 		closes that user/post's report, if there's one.
 	</p>
-	<h2>User List</h2>
-	<Container>
-		There are currently {$ulist.length} users online{#if $ulist.length}{" "}({$ulist.join(
-				", "
-			)}){/if}.
-	</Container>
 	<h2>Get User Info</h2>
 	<form
 		on:submit|preventDefault={async e => {
