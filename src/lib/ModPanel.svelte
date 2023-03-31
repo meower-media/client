@@ -86,7 +86,7 @@
 		no confirmation.<br />Also, performing an action on a user/post also
 		closes that user/post's report, if there's one.
 	</p>
-	<h2>ulist</h2>
+	<h2>User List</h2>
 	<Container>
 		There are currently {$ulist.length} users online{#if $ulist.length}{" "}({$ulist.join(
 				", "
