@@ -26,6 +26,19 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: simvoni-il;
+	src: url(./font/ModifiedSimvoni.ttf);
+	font-display: swap;
+}
+
+@font-face {
+	font-family: simvoni-il;
+	src: url(./font/ModifiedSimvoni-Bold.ttf);
+	font-weight: bold;
+	font-display: swap;
+}
+
 .settings-controls {
 	position: absolute;
 	top: 0.25em;

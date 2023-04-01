@@ -1,0 +1,1 @@
+"ModifiedSimvoni" is a version of Simvoni modified by me (CST1229) in FontForge, to differentiate O/0 and I/l. It's used in usernames.
