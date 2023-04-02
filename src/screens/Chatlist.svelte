@@ -115,14 +115,6 @@
 					<Container>
 						<div class="settings-controls">
 							<button
-								class="circle close"
-								on:click={() => {
-									chatName.set(chat.nickname);
-									chatid.set(chat._id);
-									toLeaveChat = true;
-								}}
-							/>
-							<button
 								class="circle join"
 								on:click={() => {
 									chatName.set(chat.nickname);

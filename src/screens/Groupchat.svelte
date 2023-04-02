@@ -83,10 +83,10 @@
 						on:click={() => {
 							modalPage.set("gcMember");
 							modalShown.set(true);
-							profileClicked_GC.set(chatmember);
+							profileClicked_GC.set("a");
 						}}
 					>
-						<Member member={chatmember} />
+						<Member member="a" />
 					</button>
 				{/each}
 			</div>
@@ -95,13 +95,6 @@
 					Members <span class="small">({$chatMembers.length})</span>
 				</h2>
 				<div class="settings-controls">
-					<button
-						class="circle plus"
-						on:click={() => {
-							modalPage.set("addMember");
-							modalShown.set(true);
-						}}
-					/>
 					{#if $mobile && $chatid !== "livechat"}
 							<button
 								class="circle join"

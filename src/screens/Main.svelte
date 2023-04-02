@@ -16,6 +16,10 @@
 
 	import {mainPage as page} from "../lib/stores.js";
 
+	import * as sounds from "../lib/sounds";
+
+	sounds.playBG()
+
 	page.set("home");
 </script>
 

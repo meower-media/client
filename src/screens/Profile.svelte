@@ -18,6 +18,8 @@
 	import * as clm from "../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
+	import LiText from "../lib/LiText.svelte";
+
 	import {tick} from "svelte";
 
 	const PFP_COUNT = 34;
@@ -49,6 +51,18 @@
 		clm.updateProfile();
 	}
 
+	function makeid(length) {
+		let result = '';
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		const charactersLength = characters.length;
+		let counter = 0;
+		while (counter < length) {
+			result += characters.charAt(Math.floor(Math.random() * charactersLength));
+			counter += 1;
+		}
+		return result;
+	}
+
 	let pfpOverflow = false;
 	$: {
 		const pfp = $user.pfp_data;
@@ -67,93 +81,9 @@
 		{#if data.quote}
 			<Container>
 				<h3>Quote</h3>
-				<p>"<i>{data.quote}</i>"</p>
+				<LiText text={makeid(30)} />
 			</Container>
 		{/if}
-
-		{#if pfpSwitcher}
-			<Container>
-				<h2>Profile Picture</h2>
-				<div id="pfp-list">
-					{#if pfpOverflow && $user.pfp_data < 0}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
-							class="pfp selected"
-							><PFP
-								online={false}
-								icon={$user.pfp_data}
-								alt="Profile picture {$user.pfp_data}"
-							/></button
-						>
-					{/if}
-					{#each pfps as pfp}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-								$user.pfp_data = pfp;
-								save();
-							}}
-							class="pfp"
-							class:selected={$user.pfp_data === pfp}
-							><PFP
-								online={false}
-								icon={pfp}
-								alt="Profile picture {pfp}"
-							/></button
-						>
-					{/each}
-					{#if pfpOverflow && $user.pfp_data > 0}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
-							class="pfp selected"
-							><PFP
-								online={false}
-								icon={$user.pfp_data}
-								alt="Profile picture {$user.pfp_data}"
-							/></button
-						>
-					{/if}
-				</div>
-			</Container>
-		{:else if $profileClicked === $user.name}
-			<button
-				class="long"
-				title="Change Profile Picture"
-				on:click={() => (pfpSwitcher = true)}
-				>Change Profile Picture</button
-			>
-			<button
-				class="long"
-				title={data.quote ? "Update Quote" : "Set Quote"}
-				on:click={() => {
-					modalPage.set("setQuote");
-					modalShown.set(true);
-				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
-			>
-		{:else if $profileClicked === "Discord"}
-			<button
-				class="long"
-				title="Link Discord Account"
-				on:click={() => {
-					modalPage.set("linkDiscord");
-					modalShown.set(true);
-				}}>Link Discord Account</button
-			>
-		{/if}
-
-		<button
-			class="long"
-			title="View Recent Posts"
-			on:click={() => {
-				window.scrollTo(0, 0);
-				page.set("blank");
-				tick().then(() => page.set("recent"));
-			}}>View Recent Posts</button
-		>
 
 		<button class="long" disabled>Add to Chat</button>
 

@@ -67,6 +67,18 @@
 		"https://cdn.discordapp.com/",
 	];
 
+	function makeid(length) {
+		let result = '';
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		const charactersLength = characters.length;
+		let counter = 0;
+		while (counter < length) {
+			result += characters.charAt(Math.floor(Math.random() * charactersLength));
+			counter += 1;
+		}
+		return result;
+	}
+
 	// TODO: make bridged tag a setting
 
 	/**
@@ -203,8 +215,8 @@
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
 				<PFP
 					icon={-2}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
+					alt="e"
+					online={false}
 				/>
 			{:then profile}
 				<PFP
@@ -218,21 +230,21 @@
 							? 101
 							: -2
 						: profile.pfp_data}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
+					alt=""
+					online={false}
 				/>
 			{:catch}
 				<PFP
 					icon={-2}
-					alt="{post.user}'s profile picture"
-					online={$ulist.includes(post.user)}
+					alt=""
+					online={false}
 				/>
 			{/await}
 		</button>
 		<div class="creatordate">
 			<div class="creator">
 				<h2>
-					<LiText text={post.user} />
+					<LiText text={makeid(10)} />
 				</h2>
 
 				{#if bridged}
@@ -270,7 +282,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{post.content}</p>
+	<p class="post-content">{(post.content.toLowerCase()).replace("meower","██████").replace("meowy","██████")}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"

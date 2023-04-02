@@ -19,6 +19,18 @@
 		}
 		return loadProfile(username, true);
 	}
+
+	function makeid(length) {
+		let result = '';
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		const charactersLength = characters.length;
+		let counter = 0;
+		while (counter < length) {
+			result += characters.charAt(Math.floor(Math.random() * charactersLength));
+			counter += 1;
+		}
+		return result;
+	}
 </script>
 
 <div>
@@ -60,13 +72,13 @@
 				{/if}
 				<div class="profile-header-info" class:small>
 					{#if small}
-						<h2 class="profile-username"><LiText text={data._id} /></h2>
+						<h2 class="profile-username"><LiText text={makeid(10)} /></h2>
 					{:else}
-						<h1 class="profile-username"><LiText text={data._id} /></h1>
+						<h1 class="profile-username"><LiText text={makeid(10)} /></h1>
 					{/if}
 					<div class="profile-active">
 						{#if data.banned == false}
-							{$ulist.includes(data._id) ? "Online" : "Offline"}
+							Offline
 						{:else}
 							Banned
 						{/if}

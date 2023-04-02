@@ -156,7 +156,9 @@
 
 	{#if $screen === "setup"}
 		<Setup />
-	{:else}
+	{:else if $screen === "start_s"}
+		<button on:click={() => screen.set("setup")} class="fullcenter">Idk if this is needed but click me</button>
+	{:else if $screen === "main"}
 		<Main />
 	{/if}
 
@@ -168,6 +170,18 @@
 </main>
 
 <style>
+	.fullcenter {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+	}
+
 	:global(body) {
 		filter: grayscale(1);
 	}

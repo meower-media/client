@@ -72,8 +72,8 @@
 			}}
 		>
 			<p>
-				Note that usernames are currently case-sensitive (e.g going to
-				MikeDEV will work, but going to mikedev or MIKEDEV won't)!
+				Note that ██████ are currently ██████ (e.g going to
+				██████ will work, but going to ██████ or ██████ won't)!
 			</p>
 			<input
 				type="text"

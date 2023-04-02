@@ -5,19 +5,19 @@
 </script>
 
 <span class="text-overlap" aria-hidden="true"
-	>{#each _text as l}{#if l === "0"}<span class="overlap"
+	>{#each _text as l}<span class="overlap"
 				><span class="letter">0</span><span class="zero-slash">/</span
 				></span
-			>{:else if l === "l"}<span class="overlap l"
+			><span class="overlap l"
 				><span class="letter">l</span><span
 					class="l-bottom"
 					aria-hidden="true">_</span
 				></span
-			>{:else if l === "I"}<span class="overlap i"
+			><span class="overlap i"
 				><span class="letter">I</span><span class="i-top">_</span><span
 					class="i-bottom">_</span
 				></span
-			>{:else}<span class="letter">{l}</span>{/if}{/each}</span
+			><span class="letter">{l}</span>{/each}</span
 >{text}
 
 <style>
