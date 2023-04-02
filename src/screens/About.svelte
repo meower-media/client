@@ -37,12 +37,12 @@
 	</h1>
 	Svelte Client, v{version}
 	<br />
-	All of Meower is free and open-source!
+	All of ██████ is free and open-source!
 	<a href="https://github.com/Meower-Media-Co">See the source code here.</a>
 </Container>
 <Container>
 	<h2>Credits</h2>
-	Meower is possible thanks to these amazing people:
+	██████ is possible thanks to these amazing people:
 
 	<h3>The People Who Started It All</h3>
 	<ul>
@@ -54,7 +54,7 @@
 				}}>@MikeDEV</a
 			>
 			(<a href="https://github.com/MikeDEV">GitHub</a>) - current owner of
-			Meower and creator of the
+			██████ and creator of the
 			<a href="https://old.meower.org">old Scratch client</a>
 		</li>
 		<li>
@@ -92,7 +92,7 @@
 	<ul>
 		<li>
 			<a href="https://scratch.mit.edu/users/trappist-1e">@trappist-1e</a>
-			on Scratch - <img src={meowy} alt="Meowy" height="20" /> Meowy's original
+			on Scratch - <img src={meowy} alt="Meowy" height="20" /> █████'s original
 			creator
 		</li>
 	</ul>

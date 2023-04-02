@@ -259,14 +259,14 @@
 					(Several features will be unavailable while not logged in.)
 				</p>
 				<div>
-					<p class="small">Meower Svelte v{version}</p>
+					<p class="small">██████ Svelte v{version}</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
 		</div>
 	{:else if $page === "login"}
 		<div class="fullcenter">
-			<h1>Login to Meower</h1>
+			<h1>Login to ██████</h1>
 
 			<form
 				class="column-ui"
@@ -307,7 +307,7 @@
 		</div>
 	{:else if $page === "join"}
 		<div class="fullcenter">
-			<h1>Welcome to Meower</h1>
+			<h1>Welcome to ██████</h1>
 
 			<form
 				class="column-ui"
@@ -426,7 +426,7 @@
 							href="https://meower.org/legal"
 							target="_blank"
 							rel="noreferrer"
-							>Meower's Terms of Service and Privacy Policy</a
+							>██████'s Terms of Service and Privacy Policy</a
 						>
 					</label>
 				</p>

@@ -21,7 +21,7 @@
 				Are you sure you would like to report this post?
 				<br /><br />
 				Please make sure you're only reporting stuff that is against the
-				Meower
+				██████
 				<a
 					href="https://meower.org/legal"
 					target="_blank"
@@ -55,7 +55,7 @@
 			</div>
 		{:else if state === 1}
 			<p>
-				Successfully reported post! A member of the Meower moderation
+				Successfully reported post! A member of the ██████ moderation
 				team will review it shortly.
 			</p>
 			<br />

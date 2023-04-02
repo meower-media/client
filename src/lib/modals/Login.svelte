@@ -101,7 +101,7 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Login to Meower</h2>
+	<h2 slot="header">Login to ██████</h2>
 	<div slot="default">
 		{#if loading}
 			<div class="fullcenter">
@@ -153,7 +153,7 @@
 						href="/"
 						on:click|preventDefault={() => {
 							modalPage.set("signup");
-						}}>Join Meower</a
+						}}>Join ██████</a
 					>
 					<button type="submit">Login</button>
 				</div>

@@ -75,7 +75,7 @@
 			<div slot="default">
 				<p>
 					{#if $disconnectReason === ""}
-						Something went wrong and the connection to Meower was
+						Something went wrong and the connection to ██████ was
 						lost.
 					{:else if $disconnectReason === "Failed to load userdata"}
 						An unexpected error occurred while trying to load your
@@ -84,9 +84,9 @@
 						The server has blocked your IP address ({link.ip}).
 					{:else if $disconnectReason == "E:110 | ID conflict"}
 						There has been a hiccup! Looks like you logged into
-						Meower from another device.
+						██████ from another device.
 						<br /><br />
-						Please check any devices currently logged into Meower and
+						Please check any devices currently logged into ██████ and
 						try again.
 					{:else if $disconnectReason == "E:018 | Account Banned"}
 						You have been banned by a moderator.
@@ -168,6 +168,10 @@
 </main>
 
 <style>
+	:global(body) {
+		filter: grayscale(1);
+	}
+
 	.spinner-container {
 		position: fixed;
 		right: 27px;

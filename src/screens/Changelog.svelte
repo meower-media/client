@@ -7,6 +7,14 @@
 	What's new?
 </Container>
 <Container>
+	<h2>Uh oh!</h2>
+	<ul>
+		<li>
+			Meowy ran away :(
+		</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.6</h2>
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
@@ -57,12 +65,12 @@
 		<li>Work-in-progress search page</li>
 		<li>
 			Images now show up in posts (like [title: https://url]). There is an
-			image host whitelist of a few sites (Meower, Tenor, Scratch,
+			image host whitelist of a few sites (██████, Tenor, Scratch,
 			cubeupload, Discord and imgBB)
 		</li>
 		<li>
 			New profile pictures from the <a href="https://bettermeower.app"
-				>BetterMeower</a
+				>Better██████</a
 			> project
 		</li>
 		<li>Badges now also look nicer and are next to the username now</li>
@@ -131,7 +139,7 @@
 		<h3>Dev Preview 1</h3>
 		<ul>
 			<li>Search page</li>
-			<li>BetterMeower profile picture support</li>
+			<li>Better██████ profile picture support</li>
 			<li>Statisics</li>
 			<li>Bot tags (verified, unverified, bot owner)</li>
 			<li>Don't allow verified bot posts to be reported</li>
@@ -158,7 +166,7 @@
 		<li>Fix an issue that caused posts to sometimes not show up in home</li>
 		<li>Add credentials when fetching home (to view pages past 1)</li>
 		<li>
-			Rename page title from "Meower Svelte" to "Meower" to reflect it
+			Rename page title from "██████ Svelte" to "██████" to reflect it
 			becoming the official main client
 		</li>
 	</ul>

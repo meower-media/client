@@ -1,4 +1,4 @@
-# Contributing to Meower
+# Contributing to ██████
 
 ## Branch information
 

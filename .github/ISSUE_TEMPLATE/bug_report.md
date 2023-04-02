@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-<!-- MEOWER CLIENT BUG REPORT INSTRUCTIONS
+<!-- ██████ CLIENT BUG REPORT INSTRUCTIONS
 Before you continue, please read the following instructions provided:
 
 Replace the title of your issue with the name of the branch and version of the server you are using, and a brief summary of the issue, and then fill out the form below.
@@ -50,8 +50,8 @@ Please note the following:
 
 ## Platform info
 <!-- Please provide version info of the software you are using. -->
-**Meower Client**
-- Meower Client Version + Build Date: 
+**██████ Client**
+- ██████ Client Version + Build Date: 
 
 <!-- Please fill out this section below.-->
 **Desktop/Mobile Device**

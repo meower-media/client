@@ -85,7 +85,7 @@
 			Try again. If this issue persists,
 			<a
 				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
-				>create an issue on Meower Svelte's issue tracker</a
+				>create an issue on ██████ Svelte's issue tracker</a
 			> with the error code shown above.
 		</Container>
 	{/await}

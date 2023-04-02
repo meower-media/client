@@ -1,6 +1,6 @@
 done (preview 1):
 - search page
-- Bettermeower pfp support
+- Better██████ pfp support
 - statisics
 - txt file of bots
 - dont allow verified bot posts to be reported
@@ -25,13 +25,13 @@ cst and tnix (or me) please fix all these bugs:
 - image sizing issues
 - navbar links
 
-bettermeower:
+better██████:
 - img.bb image sharing (people need to generate their own api keys)
 - custom softcoded badges system (like bot system)
 - verified users?
 - make some sort of system for if the username matches another username with l or uppercase i
 - for image sharing, custom alt text
-- last online and go to last meower msg
+- last online and go to last ██████ msg
 - custom pfp for bots
 - idk like mesage links
 

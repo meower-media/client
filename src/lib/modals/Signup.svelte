@@ -118,7 +118,7 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Join Meower</h2>
+	<h2 slot="header">Join ██████</h2>
 	<div slot="default">
 		{#if loading}
 			<div class="fullcenter">
@@ -174,7 +174,7 @@
 							href="https://meower.org/legal"
 							target="_blank"
 							rel="noreferrer"
-							>Meower's Terms of Service and Privacy Policy</a
+							>██████'s Terms of Service and Privacy Policy</a
 						>
 					</label>
 				</p>
@@ -184,7 +184,7 @@
 						href="/"
 						on:click|preventDefault={() => {
 							modalPage.set("login");
-						}}>Login to Meower</a
+						}}>Login to ██████</a
 					>
 					<button type="submit" disabled={!acceptTerms}
 						>Create Account</button

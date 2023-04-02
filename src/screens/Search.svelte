@@ -10,7 +10,7 @@
 <div class="Search">
 	<Container>
 		<h1>Search</h1>
-		meower search, statistics and more!
+		██████ search, statistics and more!
 	</Container>
 	<Container>
 		<div class="settings-controls">
@@ -106,7 +106,7 @@
 				</div>
 			{:then stats}
 				There are {(stats.posts / 1000).toFixed(2)}k posts, {stats.chats}
-				chats and {(stats.users / 1000).toFixed(2)}k users on Meower.
+				chats and {(stats.users / 1000).toFixed(2)}k users on ██████.
 			{/await}
 		{/await}
 	</Container>

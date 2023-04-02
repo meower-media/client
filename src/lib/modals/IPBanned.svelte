@@ -13,7 +13,7 @@
 	<div slot="default">
 		<p>
 			Your IP address has been blocked from creating new accounts because
-			it was used to violate Meower's Terms of Service.
+			it was used to violate ██████'s Terms of Service.
 			<br /><br />
 			If you would like to discuss this block, please email
 			<a href="mailto:support@meower.org" target="_blank" rel="noreferrer"
