@@ -4,7 +4,7 @@
 
 import {writable} from "svelte/store";
 
-export const screen = writable("setup");
+export const screen = writable("start_s");
 export const mainPage = writable("home");
 export const setupPage = writable("logo");
 
