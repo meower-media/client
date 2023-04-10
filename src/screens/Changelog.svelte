@@ -11,7 +11,7 @@
 	<ul>
 		<li>Changing your password now also logs you out of every device</li>
 		<li>
-			Add https://forums.meower.org/ and https://nextcloud.meower.org/ to
+			Add https://forums.meower.org/ and https://nc.meower.org/ to
 			the image host whitelist
 		</li>
 	</ul>
