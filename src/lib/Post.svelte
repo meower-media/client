@@ -43,7 +43,7 @@
 		"https://assets.meower.org/",
 		"https://forums.meower.org/",
 		"https://go.meower.org/", // not everyone can add urls to go.meower.org, should be fine
-		"https://nextcloud.meower.org/",
+		"https://nc.meower.org/",
 
 		// cubeupload
 		"https://u.cubeupload.com/",
