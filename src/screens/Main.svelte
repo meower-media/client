@@ -11,6 +11,7 @@
 	import Search from "./Search.svelte";
 	import Changelog from "./Changelog.svelte";
 	import About from "./About.svelte";
+	import SearchResults from "./SearchResults.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
@@ -31,6 +32,8 @@
 			<Inbox />
 		{:else if $page === "search"}
 			<Search />
+		{:else if $page === "searchresults"}
+			<SearchResults />
 		{:else if $page === "chatlist"}
 			<Chatlist />
 		{:else if $page === "changelog"}

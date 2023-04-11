@@ -71,6 +71,7 @@ img.emoji {
 
 button,
 input[type="text"],
+input[type="search"],
 input[type="password"],
 textarea,
 select {
@@ -91,6 +92,7 @@ select {
 }
 
 input[type="text"],
+input[type="search"],
 input[type="password"],
 textarea {
 	min-width: 5em;
@@ -115,6 +117,8 @@ main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
 button:not(.circle):not(.white):focus-visible,
 main.input-hover input[type="text"]:not(.white):not(:disabled):hover,
 input[type="text"]:not(.white):focus-visible,
+main.input-hover input[type="search"]:not(.white):not(:disabled):hover,
+input[type="search"]:not(.white):focus-visible,
 main.input-hover input[type="password"]:not(.white):not(:disabled):hover,
 input[type="password"]:not(.white):focus-visible {
 	background-color: var(--orange-light);
@@ -122,6 +126,7 @@ input[type="password"]:not(.white):focus-visible {
 
 #main button:not(.circle):not(.white):not(:disabled):active,
 #main input[type="text"]:not(.white):not(:disabled):focus,
+#main input[type="searcg"]:not(.white):not(:disabled):focus,
 #main input[type="password"]:not(.white):not(:disabled):focus {
 	background-color: var(--orange-dark);
 }
@@ -134,6 +139,7 @@ button.round {
 }
 
 input[type="text"].white,
+input[type="search"].white,
 input[type="password"].white,
 textarea,
 select.white {
@@ -151,13 +157,16 @@ button.white {
 
 main.input-hover input[type="text"].white:not(:disabled):hover,
 main.input-hover input[type="password"].white:not(:disabled):hover,
+main.input-hover input[type="search"].white:not(:disabled):hover,
 main.input-hover textarea:not(:disabled):hover,
 main.input-touch input[type="text"].white:not(:disabled):active,
 main.input-touch input[type="password"].white:not(:disabled):active,
+main.input-touch input[type="search"].white:not(:disabled):active,
 main.input-touch textarea:not(:disabled):active,
 main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
+input[type="search"].white:focus-visible,
 #main textarea:focus-visible,
 #main textarea:focus-visible,
 button:not(.circle).white:focus-visible {
@@ -166,6 +175,7 @@ button:not(.circle).white:focus-visible {
 
 #main input[type="text"].white:not(:disabled):focus,
 #main input[type="password"].white:not(:disabled):focus,
+#main input[type="search"].white:not(:disabled):focus,
 #main textarea:focus,
 button:not(.circle).white:active {
 	border-color: var(--orange-dark);

@@ -19,7 +19,7 @@ export const disconnectReason = writable("");
 // Last typed
 export const lastTyped = writable(0);
 
-// Current chat ID
+// Current chat stuff
 export const chatName = writable("");
 export const chatid = writable("");
 export const chatMembers = writable([]);
@@ -36,6 +36,8 @@ export const postClicked = writable({});
 export const profileClicked = writable("");
 export const profileClicked_GC = writable("");
 export const announcementToSend = writable("");
+export const searchQuery = writable("");
+export const searchType = writable("");
 
 // Current auth header
 export const authHeader = writable({});

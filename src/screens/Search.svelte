@@ -1,5 +1,5 @@
 <script>
-	import {mainPage as page, profileClicked} from "../lib/stores.js";
+	import {mainPage as page, profileClicked, searchQuery, searchType} from "../lib/stores.js";
 	import {apiUrl} from "../lib/urls.js";
 	import Loading from "../lib/Loading.svelte";
 	import Container from "../lib/Container.svelte";
@@ -10,28 +10,78 @@
 <div class="Search">
 	<Container>
 		<h1>Search</h1>
-		meower search, statistics and more!
+		<i>meower search, statistics and more</i>
 	</Container>
 	<Container>
-		<div class="settings-controls">
-			<button class="circle search" disabled />
-		</div>
+		<h1>Search Home</h1>
+		<form
+			class="search"
+			autocomplete="off"
+			on:submit|preventDefault={async e => {
+				// @ts-ignore
+				const input = e.target.elements.query;
 
-		<h1>Search Posts</h1>
-		Find posts and maybe even relics. Coming Soon™
+				searchQuery.set(input.value);
+				searchType.set("home");
+				page.set("searchresults");
+			}}
+		>
+			<input
+				type="search"
+				class="white"
+				placeholder="Find posts and maybe even relics."
+				name="query"
+				autocomplete="false"
+				on:keydown={e => {
+					if (e.key == "Enter") {
+						e.preventDefault();
+						// @ts-ignore
+						e.target.form.requestSubmit();
+					}
+				}}
+			/>
+			<button>Search</button>
+		</form>
 	</Container>
 	<Container>
-		<div class="settings-controls">
-			<button class="circle search" disabled />
-		</div>
-
 		<h1>Search Users</h1>
-		Find all the legit users, memes, bots and namesnipes. Coming Soon™
+		<form
+			class="search"
+			autocomplete="off"
+			on:submit|preventDefault={async e => {
+				// @ts-ignore
+				const input = e.target.elements.query;
+
+				searchQuery.set(input.value);
+				searchType.set("users");
+				page.set("searchresults");
+			}}
+		>
+			<input
+				type="search"
+				class="white"
+				placeholder="Find all the legit users, memes, bots and namesnipes."
+				name="query"
+				autocomplete="false"
+				on:keydown={e => {
+					if (e.key == "Enter") {
+						e.preventDefault();
+						// @ts-ignore
+						e.target.form.requestSubmit();
+					}
+				}}
+			/>
+			<button>Search</button>
+		</form>
 	</Container>
 	<Container>
 		<h1>Go to User</h1>
+		<p>
+			Note that usernames are currently case-sensitive (e.g going to
+			MikeDEV will work, but going to mikedev or MIKEDEV won't)!
+		</p>
 		<form
-			class="createpost"
+			class="search"
 			autocomplete="off"
 			on:submit|preventDefault={async e => {
 				errors = "";
@@ -71,10 +121,6 @@
 				}
 			}}
 		>
-			<p>
-				Note that usernames are currently case-sensitive (e.g going to
-				MikeDEV will work, but going to mikedev or MIKEDEV won't)!
-			</p>
 			<input
 				type="text"
 				class="white"
@@ -113,11 +159,6 @@
 </div>
 
 <style>
-	.settings-controls {
-		position: absolute;
-		top: 0.25em;
-		right: 0.25em;
-	}
 	.center {
 		text-align: center;
 	}
@@ -126,5 +167,18 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.search {
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 0.25em;
+	}
+	.search > input {
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+	.search > button {
+		flex-shrink: 0;
 	}
 </style>
