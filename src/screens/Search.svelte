@@ -30,6 +30,7 @@
 				type="search"
 				class="white"
 				placeholder="Find posts and maybe even relics."
+				maxlength="360"
 				name="query"
 				autocomplete="false"
 				on:keydown={e => {
@@ -61,6 +62,7 @@
 				type="search"
 				class="white"
 				placeholder="Find all the legit users, memes, bots and namesnipes."
+				maxlength="20"
 				name="query"
 				autocomplete="false"
 				on:keydown={e => {
