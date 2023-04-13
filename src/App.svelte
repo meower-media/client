@@ -115,12 +115,12 @@
 			<LoginModal />
 		{:else if $modalPage === "signup"}
 			<SignupModal />
-			<!-- Bans -->
+		<!-- Bans -->
 		{:else if $modalPage === "banned"}
 			<BannedModal />
 		{:else if $modalPage === "ipBanned"}
 			<IPBannedModal />
-			<!-- Confirmations -->
+		<!-- Confirmations -->
 		{:else if $modalPage === "deletePost"}
 			<DeletePostModal />
 		{:else if $modalPage === "reportPost"}
@@ -131,9 +131,9 @@
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
-			{:else if $modalPage === "announce"}
-				<AnnounceModal />
-			<!-- Text inputs -->
+		{:else if $modalPage === "announce"}
+			<AnnounceModal />
+		<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
@@ -191,7 +191,7 @@
 		--foreground-orange: white;
 
 		--pfp-bg: white;
-		--pfp-outline: #d9d9d9;
+		--pfp-outline: #092d2f;
 
 		background-color: var(--background);
 		color: var(--foreground);

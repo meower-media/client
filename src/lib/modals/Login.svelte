@@ -5,94 +5,15 @@
 	import {modalShown, modalPage, authHeader, user} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
+	import * as api from "../api.js";
 
-	let loading = false;
 	let loginStatus = "";
-	let username = "";
-	let password = "";
 	let rememberMe = false;
+	let loginState = "";
+	let mfaTicket = "";
 
-	function doLogin() {
-		try {
-			loading = true;
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "authpswd",
-					val: {
-						username: username,
-						pswd: password,
-					},
-				},
-			})
-				.then(async val => {
-					try {
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: val.payload.username,
-							},
-						});
-
-						modalShown.set(false);
-
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							})
-						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-					} catch (e) {
-						loading = false;
-						loginStatus =
-							"Unexpected " + e + " error getting user data!";
-					}
-				})
-				.catch(code => {
-					loading = false;
-					switch (code) {
-						case "E:103 | ID not found":
-							loginStatus = "Invalid username!";
-							break;
-						case "I:011 | Invalid Password":
-							loginStatus = "Invalid password!";
-							break;
-						case "E:018 | Account Banned":
-							modalPage.set("banned");
-							break;
-						case "E:019 | Illegal characters detected":
-							loginStatus =
-								"Usernames must not have spaces or other special characters!";
-							break;
-						case "E:106 | Too many requests":
-							loginStatus =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							loginStatus = `Unexpected ${code} error!`;
-					}
-				});
-		} catch (e) {
-			console.log(e);
-			loading = false;
-			loginStatus = "Error logging in: " + e;
-		}
+	function doLogin(accessToken) {
+		console.log("");
 	}
 </script>
 
@@ -103,22 +24,23 @@
 >
 	<h2 slot="header">Login to Meower</h2>
 	<div slot="default">
-		{#if loading}
+		{#if loginState === "loading"}
 			<div class="fullcenter">
 				<Loading />
 			</div>
-		{:else}
+		{:else if loginState === "totp"}
 			<form
 				on:submit|preventDefault={e => {
-					if (!(e.target[0].value && e.target[1].value)) {
+					if (!e.target[0].value) {
 						loginStatus =
 							"You must specify a username and a password to login!";
-						return false;
+						return;
 					}
-					username = e.target[0].value;
-					password = e.target[1].value;
-					doLogin();
-					return false;
+					api.makeRequest('auth/totp', 'POST', {
+						ticket: mfaTicket,
+						code: e.target[0].value
+					}, false)
+						.then(async resp => doLogin(resp.access_token))
 				}}
 			>
 				{#if loginStatus}
@@ -127,9 +49,65 @@
 				<input
 					type="text"
 					class="modal-input white"
-					placeholder="Username"
-					maxlength="20"
-					value={username}
+					placeholder="Authenticator code"
+					maxlength="6"
+					autofocus
+				/><br /><br />
+				<div class="modal-buttons">
+					<a
+						href="/"
+						on:click|preventDefault={() => {
+							loginState = "";
+						}}>Cancel</a
+					>
+					<button type="submit">Login</button>
+				</div>
+			</form>
+		{:else}
+			<form
+				on:submit|preventDefault={e => {
+					if (!(e.target[0].value && e.target[1].value)) {
+						loginStatus =
+							"You must specify a username and a password to login!";
+						return;
+					}
+					loginState = "loading";
+					api.makeRequest('auth/password', 'POST', {
+						username: e.target[0].value,
+						password: e.target[1].value
+					}, false)
+						.then(async resp => {
+							if (resp.mfa_required) {
+								mfaTicket = resp.mfa_ticket;
+								if (resp.mfa_methods.length > 1) {
+									loginState = "mfaMethods";
+								} else {
+									switch (resp.mfa_methods[0]) {
+										case "email":
+											loginState = "emailMFA";
+											break;
+										case "totp":
+											loginState = "totp";
+											break;
+										case "recovery_codes":
+											loginState = "recovery_codes";
+											break;
+									}
+								}
+								return;
+							}
+						})
+						.catch(async resp => loginState = "")
+				}}
+			>
+				{#if loginStatus}
+					<span class="login-status">{loginStatus}</span><br />
+				{/if}
+				<input
+					type="text"
+					class="modal-input white"
+					placeholder="Username/Email"
+					maxlength="255"
 					autofocus
 				/><br /><br />
 				<input
@@ -137,7 +115,6 @@
 					class="modal-input white"
 					placeholder="Password"
 					maxlength="255"
-					value={password}
 				/><br />
 				<p class="checkboxes">
 					<input

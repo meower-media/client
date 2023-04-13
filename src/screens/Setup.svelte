@@ -8,6 +8,7 @@
 		authHeader,
 		user,
 	} from "../lib/stores.js";
+	import * as api from "../lib/api.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
 	// @ts-ignore
@@ -53,7 +54,7 @@
 				logoImg.height = 0;
 				logo.classList.remove("top");
 
-				await sleep(600);
+				await sleep(300);
 				// Directly changing image height instead
 				// of using transforms to prevent blur
 				logoImg.height = 80;
@@ -62,21 +63,23 @@
 				logoImg.height = 40;
 				logo.classList.add("top");
 
-				await sleep(700);
+				await sleep(500);
 				loginStatus = "Connecting...";
 				await connect();
 
-				if (
-					localStorage.getItem("meower_savedusername") &&
-					localStorage.getItem("meower_savedpassword")
-				) {
+				if (localStorage.getItem("meower_token")) {
+					const sessionDetails = api.makeRequest('/me', 'GET');
+					
+				}
+
+				if (localStorage.getItem("meower_token")) {
 					doLogin(
 						localStorage.getItem("meower_savedusername"),
 						localStorage.getItem("meower_savedpassword"),
 						true
 					);
 				} else {
-					await mainSetup();
+					screen.set("main");
 				}
 			} else if (value === "reconnect") {
 				loginStatus = "";
@@ -163,7 +166,7 @@
 					}
 				})
 				.catch(code => {
-					if (autoLogin) return mainSetup();
+					if (autoLogin) return screen.set("main");
 
 					switch (code) {
 						case "E:103 | ID not found":
@@ -190,7 +193,7 @@
 					}
 				});
 		} catch (e) {
-			if (autoLogin) return mainSetup();
+			if (autoLogin) return screen.set("main");
 
 			console.error(e);
 			loginStatus = "Error logging in: " + e;

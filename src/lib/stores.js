@@ -43,6 +43,12 @@ export const authHeader = writable({});
 // The mod panel is a popup
 export const modPanelOpen = writable(false);
 
+// The current user auth token
+export const token = writable("");
+
+// The current MFA ticket
+export const MFATicket = writable("");
+
 // The current user profile
 export const user = writable({
 	name: null,

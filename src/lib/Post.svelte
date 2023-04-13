@@ -32,6 +32,9 @@
 	let bridged = false;
 	let webhook = false;
 
+	let liked = false;
+	let meowed = false;
+
 	let images = [];
 
 	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
@@ -134,62 +137,6 @@
 
 <Container>
 	<div class="post-header">
-		<div class="settings-controls">
-			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}
-				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
-					<button
-						class="circle join"
-						on:click={() => {
-							let existingText = input.value;
-
-							const mentionRegex = /^@\w+\s*/i;
-							const mention = "@" + post.user + " ";
-
-							if (mentionRegex.test(existingText)) {
-								input.value = existingText
-									.trim()
-									.replace(mentionRegex, mention);
-							} else {
-								input.value = mention + existingText.trim();
-							}
-
-							input.focus();
-						}}
-					/>
-				{/if}
-				{#if canDoActions}
-					{#if $user.lvl >= 1 || post.user === $user.name}
-						<button
-							class="circle trash"
-							on:click={() => {
-								if (shiftHeld) {
-									clm.meowerRequest({
-										cmd: "direct",
-										val: {
-											cmd: "delete_post",
-											val: post.post_id,
-										},
-									});
-									return;
-								}
-								postClicked.set(post);
-								modalPage.set("deletePost");
-								modalShown.set(true);
-							}}
-						/>
-					{:else}
-						<button
-							class="circle report"
-							on:click={() => {
-								postClicked.set(post);
-								modalPage.set("reportPost");
-								modalShown.set(true);
-							}}
-						/>
-					{/if}
-				{/if}
-			{/if}
-		</div>
 		<button
 			class="pfp"
 			on:click={async () => {
@@ -278,6 +225,87 @@
 			</a>
 		{/each}
 	</div>
+	<div class="post-buttons">
+		{#if buttons && !$user.name && $chatid !== "livechat" && post.user !== "Server"}
+			{#if input && post.user !== "Notification" && post.user !== "Announcement"}
+				<button
+					class="circle join"
+					on:click={() => {
+						let existingText = input.value;
+
+						const mentionRegex = /^@\w+\s*/i;
+						const mention = "@" + post.user + " ";
+
+						if (mentionRegex.test(existingText)) {
+							input.value = existingText
+								.trim()
+								.replace(mentionRegex, mention);
+						} else {
+							input.value = mention + existingText.trim();
+						}
+
+						input.focus();
+					}}
+				/>
+			{/if}
+			{#if canDoActions}
+				<figure>
+					<button
+						class="circle {liked ? 'heart-on' : 'heart-off'}"
+						on:click={() => {liked = !liked}}
+					/>
+					<figcaption>123</figcaption>
+				</figure>
+				<figure>
+					<button
+						class="circle {meowed ? 'meow-on' : 'meow-off'}"
+						on:click={() => {meowed = !meowed}}
+					/>
+					<figcaption>123</figcaption>
+				</figure>
+				<figure>
+					<button
+						class="circle comment"
+					/>
+					<figcaption>123</figcaption>
+				</figure>
+				<figure>
+					{#if $user.lvl >= 1 || post.user !== $user.name}
+						<button
+							class="circle edit"
+						/>
+						<button
+							class="circle trash"
+							on:click={() => {
+								if (shiftHeld) {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "delete_post",
+											val: post.post_id,
+										},
+									});
+									return;
+								}
+								postClicked.set(post);
+								modalPage.set("deletePost");
+								modalShown.set(true);
+							}}
+						/>
+					{:else}
+						<button
+							class="circle report"
+							on:click={() => {
+								postClicked.set(post);
+								modalPage.set("reportPost");
+								modalShown.set(true);
+							}}
+						/>
+					{/if}
+				</figure>
+			{/if}
+		{/if}
+	</div>
 </Container>
 
 <style>
@@ -317,15 +345,11 @@
 	.post-content {
 		white-space: pre-wrap;
 	}
-	.settings-controls {
-		position: absolute;
-		top: 0.25em;
-		right: 0.25em;
-	}
 	button.circle {
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+		margin-right: 0.5em;
 	}
 
 	.post-image {

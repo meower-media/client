@@ -7,12 +7,13 @@
 <style>
 	div {
 		background-color: var(--background);
-		border: solid 2px var(--orange);
-		border-radius: 1px;
+		border: solid 4px var(--orange);
+		border-radius: 11px;
 		padding: 0.6em;
-		margin-bottom: 0.4em;
+		margin-bottom: 0.6em;
 		overflow-wrap: break-word;
 		position: relative;
 		overflow: auto;
+		filter: drop-shadow(0 4px 0 var(--orange-dark));
 	}
 </style>

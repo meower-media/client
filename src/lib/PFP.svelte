@@ -32,17 +32,7 @@
 		<img
 			{alt}
 			title={alt}
-			src={icons[
-				`../assets/avatars/icon_${
-					id === -1
-						? 21
-						: id === -2
-						? "err"
-						: id === -3
-						? "guest"
-						: id - 1
-				}.svg`
-			] || errorIcon}
+			src="https://uploads.scratch.mit.edu/get_image/user/60576675_512x512.png"
 			on:error={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}
@@ -58,17 +48,18 @@
 		position: relative;
 	}
 	.raw-pfp {
-		width: calc(var(--size) * 3.75em);
-		height: calc(var(--size) * 3.75em);
+		width: 100%;
+		height: 100%;
 	}
 	.pfp {
-		width: calc(var(--size) * 3.75em);
-		height: calc(var(--size) * 3.75em);
+		width: calc(var(--size) * 4em);
+		height: calc(var(--size) * 4em);
 		box-sizing: border-box;
+		overflow: hidden;
 
-		background-color: var(--pfp-bg);
-		border: solid 1.5px var(--pfp-outline);
-		border-bottom-width: 5px;
+		
+		background: var(--pfp-outline);
+		border: solid calc(var(--size) * 0.3em) var(--pfp-outline);
 		border-radius: calc(var(--size) * 1.25em);
 
 		display: flex;

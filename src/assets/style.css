@@ -40,9 +40,26 @@
 }
 
 .settings-controls {
-	position: absolute;
-	top: 0.25em;
-	right: 0.25em;
+	position: flex;
+}
+
+.post-buttons {
+	display: flex;
+	flex-direction: row;
+	align-items: left;
+	gap: 10px;
+}
+
+.post-buttons figure {
+	margin: 0;
+	text-align: center;
+}
+
+.post-buttons figure button {
+	margin-left: 0;
+	border-radius: 0%;
+	background-color: transparent;
+	overflow: visible;
 }
 
 .image_1 {
@@ -237,14 +254,44 @@ button.close {
 	background-size: 50%;
 }
 
+button.heart-off {
+	background-image: url("./heart_off.svg");
+	background-size: 90%;
+}
+
+button.heart-on {
+	background-image: url("./heart_on.svg");
+	background-size: 90%;
+}
+
+button.meow-off {
+	background-image: url("./meow_off.svg");
+	background-size: 90%;
+}
+
+button.meow-on {
+	background-image: url("./meow_on.svg");
+	background-size: 90%;
+}
+
+button.comment {
+	background-image: url("./comment.svg");
+	background-size: 90%;
+}
+
+button.edit {
+	background-image: url("./edit.svg");
+	background-size: 90%;
+}
+
 button.trash {
 	background-image: url("./trash.svg");
-	background-size: 56%;
+	background-size: 90%;
 }
 
 button.report {
 	background-image: url("./report.svg");
-	background-size: 50%;
+	background-size: 90%;
 }
 
 button.join {
