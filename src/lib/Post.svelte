@@ -4,7 +4,9 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
-    import { emojify } from "./emoji.js";
+    import twemoji from "twemoji";
+    import { toHTMLElement } from "./twemoji-utils.js";
+    import DOMPurify from "dompurify";
 
 	import LiText from "./LiText.svelte";
 
@@ -271,7 +273,17 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{@html emojify(post.content)}</p>
+	<p class="post-content">{@html DOMPurify.sanitize(twemoji.parse(toHTMLElement(post.content).innerText, {
+        folder: "svg",
+        ext: ".svg"
+      }), {
+        FORBID_TAGS: ["b", "i", "h1", "h2", "h3", "h4", "h5", "h6", "a"],
+        CUSTOM_ELEMENT_HANDLING: {
+            tagNameCheck: "img",
+            attributeNameCheck: "emoji",
+            allowCustomizedBuiltInElements: true
+        }
+    })}
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"
