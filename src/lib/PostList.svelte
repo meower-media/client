@@ -163,7 +163,7 @@
 			const isGC = postOrigin !== "home";
 			if (cmd.val.mode == "delete") {
 				items = items.filter(post => post.post_id !== cmd.val.id);
-			}
+			} // This needs to be here to even function - Bloctans
 			if (!isGC || cmd.val.state === 2) {
 				if (cmd.val.post_origin !== postOrigin) return;
 
