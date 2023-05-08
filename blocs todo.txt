@@ -1,11 +1,14 @@
-Do:
+Done:
 - tiny crown on chat owner
-- fix terrible codebase
+
+Do:
+- fix terrible codebase (More specifically Modals)
+- add to chat button on profiles 
 
 Later:
-- image button
+- image button (simpler way to upload images)
 - log out everywhere
 - BGM
 - OOBE
-- add to chat button on profiles 
 - add users to gc via search
+- basic modal

@@ -13,12 +13,11 @@
 		user,
 		chatid,
 		ulist,
-		mainPage as page,
-		modalShown,
-		modalPage,
+		mainPage as page
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
+	import * as Modals from "../lib/Modals.js";
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
@@ -173,8 +172,7 @@
 									return;
 								}
 								postClicked.set(post);
-								modalPage.set("deletePost");
-								modalShown.set(true);
+								Modals.ShowModal("deletePost")
 							}}
 						/>
 					{:else}
@@ -182,8 +180,7 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								modalPage.set("reportPost");
-								modalShown.set(true);
+								Modals.ShowModal("reportPost")
 							}}
 						/>
 					{/if}

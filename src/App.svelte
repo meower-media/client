@@ -22,6 +22,7 @@
 	import LogoutModal from "./lib/modals/Logout.svelte";
 	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
 	import AnnounceModal from "./lib/modals/Announce.svelte";
+	import AddMember2Modal from "./lib/modals/AddMember_2.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -145,6 +146,8 @@
 			<GCMemberModal />
 		{:else if $modalPage === "addMember"}
 			<AddMemberModal />
+		{:else if $modalPage === "addMember2"}
+			<AddMember2Modal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
 		{:else if $modalPage === "linkDiscord"}

@@ -13,6 +13,7 @@
 		chatid,
 		chatOwner,
 	} from "../stores.js";
+	
 	import ProfileView from "../ProfileView.svelte";
 </script>
 

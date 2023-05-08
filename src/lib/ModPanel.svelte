@@ -5,14 +5,13 @@
 	import {levels} from "./formatting.js";
 	import {
 		mainPage as page,
-		modalPage,
-		modalShown,
 		announcementToSend,
 		profileClicked,
 		user,
 	} from "./stores";
 	import {tick} from "svelte";
 	import Container from "./Container.svelte";
+	import * as Modals from "../lib/Modals.js";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -270,8 +269,7 @@
 				}
 				announceMsg = "";
 				$announcementToSend = text;
-				$modalPage = "announce";
-				$modalShown = true;
+				Modals.ShowModal("announce")
 			}}
 		>
 			<textarea

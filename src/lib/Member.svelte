@@ -5,7 +5,10 @@
 
 	import {onMount} from "svelte";
 	import loadProfile from "./loadProfile.js";
+	import crown from "../assets/crown.svg";
+
 	export let member = "";
+	export let owner = false;
 
 	let pfp = 0;
 
@@ -38,12 +41,20 @@
 			/>
 		</div>
 		<p class="member-name">{member}</p>
+
+		{#if owner}
+			<img src = {crown} alt = "Owner" class = "ownericon" title = "{member} Is The Group chat owner"/>
+		{/if}
 	</div>
 {:else}
 	<div class="error">error loading member {member}: {error}</div>
 {/if}
 
 <style>
+	.ownericon {
+		height: 50%;
+	}
+
 	.member {
 		display: flex;
 		flex-wrap: nowrap;

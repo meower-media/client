@@ -1,12 +1,11 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
-		modalPage,
-		modalShown,
 		profileClicked,
 		user,
 		mainPage as page,
 	} from "../lib/stores.js";
+	import * as Modals from "../lib/Modals.js";
 
 	import {profileCache} from "../lib/loadProfile.js";
 
@@ -130,8 +129,7 @@
 				class="long"
 				title={data.quote ? "Update Quote" : "Set Quote"}
 				on:click={() => {
-					modalPage.set("setQuote");
-					modalShown.set(true);
+					Modals.ShowModal("setQuote")
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
 			>
 		{:else if $profileClicked === "Discord"}
@@ -139,8 +137,7 @@
 				class="long"
 				title="Link Discord Account"
 				on:click={() => {
-					modalPage.set("linkDiscord");
-					modalShown.set(true);
+					Modals.ShowModal("linkDiscord")
 				}}>Link Discord Account</button
 			>
 		{/if}
@@ -155,15 +152,15 @@
 			}}>View Recent Posts</button
 		>
 
-		<button class="long" disabled>Add to Chat</button>
-
 		{#if $user.name && $profileClicked !== $user.name}
+			<button class="long" on:click={() => {
+				Modals.ShowModal("addMember2")
+			}}>Add to Chat</button>
 			<button
 				class="long"
 				title="Report User"
 				on:click={() => {
-					modalPage.set("reportUser");
-					modalShown.set(true);
+					Modals.ShowModal("reportUser")
 				}}>Report User</button
 			>
 		{/if}
