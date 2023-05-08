@@ -126,20 +126,7 @@ export default class Cloudlink {
 						this.log("connection", "connected to websockets");
 
 						const _ip = localStorage.getItem("meower_ip");
-						if (_ip || _ip === "") {
-							this.ip = _ip;
-						} else {
-							this.ip = await (await fetch(apiUrl + "ip")).text();
-						}
-
-						this.send({
-							cmd: "direct",
-							val: {
-								cmd: "ip",
-								val: this.ip,
-							},
-						});
-
+						
 						await sleep(100);
 
 						this.send({
