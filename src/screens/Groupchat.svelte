@@ -100,7 +100,7 @@
 					<button
 						class="circle plus"
 						on:click={() => {
-							modalPage.set("addMember");
+							modalPage.set("addMemberMode");
 							modalShown.set(true);
 						}}
 					/>

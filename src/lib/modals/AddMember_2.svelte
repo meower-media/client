@@ -60,7 +60,7 @@
 
 <Modal
 	on:close={() => {
-		Modals.CloseModal("addMember2")
+		Modals.CloseModal()
 	}}
 >
 	<h2 slot="header">Add Member To Chat</h2>
@@ -84,7 +84,7 @@
 												val: {chatid: chat._id, username: $profileClicked},
 											},
 										});
-										Modals.CloseModal("addMember2")
+										Modals.CloseModal()
                                     }}
                                 />
                             </div>

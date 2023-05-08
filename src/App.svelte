@@ -23,6 +23,9 @@
 	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
 	import AnnounceModal from "./lib/modals/Announce.svelte";
 	import AddMember2Modal from "./lib/modals/AddMember_2.svelte";
+	import AddMemberSearchModal from "./lib/modals/AddMember_Search.svelte";
+	import AddMemberModeModal from "./lib/modals/AddMember_Mode.svelte";
+	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -128,6 +131,8 @@
 			<ReportPostModal />
 		{:else if $modalPage === "reportUser"}
 			<ReportUserModal />
+		{:else if $modalPage === "searchResults"}
+			<SearchResultsModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
@@ -148,6 +153,10 @@
 			<AddMemberModal />
 		{:else if $modalPage === "addMember2"}
 			<AddMember2Modal />
+		{:else if $modalPage === "addMemberSearch"}
+			<AddMemberSearchModal />
+		{:else if $modalPage === "addMemberMode"}
+			<AddMemberModeModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
 		{:else if $modalPage === "linkDiscord"}

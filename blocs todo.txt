@@ -1,14 +1,20 @@
 Done:
 - tiny crown on chat owner
-
-Do:
 - fix terrible codebase (More specifically Modals)
 - add to chat button on profiles 
+- add users to gc via search
+
+Do:
 
 Later:
 - image button (simpler way to upload images)
 - log out everywhere
 - BGM
 - OOBE
-- add users to gc via search
 - basic modal
+
+maybe:
+- moving meower logo
+
+tnix or someone:
+- fix stupid button inperfections

@@ -2,6 +2,8 @@
 	import Modal from "../Modal.svelte";
 
 	import * as clm from "../clmanager.js";
+	// @ts-ignore
+	import * as key from "../keyDetect.js";
 
 	import {
 		modalShown,
@@ -12,9 +14,14 @@
 		mainPage as page,
 		chatid,
 		chatOwner,
+		chatMembers,
 	} from "../stores.js";
 	
 	import ProfileView from "../ProfileView.svelte";
+
+	function filter1(v) {
+		return v !== $profileClicked_GC;
+	}
 </script>
 
 <Modal
@@ -47,7 +54,22 @@
 			<button
 				class="long"
 				on:click={() => {
-					modalPage.set("removeMember");
+					console.log(key.shiftHeld)
+					if (key.shiftHeld) {
+						clm.meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "remove_from_chat",
+								val: {
+									chatid: $chatid,
+									username: $profileClicked_GC,
+								},
+							},
+						});
+						chatMembers.set($chatMembers.filter(filter1));
+					} else {
+						modalPage.set("removeMember");
+					}
 				}}>Remove from chat</button
 			>
 		{/if}

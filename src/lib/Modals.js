@@ -12,8 +12,6 @@ export function ShowModal(Modal, Title, Desc) {
     }
 }
 
-export function CloseModal(Modal) {
-    if (Modal !== "BasicModal") {
-        modalShown.set(false)
-    }
+export function CloseModal() {
+    modalShown.set(false)
 }

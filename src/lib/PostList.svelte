@@ -20,7 +20,7 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import {authHeader, user, spinner, lastTyped} from "./stores.js";
+	import {authHeader, user, spinner, lastTyped, chatid,chatMembers} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
 	import PagedList from "./PagedList.svelte";
@@ -39,6 +39,7 @@
 	export let chatName = "Home";
 	export let canPost = true;
 	export let queryParams = {};
+	export let AddToChat = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -402,6 +403,25 @@
 									} catch (e) {
 										console.error(e);
 									}
+								}}
+							/>
+						</div>
+					{/if}
+					{#if AddToChat}
+						<div class="settings-controls">
+							<button
+								class="circle add"
+								title="Add to chat"
+								on:click={async () => {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "add_to_chat",
+											val: {chatid: $chatid, username: post._id},
+										},
+									});
+									$chatMembers.push(post._id);
+									chatMembers.set($chatMembers);
 								}}
 							/>
 						</div>
