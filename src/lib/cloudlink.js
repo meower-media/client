@@ -129,7 +129,7 @@ export default class Cloudlink {
 							cmd: "direct",
 							val: {
 								cmd: "ip",
-								val: "MeowyLikesBypassing",
+								val: "ApparentlyINeedThis",
 							},
 						});
 
