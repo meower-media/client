@@ -162,18 +162,17 @@
 
 			const isGC = postOrigin !== "home";
 			if (!isGC || cmd.val.state === 2) {
-				if (!cmd.val.post_id) return;
-				if (cmd.val.post_origin !== postOrigin) return;
-
-				list.addItem({
-					id: id++,
-					post_id: cmd.val._id,
-					user: cmd.val.u,
-					content: cmd.val.p,
-					date: cmd.val.t.e,
-					post_origin: cmd.val.post_origin,
-					isDeleted: cmd.val.isDeleted,
-				});
+				if (cmd.val.post_origin == postOrigin) {
+					list.addItem({
+						id: id++,
+						post_id: cmd.val._id,
+						user: cmd.val.u,
+						content: cmd.val.p,
+						date: cmd.val.t.e,
+						post_origin: cmd.val.post_origin,
+						isDeleted: cmd.val.isDeleted,
+					});
+				}
 			}
 			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
 				list.addItem({
@@ -204,11 +203,13 @@
 			) {
 				playNotification();
 			}
-			if (cmd.val.mode === "delete") {
+			
+			if (cmd.val.mode == "delete") {
+				alert("Delete")
 				items = items.filter(post => post.post_id !== cmd.val.id);
 			}
 		});
-		destroy = () => clm.link.off(evId);
+		destroy = () => clm.link.off(evId);;
 	}
 	onMount(() => {
 		if (postOrigin) {

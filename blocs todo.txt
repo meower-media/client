@@ -12,6 +12,7 @@ Later:
 - BGM
 - OOBE
 - basic modal
+- hold shift = do action instantly
 
 maybe:
 - moving meower logo

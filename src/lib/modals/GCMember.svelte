@@ -3,7 +3,7 @@
 
 	import * as clm from "../clmanager.js";
 	// @ts-ignore
-	import * as key from "../keyDetect.js";
+	import {shiftHeld} from "../keyDetect.js";
 
 	import {
 		modalShown,
@@ -54,8 +54,8 @@
 			<button
 				class="long"
 				on:click={() => {
-					console.log(key.shiftHeld)
-					if (key.shiftHeld) {
+					console.log(shiftHeld)
+					if (shiftHeld) {
 						clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -67,6 +67,7 @@
 							},
 						});
 						chatMembers.set($chatMembers.filter(filter1));
+						$modalShown = false;
 					} else {
 						modalPage.set("removeMember");
 					}
