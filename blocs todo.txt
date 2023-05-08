@@ -5,14 +5,15 @@ Done:
 - add users to gc via search
 
 Do:
-
-Later:
 - image button (simpler way to upload images)
 - log out everywhere
+
+Later:
 - BGM
 - OOBE
 - basic modal
-- hold shift = do action instantly
+- custom themes
+- auto dark mode?
 
 maybe:
 - moving meower logo
