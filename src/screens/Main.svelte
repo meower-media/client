@@ -12,12 +12,11 @@
 	import Changelog from "./Changelog.svelte";
 	import About from "./About.svelte";
 	import SearchResults from "./SearchResults.svelte";
+	import OOBEMain from "./OOBE/OOBEMain.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
 	import {mainPage as page} from "../lib/stores.js";
-
-	page.set("home");
 </script>
 
 <div class="main-screen">
@@ -46,6 +45,8 @@
 			<Recent />
 		{:else if $page === "settings"}
 			<Settings />
+		{:else if $page === "oobe"}
+			<OOBEMain />
 		{:else if $page === "groupcat"}
 			<Groupcat />
 		{:else if $page === "groupchat"}

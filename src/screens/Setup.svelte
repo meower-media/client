@@ -6,7 +6,7 @@
 		modalShown,
 		modalPage,
 		authHeader,
-		user,
+		user
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
@@ -373,6 +373,8 @@
 								page.set("go");
 								await sleep(1000);
 								screen.set("main");
+								await sleep(100);
+								page.set("oobe");
 							} else {
 								loginStatus = "Unexpected error logging in!";
 							}

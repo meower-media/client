@@ -7,6 +7,7 @@ Done:
 Do:
 - image button (simpler way to upload images)
 - log out everywhere
+- Theme modal (for oobe and settings)
 
 Later:
 - BGM

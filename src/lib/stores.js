@@ -39,6 +39,10 @@ export const announcementToSend = writable("");
 export const searchQuery = writable("");
 export const searchType = writable("");
 
+export const Sidebarlocked = writable(false);
+export const OOBEPage = writable(0);
+export const Next_Enabled = writable(true);
+
 // Current auth header
 export const authHeader = writable({});
 

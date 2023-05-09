@@ -8,6 +8,7 @@
 		modalShown,
 		modalPage,
 		modPanelOpen,
+		Sidebarlocked
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 
@@ -76,6 +77,9 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
+	{#if $Sidebarlocked}
+		<div class="locked"></div>
+	{/if}
 	<div class="logo">
 		<button class="logo-inner" on:click={() => goto("home")}>
 			<img
@@ -240,6 +244,15 @@
 		width: 90%;
 		height: 90%;
 		object-fit: contain;
+	}
+
+	.locked {
+		height: 100%;
+		width: 100%;
+		z-index: 10;
+		position: absolute;
+		background-color: lightgray;
+		opacity: 0.5;
 	}
 
 	.logo {
