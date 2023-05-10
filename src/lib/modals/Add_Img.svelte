@@ -1,12 +1,20 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage, PostInput} from "../stores.js";
+	import {modalShown, modalPage, PostInput, user} from "../stores.js";
 
+	import Post from "../Post.svelte";
+	
 	import {IMAGE_HOST_WHITELIST} from "../ImageWhitelist.js"
 
 	let ImgUrl;
 	let ImgName;
+
+	let post = {"user":$user.name,"content":"Content","date":1683754263,"post_origin":"home","isDeleted":false};
+
+	function change() {
+		//post.
+	}
 
 	let postErrors = "";
 </script>
@@ -27,6 +35,7 @@
 			placeholder="Image Name"
 			autocomplete="false"
 			bind:this={ImgName}
+			on:change={change}
 		/>
 		<br/><br/>
 		<label for="ImageURL"><b>URL</b></label>
@@ -37,11 +46,13 @@
 			placeholder="Image URL"
 			autocomplete="false"
 			bind:this={ImgUrl}
+			on:change={change}
 		/>
 		<br/><br/>
 		<h2>Preview:</h2>
 		<div id="Preview">
-
+			<!--TODO: post preview-->
+			<Post canDoActions={false} buttons={false} />
 		</div>
 		<p class="post-errors">{postErrors}</p>
 		<div class="modal-buttons">
