@@ -10,6 +10,7 @@
 		If falsy, posts will not be listened to.
 	- chatName: Only needed for group chats. Used for join/leave messages.
 	- canPost: A boolean which indicates if this list can be posted in or not.
+	- queryParams: Additional query parameters, as an object.
 
 	Slots:
 	- error and empty: These slots unction the same as PagedList (see its comment).
@@ -37,6 +38,7 @@
 	export let postOrigin = "home";
 	export let chatName = "Home";
 	export let canPost = true;
+	export let queryParams = {};
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -77,9 +79,11 @@
 
 		let result;
 
-		let path = `${fetchUrl}?autoget&page=`;
+		const params = new URLSearchParams({autoget: "1", page: page.toString(), ...queryParams}).toString();
+
+		let path = `${fetchUrl}?${params}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = await fetch(`${apiUrl}${path}${page}`, {
+		const resp = await fetch(`${apiUrl}${path}`, {
 			headers: $authHeader,
 		});
 
@@ -333,7 +337,7 @@
 					transition:fly|local={{y: -50, duration: 250}}
 					animate:flip={{duration: 250}}
 				>
-					{#if post.lower_username}
+					{#if "lower_username" in post}
 						<ProfileView
 							canClick={true}
 							small={true}
