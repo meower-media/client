@@ -1,15 +1,11 @@
 <script>
-	import {
-		Sidebarlocked,
-        Next_Enabled,
-        OOBEPage
-	} from "../../lib/stores.js";
+	import * as Modals from "../../lib/Modals.js";
+    Modals.ShowModal("switchTheme")
 </script>
 
 <div>
-    
+    Press "Next" When done.
 </div>
 
 <style>
-    
 </style>

@@ -39,9 +39,9 @@ export const announcementToSend = writable("");
 export const searchQuery = writable("");
 export const searchType = writable("");
 
+// OOBE
 export const Sidebarlocked = writable(false);
 export const OOBEPage = writable(0);
-export const Next_Enabled = writable(true);
 
 // Current auth header
 export const authHeader = writable({});
@@ -64,6 +64,8 @@ export const user = writable({
 	quote: "",
 });
 
+// Spinner thing
 export const spinner = writable(false);
 
+// What is this
 export const windowStyle = writable({});

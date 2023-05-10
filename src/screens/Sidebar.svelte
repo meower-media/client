@@ -81,7 +81,7 @@
 		<div class="locked"></div>
 	{/if}
 	<div class="logo">
-		<button class="logo-inner" on:click={() => goto("home")}>
+		<button class="logo-inner" title="The Home Screen" on:click={() => goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -91,12 +91,13 @@
 			/>
 		</button>
 	</div>
-	<button on:click={() => goto("home")} class="home-btn round">
+	<button on:click={() => goto("home")} title="The Home Screen." class="home-btn round">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
 		on:click={() => goto("inbox")}
 		class="round"
+		title="The Inbox"
 		class:new-msgs={$user.unread_inbox}
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />
@@ -109,11 +110,12 @@
 				goto("chatlist");
 			}
 		}}
+		title="Groupchats"
 		class="gc-btn round"
 	>
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
-	<button on:click={() => goto("search")} class="search-btn round">
+	<button on:click={() => goto("search")} title="Search for users" class="search-btn round">
 		<img
 			src={search}
 			alt="Search"
@@ -126,6 +128,7 @@
 		<button
 			on:click={() => ($modPanelOpen = !$modPanelOpen)}
 			class="modpanel-btn round"
+			title="Open/close moderator panel"
 		>
 			<img
 				src={shield}
@@ -166,6 +169,7 @@
 				goto("profile");
 			}}
 			class="profile-btn round"
+			title = "Your profile."
 		>
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>

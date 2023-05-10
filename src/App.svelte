@@ -26,6 +26,7 @@
 	import AddMemberSearchModal from "./lib/modals/AddMember_Search.svelte";
 	import AddMemberModeModal from "./lib/modals/AddMember_Mode.svelte";
 	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
+	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -135,6 +136,8 @@
 			<SearchResultsModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
+		{:else if $modalPage === "switchTheme"}
+			<SwitchThemeModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
 			{:else if $modalPage === "announce"}

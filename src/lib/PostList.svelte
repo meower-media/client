@@ -322,6 +322,7 @@
 				}}
 				bind:this={postInput}
 			/>
+			<button class="UploadIMG"></button>
 			<button bind:this={submitBtn} name="submit">Post</button>
 		</form>
 	{/if}

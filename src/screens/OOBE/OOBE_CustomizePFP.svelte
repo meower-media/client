@@ -6,7 +6,6 @@
 
 	import {
 		Sidebarlocked,
-        Next_Enabled,
         OOBEPage,
         profileClicked,
 		user,

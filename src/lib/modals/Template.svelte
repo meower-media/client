@@ -13,6 +13,13 @@
 	<div slot="default">
 		<p>Template</p>
 		<small class="smol">(PS to developers: your code is working!!!!)</small>
+		<div class="modal-buttons">
+			<button
+				on:click={() => {
+					$modalShown = false;
+				}}>Close</button
+			>
+		</div>
 	</div>
 </Modal>
 

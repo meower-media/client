@@ -4,6 +4,7 @@
 -->
 <script>
 	import {ulist, mainPage} from "../lib/stores.js";
+	import * as Modals from "../lib/Modals.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
 </script>

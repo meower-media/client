@@ -3,21 +3,21 @@ Done:
 - fix terrible codebase (More specifically Modals)
 - add to chat button on profiles 
 - add users to gc via search
+- Theme modal (for oobe and settings)
+- OOBE
 
 Do:
 - image button (simpler way to upload images)
 - log out everywhere
-- Theme modal (for oobe and settings)
 
 Later:
+- BGM + SFX modal
 - BGM
-- OOBE
 - basic modal
 - custom themes
-- auto dark mode?
 
 maybe:
 - moving meower logo
 
 tnix or someone:
-- fix stupid button inperfections
+- fix stupid button inperfections and css

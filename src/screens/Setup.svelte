@@ -3,6 +3,7 @@
 	import {
 		screen,
 		setupPage as page,
+		mainPage,
 		modalShown,
 		modalPage,
 		authHeader,
@@ -372,9 +373,9 @@
 
 								page.set("go");
 								await sleep(1000);
+								mainPage.set("oobe");
+								await sleep(10)
 								screen.set("main");
-								await sleep(100);
-								page.set("oobe");
 							} else {
 								loginStatus = "Unexpected error logging in!";
 							}

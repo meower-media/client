@@ -1,14 +1,17 @@
 <script>
 	import {
 		Sidebarlocked,
-        Next_Enabled,
-        OOBEPage
+        OOBEPage,
+        mainPage
 	} from "../../lib/stores.js";
 
     import OobEactual from "./OOBEactual.svelte";
     OOBEPage.set(0)
 
-    //Sidebarlocked.set(true)
+    let allowprevious = true
+    let allownext = true
+
+    Sidebarlocked.set(true)
 </script>
 
 <div class="oobe">
@@ -18,9 +21,13 @@
     <div class="footer">
         <button 
             class="full"
+            disabled = {!allowprevious}
             on:click={() => {
-                if ($Next_Enabled) {
+                if ($OOBEPage > 0) {
+                    allownext = true
                     OOBEPage.set($OOBEPage - 1);
+                } else {
+                    allowprevious = false
                 }
             }}
         >
@@ -28,15 +35,20 @@
         </button>
         <button 
             class="right full"
+            disabled = {!allownext}
             on:click={() => {
-                if ($Next_Enabled) {
+                if ($OOBEPage < 3) {
+                    allowprevious = true
                     OOBEPage.set($OOBEPage + 1);
+                } else {
+                    allowprevious = true
+                    allownext = false
                 }
             }}
         >
             {"-> Next"}
         </button>
-        <button class="center full">Skip</button>
+        <button class="center full" on:click={() => {Sidebarlocked.set(false); mainPage.set("home")}}>Skip</button>
     </div>
 </div>
 
