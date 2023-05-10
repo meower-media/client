@@ -27,6 +27,7 @@
 	import AddMemberModeModal from "./lib/modals/AddMember_Mode.svelte";
 	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
 	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
+	import AddImgModal from "./lib/modals/Add_Img.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -115,7 +116,7 @@
 	{/if}
 
 	{#if $modalShown}
-		<!-- Login, signup -->
+			<!-- Login, signup -->
 		{#if $modalPage === "login"}
 			<LoginModal />
 		{:else if $modalPage === "signup"}
@@ -136,17 +137,17 @@
 			<SearchResultsModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
-		{:else if $modalPage === "switchTheme"}
-			<SwitchThemeModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
-			{:else if $modalPage === "announce"}
-				<AnnounceModal />
+		{:else if $modalPage === "announce"}
+			<AnnounceModal />
 			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
+		{:else if $modalPage === "addImg"}
+			<AddImgModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 			<!-- Group chats -->
@@ -162,6 +163,9 @@
 			<AddMemberModeModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
+			<!-- Misc -->
+		{:else if $modalPage === "switchTheme"}
+			<SwitchThemeModal />
 		{:else if $modalPage === "linkDiscord"}
 			<LinkDiscord />
 		{:else}

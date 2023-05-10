@@ -20,9 +20,10 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import {authHeader, user, spinner, lastTyped, chatid,chatMembers} from "./stores.js";
+	import {authHeader, user, spinner, lastTyped, chatid,chatMembers, PostInput as Post_Input2, modalShown} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
+	import * as Modals from "../lib/Modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
@@ -286,6 +287,7 @@
 				}
 			}}
 		>
+			<button class="UploadIMG" name="AddImage" title="Add an image" on:click|preventDefault={() => {Post_Input2.set(postInput); Modals.ShowModal("addImg") }}>+</button>
 			<textarea
 				type="text"
 				class="white"
@@ -322,7 +324,6 @@
 				}}
 				bind:this={postInput}
 			/>
-			<button class="UploadIMG"></button>
 			<button bind:this={submitBtn} name="submit">Post</button>
 		</form>
 	{/if}
@@ -468,6 +469,14 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.UploadIMG {
+		z-index: 1;
+		padding: 0;
+		padding-left: 0.8rem;
+		padding-right: 0.8rem;
+		font-size: 2rem;
 	}
 
 	.settings-controls {

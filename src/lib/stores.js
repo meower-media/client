@@ -43,6 +43,9 @@ export const searchType = writable("");
 export const Sidebarlocked = writable(false);
 export const OOBEPage = writable(0);
 
+// Image adding stuff
+export const PostInput = writable();
+
 // Current auth header
 export const authHeader = writable({});
 

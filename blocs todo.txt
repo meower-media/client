@@ -11,6 +11,7 @@ Do:
 - log out everywhere
 
 Later:
+- Fix modal importing
 - BGM + SFX modal
 - BGM
 - basic modal
