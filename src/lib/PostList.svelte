@@ -23,7 +23,7 @@
 	import {authHeader, user, spinner, lastTyped, chatid,chatMembers, PostInput as Post_Input2, modalShown} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
-	import * as Modals from "../lib/Modals.js";
+	import * as Modals from "./Modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";

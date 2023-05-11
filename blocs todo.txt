@@ -5,9 +5,9 @@ Done:
 - add users to gc via search
 - Theme modal (for oobe and settings)
 - OOBE
+- image button (simpler way to upload images)
 
 Do:
-- image button (simpler way to upload images)
 - log out everywhere
 
 Later:

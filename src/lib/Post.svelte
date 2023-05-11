@@ -17,7 +17,8 @@
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "../lib/Modals.js";
+	import * as Modals from "./Modals.js";
+
 
 	import {IMAGE_HOST_WHITELIST} from "../lib/ImageWhitelist.js"
 
@@ -40,7 +41,7 @@
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	function initPostUser() {
+	export function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
@@ -91,6 +92,7 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+	
 
 	$: noPFP =
 		post.user === "Notification" ||
