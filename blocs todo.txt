@@ -9,15 +9,13 @@ Done:
 
 Do:
 - log out everywhere
+- BGM
 
 Later:
 - Fix modal importing
 - BGM + SFX modal
-- BGM
 - basic modal
 - custom themes
-
-maybe:
 - moving meower logo
 
 tnix or someone:
