@@ -11,7 +11,7 @@
 </script>
 
 <div class="home">
-	<button on:click={() => {Modals.ShowModal("switchBGM")}}>Switch BGM test</button>
+	<!--<button on:click={() => {Modals.ShowModal("switchBGM")}}>Switch BGM test</button>-->
 	<Container>
 		<h1>Home</h1>
 		<div class="overflow">

@@ -2,6 +2,8 @@ import {apiUrl} from "./urls.js";
 import {AudioJSON} from "./BGM_Json.js"
 import {user} from "./stores.js"
 
+// Music that runs in the background
+
 let _user = null;
 user.subscribe(v => {
 	_user = v;

@@ -109,6 +109,19 @@
 		? "disabled"
 		: "enabled"}.
 </Container>
+<Container>
+	<div class="settings-controls">
+		<button
+			class="circle settings"
+			on:click={() => {
+				Modals.ShowModal("switchBGM")
+			}}
+		/>
+	</div>
+
+	<h2>Change BGM</h2>
+	Change Background Music
+</Container>
 <!--<Container>
 	<div class="settings-controls">
 		<input

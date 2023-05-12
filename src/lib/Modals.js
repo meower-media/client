@@ -1,3 +1,5 @@
+// Literally a way to make 2 lines of code into one line of code
+
 import {
     modalShown,
     modalPage

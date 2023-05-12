@@ -6,18 +6,17 @@ Done:
 - Theme modal (for oobe and settings)
 - OOBE
 - image button (simpler way to upload images)
-
-Doing:
 - BGM
 - BGM + SFX modal
-- OOBE BGM + SFX
 
-Do: 
+Doing:
 - log out everywhere
 
-Later:
+Do: 
 - Fix modal importing
 - basic modal
+
+Later:
 - custom themes
 - moving meower logo
 - authors for music in bgm

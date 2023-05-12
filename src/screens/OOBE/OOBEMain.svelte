@@ -37,7 +37,7 @@
             class="right full"
             disabled = {!allownext}
             on:click={() => {
-                if ($OOBEPage < 3) {
+                if ($OOBEPage < 2) {
                     allowprevious = true
                     OOBEPage.set($OOBEPage + 1);
                 } else {
