@@ -4,12 +4,13 @@
 -->
 <script>
 	import {ulist, mainPage} from "../lib/stores.js";
-	import * as Modals from "../lib/Modals.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
+	import * as BGM from "../lib/BGM.js";
 </script>
 
 <div class="home">
+	<button on:click={() => {BGM.PlayBGM(2)}}>Test BGM</button>
 	<Container>
 		<h1>Home</h1>
 		<div class="overflow">
