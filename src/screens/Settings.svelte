@@ -97,7 +97,7 @@
 				const _user = $user;
 				_user.bgm = !_user.bgm;
 				user.set(_user);
-				if (_user.bgm) {BGM.PlayBGM(_user.bgm_song)} else {BGM.StopBGM();}
+				BGM.PlayBGM(_user.bgm_song)
 
 				clm.updateProfile();
 			}}

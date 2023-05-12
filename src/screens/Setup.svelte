@@ -157,8 +157,7 @@
 
 						try {
 							BGM.PlayBGM($user.bgm_song)
-						} catch (error) {
-						}
+						} catch (error) {console.warn("Error playing BGM")}
 						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
