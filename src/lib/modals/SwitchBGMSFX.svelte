@@ -4,22 +4,24 @@
 	import {modalShown, modalPage, user} from "../stores.js";
     import * as clm from "../clmanager.js";
     import {AudioJSON} from "../BGM_Json.js"
+    import * as BGM from "../BGM.js"
 
     let Selections = AudioJSON
 
     let BgmError = false
-    let BgmTrack = $user.bgm_song
+    let BgmTrack = $user.bgm_song - 1
 
-    if (Selections[BgmTrack]) {
+    if (BgmTrack > Selections.length-1 || BgmTrack < 0) {
         BgmTrack = 2
         BgmError = true
     }
 
     const _clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-    let Selection = BgmTrack
+    let BgmTrack_Name = Selections[BgmTrack]["name"]
 
     function ChangeTrack() {
-       
+        BgmTrack = _clamp(BgmTrack, 0, Selections.length-1)
+        BgmTrack_Name = Selections[BgmTrack]["name"]
     }
 </script>
 
@@ -30,27 +32,23 @@
 >
 	<h2 slot="header">Select a Bgm</h2>
 	<div slot="default">
-        <p id="BgmName">{BgmTrack }</p>
+        <p id="BgmName">{BgmTrack_Name}</p>
         <div id="BgmSelect">
-            <button on:click={() => {Selection -= 1; ChangeTrack()}}>{"<"}</button>
-            <button on:click={() => {Selection += 1; ChangeTrack()}}>{">"}</button>
+            <button on:click={() => {BgmTrack -= 1; ChangeTrack()}}>{"<"}</button>
+            <button on:click={() => {BgmTrack += 1; ChangeTrack()}}>{">"}</button>
         </div>
         {#if BgmError}
             <p id="BgmInvalid">Your previous BGM song Was invalid, so it was reset to orange.</p>
         {/if}
-        <div class="DarkMode">
-            <input id="sfx" style="position: relative; float:left; z-index: 2;" type="checkbox" title="Sound Effects" bind:checked={(SfxEnabled)} on:change={() => {Sfx()}}/>
-            <label for="sfx">SFX?</label>
-            <p style="top:0.5rem; position: relative; z-index: 0;">SFX?</p>
-        </div>
         <div class="modal-buttons">
             <button 
                 on:click={() => {
                     const _user = $user;
-                    _user.bgm_song = BgmTrack;
+                    _user.bgm_song = BgmTrack + 1;
                     user.set(_user);
 
                     clm.updateProfile();
+                    BGM.PlayBGM(BgmTrack+1);
                     $modalShown = false;
                 }}
             >OK</button>
@@ -67,12 +65,6 @@
     #BgmInvalid {
         text-align: center;
         width: 100%;
-    }
-
-    .DarkMode {
-        position: relative;
-        left: 50%;
-        transform: translate(-50%,0);
     }
 
     #BgmName {

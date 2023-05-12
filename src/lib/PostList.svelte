@@ -294,7 +294,7 @@
 				placeholder="Write something..."
 				name="input"
 				autocomplete="false"
-				maxlength="360"
+				maxlength="500"
 				rows="1"
 				use:autoresize
 				on:input={() => {

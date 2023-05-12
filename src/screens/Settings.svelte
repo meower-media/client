@@ -5,6 +5,7 @@
 	import {user, modalShown, modalPage} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as Modals from "../lib/Modals.js";
+	import * as BGM from "../lib/BGM.js"
 </script>
 
 <!--
@@ -84,6 +85,27 @@
 
 	<h2>Sound Effects</h2>
 	Sound effects (for new messages) are currently {!$user.sfx
+		? "disabled"
+		: "enabled"}.
+</Container>
+<Container>
+	<div class="settings-controls">
+		<input
+			type="checkbox"
+			checked={$user.bgm}
+			on:change={() => {
+				const _user = $user;
+				_user.bgm = !_user.bgm;
+				user.set(_user);
+				if (_user.bgm) {BGM.PlayBGM(_user.bgm_song)} else {BGM.StopBGM();}
+
+				clm.updateProfile();
+			}}
+		/>
+	</div>
+
+	<h2>BGM</h2>
+	BGM is currently {!$user.bgm
 		? "disabled"
 		: "enabled"}.
 </Container>

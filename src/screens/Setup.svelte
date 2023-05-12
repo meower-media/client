@@ -23,6 +23,7 @@
 	import {fade} from "svelte/transition";
 	import sleep from "../lib/sleep.js";
 	import version from "../lib/version.js";
+	import * as BGM from "../lib/BGM.js";
 
 	let logo,
 		setup,
@@ -154,6 +155,10 @@
 							);
 						}
 
+						try {
+							BGM.PlayBGM($user.bgm_song)
+						} catch (error) {
+						}
 						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
