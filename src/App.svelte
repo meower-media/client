@@ -28,6 +28,7 @@
 	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
 	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
 	import AddImgModal from "./lib/modals/Add_Img.svelte";
+	import SwitchBGMSFXModal from "./lib/modals/SwitchBGMSFX.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -166,6 +167,8 @@
 			<!-- Misc -->
 		{:else if $modalPage === "switchTheme"}
 			<SwitchThemeModal />
+		{:else if $modalPage === "switchBGM"}
+			<SwitchBGMSFXModal />
 		{:else if $modalPage === "linkDiscord"}
 			<LinkDiscord />
 		{:else}

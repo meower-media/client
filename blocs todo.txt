@@ -7,16 +7,20 @@ Done:
 - OOBE
 - image button (simpler way to upload images)
 
-Do:
-- log out everywhere
+Doing:
 - BGM
+- BGM + SFX modal
+- OOBE BGM + SFX
+
+Do: 
+- log out everywhere
 
 Later:
 - Fix modal importing
-- BGM + SFX modal
 - basic modal
 - custom themes
 - moving meower logo
+- authors for music in bgm
 
 tnix or someone:
 - fix stupid button inperfections and css

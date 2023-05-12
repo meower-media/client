@@ -6,9 +6,11 @@
 	import {ulist, mainPage} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
+	import * as Modals from "../lib/Modals.js"
 </script>
 
 <div class="home">
+	<button on:click={() => {}}
 	<Container>
 		<h1>Home</h1>
 		<div class="overflow">
