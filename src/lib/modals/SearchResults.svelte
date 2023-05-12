@@ -31,9 +31,3 @@
         </div>
 	</div>
 </Modal>
-
-<style>
-	.smol {
-		font-size: 8px;
-	}
-</style>

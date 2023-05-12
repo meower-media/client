@@ -32,8 +32,4 @@
 		width: 100%;
 		margin-bottom: 0.2em;
 	}
-
-	.smol {
-		font-size: 8px;
-	}
 </style>
