@@ -25,14 +25,14 @@
     let Selection = Selections.indexOf(Theme)
 
     let DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-    let CurrentThemeName = Theme+DarkModeSTR
+    let CurrentThemeName = Theme.slice(0,1).toUpperCase()+Theme.slice(1)+DarkModeSTR
     let CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
 
     function ChangeTheme() {
         Selection = _clamp(Selection, 0, 1)
         Theme = Selections[Selection]
         DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-        CurrentThemeName = Theme+DarkModeSTR
+        CurrentThemeName = Theme.slice(0,1).toUpperCase()+Theme.slice(1)+DarkModeSTR
         CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
     }
 </script>
