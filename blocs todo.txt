@@ -9,12 +9,12 @@ Done:
 - BGM
 - BGM + SFX modal
 - basic modal
-
-Doing:
 - authors for music in bgm
 
-Do: 
+Doing:
 - custom themes
+
+Do: 
 - moving meower logo
 
 tnix or someone:

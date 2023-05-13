@@ -30,8 +30,9 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Select a Bgm</h2>
+	<h2 slot="header">Select a Song</h2>
 	<div slot="default">
+        <p id="BgmAuthor">{Selections[BgmTrack]["author"]}</p>
         <p id="BgmName">{BgmTrack_Name}</p>
         <div id="BgmSelect">
             <button on:click={() => {BgmTrack -= 1; ChangeTrack()}}>{"<"}</button>
@@ -65,6 +66,13 @@
     #BgmInvalid {
         text-align: center;
         width: 100%;
+    }
+
+    #BgmAuthor {
+        font-size: 2rem;
+        margin: 0.2rem;
+        text-align: center;
+        font-weight: bold;
     }
 
     #BgmName {

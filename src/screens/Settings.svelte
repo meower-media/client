@@ -105,23 +105,25 @@
 	</div>
 
 	<h2>BGM</h2>
-	BGM is currently {!$user.bgm
+	BGM (Background Music) is currently {!$user.bgm
 		? "disabled"
 		: "enabled"}.
 </Container>
-<Container>
-	<div class="settings-controls">
-		<button
-			class="circle settings"
-			on:click={() => {
-				Modals.ShowModal("switchBGM")
-			}}
-		/>
-	</div>
+{#if $user.bgm}
+	<Container>
+		<div class="settings-controls">
+			<button
+				class="circle settings"
+				on:click={() => {
+					Modals.ShowModal("switchBGM")
+				}}
+			/>
+		</div>
 
-	<h2>Change BGM</h2>
-	Change Background Music
-</Container>
+		<h2>Change BGM</h2>
+		Change Background Music
+	</Container>
+{/if}
 <!--<Container>
 	<div class="settings-controls">
 		<input
