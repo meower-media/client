@@ -22,6 +22,7 @@
     function ChangeTrack() {
         BgmTrack = _clamp(BgmTrack, 0, Selections.length-1)
         BgmTrack_Name = Selections[BgmTrack]["name"]
+        BGM.PlayBGM(BgmTrack+1);
     }
 </script>
 
