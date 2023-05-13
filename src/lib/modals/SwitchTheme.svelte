@@ -25,15 +25,27 @@
     let Selection = Selections.indexOf(Theme)
 
     let DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-    let CurrentThemeName = Theme.slice(0,1).toUpperCase()+Theme.slice(1)+DarkModeSTR
+    let Theme_Caps = Theme.slice(0,1).toUpperCase()+Theme.slice(1)
+    let CurrentThemeName = Theme_Caps+DarkModeSTR
+
     let CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
 
     function ChangeTheme() {
-        Selection = _clamp(Selection, 0, 1)
-        Theme = Selections[Selection]
+        Selection = _clamp(Selection, 0, 2)
+        if (Selection == 2) {
+            CustomThemeChange();
+        }
+        Theme = Selections[Selection] // Selection change
+
         DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-        CurrentThemeName = Theme.slice(0,1).toUpperCase()+Theme.slice(1)+DarkModeSTR
-        CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
+        Theme_Caps = Theme.slice(0,1).toUpperCase()+Theme.slice(1)
+        CurrentThemeName = Theme_Caps+DarkModeSTR // Change vars
+
+        CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"] // change preview
+    }
+
+    function CustomThemeChange() {
+        
     }
 </script>
 
@@ -45,7 +57,7 @@
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
         <img src={CurrentThemePreviewIMG} id="ThemePreview" alt={CurrentThemeName} />
-        <p id="ThemeName">{Theme.slice(0,1).toUpperCase()+Theme.slice(1) + " (" + DarkModeSTR + ")"}</p>
+        <p id="ThemeName">{Theme_Caps + " (" + DarkModeSTR + ")"}</p>
         <div id="ThemeSelect">
             <button on:click={() => {Selection -= 1; ChangeTheme()}}>{"<"}</button>
             <button on:click={() => {Selection += 1; ChangeTheme()}}>{">"}</button>

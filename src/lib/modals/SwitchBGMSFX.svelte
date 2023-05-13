@@ -56,6 +56,7 @@
             >OK</button>
 			<button
 				on:click={() => {
+                    BGM.PlayBGM($user.bgm_song); // why
 					$modalShown = false;
 				}}>Close</button
 			>
