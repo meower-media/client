@@ -13,6 +13,7 @@ Done:
 
 Doing:
 - custom themes
+- bgm disabled by default
 
 Do: 
 - moving meower logo
