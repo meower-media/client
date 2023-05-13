@@ -2,8 +2,18 @@
 	import {
 		Sidebarlocked,
         OOBEPage,
-        mainPage
+        mainPage,
+        user
 	} from "../../lib/stores.js";
+    import * as clm from "../../lib/clmanager.js";
+    import * as BGM from "../../lib/BGM.js"
+    
+    const _user = $user;
+    _user.bgm = false;
+    user.set(_user);
+    BGM.PlayBGM(_user.bgm_song)
+
+    clm.updateProfile();
 
     import OobEactual from "./OOBEactual.svelte";
     OOBEPage.set(0)

@@ -64,7 +64,7 @@ export const user = writable({
 	theme: "orange",
 	mode: true,
 	sfx: true,
-	bgm: true,
+	bgm: false,
 	bgm_song: 2,
 	layout: "new",
 	pfp_data: 1,

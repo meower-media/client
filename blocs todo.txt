@@ -10,10 +10,10 @@ Done:
 - BGM + SFX modal
 - basic modal
 - authors for music in bgm
+- disable bgm by default
 
 Doing:
 - custom themes
-- bgm disabled by default
 
 Do: 
 - moving meower logo
