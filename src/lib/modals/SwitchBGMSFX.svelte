@@ -40,7 +40,7 @@
             <button on:click={() => {BgmTrack += 1; ChangeTrack()}}>{">"}</button>
         </div>
         {#if BgmError}
-            <p id="BgmInvalid">Your previous BGM song Was invalid, so it was reset to orange.</p>
+            <p id="BgmInvalid">Your previous BGM song Was invalid, so it was reset.</p>
         {/if}
         <div class="modal-buttons">
             <button 
