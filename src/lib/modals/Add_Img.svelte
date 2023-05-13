@@ -14,7 +14,8 @@
 	let ImgName;
 
 	let images = [];
-	let post = {"user":$user.name,"content":$PostInput.value,"date":1683754263,"post_origin":"home","isDeleted":false};
+	var content = $PostInput.value || ""
+	let post = {"user":$user.name,"content":content,"date":1683754263,"post_origin":"home","isDeleted":false};
 
 	// TODO: make bridged tag a setting
 	import {default as loadProfile} from "../loadProfile.js";
