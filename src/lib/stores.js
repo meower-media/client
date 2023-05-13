@@ -12,6 +12,10 @@ export const setupPage = writable("logo");
 export const modalShown = writable(false);
 export const modalPage = writable("");
 
+// Used for basic modal
+export const BasicModalTitle = writable("");
+export const BasicModalDesc = writable("");
+
 // Used for the disconnected screen
 export const disconnected = writable(false);
 export const disconnectReason = writable("");

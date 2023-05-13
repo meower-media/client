@@ -20,7 +20,7 @@
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
-	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
+	import LinkDiscordModal from "./lib/modals/LinkDiscord.svelte";
 	import AnnounceModal from "./lib/modals/Announce.svelte";
 	import AddMember2Modal from "./lib/modals/AddMember_2.svelte";
 	import AddMemberSearchModal from "./lib/modals/AddMember_Search.svelte";
@@ -29,6 +29,7 @@
 	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
 	import AddImgModal from "./lib/modals/Add_Img.svelte";
 	import SwitchBGMSFXModal from "./lib/modals/SwitchBGMSFX.svelte";
+	import BasicModal from "./lib/modals/Basic.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -170,7 +171,9 @@
 		{:else if $modalPage === "switchBGM"}
 			<SwitchBGMSFXModal />
 		{:else if $modalPage === "linkDiscord"}
-			<LinkDiscord />
+			<LinkDiscordModal />
+		{:else if $modalPage === "BasicModal"}
+			<BasicModal />
 		{:else}
 			<ErrorModal />
 		{/if}
