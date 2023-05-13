@@ -4,6 +4,8 @@
 	import {modalShown, modalPage, user} from "../stores.js";
     import * as clm from "../clmanager.js";
 
+    import * as Modals from "../Modals.js";
+
     const ThemePreviews = import.meta.glob("../../assets/ThemePreviews/*.png", {
 		import: "default",
 		eager: true,
@@ -31,10 +33,10 @@
     let CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
 
     function ChangeTheme() {
-        Selection = _clamp(Selection, 0, 2)
-        if (Selection == 2) {
-            CustomThemeChange();
-        }
+        Selection = _clamp(Selection, 0, 1)
+        //if (Selection == 2) {
+        //    CustomThemeChange();
+        //}
         Theme = Selections[Selection] // Selection change
 
         DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
@@ -45,7 +47,7 @@
     }
 
     function CustomThemeChange() {
-        
+        Modals.ShowModal("customTheme")
     }
 </script>
 

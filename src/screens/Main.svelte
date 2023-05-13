@@ -16,6 +16,10 @@
 
 	import Sidebar from "./Sidebar.svelte";
 
+	//import {LoadTheme} from "../lib/CustomTheme.js"
+
+	//LoadTheme()
+
 	import {mainPage as page} from "../lib/stores.js";
 </script>
 

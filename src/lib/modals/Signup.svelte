@@ -76,7 +76,7 @@
 						}
 
 						mainPage.set("blank");
-						tick().then(() => mainPage.set("home"));
+						tick().then(() => mainPage.set("oobe"));
 					} else {
 						loginStatus = "Unexpected error logging in!";
 					}

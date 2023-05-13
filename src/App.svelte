@@ -47,9 +47,22 @@
 		user,
 		spinner,
 		modPanelOpen,
+		useCustomTheme,
+		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
+
+<!--
+	in main:
+	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orangeButton : null}
+	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
+-->
 
 <main
 	id="main"

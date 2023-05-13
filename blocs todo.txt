@@ -12,11 +12,8 @@ Done:
 - authors for music in bgm
 - disable bgm by default
 
-Doing:
+Might do later on:
 - custom themes
-
-Do: 
-- moving meower logo
 
 tnix or someone:
 - Fix modal importing
