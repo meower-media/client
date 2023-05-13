@@ -195,7 +195,7 @@
 			<button
 				on:click={() => {
 					if (postErrors == "") {
-						$PostInput.value = $PostInput.value+"\n["+ImgName.value+": "+ImgUrl.value+"]"
+						$PostInput.value = $PostInput.value+" ["+ImgName.value+": "+ImgUrl.value+"]"
 						$modalShown = false;
 					}
 				}}
