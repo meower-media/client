@@ -6,6 +6,8 @@ export function toHTMLElement(text) {
 			text_split[i] = "&lt";
 		} else if (text_split[i] == ">") {
 			text_split[i] = "&gt";
+		} else if (text_split[i] == "\n") {
+			text_split[i] = "<br>";
 		}
 	}
 	
