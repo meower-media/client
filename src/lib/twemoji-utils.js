@@ -9,9 +9,9 @@ export function toHTMLElement(text) {
 		}
 	}
 	
-    const div = document.createElement("div");
+    const span = document.createElement("span");
     const p = document.createElement("p");
     p.innerText = text_split.join("");
-    div.appendChild(p);
-    return div;
+    span.appendChild(p);
+    return span;
 }
