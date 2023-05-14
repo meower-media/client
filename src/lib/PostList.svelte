@@ -160,8 +160,10 @@
 			if (!cmd.val) return;
 
 			const isGC = postOrigin !== "home";
+			if (cmd.val.mode === "delete") {
+				items = items.filter(post => post.post_id !== cmd.val.id);
+			}
 			if (!isGC || cmd.val.state === 2) {
-				if (!cmd.val.post_id) return;
 				if (cmd.val.post_origin !== postOrigin) return;
 
 				list.addItem({
@@ -202,9 +204,6 @@
 				cmd.val.mode !== "delete"
 			) {
 				playNotification();
-			}
-			if (cmd.val.mode === "delete") {
-				items = items.filter(post => post.post_id !== cmd.val.id);
 			}
 		});
 		destroy = () => clm.link.off(evId);
