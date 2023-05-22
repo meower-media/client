@@ -4,7 +4,8 @@ export function toHTMLElement(text) {
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
-        .replaceAll("'", "&apos;");
+        .replaceAll("'", "&apos;")
+		.replaceAll("\n", "<br>;");
     
     const span = document.createElement("span");
     const p = document.createElement("p");
