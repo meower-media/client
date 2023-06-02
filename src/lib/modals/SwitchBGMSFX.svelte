@@ -1,29 +1,29 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage, user} from "../stores.js";
-    import * as clm from "../clmanager.js";
-    import {AudioJSON} from "../BGM_Json.js"
-    import * as BGM from "../BGM.js"
+	import {modalShown, user} from "../stores.js";
+	import * as clm from "../clmanager.js";
+	import {audioData} from "../BGMdata.js";
+	import * as BGM from "../BGM.js";
 
-    let Selections = AudioJSON
+	let selections = audioData;
 
-    let BgmError = false
-    let BgmTrack = $user.bgm_song - 1
+	let bgmError = false;
+	let bgmTrack = $user.bgm_song - 1;
 
-    if (BgmTrack > Selections.length-1 || BgmTrack < 0) {
-        BgmTrack = 2
-        BgmError = true
-    }
+	if (bgmTrack > selections.length - 1 || bgmTrack < 0) {
+		bgmTrack = 2;
+		bgmError = true;
+	}
 
-    const _clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-    let BgmTrack_Name = Selections[BgmTrack]["name"]
+	const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+	let bgmName = selections[bgmTrack]["name"];
 
-    function ChangeTrack() {
-        BgmTrack = _clamp(BgmTrack, 0, Selections.length-1)
-        BgmTrack_Name = Selections[BgmTrack]["name"]
-        BGM.PlayBGM(BgmTrack+1);
-    }
+	function ChangeTrack() {
+		bgmTrack = clamp(bgmTrack, 0, selections.length - 1);
+		bgmName = selections[bgmTrack].name;
+		BGM.playBGM(bgmTrack + 1);
+	}
 </script>
 
 <Modal
@@ -31,64 +31,78 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Select a Song</h2>
+	<h2 slot="header">Select Song</h2>
 	<div slot="default">
-        <p id="BgmAuthor">{Selections[BgmTrack]["author"]}</p>
-        <p id="BgmName">{BgmTrack_Name}</p>
-        <div id="BgmSelect">
-            <button on:click={() => {BgmTrack -= 1; ChangeTrack()}}>{"<"}</button>
-            <button on:click={() => {BgmTrack += 1; ChangeTrack()}}>{">"}</button>
-        </div>
-        {#if BgmError}
-            <p id="BgmInvalid">Your previous BGM song Was invalid, so it was reset.</p>
-        {/if}
-        <div class="modal-buttons">
-            <button 
-                on:click={() => {
-                    const _user = $user;
-                    _user.bgm_song = BgmTrack + 1;
-                    user.set(_user);
-
-                    clm.updateProfile();
-                    BGM.PlayBGM(BgmTrack+1);
-                    $modalShown = false;
-                }}
-            >OK</button>
+		<div class="bgm-select">
 			<button
 				on:click={() => {
-                    BGM.PlayBGM($user.bgm_song); // why
+					bgmTrack -= 1;
+					ChangeTrack();
+				}}>{"<"}</button
+			>
+			<div class="bgm-name">
+				{bgmName}
+				<div class="bgm-author">
+					by {selections[bgmTrack]["author"]}
+				</div>
+			</div>
+			<button
+				on:click={() => {
+					bgmTrack += 1;
+					ChangeTrack();
+				}}>{">"}</button
+			>
+		</div>
+		{#if bgmError}
+			<p class="bgm-invalid">
+				Your previous song Was invalid, so it was reset.
+			</p>
+		{/if}
+		<div class="modal-buttons">
+			<button
+				on:click={() => {
+					const _user = $user;
+					_user.bgm_song = bgmTrack + 1;
+					user.set(_user);
+
+					clm.updateProfile();
+					BGM.playBGM(bgmTrack + 1);
 					$modalShown = false;
-				}}>Close</button
+				}}>OK</button
+			>
+			<button
+				on:click={() => {
+					BGM.playBGM($user.bgm_song); // why
+					$modalShown = false;
+				}}>Cancel</button
 			>
 		</div>
 	</div>
 </Modal>
 
 <style>
-    #BgmInvalid {
-        text-align: center;
-        width: 100%;
-    }
+	.bgm-invalid {
+		text-align: center;
+		width: 100%;
+	}
 
-    #BgmAuthor {
-        font-size: 2rem;
-        margin: 0.2rem;
-        text-align: center;
-        font-weight: bold;
-    }
+	.bgm-select {
+		margin: 1em 0;
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-    #BgmName {
-        font-size: 4rem;
-        margin: 0.2rem;
+	.bgm-name {
+		font-weight: bold;
+		font-size: 2.5em;
         text-align: center;
-        font-weight: bold;
-    }
+	}
 
-    #BgmSelect {
-        margin-top: 1rem;
-        position: relative;
-        left: 50%;
-        width: 6.7rem;
-        transform: translate(-50%,0);
-    }
+	.bgm-author {
+		font-size: 0.5em;
+        text-align: center;
+        font-weight: normal;
+	}
 </style>

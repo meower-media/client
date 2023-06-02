@@ -1,21 +1,27 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage, PostInput, user} from "../stores.js";
+	import {modalShown, postInput, user} from "../stores.js";
 
 	import LiText from "../LiText.svelte";
-	
-	import {IMAGE_HOST_WHITELIST} from "../ImageWhitelist.js"
+
+	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
 	import Container from "../Container.svelte";
 	import FormattedDate from "../FormattedDate.svelte";
 	import PFP from "../PFP.svelte";
 
-	let ImgUrl;
-	let ImgName;
+	let imgUrl;
+	let imgName;
 
 	let images = [];
-	var content = $PostInput.value || ""
-	let post = {"user":$user.name,"content":content,"date":1683754263,"post_origin":"home","isDeleted":false};
+	let content = $postInput.value || "[: ]";
+	let post = {
+		user: $user.name,
+		content: content,
+		date: Date.now() / 1000,
+		post_origin: "home",
+		isDeleted: false,
+	};
 
 	// TODO: make bridged tag a setting
 	import {default as loadProfile} from "../loadProfile.js";
@@ -26,7 +32,7 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		var i = 0
+		let  i = 0;
 
 		// Match image syntax
 		// ([title: https://url])
@@ -35,7 +41,7 @@
 		);
 		images = [];
 		while (true) {
-			i += 1
+			i += 1;
 			const result = iterator.next();
 			if (result.done) break;
 
@@ -56,7 +62,7 @@
 			images.push({
 				title: result.value[1],
 				url: result.value[2],
-				id: i
+				id: i,
 			});
 			// Prevent flooding
 			if (images.length >= 3) break;
@@ -73,23 +79,36 @@
 		post.user === "Server";
 
 	function change() {
-		var full = $PostInput.value+"\n["+ImgName.value+": "+ImgUrl.value+"]"
-		post.content = full
-		initPostUser()
+		const full =
+			$postInput.value +
+			" [" +
+			imgName.value +
+			": " +
+			imgUrl.value +
+			"]";
+		post.content = full;
+		initPostUser();
 
-		const iterator = full.matchAll(
-			/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs
-		);
+		if (imgName.value === "") {
+			postErrors = "The image must have a name!";
+			return;
+		}
+		if (!imgUrl.value.startsWith("https://")) {
+			postErrors = "The image URL must start with https://!";
+			return;
+		}
+
+		const iterator = full.matchAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs);
 		const result = iterator.next();
 		if (result.done) {
-			postErrors = "Regex encountered an early end to the string."
-			return
-		};
+			postErrors = "";
+			return;
+		}
 
 		try {
 			new URL(result.value[2]);
 		} catch (e) {
-			console.log("weird")
+			console.log("weird");
 		}
 
 		if (
@@ -97,13 +116,16 @@
 				result.value[2].toLowerCase().startsWith(o.toLowerCase())
 			)
 		) {
-			postErrors = "Not on the image host whitelist"
+			postErrors = "This image is not on the image host whitelist! Allowed image hosts are: " +
+			IMAGE_HOST_WHITELIST.map(
+				url => url.replaceAll("https://", "").replaceAll("/", "")
+			).join(", ");
 		} else {
-			postErrors = ""
+			postErrors = "";
 		}
 	}
 
-	let postErrors = "Regex encountered an early end to the string.";
+	let postErrors = "The image must have a name!";
 </script>
 
 <Modal
@@ -111,39 +133,33 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Add Image to post</h2>
+	<h2 slot="header">Add Image to Post</h2>
 	<div slot="default">
-		<p class="smol">Example: [FunnyCat: https://go.meower.org/34378a47]</p>
-		<label for="ImageNAMe"><b>Name</b></label>
 		<input
 			type="text"
-			name="ImageNAMe"
+			name="imageName"
 			class="long white"
 			placeholder="Image Name"
 			autocomplete="false"
-			bind:this={ImgName}
+			bind:this={imgName}
 			on:change={change}
 		/>
-		<br/><br/>
-		<label for="ImageURL"><b>URL</b></label>
 		<input
 			type="text"
 			name="ImageURL"
 			class="long white"
 			placeholder="Image URL"
 			autocomplete="false"
-			bind:this={ImgUrl}
+			bind:this={imgUrl}
 			on:change={change}
 		/>
-		<br/><br/>
-		<h2>Preview:</h2>
+		<br /><br />
+		<h2>Preview</h2>
 		<div id="Preview">
 			<!--TODO: post preview-->
 			<Container>
 				<div class="post-header">
-					<button
-						class="pfp"
-					>
+					<button class="pfp">
 						{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
 							<PFP
 								icon={-2}
@@ -170,7 +186,7 @@
 								<LiText text={post.user} />
 							</h2>
 						</div>
-			
+
 						<FormattedDate date={post.date} />
 					</div>
 				</div>
@@ -178,7 +194,12 @@
 				<div class="post-images">
 					{#each images as { title, url }}
 						<a href={url} target="_blank" rel="noreferrer"
-							><img src={url} alt={title} {title} class="post-image" />
+							><img
+								src={url}
+								alt={title}
+								{title}
+								class="post-image"
+							/>
 						</a>
 					{/each}
 				</div>
@@ -195,7 +216,12 @@
 			<button
 				on:click={() => {
 					if (postErrors == "") {
-						$PostInput.value = $PostInput.value+" ["+ImgName.value+": "+ImgUrl.value+"]"
+						$postInput.value +=
+							" [" +
+							imgName.value +
+							": " +
+							imgUrl.value +
+							"]";
 						$modalShown = false;
 					}
 				}}
@@ -207,10 +233,6 @@
 </Modal>
 
 <style>
-	.smol {
-		font-size: 10px;
-	}
-
 	.long {
 		width: 100%;
 		margin: 0;

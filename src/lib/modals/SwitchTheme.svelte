@@ -1,54 +1,65 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage, user} from "../stores.js";
-    import * as clm from "../clmanager.js";
+	import {modalShown, user} from "../stores.js";
+	import * as clm from "../clmanager.js";
 
-    import * as Modals from "../Modals.js";
+	import * as Modals from "../modals.js";
 
-    const ThemePreviews = import.meta.glob("../../assets/ThemePreviews/*.png", {
+    import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
+
+	const themePreviews = import.meta.glob("../../assets/themePreviews/*.png", {
 		import: "default",
 		eager: true,
 	});
 
-    let Selections = ["orange","blue"]
+	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
 
-    let ThemeError = false
+	let error = false;
 
-    let DarkMode = !$user.mode
-    let Theme = $user.theme
+    let darkMode = !$user.mode;
+	let theme = $user.theme;
 
-    if (!Selections.includes(Theme)) {
-        Theme = "orange"
-        ThemeError = true
-    }
+	if (!selections.includes(theme)) {
+		theme = "orange";
+		error = true;
+	}
 
-    const _clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-    let Selection = Selections.indexOf(Theme)
+	const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+	let selection = selections.indexOf((darkMode ? "dark-" : "") + theme);
 
-    let DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-    let Theme_Caps = Theme.slice(0,1).toUpperCase()+Theme.slice(1)
-    let CurrentThemeName = Theme_Caps+DarkModeSTR
+	let darkModeStr = (!darkMode && "Light") || "Dark";
+	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
+	let themeName = themeCaps + darkModeStr;
 
-    let CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"]
+    /**
+     * @type {string}
+     */
+	// @ts-ignore
+	let currentPreviewImage =
+		themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
 
-    function ChangeTheme() {
-        Selection = _clamp(Selection, 0, 1)
-        //if (Selection == 2) {
-        //    CustomThemeChange();
-        //}
-        Theme = Selections[Selection] // Selection change
+	function changeTheme() {
+		selection = clamp(selection, 0, 3);
+		theme = selections[selection];
+        darkMode = false;
+        if (theme.startsWith("dark-")) {
+            darkMode = true;
+            theme = theme.substring(5);
+        }
 
-        DarkModeSTR = (!DarkMode && 'Light' || 'Dark')
-        Theme_Caps = Theme.slice(0,1).toUpperCase()+Theme.slice(1)
-        CurrentThemeName = Theme_Caps+DarkModeSTR // Change vars
+		darkModeStr = darkMode ? "Dark" : "Light";
+		themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
+		themeName = themeCaps + darkModeStr; // Change vars
+        
+		// @ts-ignore
+		currentPreviewImage =
+			themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+	}
 
-        CurrentThemePreviewIMG = ThemePreviews["../../assets/ThemePreviews/"+CurrentThemeName+".png"] // change preview
-    }
-
-    function CustomThemeChange() {
-        Modals.ShowModal("customTheme")
-    }
+	function customThemeChange() {
+		Modals.showModal("customTheme");
+	}
 </script>
 
 <Modal
@@ -58,32 +69,48 @@
 >
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
-        <img src={CurrentThemePreviewIMG} id="ThemePreview" alt={CurrentThemeName} />
-        <p id="ThemeName">{Theme_Caps + " (" + DarkModeSTR + ")"}</p>
-        <div id="ThemeSelect">
-            <button on:click={() => {Selection -= 1; ChangeTheme()}}>{"<"}</button>
-            <button on:click={() => {Selection += 1; ChangeTheme()}}>{">"}</button>
-        </div>
-        {#if ThemeError}
-            <p id="ThemeInvalid">Your previous theme Was invalid, so it was reset to orange.</p>
-        {/if}
-        <div class="DarkMode">
-            <input style="position: relative; float:left; z-index: 2;" type="checkbox" title="Dark Mode" bind:checked={(DarkMode)} on:change={() => {ChangeTheme()}}/>
-            <p style="top:0.5rem; position: relative; z-index: 0;">Dark mode?</p>
-        </div>
-        <p class="smol">Layout Has to be changed in settings.</p>
-        <div class="modal-buttons">
-            <button 
-                on:click={() => {
-                    const _user = $user;
-                    _user.theme = Theme;
-                    _user.mode = !DarkMode;
-                    user.set(_user);
+		<div class="theme-select">
+			<button
+				on:click={() => {
+					selection -= 1;
+					changeTheme();
+				}}>{"<"}</button
+			>
+			<div class="theme-middle">
+				<img
+					src={currentPreviewImage}
+					class="theme-preview"
+					alt={themeName}
+				/>
+				<div class="theme-name">
+					{themeCaps + " (" + darkModeStr + ")"}
+				</div>
+			</div>
+			<button
+				on:click={() => {
+					selection += 1;
+					changeTheme();
+				}}>{">"}</button
+			>
+		</div>
+		{#if error}
+			<p class="theme-invalid">
+				Your previous theme was invalid, so it was reset to orange.
+			</p>
+		{/if}
+		<p class="layout-text">(Change the layout in the settings.)</p>
+		<div class="modal-buttons">
+			<button
+				on:click={() => {
+					const _user = $user;
+					_user.theme = theme;
+					_user.mode = !darkMode;
+					user.set(_user);
 
-                    clm.updateProfile();
-                    $modalShown = false;
-                }}
-            >OK</button>
+					clm.updateProfile();
+					$modalShown = false;
+				}}>OK</button
+			>
 			<button
 				on:click={() => {
 					$modalShown = false;
@@ -94,42 +121,36 @@
 </Modal>
 
 <style>
-    #ThemePreview {
-        position: relative;
-        left: 50%;
-        transform: translate(-50%,0);
-        width: 50%;
-        height: 50%;
-        border-radius: 1vw;
-    }
+	.theme-select {
+		margin-top: 1rem;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: space-between;
+	}
 
-    .DarkMode {
-        position: relative;
-        left: 50%;
-        transform: translate(-50%,0);
-    }
+	.theme-preview {
+		height: 11em;
+		width: auto;
+	}
 
-    #ThemeInvalid {
-        text-align: center;
-        width: 100%;
-    }
+	.theme-name {
+		font-size: 3rem;
+		font-weight: bold;
+	}
 
-    #ThemeName {
-        font-size: 4rem;
-        margin: 0.2rem;
-        text-align: center;
-        font-weight: bold;
-    }
+	.theme-middle {
+		text-align: center;
+	}
 
-    #ThemeSelect {
-        margin-top: 1rem;
-        position: relative;
-        left: 50%;
-        width: 6.7rem;
-        transform: translate(-50%,0);
-    }
+	.theme-invalid {
+		text-align: center;
+		width: 100%;
+	}
 
-	.smol {
-		font-size: 0.8rem;
+	.layout-text {
+		text-align: center;
+        margin: 0.75em 0;
+        font-size: 80%;
 	}
 </style>

@@ -3,11 +3,9 @@
 	It features live post updates and a load more button which is pretty nice.
 -->
 <script>
-	import {ulist, mainPage, user} from "../lib/stores.js";
+	import {ulist} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
-	import * as Modals from "../lib/Modals.js"
-	import * as BGM from "../lib/BGM.js";
 </script>
 
 <div class="home">
@@ -23,15 +21,6 @@
 					", "
 				)}).
 			{/if}
-		</div>
-		<div class="settings-controls">
-			<button
-				class="circle reload"
-				title="Reload the music if it isnt playing"
-				on:click={() => {
-					BGM.PlayBGM($user.bgm_song)
-				}}
-			/>
 		</div>
 	</Container>
 	<PostList fetchUrl="home" postOrigin="home" canPost={true} />

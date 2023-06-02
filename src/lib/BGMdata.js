@@ -1,6 +1,6 @@
 // Some goofy code
 
-export const AudioJSON = [
+export const audioData = [
     {"name":"Night sky", "author":"Meguy7878", "file":"0c38836da69714eae0f2a6662f9cbc58.wav"},
     {"name":"Percussion bass loop", "author":"Voxalice", "file":"6e1576462ac271ca5847a68dca722265.wav"},
     {"name":"Piano ear grapes","author":"Maclator","file":"2885eb62f10a5a18368d5481e1ac9f97.mp3"},

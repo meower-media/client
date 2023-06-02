@@ -7,7 +7,7 @@
 	} from "../stores.js";
     import PagedList from "../PagedList.svelte";
 	import Container from "../Container.svelte";
-	import * as Modals from "../Modals.js";
+	import * as Modals from "../modals.js";
 
     import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
@@ -63,7 +63,7 @@
 		Modals.CloseModal()
 	}}
 >
-	<h2 slot="header">Add Member To Chat</h2>
+	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<PagedList bind:items {loadPage}>
             <svelte:fragment slot="loaded" let:items>

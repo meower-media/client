@@ -1,10 +1,10 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, BasicModalDesc, BasicModalTitle} from "../stores.js";
+	import {modalShown, basicModalDesc, basicModalTitle} from "../stores.js";
 
-	let Desc = ($BasicModalDesc != "") && $BasicModalDesc || "Error Loading Description"
-	let Title = ($BasicModalTitle != "") && $BasicModalTitle || "Error Loading Title"
+	let Desc = ($basicModalDesc != "") && $basicModalDesc || "Error loading description."
+	let Title = ($basicModalTitle != "") && $basicModalTitle || "Error loading title"
 </script>
 
 <Modal
@@ -26,7 +26,4 @@
 </Modal>
 
 <style>
-	.smol {
-		font-size: 8px;
-	}
 </style>

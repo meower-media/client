@@ -20,10 +20,18 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import {authHeader, user, spinner, lastTyped, chatid,chatMembers, PostInput as Post_Input2, modalShown} from "./stores.js";
+	import {
+		authHeader,
+		user,
+		spinner,
+		lastTyped,
+		chatid,
+		chatMembers,
+		postInput as postInput_2,
+	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
-	import * as Modals from "./Modals.js";
+	import * as Modals from "./modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
@@ -40,7 +48,7 @@
 	export let chatName = "Home";
 	export let canPost = true;
 	export let queryParams = {};
-	export let AddToChat = false;
+	export let addToChat = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -81,7 +89,11 @@
 
 		let result;
 
-		const params = new URLSearchParams({autoget: "1", page: page.toString(), ...queryParams}).toString();
+		const params = new URLSearchParams({
+			autoget: "1",
+			page: page.toString(),
+			...queryParams,
+		}).toString();
 
 		let path = `${fetchUrl}?${params}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
@@ -208,7 +220,7 @@
 				playNotification();
 			}
 		});
-		destroy = () => clm.link.off(evId);;
+		destroy = () => clm.link.off(evId);
 	}
 	onMount(() => {
 		if (postOrigin) {
@@ -287,7 +299,6 @@
 				}
 			}}
 		>
-			<button class="UploadIMG" name="AddImage" title="Add an image" on:click|preventDefault={() => {Post_Input2.set(postInput); Modals.ShowModal("addImg") }}>+</button>
 			<textarea
 				type="text"
 				class="white"
@@ -324,6 +335,15 @@
 				}}
 				bind:this={postInput}
 			/>
+			<button
+				class="upload-image"
+				name="addImage"
+				title="Add an image"
+				on:click|preventDefault={() => {
+					postInput_2.set(postInput);
+					Modals.showModal("addImg");
+				}}>+</button
+			>
 			<button bind:this={submitBtn} name="submit">Post</button>
 		</form>
 	{/if}
@@ -408,7 +428,7 @@
 							/>
 						</div>
 					{/if}
-					{#if AddToChat}
+					{#if addToChat}
 						<div class="settings-controls">
 							<button
 								class="circle add"
@@ -418,7 +438,10 @@
 										cmd: "direct",
 										val: {
 											cmd: "add_to_chat",
-											val: {chatid: $chatid, username: post._id},
+											val: {
+												chatid: $chatid,
+												username: post._id,
+											},
 										},
 									});
 									$chatMembers.push(post._id);
@@ -456,10 +479,10 @@
 	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
+		gap: 0.25em;
 	}
 	.createpost textarea {
 		flex-grow: 1;
-		margin-right: 0.25em;
 		resize: none;
 		max-height: 300px;
 	}
@@ -471,8 +494,7 @@
 		margin: 0.25em 0;
 	}
 
-	.UploadIMG {
-		z-index: 1;
+	.upload-image {
 		padding: 0;
 		padding-left: 0.8rem;
 		padding-right: 0.8rem;

@@ -43,7 +43,7 @@
 		<p class="member-name">{member}</p>
 
 		{#if owner}
-			<img src = {crown} alt = "Owner" class = "ownericon" title = "{member} Is The Group chat owner"/>
+			<img src={crown} alt="Owner" class="owner-icon" title = "Owns this chat"/>
 		{/if}
 	</div>
 {:else}
@@ -51,8 +51,12 @@
 {/if}
 
 <style>
-	.ownericon {
-		height: 50%;
+	.owner-icon {
+		height: 40%;
+	}
+
+	:global(#main.mode-dark) .owner-icon {
+		filter: invert(1);
 	}
 
 	.member {

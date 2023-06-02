@@ -3,24 +3,25 @@
 import {
     modalShown,
     modalPage,
-    BasicModalDesc,
-    BasicModalTitle
+    basicModalDesc,
+    basicModalTitle
 } from "./stores.js";
 
-export function ShowModal(Modal, Title, Description) {
-    BasicModalTitle.set("")
-    BasicModalDesc.set("")
-    if (Modal == "BasicModal") {
-        if (!Title) {console.warn("No title set")}
-        if (!Description) {console.warn("No description set")}
-        BasicModalTitle.set(Title)
-        BasicModalDesc.set(Description)
+export function showModal(modal, title, description) {
+    basicModalTitle.set("");
+    basicModalDesc.set("");
+    if (modal === "BasicModal") {
+        if (!title) throw new Error("No title set");
+        if (!description) throw new Error("No description set");
+
+        basicModalTitle.set(title);
+        basicModalDesc.set(description);
     }
     // Save a bit of processing time removing that else statement
-    // Of course we dont need to sqeeze out performance.
+    // Of course we don't need to sqeeze out performance.
 
-    modalPage.set(Modal)
-    modalShown.set(true)
+    modalPage.set(modal);
+    modalShown.set(true);
 }
 
 export function CloseModal() {

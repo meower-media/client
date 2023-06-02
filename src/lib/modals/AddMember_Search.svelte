@@ -7,7 +7,7 @@
         searchQuery, 
         searchType
 	} from "../stores.js";
-    import * as Modals from "../Modals.js";
+    import * as Modals from "../modals.js";
 
 	let username;
 </script>
@@ -17,13 +17,13 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">Add Member Via Searching</h2>
+	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<form
 			on:submit|preventDefault={e => {
                 searchQuery.set(e.target[0].value);
 				searchType.set("users");
-				Modals.ShowModal("searchResults")
+				Modals.showModal("searchResults")
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>
@@ -45,7 +45,7 @@
 						$modalShown = false;
 					}}>Cancel</button
 				>
-				<button type="submit" disabled={!username}>Get results</button>
+				<button type="submit" disabled={!username}>Search</button>
 			</div>
 		</form>
 	</div>

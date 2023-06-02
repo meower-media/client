@@ -27,7 +27,7 @@
 	import AddMemberModeModal from "./lib/modals/AddMember_Mode.svelte";
 	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
 	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
-	import AddImgModal from "./lib/modals/Add_Img.svelte";
+	import AddImgModal from "./lib/modals/AddImage.svelte";
 	import SwitchBGMSFXModal from "./lib/modals/SwitchBGMSFX.svelte";
 	import BasicModal from "./lib/modals/Basic.svelte";
 
@@ -36,6 +36,7 @@
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
 	import {mobile, touch} from "./lib/responsiveness.js";
+	import * as BGM from "./lib/BGM.js";
 
 	import {
 		screen,
@@ -74,6 +75,9 @@
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
+
+	on:mousedown={() => BGM.canPlayNow()}
+	on:keydown={() => BGM.canPlayNow()}
 >
 	{#if $modPanelOpen}
 		<div class="mod-panel">

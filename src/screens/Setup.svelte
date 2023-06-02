@@ -155,9 +155,7 @@
 							);
 						}
 
-						try {
-							BGM.PlayBGM($user.bgm_song)
-						} catch (error) {console.warn("Error playing BGM")}
+						BGM.playBGM($user.bgm_song);
 						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
@@ -374,9 +372,7 @@
 										val.payload.token
 									);
 								}
-
-								page.set("go");
-								await sleep(1000);
+								
 								mainPage.set("oobe");
 								await sleep(10)
 								screen.set("main");

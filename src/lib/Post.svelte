@@ -17,10 +17,10 @@
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "./Modals.js";
+	import * as Modals from "./modals.js";
 
 
-	import {IMAGE_HOST_WHITELIST} from "../lib/ImageWhitelist.js"
+	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js"
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
@@ -143,7 +143,7 @@
 									return;
 								}
 								postClicked.set(post);
-								Modals.ShowModal("deletePost")
+								Modals.showModal("deletePost")
 							}}
 						/>
 					{:else}
@@ -151,7 +151,7 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								Modals.ShowModal("reportPost")
+								Modals.showModal("reportPost")
 							}}
 						/>
 					{/if}

@@ -13,8 +13,8 @@ export const modalShown = writable(false);
 export const modalPage = writable("");
 
 // Used for basic modal
-export const BasicModalTitle = writable("");
-export const BasicModalDesc = writable("");
+export const basicModalTitle = writable("");
+export const basicModalDesc = writable("");
 
 // Used for the disconnected screen
 export const disconnected = writable(false);
@@ -44,11 +44,11 @@ export const searchQuery = writable("");
 export const searchType = writable("");
 
 // OOBE
-export const Sidebarlocked = writable(false);
+export const sidebarLocked = writable(false);
 export const OOBEPage = writable(0);
 
 // Image adding stuff
-export const PostInput = writable();
+export const postInput = writable();
 
 // Current auth header
 export const authHeader = writable({});

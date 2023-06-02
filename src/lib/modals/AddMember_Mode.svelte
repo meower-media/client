@@ -2,7 +2,7 @@
 	import Modal from "../Modal.svelte";
 
 	import {modalShown, modalPage} from "../stores.js";
-    import * as Modals from "../Modals.js";
+    import * as Modals from "../modals.js";
 </script>
 
 <Modal
@@ -10,19 +10,19 @@
 		$modalShown = false;
 	}}
 >
-	<h2 slot="header">How do you wanna add this Member?</h2>
+	<h2 slot="header">Add Member</h2>
 	<div slot="default">
         <button
             class="long"
-            on:click={() => {Modals.ShowModal("addMember")}}
+            on:click={() => {Modals.showModal("addMember")}}
         >
-            Enter a Username!
+            Enter Username
         </button>
 		<button
             class="long"
-            on:click={() => {Modals.ShowModal("addMemberSearch")}}
+            on:click={() => {Modals.showModal("addMemberSearch")}}
         >
-            Search For Users To add!
+            Search for Users
         </button>
 	</div>
 </Modal>

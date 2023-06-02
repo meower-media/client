@@ -1,96 +1,71 @@
 <script>
-	import {
-		Sidebarlocked,
-        OOBEPage,
-        mainPage,
-        user
-	} from "../../lib/stores.js";
-    import * as clm from "../../lib/clmanager.js";
-    import * as BGM from "../../lib/BGM.js"
-    
-    const _user = $user;
-    _user.bgm = false;
-    user.set(_user);
-    BGM.PlayBGM(_user.bgm_song)
+	import {sidebarLocked, OOBEPage, mainPage, user} from "../../lib/stores.js";
+	import * as clm from "../../lib/clmanager.js";
+	import * as BGM from "../../lib/BGM.js";
 
-    clm.updateProfile();
+	const _user = $user;
+	_user.bgm = false;
+	user.set(_user);
+	BGM.playBGM(_user.bgm_song);
 
-    import OobEactual from "./OOBEactual.svelte";
-    OOBEPage.set(0)
+	clm.updateProfile();
 
-    let allowprevious = true
-    let allownext = true
+	import OOBEActual from "./OOBEActual.svelte";
+	OOBEPage.set(0);
 
-    Sidebarlocked.set(true)
+	$: allowPrevious = $OOBEPage > 0;
+	$: allowNext = $OOBEPage < 2;
+
+	sidebarLocked.set(true);
 </script>
 
 <div class="oobe">
 	<div class="main">
-        <OobEactual />
-    </div>
-    <div class="footer">
-        <button 
-            class="full"
-            disabled = {!allowprevious}
-            on:click={() => {
-                if ($OOBEPage > 0) {
-                    allownext = true
-                    OOBEPage.set($OOBEPage - 1);
-                } else {
-                    allowprevious = false
-                }
-            }}
-        >
-            {"<- Back"}
-        </button>
-        <button 
-            class="right full"
-            disabled = {!allownext}
-            on:click={() => {
-                if ($OOBEPage < 2) {
-                    allowprevious = true
-                    OOBEPage.set($OOBEPage + 1);
-                } else {
-                    allowprevious = true
-                    allownext = false
-                }
-            }}
-        >
-            {"-> Next"}
-        </button>
-        <button class="center full" on:click={() => {Sidebarlocked.set(false); mainPage.set("home")}}>Skip</button>
-    </div>
+		<OOBEActual />
+	</div>
+	<div class="footer">
+		<button
+			class="full"
+			disabled={!allowPrevious}
+			on:click={() => {
+				OOBEPage.set($OOBEPage - 1);
+			}}
+		>
+			&lt;- Back
+		</button>
+		<button
+			class="center full"
+			on:click={() => {
+				sidebarLocked.set(false);
+				mainPage.set("home");
+			}}>Skip</button
+		>
+		<button
+			class="right full"
+			disabled={!allowNext}
+			on:click={() => {
+				OOBEPage.set($OOBEPage + 1);
+			}}
+		>
+			Next -&gt;
+		</button>
+	</div>
 </div>
 
 <style>
-    .main {
-        height: calc(100% - 4rem);
-    }
+	.main {
+		height: calc(100% - 3em);
+	}
 
-    .full {
-        height: 4rem;
-        border: none;
-        background-color: var(--orange-dark);
-    }
+	.footer {
+		height: 3em;
+		display: flex;
+		align-items: stretch;
+		justify-content: space-between;
+	}
 
-    .right {
-        right: 0.33em;
-        position: absolute;
-    }
-
-    .center {
-        position: relative;
-        transform: translate(-180%,0);
-        left: 50%;
-    }
-
-	.footer { 
-        height: 4rem;
-        background-color: var(--orange);
-    }
-
-    .oobe {
-        width: 100%;
+	.oobe {
+		width: 100%;
 		height: 100%;
 	}
 </style>

@@ -11,7 +11,7 @@
 	} from "./stores";
 	import {tick} from "svelte";
 	import Container from "./Container.svelte";
-	import * as Modals from "../lib/Modals.js";
+	import * as Modals from "./modals.js";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -269,7 +269,7 @@
 				}
 				announceMsg = "";
 				$announcementToSend = text;
-				Modals.ShowModal("announce")
+				Modals.showModal("announce")
 			}}
 		>
 			<textarea

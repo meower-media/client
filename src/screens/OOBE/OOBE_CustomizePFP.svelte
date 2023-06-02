@@ -5,9 +5,6 @@
     import * as clm from "../../lib/clmanager.js";
 
 	import {
-		Sidebarlocked,
-        OOBEPage,
-        profileClicked,
 		user,
 		mainPage as page
 	} from "../../lib/stores.js";
@@ -18,17 +15,6 @@
 
 	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
 	let pfpSwitcher = false;
-
-	async function loadProfile() {
-		let path = `users/${$profileClicked}`;
-		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = await fetch(`${apiUrl}${path}`);
-		if (!resp.ok) {
-			throw new Error("Response code is not OK; code is " + resp.status);
-		}
-		const json = await resp.json();
-		return json;
-	}
 
 	/**
 	 * Saves the user profile, and also clears its cache entry.
@@ -51,9 +37,9 @@
 </script>
 
 <div class="pfps">
-	<h1>Customize PFP</h1>
-    <div id="pfp-outer">
-        <div id="pfp-list">
+	<h1>Set your profile picture</h1>
+    <div class="pfp-outer">
+        <div class="pfp-list">
             {#if pfpOverflow && $user.pfp_data < 0}
                 <button
                     on:click={() => {
@@ -102,29 +88,20 @@
 
 <style>
     .pfps {
-        overflow-y: scroll;
+        /* this is kind of a hack, whatever */
         overflow-x: hidden;
-        height: 60%;
-        width: 80%;
-        left: 50%;
+        height: calc(100% - 0.25em);
+        width: 100%;
+
+        margin-bottom: 1em;
+        box-sizing: border-box;
+
         position: relative;
-        transform: translate(-50%,0);
+        left: 50%;
+        transform: translate(-50%, 0);
     }
 
-    .fullcenter {
-        width: 100vw;
-		height: calc(100vh - 4rem);
-		box-sizing: border-box;
-
-		margin: auto;
-		overflow: auto;
-
-		display: table-cell;
-		vertical-align: middle;
-		padding: 0.5em;
-    }
-
-    #pfp-outer {
+    .pfp-outer {
         overflow-y: none;
     }
 
@@ -147,7 +124,7 @@
 	:global(main) .pfp.selected {
 		background-color: var(--orange);
 	}
-	#pfp-list {
+	.pfp-list {
 		display: flex;
 		flex-wrap: wrap;
 	}

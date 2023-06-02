@@ -1,23 +1,23 @@
 <script>
 	import {
-		Sidebarlocked,
+		sidebarLocked,
         OOBEPage,
 		mainPage
 	} from "../../lib/stores.js";
 
-	import OobeCustomizePfp from "./OOBE_CustomizePFP.svelte";
-	import OobeCustomizeTheme from "./OOBE_CustomizeTheme.svelte";
+	import OOBECustomizePFP from "./OOBE_CustomizePFP.svelte";
+	import OOBECustomizeTheme from "./OOBE_CustomizeTheme.svelte";
 </script>
 
 <div class="actual">
 	<div class="fullcenter">
 		{#if $OOBEPage == 0}
-			<OobeCustomizePfp />
+			<OOBECustomizePFP />
 		{:else if $OOBEPage == 1}
-			<OobeCustomizeTheme />
+			<OOBECustomizeTheme />
 		{:else if $OOBEPage == 2}
-			<h1>Thats it!</h1>
-			<button on:click={() => {Sidebarlocked.set(false); mainPage.set("home")}}>Press me to finish!</button>
+			<h1>That's it!</h1>
+			<button on:click={() => {sidebarLocked.set(false); mainPage.set("home")}}>Let's go!</button>
 		{:else}
 			<p>{$OOBEPage}</p>
 		{/if}

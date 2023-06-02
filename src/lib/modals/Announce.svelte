@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 	import {modalShown, announcementToSend} from "../stores.js";
-	import * as Modals from "../Modals.js";
+	import * as Modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 	import sleep from "../sleep";
 

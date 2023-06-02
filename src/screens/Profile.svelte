@@ -5,7 +5,7 @@
 		user,
 		mainPage as page,
 	} from "../lib/stores.js";
-	import * as Modals from "../lib/Modals.js";
+	import * as Modals from "../lib/modals.js";
 
 	import {profileCache} from "../lib/loadProfile.js";
 
@@ -129,7 +129,7 @@
 				class="long"
 				title={data.quote ? "Update Quote" : "Set Quote"}
 				on:click={() => {
-					Modals.ShowModal("setQuote")
+					Modals.showModal("setQuote")
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
 			>
 		{:else if $profileClicked === "Discord"}
@@ -137,7 +137,7 @@
 				class="long"
 				title="Link Discord Account"
 				on:click={() => {
-					Modals.ShowModal("linkDiscord")
+					Modals.showModal("linkDiscord")
 				}}>Link Discord Account</button
 			>
 		{/if}
@@ -154,13 +154,13 @@
 
 		{#if $user.name && $profileClicked !== $user.name}
 			<button class="long" on:click={() => {
-				Modals.ShowModal("addMember2")
+				Modals.showModal("addMember2")
 			}}>Add to Chat</button>
 			<button
 				class="long"
 				title="Report User"
 				on:click={() => {
-					Modals.ShowModal("reportUser")
+					Modals.showModal("reportUser")
 				}}>Report User</button
 			>
 		{/if}

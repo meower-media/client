@@ -20,7 +20,7 @@
                 queryParams={{q: $searchQuery}}
                 postOrigin=""
                 canPost={false}
-                AddToChat={true}
+                addToChat={true}
             >
                 <Container slot="error" let:error>
                     Error loading results. Please try again.
