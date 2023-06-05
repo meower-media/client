@@ -34,6 +34,7 @@ export const ulist = writable([]);
 
 // Mod panel
 export const userToMod = writable("");
+export const modPanelOpen = writable(false);
 
 // Last (blank) clicked
 export const postClicked = writable({});
@@ -52,9 +53,6 @@ export const postInput = writable();
 
 // Current auth header
 export const authHeader = writable({});
-
-// The mod panel is a popup
-export const modPanelOpen = writable(false);
 
 // The current user profile
 export const user = writable({

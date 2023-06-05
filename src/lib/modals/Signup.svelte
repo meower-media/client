@@ -153,6 +153,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
+					minlength="8"
 					maxlength="255"
 					value={password}
 				/><br />

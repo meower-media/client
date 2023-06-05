@@ -1,6 +1,8 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
+		userToMod,
+		modPanelOpen,
 		profileClicked,
 		user,
 		mainPage as page,
@@ -132,14 +134,6 @@
 					Modals.showModal("setQuote")
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
 			>
-		{:else if $profileClicked === "Discord"}
-			<button
-				class="long"
-				title="Link Discord Account"
-				on:click={() => {
-					Modals.showModal("linkDiscord")
-				}}>Link Discord Account</button
-			>
 		{/if}
 
 		<button
@@ -156,13 +150,24 @@
 			<button class="long" on:click={() => {
 				Modals.showModal("addMember2")
 			}}>Add to Chat</button>
-			<button
-				class="long"
-				title="Report User"
-				on:click={() => {
-					Modals.showModal("reportUser")
-				}}>Report User</button
-			>
+			{#if $user.lvl < 1}
+				<button
+					class="long"
+					title="Report User"
+					on:click={() => {
+						Modals.showModal("reportUser")
+					}}>Report User</button
+				>
+			{:else}
+				<button
+					class="long"
+					title="Moderate User"
+					on:click={() => {
+						$userToMod = $profileClicked;
+						$modPanelOpen = true;
+					}}>Moderate User</button
+				>
+			{/if}
 		{/if}
 	{:catch e}
 		<ProfileView username={$profileClicked} />

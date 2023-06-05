@@ -5,13 +5,14 @@
 	import {levels} from "./formatting.js";
 	import {
 		mainPage as page,
-		announcementToSend,
+		userToMod,
 		profileClicked,
+		announcementToSend,
 		user,
 	} from "./stores";
 	import {tick} from "svelte";
-	import Container from "./Container.svelte";
 	import * as Modals from "./modals.js";
+	import { onMount } from "svelte/internal";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -76,6 +77,12 @@
 	}
 
 	let items = [];
+
+	let getInfoButton;
+
+	onMount(async () => {
+		if ($userToMod) getInfoButton.click();
+	});
 </script>
 
 <div class="ModPanel">
@@ -152,8 +159,9 @@
 				class="grow white"
 				type="text"
 				placeholder="Username/IP..."
+				value={$userToMod}
 			/>
-			<button class="static">Submit</button>
+			<button class="static" bind:this={getInfoButton}>Submit</button>
 		</div>
 		{#if infoMsg}
 			<div class="msg">{infoMsg}</div>
@@ -240,7 +248,7 @@
 		}}
 	>
 		<div class="input-row">
-			<input class="grow white" type="text" placeholder="Username..." />
+			<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
 			<button class="static">Send</button>
 		</div>
 		<textarea
@@ -323,6 +331,7 @@
 				placeholder={["block", "unblock"].includes(actionType)
 					? "IP address..."
 					: "Username..."}
+				value={$userToMod}
 			/>
 			<div class="input-row grow">
 				<select
@@ -369,7 +378,7 @@
 	<h2>Reports</h2>
 	<PostList bind:items fetchUrl="reports" postOrigin="" canPost={false}>
 		<div slot="error" let:error>
-			Error loading the mod panel. Please close and reopen it.
+			Error loading the report queue. Please close and reopen it.
 			<pre><code>{error}</code></pre>
 		</div>
 		<div slot="empty">Yay, the report queue is empty!</div>

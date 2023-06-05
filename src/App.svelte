@@ -20,7 +20,6 @@
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
-	import LinkDiscordModal from "./lib/modals/LinkDiscord.svelte";
 	import AnnounceModal from "./lib/modals/Announce.svelte";
 	import AddMember2Modal from "./lib/modals/AddMember_2.svelte";
 	import AddMemberSearchModal from "./lib/modals/AddMember_Search.svelte";
@@ -45,11 +44,10 @@
 		modalPage,
 		disconnected,
 		disconnectReason,
+		userToMod,
 		user,
 		spinner,
-		modPanelOpen,
-		useCustomTheme,
-		customTheme
+		modPanelOpen
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
@@ -84,6 +82,7 @@
 			<Modal
 				on:close={() => {
 					$modPanelOpen = false;
+					$userToMod = "";
 				}}
 			>
 				<div slot="header">
@@ -187,8 +186,6 @@
 			<SwitchThemeModal />
 		{:else if $modalPage === "switchBGM"}
 			<SwitchBGMSFXModal />
-		{:else if $modalPage === "linkDiscord"}
-			<LinkDiscordModal />
 		{:else if $modalPage === "BasicModal"}
 			<BasicModal />
 		{:else}
