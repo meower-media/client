@@ -61,6 +61,12 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
+					BGM.playBGM($user.bgm_song); // why
+					$modalShown = false;
+				}}>Cancel</button
+			>
+			<button
+				on:click={() => {
 					const _user = $user;
 					_user.bgm_song = bgmTrack + 1;
 					user.set(_user);
@@ -69,12 +75,6 @@
 					BGM.playBGM(bgmTrack + 1);
 					$modalShown = false;
 				}}>OK</button
-			>
-			<button
-				on:click={() => {
-					BGM.playBGM($user.bgm_song); // why
-					$modalShown = false;
-				}}>Cancel</button
 			>
 		</div>
 	</div>
