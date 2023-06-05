@@ -257,46 +257,37 @@
 				spinner.set(true);
 
 				submitBtn.disabled = true;
-				if ($user.name) {
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd:
-								postOrigin === "home"
-									? "post_home"
-									: "post_chat",
-							val:
-								postOrigin === "home"
-									? content
-									: {
-											p: content,
-											chatid: postOrigin,
-									  },
-						},
-					}).then(data => {
-						submitBtn.disabled = false;
-
-						if (data === "I:100 | OK" || !data) {
-							input.value = "";
-							input.rows = "1";
-							input.style.height = "45px";
-						} else if (data === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + data + " error!";
-						}
-					});
-					return false;
-				} else {
-					post("https://webhooks.meower.org/post/home", {
-						post: content,
-					});
-					submitBtn.disabled = false;
+				clm.meowerRequest({
+					cmd: "direct",
+					val: {
+						cmd:
+							postOrigin === "home"
+								? "post_home"
+								: "post_chat",
+						val:
+							postOrigin === "home"
+								? content
+								: {
+										p: content,
+										chatid: postOrigin,
+									},
+					},
+				}).then(data => {
 					input.value = "";
 					input.rows = "1";
 					input.style.height = "45px";
-					spinner.set(false);
-				}
+					submitBtn.disabled = false;
+				}).catch(code => {
+					submitBtn.disabled = false;
+					switch (code) {
+						case "E:106 | Too many requests":
+							postErrors = "You're posting too fast!";
+							break;
+						default:
+							postErrors = "Unexpected " + code + " error!";
+					}
+				});
+				return false;
 			}}
 		>
 			<textarea
@@ -330,7 +321,7 @@
 				on:keydown={event => {
 					if (event.key == "Enter" && !shiftHeld) {
 						event.preventDefault();
-						submitBtn.click();
+						if (!submitBtn.disabled) submitBtn.click();
 					}
 				}}
 				bind:this={postInput}
@@ -344,7 +335,7 @@
 					Modals.showModal("addImg");
 				}}>+</button
 			>
-			<button bind:this={submitBtn} name="submit">Post</button>
+			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
@@ -428,7 +419,7 @@
 							/>
 						</div>
 					{/if}
-					{#if addToChat}
+					{#if addToChat && !$chatMembers.includes(post._id)}
 						<div class="settings-controls">
 							<button
 								class="circle add"

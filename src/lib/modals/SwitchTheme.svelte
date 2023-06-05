@@ -102,6 +102,11 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
+					$modalShown = false;
+				}}>Close</button
+			>
+			<button
+				on:click={() => {
 					const _user = $user;
 					_user.theme = theme;
 					_user.mode = !darkMode;
@@ -110,11 +115,6 @@
 					clm.updateProfile();
 					$modalShown = false;
 				}}>OK</button
-			>
-			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Close</button
 			>
 		</div>
 	</div>

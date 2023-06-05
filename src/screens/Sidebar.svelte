@@ -110,7 +110,7 @@
 				goto("chatlist");
 			}
 		}}
-		title="Group chats"
+		title="Group Chats"
 		class="gc-btn round"
 	>
 		<img src={gc} alt="Group chats" draggable={false} />

@@ -7,16 +7,16 @@
 
 	import {tick} from "svelte";
 
-	let createStatus = "";
+	let createStatus, chatNickname = "";
 
-	function doCreate(nickname) {
+	function doCreate() {
 		try {
 			createStatus = "Creating chat...";
 			clm.meowerRequest({
 				cmd: "direct",
 				val: {
 					cmd: "create_chat",
-					val: nickname,
+					val: chatNickname,
 				},
 			})
 				.then(() => {
@@ -41,36 +41,31 @@
 >
 	<h2 slot="header">Create Chat</h2>
 	<div slot="default">
-		<form
-			on:submit|preventDefault={e => {
-				if (!e.target[0].value) {
-					createStatus =
-						"You must specify a nickname to create the chat!";
-					return false;
-				}
-				doCreate(e.target[0].value);
-				return false;
-			}}
-		>
-			{#if createStatus}
-				<span class="login-status">{createStatus}</span><br />
-			{/if}
-			<input
-				type="text"
-				class="modal-input white"
-				placeholder="Nickname"
-				maxlength="20"
-				autofocus
-			/><br /><br />
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => {
-						$modalShown = false;
-					}}>Cancel</button
-				>
-				<button type="submit">Create</button>
-			</div>
-		</form>
+		{#if createStatus}
+			<span class="login-status">{createStatus}</span><br />
+		{/if}
+		<input
+			type="text"
+			class="modal-input white"
+			placeholder="Nickname"
+			maxlength="20"
+			autofocus
+			bind:value={chatNickname}
+		/><br /><br />
+		<div class="modal-buttons">
+			<button
+				type="button"
+				on:click={() => {
+					$modalShown = false;
+				}}>Cancel</button
+			>
+			<button
+				type="submit"
+				disabled={!chatNickname}
+				on:click={() => {
+					doCreate();
+				}}
+			>Create</button>
+		</div>
 	</div>
 </Modal>

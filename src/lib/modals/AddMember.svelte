@@ -3,12 +3,9 @@
 
 	import {
 		modalShown,
-		mainPage as page,
 		chatid,
 		chatMembers,
 	} from "../stores.js";
-
-	import {tick} from "svelte";
 
 	import * as clm from "../clmanager.js";
 

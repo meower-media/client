@@ -46,6 +46,7 @@
 				});
 				if (!result || numPages === undefined)
 					throw "This message should not appear";
+				result = result.filter(chat => !chat.members.includes($profileClicked));
 				return {result, numPages};
 			} finally {
 				if (ev) clm.link.off(ev);
@@ -66,17 +67,17 @@
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<PagedList bind:items {loadPage}>
-            <svelte:fragment slot="loaded" let:items>
-                {#each items as chat (chat._id)}
-                    <div
-                        transition:fly|local={{y: -50, duration: 250}}
-                        animate:flip={{duration: 250}}
-                    >
-                        <Container>
-                            <div class="settings-controls">
-                                <button
-                                    class="circle add"
-                                    on:click={() => {
+			<svelte:fragment slot="loaded" let:items>
+				{#each items as chat (chat._id)}
+					<div
+						transition:fly|local={{y: -50, duration: 250}}
+						animate:flip={{duration: 250}}
+					>
+						<Container>
+							<div class="settings-controls">
+								<button
+									class="circle add"
+									on:click={() => {
 										clm.meowerRequest({
 											cmd: "direct",
 											val: {
@@ -85,20 +86,20 @@
 											},
 										});
 										Modals.CloseModal()
-                                    }}
-                                />
-                            </div>
-    
-                            <h1>{chat.nickname}</h1>
-                            Members: {chat.members.length > 5
-                                ? chat.members.slice(0, 4).join(", ") + "..."
-                                : chat.members.join(", ")}
-                        </Container>
-                    </div>
-                {/each}
+									}}
+								/>
+							</div>
+	
+							<h1>{chat.nickname}</h1>
+							Members: {chat.members.length > 5
+								? chat.members.slice(0, 4).join(", ") + "..."
+								: chat.members.join(", ")}
+						</Container>
+					</div>
+				{/each}
             </svelte:fragment>
             <Container slot="error" let:error>
-                Error loading posts. Please try again.
+                Error loading chats. Please try again.
                 <pre><code>{error}</code></pre>
             </Container>
         </PagedList>
