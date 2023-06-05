@@ -7,7 +7,7 @@
 	} from "../stores.js";
     import PagedList from "../PagedList.svelte";
 	import Container from "../Container.svelte";
-	import * as Modals from "../modals.js";
+	import * as Modals from "../Modals.js";
 
     import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
