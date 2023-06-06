@@ -23,7 +23,7 @@
 
 	const PFP_COUNT = 34;
 
-	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
+	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1).push(41)
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
