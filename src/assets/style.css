@@ -277,6 +277,16 @@ button.search {
 	background-size: 50%;
 }
 
+button.add {
+	background-image: url("./add.svg");
+	background-size: 50%;
+}
+
+button.reload {
+	background-image: url("./loader.svg");
+	background-size: 70%;
+}
+
 main.input-hover input[type="checkbox"]:hover:not(:active),
 main.input-hover button.circle:not(:disabled):hover:not(:active),
 main.input-touch input[type="checkbox"]:active,

@@ -8,6 +8,7 @@
 		modalShown,
 		modalPage,
 		modPanelOpen,
+		sidebarLocked
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 
@@ -76,8 +77,11 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
+	{#if $sidebarLocked}
+		<div class="locked"></div>
+	{/if}
 	<div class="logo">
-		<button class="logo-inner" on:click={() => goto("home")}>
+		<button class="logo-inner" title="Home" on:click={() => goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -87,12 +91,13 @@
 			/>
 		</button>
 	</div>
-	<button on:click={() => goto("home")} class="home-btn round">
+	<button on:click={() => goto("home")} title="Home" class="home-btn round">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
 		on:click={() => goto("inbox")}
 		class="round"
+		title="The Inbox"
 		class:new-msgs={$user.unread_inbox}
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />
@@ -105,11 +110,12 @@
 				goto("chatlist");
 			}
 		}}
+		title="Group Chats"
 		class="gc-btn round"
 	>
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
-	<button on:click={() => goto("search")} class="search-btn round">
+	<button on:click={() => goto("search")} title="Search" class="search-btn round">
 		<img
 			src={search}
 			alt="Search"
@@ -122,6 +128,7 @@
 		<button
 			on:click={() => ($modPanelOpen = !$modPanelOpen)}
 			class="modpanel-btn round"
+			title="Moderator Panel"
 		>
 			<img
 				src={shield}
@@ -162,6 +169,7 @@
 				goto("profile");
 			}}
 			class="profile-btn round"
+			title = "Profile"
 		>
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>
@@ -171,11 +179,11 @@
 			<span class="label">Settings</span>
 		</button>
 		<!-- still WIP
-		<button on:click={() => goto("about")} class="about-btn round">
-			<img src={info} alt="About" draggable={false} />
-			<span class="label">About</span>
-		</button>
-	-->
+			<button on:click={() => goto("about")} class="about-btn round">
+				<img src={info} alt="About" draggable={false} />
+				<span class="label">About</span>
+			</button>
+		-->
 		<button on:click={() => goto("changelog")} class="changelog-btn round">
 			<img
 				src={changelog}
@@ -240,6 +248,15 @@
 		width: 90%;
 		height: 90%;
 		object-fit: contain;
+	}
+
+	.locked {
+		height: 100%;
+		width: 100%;
+		z-index: 10;
+		position: absolute;
+		background-color: var(--background);
+		opacity: 0.33;
 	}
 
 	.logo {

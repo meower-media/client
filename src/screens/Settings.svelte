@@ -4,33 +4,10 @@
 
 	import {user, modalShown, modalPage} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
+	import * as Modals from "../lib/modals.js";
+	import * as BGM from "../lib/BGM.js";
 </script>
 
-<!--
-	<p>Quote: {$user.quote}</p>
-	<form
-		class="createpost"
-		on:submit|preventDefault={e => {
-			//spinner.set(true);
-			const _user = $user;
-			_user.quote = e.target[0].value;
-			user.set(_user);
-
-			clm.updateProfile();
-			//spinner.set(false);
-		}}
-	>
-		<input
-			type="text"
-			class="white"
-			placeholder="Write something..."
-				id="qinput"
-				name="qinput"
-			autocomplete="false"
-		>
-		<button>Save Quote</button>
-	</form>
--->
 <Container>
 	<h1>Settings</h1>
 	You can change your settings here. These will save to your account, so they will
@@ -58,35 +35,13 @@
 		<button
 			class="circle settings"
 			on:click={() => {
-				const _user = $user;
-				_user.theme = _user.theme === "orange" ? "blue" : "orange";
-				user.set(_user);
-
-				clm.updateProfile();
+				Modals.showModal("switchTheme");
 			}}
 		/>
 	</div>
 
 	<h2>Theme</h2>
-	The theme is currently set to {$user.theme}.
-</Container>
-<Container>
-	<div class="settings-controls">
-		<input
-			type="checkbox"
-			checked={!$user.mode}
-			on:change={() => {
-				const _user = $user;
-				_user.mode = !_user.mode;
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
-		/>
-	</div>
-
-	<h2>Dark Mode</h2>
-	Dark mode is currently {$user.mode ? "disabled" : "enabled"}.
+	The theme is currently set to {$user.theme} ({$user.mode ? "light" : "dark"}).
 </Container>
 <Container>
 	<div class="settings-controls">
@@ -108,24 +63,36 @@
 		? "disabled"
 		: "enabled"}.
 </Container>
-<!--<Container>
+<Container>
 	<div class="settings-controls">
+		{#if $user.bgm}
+			<button
+				class="circle settings"
+				on:click={() => {
+					Modals.showModal("switchBGM");
+				}}
+			/>
+		{/if}
 		<input
 			type="checkbox"
 			checked={$user.bgm}
-			on:change={()=>{
+			on:change={() => {
 				const _user = $user;
 				_user.bgm = !_user.bgm;
 				user.set(_user);
+				BGM.playBGM(_user.bgm_song);
 
 				clm.updateProfile();
 			}}
-		>
+		/>
 	</div>
 
-	<h2>BGM</h2>
-	BGM is currently {!$user.sfx ? "disabled" : "enabled"}.
-</Container>-->
+	<h2>Background Music</h2>
+	Background music is currently {!$user.bgm ? "disabled" : "enabled"}.
+	{#if $user.bgm}
+		Click the cog button to change the song.
+	{/if}
+</Container>
 {#if $user.name}
 	<Container>
 		<div class="settings-controls">
@@ -153,7 +120,8 @@
 		</div>
 
 		<h2>Delete Account</h2>
-		Permanently delete your Meower account. <b class="important">THIS CANNOT BE UNDONE!</b>
+		Permanently delete your Meower account.
+		<b class="important">THIS CANNOT BE UNDONE!</b>
 	</Container>
 {/if}
 
@@ -161,13 +129,13 @@
 	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
 -->
 
-<div class="eee" />
-
 <style>
 	.settings-controls {
 		position: absolute;
 		top: 0.25em;
 		right: 0.25em;
+		display: flex;
+		gap: 0.25em;
 	}
 
 	input[type="checkbox"],

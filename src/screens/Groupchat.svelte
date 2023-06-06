@@ -6,8 +6,10 @@
 		chatName,
 		chatMembers,
 		chatid,
+		chatOwner,
 		modalShown,
 		modalPage,
+		user,
 		profileClicked_GC,
 	} from "../lib/stores.js";
 	import {mobile} from "../lib/responsiveness.js";
@@ -86,7 +88,7 @@
 							profileClicked_GC.set(chatmember);
 						}}
 					>
-						<Member member={chatmember} />
+						<Member member={chatmember} owner={chatmember === $chatOwner} />
 					</button>
 				{/each}
 			</div>
@@ -98,7 +100,7 @@
 					<button
 						class="circle plus"
 						on:click={() => {
-							modalPage.set("addMember");
+							modalPage.set("addMemberMode");
 							modalShown.set(true);
 						}}
 					/>

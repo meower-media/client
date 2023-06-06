@@ -20,9 +20,18 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import {authHeader, user, spinner, lastTyped} from "./stores.js";
+	import {
+		authHeader,
+		user,
+		spinner,
+		lastTyped,
+		chatid,
+		chatMembers,
+		postInput as postInput_2,
+	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
+	import * as Modals from "./modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
@@ -39,6 +48,7 @@
 	export let chatName = "Home";
 	export let canPost = true;
 	export let queryParams = {};
+	export let addToChat = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -79,7 +89,11 @@
 
 		let result;
 
-		const params = new URLSearchParams({autoget: "1", page: page.toString(), ...queryParams}).toString();
+		const params = new URLSearchParams({
+			autoget: "1",
+			page: page.toString(),
+			...queryParams,
+		}).toString();
 
 		let path = `${fetchUrl}?${params}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
@@ -160,9 +174,9 @@
 			if (!cmd.val) return;
 
 			const isGC = postOrigin !== "home";
-			if (cmd.val.mode === "delete") {
+			if (cmd.val.mode == "delete") {
 				items = items.filter(post => post.post_id !== cmd.val.id);
-			}
+			} // This needs to be here to even function - Bloctans
 			if (!isGC || cmd.val.state === 2) {
 				if (cmd.val.post_origin !== postOrigin) return;
 
@@ -243,46 +257,37 @@
 				spinner.set(true);
 
 				submitBtn.disabled = true;
-				if ($user.name) {
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd:
-								postOrigin === "home"
-									? "post_home"
-									: "post_chat",
-							val:
-								postOrigin === "home"
-									? content
-									: {
-											p: content,
-											chatid: postOrigin,
-									  },
-						},
-					}).then(data => {
-						submitBtn.disabled = false;
-
-						if (data === "I:100 | OK" || !data) {
-							input.value = "";
-							input.rows = "1";
-							input.style.height = "45px";
-						} else if (data === "E:106 | Too many requests") {
-							postErrors = "You're posting too fast!";
-						} else {
-							postErrors = "Unexpected " + data + " error!";
-						}
-					});
-					return false;
-				} else {
-					post("https://webhooks.meower.org/post/home", {
-						post: content,
-					});
-					submitBtn.disabled = false;
+				clm.meowerRequest({
+					cmd: "direct",
+					val: {
+						cmd:
+							postOrigin === "home"
+								? "post_home"
+								: "post_chat",
+						val:
+							postOrigin === "home"
+								? content
+								: {
+										p: content,
+										chatid: postOrigin,
+									},
+					},
+				}).then(data => {
 					input.value = "";
 					input.rows = "1";
 					input.style.height = "45px";
-					spinner.set(false);
-				}
+					submitBtn.disabled = false;
+				}).catch(code => {
+					submitBtn.disabled = false;
+					switch (code) {
+						case "E:106 | Too many requests":
+							postErrors = "You're posting too fast!";
+							break;
+						default:
+							postErrors = "Unexpected " + code + " error!";
+					}
+				});
+				return false;
 			}}
 		>
 			<textarea
@@ -291,7 +296,7 @@
 				placeholder="Write something..."
 				name="input"
 				autocomplete="false"
-				maxlength="360"
+				maxlength="500"
 				rows="1"
 				use:autoresize
 				on:input={() => {
@@ -316,12 +321,21 @@
 				on:keydown={event => {
 					if (event.key == "Enter" && !shiftHeld) {
 						event.preventDefault();
-						submitBtn.click();
+						if (!submitBtn.disabled) submitBtn.click();
 					}
 				}}
 				bind:this={postInput}
 			/>
-			<button bind:this={submitBtn} name="submit">Post</button>
+			<button
+				class="upload-image"
+				name="addImage"
+				title="Add an image"
+				on:click|preventDefault={() => {
+					postInput_2.set(postInput);
+					Modals.showModal("addImg");
+				}}>+</button
+			>
+			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
@@ -405,6 +419,28 @@
 							/>
 						</div>
 					{/if}
+					{#if addToChat && !$chatMembers.includes(post._id)}
+						<div class="settings-controls">
+							<button
+								class="circle add"
+								title="Add to chat"
+								on:click={async () => {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "add_to_chat",
+											val: {
+												chatid: $chatid,
+												username: post._id,
+											},
+										},
+									});
+									$chatMembers.push(post._id);
+									chatMembers.set($chatMembers);
+								}}
+							/>
+						</div>
+					{/if}
 				</div>
 			{/each}
 		</svelte:fragment>
@@ -434,10 +470,10 @@
 	.createpost {
 		display: flex;
 		margin-bottom: 0.5em;
+		gap: 0.25em;
 	}
 	.createpost textarea {
 		flex-grow: 1;
-		margin-right: 0.25em;
 		resize: none;
 		max-height: 300px;
 	}
@@ -447,6 +483,13 @@
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;
+	}
+
+	.upload-image {
+		padding: 0;
+		padding-left: 0.8rem;
+		padding-right: 0.8rem;
+		font-size: 2rem;
 	}
 
 	.settings-controls {

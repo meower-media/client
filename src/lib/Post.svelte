@@ -13,12 +13,14 @@
 		user,
 		chatid,
 		ulist,
-		mainPage as page,
-		modalShown,
-		modalPage,
+		mainPage as page
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
+	import * as Modals from "./modals.js";
+
+
+	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js"
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
@@ -34,45 +36,12 @@
 
 	let images = [];
 
-	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
-	// WARNING: Put a / at the end of each URL so it can't be bypassed
-	// (like https://http.meower.org@evilsite.bad)!
-	const IMAGE_HOST_WHITELIST = [
-		// Meower
-		"https://http.meower.org/",
-		"https://assets.meower.org/",
-		"https://forums.meower.org/",
-		"https://go.meower.org/", // not everyone can add urls to go.meower.org, should be fine
-		"https://nc.meower.org/",
-
-		// cubeupload
-		"https://u.cubeupload.com/",
-		"https://cubeupload.com/",
-
-		// ImgBB
-		"https://i.ibb.co/",
-
-		// Tenor
-		"https://media.tenor.com/",
-		"https://tenor.com/",
-		"https://c.tenor.com/",
-
-		// Scratch (assets file uploading exists)
-		"https://assets.scratch.mit.edu/",
-		"https://cdn2.scratch.mit.edu/",
-		"https://cdn.scratch.mit.edu/",
-		"https://uploads.scratch.mit.edu/",
-
-		// Discord
-		"https://cdn.discordapp.com/",
-	];
-
 	// TODO: make bridged tag a setting
 
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	function initPostUser() {
+	export function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
@@ -123,6 +92,7 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+	
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -173,8 +143,7 @@
 									return;
 								}
 								postClicked.set(post);
-								modalPage.set("deletePost");
-								modalShown.set(true);
+								Modals.showModal("deletePost")
 							}}
 						/>
 					{:else}
@@ -182,8 +151,7 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								modalPage.set("reportPost");
-								modalShown.set(true);
+								Modals.showModal("reportPost")
 							}}
 						/>
 					{/if}

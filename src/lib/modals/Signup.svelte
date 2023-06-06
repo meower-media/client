@@ -76,7 +76,7 @@
 						}
 
 						mainPage.set("blank");
-						tick().then(() => mainPage.set("home"));
+						tick().then(() => mainPage.set("oobe"));
 					} else {
 						loginStatus = "Unexpected error logging in!";
 					}
@@ -153,6 +153,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
+					minlength="8"
 					maxlength="255"
 					value={password}
 				/><br />
