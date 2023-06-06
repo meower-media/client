@@ -20,14 +20,22 @@
 	import DeleteAccountModal from "./lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "./lib/modals/Error.svelte";
 	import LogoutModal from "./lib/modals/Logout.svelte";
-	import LinkDiscord from "./lib/modals/LinkDiscord.svelte";
 	import AnnounceModal from "./lib/modals/Announce.svelte";
+	import AddMember2Modal from "./lib/modals/AddMember_2.svelte";
+	import AddMemberSearchModal from "./lib/modals/AddMember_Search.svelte";
+	import AddMemberModeModal from "./lib/modals/AddMember_Mode.svelte";
+	import SearchResultsModal from "./lib/modals/SearchResults.svelte";
+	import SwitchThemeModal from "./lib/modals/SwitchTheme.svelte";
+	import AddImgModal from "./lib/modals/AddImage.svelte";
+	import SwitchBGMSFXModal from "./lib/modals/SwitchBGMSFX.svelte";
+	import BasicModal from "./lib/modals/Basic.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
 	import Spinner from "./lib/Spinner.svelte";
 	import {link} from "./lib/clmanager.js";
 	import {mobile, touch} from "./lib/responsiveness.js";
+	import * as BGM from "./lib/BGM.js";
 
 	import {
 		screen,
@@ -36,12 +44,24 @@
 		modalPage,
 		disconnected,
 		disconnectReason,
+		userToMod,
 		user,
 		spinner,
-		modPanelOpen,
+		modPanelOpen
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
+
+<!--
+	in main:
+	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orangeButton : null}
+	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
+-->
 
 <main
 	id="main"
@@ -53,12 +73,16 @@
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
+
+	on:mousedown={() => BGM.canPlayNow()}
+	on:keydown={() => BGM.canPlayNow()}
 >
 	{#if $modPanelOpen}
 		<div class="mod-panel">
 			<Modal
 				on:close={() => {
 					$modPanelOpen = false;
+					$userToMod = "";
 				}}
 			>
 				<div slot="header">
@@ -110,7 +134,7 @@
 	{/if}
 
 	{#if $modalShown}
-		<!-- Login, signup -->
+			<!-- Login, signup -->
 		{#if $modalPage === "login"}
 			<LoginModal />
 		{:else if $modalPage === "signup"}
@@ -127,17 +151,21 @@
 			<ReportPostModal />
 		{:else if $modalPage === "reportUser"}
 			<ReportUserModal />
+		{:else if $modalPage === "searchResults"}
+			<SearchResultsModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
-			{:else if $modalPage === "announce"}
-				<AnnounceModal />
+		{:else if $modalPage === "announce"}
+			<AnnounceModal />
 			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
 		{:else if $modalPage === "setQuote"}
 			<SetQuoteModal />
+		{:else if $modalPage === "addImg"}
+			<AddImgModal />
 		{:else if $modalPage === "changePassword"}
 			<ChangePasswordModal />
 			<!-- Group chats -->
@@ -145,10 +173,21 @@
 			<GCMemberModal />
 		{:else if $modalPage === "addMember"}
 			<AddMemberModal />
+		{:else if $modalPage === "addMember2"}
+			<AddMember2Modal />
+		{:else if $modalPage === "addMemberSearch"}
+			<AddMemberSearchModal />
+		{:else if $modalPage === "addMemberMode"}
+			<AddMemberModeModal />
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
-		{:else if $modalPage === "linkDiscord"}
-			<LinkDiscord />
+			<!-- Misc -->
+		{:else if $modalPage === "switchTheme"}
+			<SwitchThemeModal />
+		{:else if $modalPage === "switchBGM"}
+			<SwitchBGMSFXModal />
+		{:else if $modalPage === "BasicModal"}
+			<BasicModal />
 		{:else}
 			<ErrorModal />
 		{/if}

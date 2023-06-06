@@ -35,6 +35,7 @@
 
 	if (previously_focused) {
 		onDestroy(() => {
+			// @ts-ignore
 			previously_focused.focus();
 		});
 	}
@@ -42,6 +43,7 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
 	class="modal-background"
 	on:click={close}

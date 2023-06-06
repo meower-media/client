@@ -3,10 +3,11 @@
 	import {
 		screen,
 		setupPage as page,
+		mainPage,
 		modalShown,
 		modalPage,
 		authHeader,
-		user,
+		user
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
@@ -22,6 +23,7 @@
 	import {fade} from "svelte/transition";
 	import sleep from "../lib/sleep.js";
 	import version from "../lib/version.js";
+	import * as BGM from "../lib/BGM.js";
 
 	let logo,
 		setup,
@@ -153,6 +155,7 @@
 							);
 						}
 
+						BGM.playBGM($user.bgm_song);
 						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
@@ -369,9 +372,9 @@
 										val.payload.token
 									);
 								}
-
-								page.set("go");
-								await sleep(1000);
+								
+								mainPage.set("oobe");
+								await sleep(10)
 								screen.set("main");
 							} else {
 								loginStatus = "Unexpected error logging in!";
@@ -407,7 +410,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="255" />
+				<input type="password" placeholder="Password" minlength="8" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"

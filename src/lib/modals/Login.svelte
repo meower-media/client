@@ -5,6 +5,7 @@
 	import {modalShown, modalPage, authHeader, user} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
+	import * as BGM from "../BGM.js";
 
 	let loading = false;
 	let loginStatus = "";
@@ -58,6 +59,8 @@
 								val.payload.token
 							);
 						}
+
+						BGM.playBGM($user.bgm_song);
 					} catch (e) {
 						loading = false;
 						loginStatus =

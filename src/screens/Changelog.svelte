@@ -7,12 +7,23 @@
 	What's new?
 </Container>
 <Container>
-	<h2>1.6</h2>
+	<h2>1.6.0</h2>
+	Way too many minor changes to list, so here are some of the highlights:
 	<ul>
-		<li>Changing your password now also logs you out of every device</li>
 		<li>
-			Add https://forums.meower.org/ and https://nc.meower.org/ to
-			the image host whitelist
+			Added search
+		</li>
+		<li>
+			Moved some of the less-used sidebar buttons into a dropdown
+		</li>
+		<li>
+			Added an actual moderator panel (for moderators)
+		</li>
+		<li>
+			Added an out-of-box experience screen when creating an account
+		</li>
+		<li>
+			New "Add image" button next to the Post button (to make adding images easier and more known)
 		</li>
 	</ul>
 </Container>
