@@ -339,7 +339,7 @@
 	{/if}
 	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
-			{#each _items as post (post.id)}
+			{#each [...new Set(_items)] as post (post.id)}
 				<div
 					class="item"
 					transition:fly|local={{y: -50, duration: 250}}
