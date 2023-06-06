@@ -19,8 +19,9 @@ export const basicModalDesc = writable("");
 // Used for the disconnected screen
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
+export const attemptedAutoReconnect = writable(false);
 
-// Last typed
+// Last typed timestamp
 export const lastTyped = writable(0);
 
 // Current chat stuff
@@ -75,6 +76,7 @@ export const spinner = writable(false);
 // What is this
 export const windowStyle = writable({});
 
+// Custom theme
 export const useCustomTheme = writable(false);
 export const customTheme = writable({
 	"orange": "f9a636",

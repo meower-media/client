@@ -4,14 +4,29 @@
 
 import Cloudlink from "./cloudlink.js";
 import {
+	screen,
+	setupPage,
 	ulist,
 	user,
 	spinner,
 	disconnected,
 	disconnectReason,
+	attemptedAutoReconnect,
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
+import {tick} from "svelte";
+import sleep from "../lib/sleep.js";
+
+/**
+ * A list of status codes that indicate the client will be disconnected.
+ */
+const disconnectCodes = [
+	"E:018 | Account Banned",
+	"E:020 | Kicked",
+	"E:110 | ID conflict",
+	"E:119 | IP Blocked"
+];
 
 let _user = null;
 user.subscribe(v => {
@@ -110,13 +125,14 @@ export async function connect() {
 	link.once("connectionstart", () => {
 		connectEvent = link.on("connected", () => {
 			disconnected.set(false);
+			attemptedAutoReconnect.set(false);
 			pingInterval = setInterval(() => {
 				link.send({cmd: "ping", val: ""});
 			}, 10000);
 		});
-		disconnectEvent = link.on("disconnected", e => {
+		disconnectEvent = link.on("disconnected", async e => {
+			// clear values and listeners
 			ulist.set([]);
-			if (e.reason !== "Intentional disconnect") disconnected.set(true);
 			let tmp_unloaded = unloadedProfile();
 			tmp_unloaded.theme = _user.theme;
 			tmp_unloaded.mode = _user.mode;
@@ -125,6 +141,30 @@ export async function connect() {
 			if (pingInterval) {
 				clearInterval(pingInterval);
 				pingInterval = null;
+			}
+
+			// get disconnect reason
+			let _disconnectReason = "";
+			disconnectReason.subscribe(v => {_disconnectReason = v});
+
+			// get whether an auto reconnect has already been attempted
+			let _attemptedAutoReconnect = false;
+			attemptedAutoReconnect.subscribe(v => {_attemptedAutoReconnect = v});
+
+			// attempt reconnect otherwise fully disconnect
+			if (
+				!_attemptedAutoReconnect &&
+				!disconnectCodes.includes(_disconnectReason) &&
+				e.reason !== "Intentional disconnect"
+			) {
+				attemptedAutoReconnect.set(true);
+				screen.set("setup");
+				disconnected.set(false);
+				await tick();
+				await sleep(1000);
+				setupPage.set("autoReconnect");
+			} else {
+				disconnected.set(true);
 			}
 		});
 		ulistEvent = link.on("ulist", cmd => {
@@ -141,12 +181,7 @@ export async function connect() {
 			}
 		});
 		disconnectRequest = link.on("direct", cmd => {
-			if (
-				cmd.val == "E:018 | Account Banned" ||
-				cmd.val == "E:020 | Kicked" ||
-				cmd.val == "E:110 | ID conflict" ||
-				cmd.val == "E:119 | IP Blocked"
-			) {
+			if (disconnectCodes.includes(cmd.val)) {
 				link.disconnect();
 				disconnectReason.set(cmd.val);
 				disconnected.set(true);
@@ -159,7 +194,6 @@ export async function connect() {
 	try {
 		return await link.connect(linkUrl);
 	} catch (e) {
-		link.disconnect();
 		disconnectReason.set(e);
 		disconnected.set(true);
 		link.error("manager", "conenction error:", e);

@@ -167,15 +167,16 @@
 					>
 					<button
 						on:click={() => {
-							items = items.filter(v => v._id !== $chatid);
 							clm.meowerRequest({
 								cmd: "direct",
 								val: {
 									cmd: "leave_chat",
 									val: $chatid,
 								},
+							}).then(() => {
+								items = items.filter(v => {v._id !== $chatid});
+								toLeaveChat = false;
 							});
-							toLeaveChat = false;
 						}}>Yes</button
 					>
 				</div>

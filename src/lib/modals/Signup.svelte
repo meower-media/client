@@ -87,9 +87,6 @@
 						case "I:015 | Account exists":
 							loginStatus = "That username already exists!";
 							break;
-						case "I:011 | Invalid Password":
-							loginStatus = "Invalid password!";
-							break;
 						case "E:119 | IP Blocked":
 							$modalPage = "ipBanned";
 							break;
