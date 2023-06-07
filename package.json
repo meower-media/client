@@ -15,7 +15,10 @@
 		"prettier": "^2.8.1",
 		"prettier-plugin-svelte": "^2.9.0",
 		"svelte": "^3.49.0",
-		"vite": "^3.0.0",
-		"svelte-textarea-autoresize": "^1.0.0"
+		"svelte-textarea-autoresize": "^1.0.0",
+		"vite": "^3.0.0"
+	},
+	"dependencies": {
+		"twemoji": "^14.0.2"
 	}
 }
