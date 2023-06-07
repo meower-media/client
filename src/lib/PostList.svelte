@@ -179,7 +179,6 @@
 			} // This needs to be here to even function - Bloctans
 			if (!isGC || cmd.val.state === 2) {
 				if (cmd.val.post_origin !== postOrigin) return;
-
 				list.addItem({
 					id: id++,
 					post_id: cmd.val._id,
@@ -189,6 +188,7 @@
 					post_origin: cmd.val.post_origin,
 					isDeleted: cmd.val.isDeleted,
 				});
+				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
 			}
 			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
 				list.addItem({
@@ -200,6 +200,7 @@
 					post_origin: postOrigin || fetchUrl,
 					isDeleted: false,
 				});
+				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
 			}
 			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
 				list.addItem({
@@ -211,13 +212,7 @@
 					post_origin: postOrigin || fetchUrl,
 					isDeleted: false,
 				});
-			}
-			if (
-				$user.sfx &&
-				cmd.val.u !== $user.name &&
-				cmd.val.mode !== "delete"
-			) {
-				playNotification();
+				if ($user.sfx) playNotification();
 			}
 		});
 		destroy = () => clm.link.off(evId);
@@ -344,7 +339,7 @@
 	{/if}
 	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
-			{#each _items as post (post.id)}
+			{#each [...new Set(_items)] as post (post.id)}
 				<div
 					class="item"
 					transition:fly|local={{y: -50, duration: 250}}

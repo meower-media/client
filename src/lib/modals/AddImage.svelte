@@ -212,18 +212,16 @@
 					$modalShown = false;
 				}}>Close</button
 			>
-
 			<button
+				disabled={postErrors !== ""}
 				on:click={() => {
-					if (postErrors == "") {
-						$postInput.value +=
-							" [" +
-							imgName.value +
-							": " +
-							imgUrl.value +
-							"]";
-						$modalShown = false;
-					}
+					$postInput.value +=
+						" [" +
+						imgName.value +
+						": " +
+						imgUrl.value +
+						"]";
+					$modalShown = false;
 				}}
 			>
 				Add

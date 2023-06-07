@@ -5,9 +5,8 @@
 		setupPage,
 		screen,
 		modalShown,
-		disconnectReason,
-		disconnected,
 	} from "../stores.js";
+	import * as clm from "../clmanager.js";
 
 	import {tick} from "svelte";
 </script>
@@ -29,9 +28,8 @@
 			>
 			<button
 				on:click={async () => {
-					$modalShown = false;
-					disconnectReason.set("Intentional disconnect");
-					disconnected.set(false);
+					await clm.disconnect();
+					modalShown.set(false);
 					screen.set("setup");
 					await tick();
 					setupPage.set("reconnect");
