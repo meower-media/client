@@ -11,10 +11,13 @@
 	Way too many minor changes to list, so here are some of the highlights:
 	<ul>
 		<li>
-			Added search
+			Added post and user searching
 		</li>
 		<li>
 			Moved some of the less-used sidebar buttons into a dropdown
+		</li>
+		<li>
+			Twemojis are now used for sent emojis
 		</li>
 		<li>
 			Added an actual moderator panel (for moderators)
@@ -24,6 +27,30 @@
 		</li>
 		<li>
 			New "Add image" button next to the Post button (to make adding images easier and more known)
+		</li>
+		<li>
+			Server auto-reconnection when a connection is unexpectedly dropped
+		</li>
+		<li>
+			Background music (disabled by default for new accounts)
+		</li>
+		<li>
+			Previews of themes while selecting a new theme
+		</li>
+		<li>
+			Ability to add users to group chats through their profile page
+		</li>
+		<li>
+			New search option for adding users to group chats (no more having to copy and paste usernames!)
+		</li>
+		<li>
+			Fixed some problems with notification sounds playing at random
+		</li>
+		<li>
+			Crown icon on group chat owners
+		</li>
+		<li>
+			Members list for group chats is now full-screen when toggled and completely hidden when not toggled on mobile
 		</li>
 	</ul>
 </Container>
