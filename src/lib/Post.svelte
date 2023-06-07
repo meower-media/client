@@ -6,7 +6,6 @@
 	import Badge from "./Badge.svelte";
     import twemoji from "twemoji";
     import { toHTMLElement } from "./twemoji-utils.js";
-    import DOMPurify from "dompurify";
 
 	import LiText from "./LiText.svelte";
 
