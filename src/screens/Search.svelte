@@ -3,6 +3,7 @@
 	import {apiUrl} from "../lib/urls.js";
 	import Loading from "../lib/Loading.svelte";
 	import Container from "../lib/Container.svelte";
+	import LargeCount from "../lib/LargeCount.svelte";
 
 	let errors = "";
 </script>
@@ -153,8 +154,10 @@
 					<Loading />
 				</div>
 			{:then stats}
-				There are {(stats.posts / 1000).toFixed(2)}k posts, {stats.chats}
-				chats and {(stats.users / 1000).toFixed(2)}k users on Meower.
+				There {stats.posts == 1 ? "is" : "are"}
+				<LargeCount num={stats.posts} /> post{stats.posts == 1 ? "" : "s"},
+				<LargeCount num={stats.chats} /> chats and
+				<LargeCount num={stats.users} /> users on Meower.
 			{/await}
 		{/await}
 	</Container>
