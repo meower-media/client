@@ -55,6 +55,7 @@
 body {
 	margin: 0;
 	overflow: hidden;
+	background-color: #f9a636;
 }
 
 #app,
@@ -323,4 +324,20 @@ hr {
 	color: var(--orange);
 	background-color: var(--orange);
 	border: none;
+}
+.nojs {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 100vw;
+	height: 100vh;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	font-family: simvoni, sans-serif;
+	color: white;
+	font-weight: bold;
 }
