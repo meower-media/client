@@ -125,15 +125,6 @@ export default class Cloudlink {
 					try {
 						this.log("connection", "connected to websockets");
 
-						
-						this.send({
-							cmd: "direct",
-							val: {
-								cmd: "ip",
-								val: "Needthis.",
-							},
-						});
-
 						await sleep(100);
 
 						this.send({

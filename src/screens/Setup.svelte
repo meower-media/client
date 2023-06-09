@@ -3,10 +3,11 @@
 	import {
 		screen,
 		setupPage as page,
+		mainPage,
 		modalShown,
 		modalPage,
 		authHeader,
-		user,
+		user
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
@@ -21,6 +22,8 @@
 	import {tick, onMount} from "svelte";
 	import {fade} from "svelte/transition";
 	import sleep from "../lib/sleep.js";
+	import version from "../lib/version.js";
+	import * as BGM from "../lib/BGM.js";
 
 	let logo,
 		setup,
@@ -77,6 +80,16 @@
 				} else {
 					await mainSetup();
 				}
+			} else if (value === "autoReconnect") {
+				loginStatus = "";
+				await connect();
+				let _authHeader = {};
+				authHeader.subscribe(authHeader => {_authHeader = authHeader});
+				doLogin(
+					_authHeader.username,
+					_authHeader.token,
+					true
+				);
 			} else if (value === "reconnect") {
 				loginStatus = "";
 				await connect();
@@ -104,7 +117,7 @@
 	 * @param {string} username
 	 * @param {string} password
 	 */
-	function doLogin(username, password, autoLogin = false) {
+	function doLogin(username, password, autoLogin = false, savedLogin = false) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -152,6 +165,7 @@
 							);
 						}
 
+						BGM.playBGM($user.bgm_song);
 						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
@@ -169,7 +183,7 @@
 							loginStatus = "Invalid username!";
 							break;
 						case "I:011 | Invalid Password":
-							loginStatus = "Invalid password!";
+							loginStatus = savedLogin ? "Session expired! Please login again." : "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
 							$modalPage = "banned";
@@ -213,6 +227,8 @@
 				<div class="connecting">{loginStatus}</div>
 			</div>
 		</div>
+	{:else if $page === "autoReconnect"}
+		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
@@ -238,7 +254,9 @@
 							rememberMe = true;
 							doLogin(
 								localStorage.getItem("meower_savedusername"),
-								localStorage.getItem("meower_savedpassword")
+								localStorage.getItem("meower_savedpassword"),
+								false,
+								true
 							);
 						}}
 						>Use saved login ({localStorage.getItem(
@@ -258,7 +276,7 @@
 					(Several features will be unavailable while not logged in.)
 				</p>
 				<div>
-					<p class="small">Meower Svelte v1.5.4</p>
+					<p class="small">Meower Svelte v{version}</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
@@ -368,9 +386,9 @@
 										val.payload.token
 									);
 								}
-
-								page.set("go");
-								await sleep(1000);
+								
+								mainPage.set("oobe");
+								await sleep(10)
 								screen.set("main");
 							} else {
 								loginStatus = "Unexpected error logging in!";
@@ -381,9 +399,6 @@
 								case "I:015 | Account exists":
 									loginStatus =
 										"That username already exists!";
-									break;
-								case "I:011 | Invalid Password":
-									loginStatus = "Invalid password!";
 									break;
 								case "E:119 | IP Blocked":
 									$modalPage = "ipBanned";
@@ -406,7 +421,7 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" maxlength="255" />
+				<input type="password" placeholder="Password" minlength="8" maxlength="255" />
 				<p class="checkboxes">
 					<input
 						id="remember-me"
@@ -424,6 +439,7 @@
 						I agree to <a
 							href="https://meower.org/legal"
 							target="_blank"
+							rel="noreferrer"
 							>Meower's Terms of Service and Privacy Policy</a
 						>
 					</label>

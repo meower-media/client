@@ -1,16 +1,16 @@
 <!--
-	The Meower*-style loading animaion, as opposed to YOU SPIN ME RIGHT ROUND-
-	*from Beta 4 and before, Beta 5 dropped this in favor of Meowy.
+	Shows you who's typing.
 -->
 <script>
 	import Container from "../lib/Container.svelte";
-	import {mainPage as page, user, chatid} from "../lib/stores.js";
+	import {mainPage as page, user} from "../lib/stores.js";
 	import {typing} from "../lib/typingIndicator.js";
+
+	export let forPage = "home";
 
 	let _typing = [];
 	typing.subscribe(val => {
-		if ($page === "home") _typing = val["home"];
-		if ($page === "groupchat") _typing = val[$chatid];
+		_typing = val[forPage];
 		if (_typing === undefined) _typing = [];
 		_typing = _typing.filter(selectedUser => selectedUser !== $user.name);
 	});
@@ -25,7 +25,7 @@
 			{#if _typing.length === 1}
 				<span class="text"><b>{_typing[0]}</b> is typing...</span>
 			{:else if _typing.length >= 5}
-				<span class="text">5 or more people are typing..</span>
+				<span class="text"><b>5 or more people</b> are typing..</span>
 			{:else}
 				<span class="text"
 					><b

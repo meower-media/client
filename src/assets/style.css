@@ -39,7 +39,7 @@
 	font-display: swap;
 }
 
-.settings-controls  {
+.settings-controls {
 	position: absolute;
 	top: 0.25em;
 	right: 0.25em;
@@ -54,6 +54,8 @@
 
 body {
 	margin: 0;
+	overflow: hidden;
+	background-color: #f9a636;
 }
 
 #app,
@@ -66,12 +68,15 @@ body,
 img.emoji {
 	height: 1em;
 	width: 1em;
+    vertical-align: bottom;
 }
 
 button,
 input[type="text"],
+input[type="search"],
 input[type="password"],
-textarea {
+textarea,
+select {
 	border: solid 2px var(--foreground-orange);
 	border-radius: 1px;
 	outline: none;
@@ -82,9 +87,17 @@ textarea {
 	padding: 0.5em 1em;
 	box-sizing: border-box;
 	margin-bottom: -0.15rem;
+	margin-top: 0;
 
 	font-family: inherit;
 	font-size: inherit;
+}
+
+input[type="text"],
+input[type="search"],
+input[type="password"],
+textarea {
+	min-width: 5em;
 }
 
 button + button {
@@ -96,15 +109,18 @@ input:not(.white)::placeholder {
 	opacity: 0.75;
 }
 
-input.white::placeholder {
+input.white::placeholder,
+textarea::placeholder {
 	color: var(--foreground);
-	opacity: 0.75;
+	opacity: 0.5;
 }
 
 main.input-hover button:not(.circle):not(.white):not(:disabled):hover,
 button:not(.circle):not(.white):focus-visible,
 main.input-hover input[type="text"]:not(.white):not(:disabled):hover,
 input[type="text"]:not(.white):focus-visible,
+main.input-hover input[type="search"]:not(.white):not(:disabled):hover,
+input[type="search"]:not(.white):focus-visible,
 main.input-hover input[type="password"]:not(.white):not(:disabled):hover,
 input[type="password"]:not(.white):focus-visible {
 	background-color: var(--orange-light);
@@ -112,6 +128,7 @@ input[type="password"]:not(.white):focus-visible {
 
 #main button:not(.circle):not(.white):not(:disabled):active,
 #main input[type="text"]:not(.white):not(:disabled):focus,
+#main input[type="searcg"]:not(.white):not(:disabled):focus,
 #main input[type="password"]:not(.white):not(:disabled):focus {
 	background-color: var(--orange-dark);
 }
@@ -124,8 +141,10 @@ button.round {
 }
 
 input[type="text"].white,
+input[type="search"].white,
 input[type="password"].white,
-textarea {
+textarea,
+select.white {
 	background-color: var(--background);
 	border-color: var(--orange);
 	color: var(--foreground);
@@ -140,13 +159,16 @@ button.white {
 
 main.input-hover input[type="text"].white:not(:disabled):hover,
 main.input-hover input[type="password"].white:not(:disabled):hover,
+main.input-hover input[type="search"].white:not(:disabled):hover,
 main.input-hover textarea:not(:disabled):hover,
 main.input-touch input[type="text"].white:not(:disabled):active,
 main.input-touch input[type="password"].white:not(:disabled):active,
+main.input-touch input[type="search"].white:not(:disabled):active,
 main.input-touch textarea:not(:disabled):active,
 main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="password"].white:focus-visible,
+input[type="search"].white:focus-visible,
 #main textarea:focus-visible,
 #main textarea:focus-visible,
 button:not(.circle).white:focus-visible {
@@ -155,6 +177,7 @@ button:not(.circle).white:focus-visible {
 
 #main input[type="text"].white:not(:disabled):focus,
 #main input[type="password"].white:not(:disabled):focus,
+#main input[type="search"].white:not(:disabled):focus,
 #main textarea:focus,
 button:not(.circle).white:active {
 	border-color: var(--orange-dark);
@@ -226,6 +249,11 @@ button.close {
 	background-size: 50%;
 }
 
+button.trash {
+	background-image: url("./trash.svg");
+	background-size: 56%;
+}
+
 button.report {
 	background-image: url("./report.svg");
 	background-size: 50%;
@@ -249,6 +277,16 @@ button.members {
 button.search {
 	background-image: url("./search.svg");
 	background-size: 50%;
+}
+
+button.add {
+	background-image: url("./add.svg");
+	background-size: 50%;
+}
+
+button.reload {
+	background-image: url("./loader.svg");
+	background-size: 70%;
 }
 
 main.input-hover input[type="checkbox"]:hover:not(:active),
@@ -278,4 +316,28 @@ a {
 .modal-buttons {
 	display: flex;
 	justify-content: space-between;
+}
+
+hr {
+	height: 2px;
+	border-radius: 2px;
+	color: var(--orange);
+	background-color: var(--orange);
+	border: none;
+}
+.nojs {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 100vw;
+	height: 100vh;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	font-family: simvoni, sans-serif;
+	color: white;
+	font-weight: bold;
 }

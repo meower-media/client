@@ -1,10 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {
-		modalShown,
-		mainPage as page
-	} from "../stores.js";
+	import {modalShown, mainPage as page} from "../stores.js";
 
 	import {tick} from "svelte";
 
@@ -24,8 +21,8 @@
 			on:submit|preventDefault={e => {
 				clm.meowerRequest({
 					cmd: "pvar",
-                    id: "Discord",
-                    name: "discord",
+					id: "Discord",
+					name: "discord",
 					val: e.target[0].value,
 				});
 				$modalShown = false;

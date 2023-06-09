@@ -1,36 +1,72 @@
 <script>
 	import loadProfile from "./loadProfile.js";
-	import {ulist, user} from "./stores.js";
+	import {profileClicked, mainPage as page, ulist, user} from "./stores.js";
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
 	import {levels} from "./formatting.js";
 	import LiText from "./LiText.svelte";
+	import {tick} from "svelte";
 
 	export let username = "";
+	export let profile = null;
+	export let small = false;
+	export let canClick = false;
+
+	function load() {
+		if (profile) {
+			return profile;
+		}
+		return loadProfile(username, true);
+	}
 </script>
 
 <div>
-	{#await loadProfile(username)}
+	{#await load()}
 		<div class="center">
 			<Loading />
 		</div>
 	{:then data}
 		<Container>
 			<div class="profile-header">
-				<PFP
-					online={$ulist.includes(data._id)}
-					icon={username === $user.name
-						? $user.pfp_data
-						: data.pfp_data}
-					alt="{username}'s profile picture"
-					size={1.4}
-				/>
-				<div class="profile-header-info">
-					<h1 class="profile-username"><LiText text={username} /></h1>
+				{#if canClick}
+					<button
+						class="clickable-pfp"
+						on:click={async () => {
+							page.set("");
+							await tick();
+							profileClicked.set(data._id);
+							page.set("profile");
+						}}
+					>
+						<PFP
+							online={$ulist.includes(data._id)}
+							icon={data._id === $user.name
+								? $user.pfp_data
+								: data.pfp_data}
+							alt="{data._id}'s profile picture"
+							size={small ? 1 : 1.4}
+						/>
+					</button>
+				{:else}
+					<PFP
+						online={$ulist.includes(data._id)}
+						icon={data._id === $user.name
+							? $user.pfp_data
+							: data.pfp_data}
+						alt="{data._id}'s profile picture"
+						size={small ? 1 : 1.4}
+					/>
+				{/if}
+				<div class="profile-header-info" class:small>
+					{#if small}
+						<h2 class="profile-username"><LiText text={data._id} /></h2>
+					{:else}
+						<h1 class="profile-username"><LiText text={data._id} /></h1>
+					{/if}
 					<div class="profile-active">
 						{#if data.banned == false}
-							{$ulist.includes(username) ? "Online" : "Offline"}
+							{$ulist.includes(data._id) ? "Online" : "Offline"}
 						{:else}
 							Banned
 						{/if}
@@ -60,6 +96,9 @@
 		margin-left: 1em;
 		height: 6em;
 	}
+	.profile-header-info.small {
+		height: 4.75em;
+	}
 
 	.profile-active {
 		font-style: italic;
@@ -75,6 +114,21 @@
 		display: inline-block;
 		max-width: 100%;
 		font-size: 3em;
+	}
+	h2.profile-username {
+		font-size: 200%;
+	}
+
+	.clickable-pfp {
+		padding: 0;
+		border: none;
+		background: none !important;
+		color: inherit;
+	}
+	:global(main.input-hover) .clickable-pfp:hover:not(:active) :global(.pfp),
+	:global(main.input-touch) .clickable-pfp:active :global(.pfp),
+	.clickable-pfp:focus-visible :global(.pfp) {
+		transform: scale(1.1);
 	}
 
 	.profile-header {

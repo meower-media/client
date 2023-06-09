@@ -9,15 +9,18 @@
 	import Settings from "./Settings.svelte";
 	import Groupcat from "./Groupcat.svelte";
 	import Search from "./Search.svelte";
-	import ModPanel from "../modpanel/ModPanel.svelte";
-	import ModerateUser from "../modpanel/ModerateUser.svelte";
 	import Changelog from "./Changelog.svelte";
+	import About from "./About.svelte";
+	import SearchResults from "./SearchResults.svelte";
+	import OOBEMain from "./OOBE/OOBEMain.svelte";
 
 	import Sidebar from "./Sidebar.svelte";
 
-	import {mainPage as page} from "../lib/stores.js";
+	// import {LoadTheme} from "../lib/CustomTheme.js"
 
-	page.set("home");
+	// LoadTheme()
+
+	import {mainPage as page} from "../lib/stores.js";
 </script>
 
 <div class="main-screen">
@@ -32,20 +35,22 @@
 			<Inbox />
 		{:else if $page === "search"}
 			<Search />
+		{:else if $page === "searchresults"}
+			<SearchResults />
 		{:else if $page === "chatlist"}
 			<Chatlist />
-		{:else if $page === "Mod_Panel"}
-			<ModPanel />
-		{:else if $page === "Mod_User"}
-			<ModerateUser />
 		{:else if $page === "changelog"}
 			<Changelog />
+		{:else if $page === "about"}
+			<About />
 		{:else if $page === "profile"}
 			<Profile />
 		{:else if $page === "recent"}
 			<Recent />
 		{:else if $page === "settings"}
 			<Settings />
+		{:else if $page === "oobe"}
+			<OOBEMain />
 		{:else if $page === "groupcat"}
 			<Groupcat />
 		{:else if $page === "groupchat"}

@@ -1,6 +1,7 @@
 <script>
 	import {createEventDispatcher, onDestroy} from "svelte";
-	import {scale} from "svelte/transition";
+	import {scale, fade} from "svelte/transition";
+	import {expoOut} from "svelte/easing";
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch("close");
@@ -34,6 +35,7 @@
 
 	if (previously_focused) {
 		onDestroy(() => {
+			// @ts-ignore
 			previously_focused.focus();
 		});
 	}
@@ -41,14 +43,19 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
-<div class="modal-background" on:click={close} />
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div
+	class="modal-background"
+	on:click={close}
+	transition:fade={{duration: 100, easing: expoOut}}
+/>
 
 <div
 	class="modal"
 	role="dialog"
 	aria-modal="true"
 	bind:this={modal}
-	transition:scale={{duration: 200}}
+	transition:scale={{start: 0.8, duration: 200, easing: expoOut}}
 >
 	<slot name="header" />
 	<hr />

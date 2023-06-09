@@ -1,43 +1,20 @@
-done (preview 1):
-- search page
-- Bettermeower pfp support
-- statisics
-- txt file of bots
-- dont allow verified bot posts to be reported
-- image links showing as images?
-
-done (preview 2):
-- enter user name and go to profile
-- crash bug fix (hopefully)
-- 10% finished mod panel
-- changelog
-- added "Badge" to Roblox888i for 200th chat (please dont beg for badges)
-- make so you dont have to log in for search bar and changelog
-
-done (preview 3):
-- sidebar transition
-
-done for release:
-- banned status
-- webhooks (use showier branch)
-
-cst and tnix (or me) please fix all these bugs:
-- image sizing issues
-- navbar links
-
-bettermeower:
-- img.bb image sharing (people need to generate their own api keys)
-- custom softcoded badges system (like bot system)
-- verified users?
-- make some sort of system for if the username matches another username with l or uppercase i
-- for image sharing, custom alt text
-- last online and go to last meower msg
-- custom pfp for bots
-- idk like mesage links
-
-1.6 or beta 6:
-- log out everywhere
-- make alert that happens when using webhooks as guest
-- search users, posts and stuff
+Done:
+- tiny crown on chat owner
+- "fix" terrible codebase (More specifically Modals)
+- add to chat button on profiles 
+- add users to gc via search
+- Theme modal (for oobe and settings)
+- OOBE
+- image button (simpler way to upload images)
 - BGM
-- add to chat button on profiles (for adding users to gc via search)
+- BGM + SFX modal
+- basic modal
+- authors for music in bgm
+- disable bgm by default
+
+Might do later on:
+- custom themes
+
+tnix or someone:
+- Fix modal importing
+- fix stupid button inperfections and css

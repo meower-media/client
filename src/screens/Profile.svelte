@@ -1,12 +1,13 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {
-		modalPage,
-		modalShown,
+		userToMod,
+		modPanelOpen,
 		profileClicked,
 		user,
 		mainPage as page,
 	} from "../lib/stores.js";
+	import * as Modals from "../lib/modals.js";
 
 	import {profileCache} from "../lib/loadProfile.js";
 
@@ -130,18 +131,8 @@
 				class="long"
 				title={data.quote ? "Update Quote" : "Set Quote"}
 				on:click={() => {
-					modalPage.set("setQuote");
-					modalShown.set(true);
+					Modals.showModal("setQuote")
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
-			>
-		{:else if $profileClicked === "Discord"}
-			<button
-				class="long"
-				title="Link Discord Account"
-				on:click={() => {
-					modalPage.set("linkDiscord");
-					modalShown.set(true);
-				}}>Link Discord Account</button
 			>
 		{/if}
 
@@ -155,17 +146,28 @@
 			}}>View Recent Posts</button
 		>
 
-		<button class="long" disabled>Add to Chat</button>
-
 		{#if $user.name && $profileClicked !== $user.name}
-			<button
-				class="long"
-				title="Report User"
-				on:click={() => {
-					modalPage.set("reportUser");
-					modalShown.set(true);
-				}}>Report User</button
-			>
+			<button class="long" on:click={() => {
+				Modals.showModal("addMember2")
+			}}>Add to Chat</button>
+			{#if $user.lvl < 1}
+				<button
+					class="long"
+					title="Report User"
+					on:click={() => {
+						Modals.showModal("reportUser")
+					}}>Report User</button
+				>
+			{:else}
+				<button
+					class="long"
+					title="Moderate User"
+					on:click={() => {
+						$userToMod = $profileClicked;
+						$modPanelOpen = true;
+					}}>Moderate User</button
+				>
+			{/if}
 		{/if}
 	{:catch e}
 		<ProfileView username={$profileClicked} />

@@ -76,7 +76,7 @@
 						}
 
 						mainPage.set("blank");
-						tick().then(() => mainPage.set("home"));
+						tick().then(() => mainPage.set("oobe"));
 					} else {
 						loginStatus = "Unexpected error logging in!";
 					}
@@ -86,9 +86,6 @@
 					switch (code) {
 						case "I:015 | Account exists":
 							loginStatus = "That username already exists!";
-							break;
-						case "I:011 | Invalid Password":
-							loginStatus = "Invalid password!";
 							break;
 						case "E:119 | IP Blocked":
 							$modalPage = "ipBanned";
@@ -153,6 +150,7 @@
 					type="password"
 					class="modal-input white"
 					placeholder="Password"
+					minlength="8"
 					maxlength="255"
 					value={password}
 				/><br />
@@ -173,6 +171,7 @@
 						I agree to <a
 							href="https://meower.org/legal"
 							target="_blank"
+							rel="noreferrer"
 							>Meower's Terms of Service and Privacy Policy</a
 						>
 					</label>

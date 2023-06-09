@@ -1,8 +1,5 @@
-function notification() {
-	const audio = new Audio("../src/assets/menu_notify.wav");
-	audio.play();
-}
+const audio = new Audio("../src/assets/menu_notify.wav");
 
 export function playNotification() {
-	notification();
+	audio.play();
 }

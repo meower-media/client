@@ -4,6 +4,8 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
+    import twemoji from "twemoji";
+    import { toHTMLElement } from "./twemoji-utils.js";
 
 	import LiText from "./LiText.svelte";
 
@@ -13,77 +15,48 @@
 		user,
 		chatid,
 		ulist,
-		mainPage as page,
-		modalShown,
-		modalPage,
+		mainPage as page
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
+	import * as Modals from "./modals.js";
+
+
+	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js"
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
-	import {onMount} from "svelte";
+	import {onMount, tick} from "svelte";
 
 	export let post = {};
 	export let buttons = true;
 	export let input = null;
+	export let canDoActions = true;
 
 	let bridged = false;
 	let webhook = false;
 
 	let images = [];
 
-	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
-	// WARNING: Put a / at the end of each URL so it can't be bypassed
-	// (like https://http.meower.org@evilsite.bad)!
-	const IMAGE_HOST_WHITELIST = [
-		// Meower
-		"https://http.meower.org/",
-		"https://assets.meower.org/",
-		"https://api.meower.org/",
-		// not everyone can add urls to go.meower.org, should be fine
-		"https://go.meower.org/",
-
-		// cubeupload
-		"https://u.cubeupload.com/",
-		"https://cubeupload.com/",
-
-		// imgBB
-		"https://i.ibb.co/",
-
-		// Tenor
-		"https://media.tenor.com/",
-		"https://tenor.com/",
-		"https://c.tenor.com/",
-
-		// Scratch (assets file uploading exists)
-		"https://assets.scratch.mit.edu/",
-		"https://cdn2.scratch.mit.edu/",
-		"https://cdn.scratch.mit.edu/",
-		"https://uploads.scratch.mit.edu/",
-
-		// Discord
-		"https://cdn.discordapp.com/",
-	];
-
 	// TODO: make bridged tag a setting
-
-	// TODO: more then 1 img + optimize getimgs function
 
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	function initPostUser() {
+	export function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
-			bridged = post.user === "Discord";
+			bridged =
+				post.user === "Discord" ||
+				post.user === "revolt" ||
+				post.user === "Revower";
 			webhook = post.user == "Webhooks";
 		}
 
 		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
-			post.content = post.content.slice(post.content.indexOf(": ") + 1);
+			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
 
 		// Match image syntax
@@ -121,6 +94,14 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+	
+
+	$: noPFP =
+		post.user === "Notification" ||
+		post.user.startsWith("Notification to ") ||
+		post.user === "Announcement" ||
+		post.user === "Server" ||
+		webhook;
 </script>
 
 <Container>
@@ -148,58 +129,75 @@
 						}}
 					/>
 				{/if}
-				{#if $user.lvl >= 1 || post.user === $user.name}
-					<button
-						class="circle close"
-						on:click={() => {
-							if (shiftHeld) {
-								clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "delete_post",
-										val: post.post_id,
-									},
-								});
-								return;
-							}
-							postClicked.set(post);
-							modalPage.set("deletePost");
-							modalShown.set(true);
-						}}
-					/>
-				{:else}
-					<button
-						class="circle report"
-						on:click={() => {
-							postClicked.set(post);
-							modalPage.set("reportPost");
-							modalShown.set(true);
-						}}
-					/>
+				{#if canDoActions}
+					{#if $user.lvl >= 1 || post.user === $user.name}
+						<button
+							class="circle trash"
+							on:click={() => {
+								if (shiftHeld) {
+									clm.meowerRequest({
+										cmd: "direct",
+										val: {
+											cmd: "delete_post",
+											val: post.post_id,
+										},
+									});
+									return;
+								}
+								postClicked.set(post);
+								Modals.showModal("deletePost")
+							}}
+						/>
+					{:else}
+						<button
+							class="circle report"
+							on:click={() => {
+								postClicked.set(post);
+								Modals.showModal("reportPost")
+							}}
+						/>
+					{/if}
 				{/if}
 			{/if}
 		</div>
 		<button
 			class="pfp"
-			on:click={() => {
-				if (
-					post.user === "Notification" ||
-					post.user === "Announcement" ||
-					post.user === "Server" ||
-					webhook
-				)
-					return;
+			on:click={async () => {
+				if (noPFP) return;
+				page.set("");
+				await tick();
 				profileClicked.set(post.user);
 				page.set("profile");
 			}}
 		>
-			<PFP
-				icon={$profileCache[post.user] && !webhook
-					? $profileCache[post.user].pfp_data
-					: -3}
-				alt="{post.user}'s profile picture"
-				online={$ulist.includes(post.user)}
-			/>
+			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
+				<PFP
+					icon={-2}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:then profile}
+				<PFP
+					icon={noPFP
+						? post.user === "Server"
+							? 102
+							: post.post_origin === "inbox" &&
+							  (post.user === "Announcement" ||
+									post.user === "Notification" ||
+									post.user.startsWith("Notification to"))
+							? 101
+							: -2
+						: profile.pfp_data}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{:catch}
+				<PFP
+					icon={-2}
+					alt="{post.user}'s profile picture"
+					online={$ulist.includes(post.user)}
+				/>
+			{/await}
 		</button>
 		<div class="creatordate">
 			<div class="creator">
@@ -210,7 +208,7 @@
 				{#if bridged}
 					<Badge
 						text="BRIDGED"
-						title="This post is a post bridged from a Discord server by the @Discord bot"
+						title="This post is bridged from an external service by a bot"
 					/>
 				{/if}
 
@@ -237,19 +235,20 @@
 			</div>
 
 			<FormattedDate date={post.date} />
+			{#if post.isDeleted}
+				<i>(deleted)</i>
+			{/if}
 		</div>
 	</div>
-	<p class="post-content">{post.content}</p>
+	<p class="post-content">{@html twemoji.parse(toHTMLElement(post.content).innerText, {
+        folder: "svg",
+        ext: ".svg"
+    })}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank"
-				><img
-					src={url}
-					alt={title}
-					title="{title} ({url})"
-					class="post-image"
-				/></a
-			>
+			<a href={url} target="_blank" rel="noreferrer"
+				><img src={url} alt={title} {title} class="post-image" />
+			</a>
 		{/each}
 	</div>
 </Container>

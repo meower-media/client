@@ -7,6 +7,54 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.6.0</h2>
+	Way too many minor changes to list, so here are some of the highlights:
+	<ul>
+		<li>
+			Added post and user searching
+		</li>
+		<li>
+			Moved some of the less-used sidebar buttons into a dropdown
+		</li>
+		<li>
+			Twemojis are now used for sent emojis
+		</li>
+		<li>
+			Added an actual moderator panel (for moderators)
+		</li>
+		<li>
+			Added an out-of-box experience screen when creating an account
+		</li>
+		<li>
+			New "Add image" button next to the Post button (to make adding images easier and more known)
+		</li>
+		<li>
+			Server auto-reconnection when a connection is unexpectedly dropped
+		</li>
+		<li>
+			Background music (disabled by default for new accounts)
+		</li>
+		<li>
+			Previews of themes while selecting a new theme
+		</li>
+		<li>
+			Ability to add users to group chats through their profile page
+		</li>
+		<li>
+			New search option for adding users to group chats (no more having to copy and paste usernames!)
+		</li>
+		<li>
+			Fixed some problems with notification sounds playing at random
+		</li>
+		<li>
+			Crown icon on group chat owners
+		</li>
+		<li>
+			Members list for group chats is now full-screen when toggled and completely hidden when not toggled on mobile
+		</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.5.4</h2>
 	<ul>
 		<li>Require password confirmation for changing account password</li>
@@ -16,7 +64,10 @@
 <Container>
 	<h2>1.5.3</h2>
 	<ul>
-		<li>Replace the grey cat profile picture per request of the original artist</li>
+		<li>
+			Replace the grey cat profile picture per request of the original
+			artist
+		</li>
 	</ul>
 </Container>
 <Container>
@@ -28,7 +79,10 @@
 <Container>
 	<h2>1.5.1</h2>
 	<ul>
-		<li>Fix the dango profile picture appearing twice when you have it selected</li>
+		<li>
+			Fix the dango profile picture appearing twice when you have it
+			selected
+		</li>
 	</ul>
 </Container>
 <Container>
@@ -62,9 +116,12 @@
 		<summary>Betas</summary>
 		<h3>Hotfix</h3>
 		<ul>
-			<li>Disable bot badges (they aren't officially supported, and the CL4 port will add them)</li>
+			<li>
+				Disable bot badges (they aren't officially supported, and the
+				CL4 port will add them)
+			</li>
 		</ul>
-		
+
 		<h3>Release</h3>
 		<ul>
 			<li>Banned status</li>
