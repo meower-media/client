@@ -56,7 +56,7 @@
 
 		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
-			post.content = post.content.slice(post.content.indexOf(": ") + 1);
+			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
 
 		// Match image syntax
