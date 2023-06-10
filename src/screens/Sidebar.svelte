@@ -146,7 +146,7 @@
 			if (popupDebounce) return;
 			popupShown = !popupShown;
 			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 1000);
+			setTimeout(() => (popupDebounce = false), 150);
 		}}
 	>
 		<PFP
@@ -162,7 +162,6 @@
 	<div
 		on:click|stopPropagation
 		class="popup"
-		transition:fade={{duration: 20}}
 	>
 		<button
 			on:click={() => {
