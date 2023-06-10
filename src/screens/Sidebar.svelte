@@ -161,7 +161,6 @@
 	<div
 		on:click|stopPropagation
 		class="popup"
-		transition:fade={{duration: 20}}
 	>
 		<button
 			on:click={() => {
