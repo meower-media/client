@@ -39,7 +39,7 @@
 	}
 	.cat {
 		position: absolute;
-
+		user-select: none;
 		animation: move 10s infinite ease-in-out;
 	}
 
