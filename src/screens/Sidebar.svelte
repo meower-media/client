@@ -80,6 +80,7 @@
 	{#if $sidebarLocked}
 		<div class="locked"></div>
 	{/if}
+	<h1>{popupDebounce}</h1>
 	<div class="logo">
 		<button class="logo-inner" title="Home" on:click={() => goto("home")}>
 			<img
@@ -145,7 +146,7 @@
 			if (popupDebounce) return;
 			popupShown = !popupShown;
 			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 500);
+			setTimeout(() => (popupDebounce = false), 1500);
 		}}
 	>
 		<PFP
