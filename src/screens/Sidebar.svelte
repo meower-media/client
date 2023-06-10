@@ -146,7 +146,7 @@
 			if (popupDebounce) return;
 			popupShown = !popupShown;
 			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 1500);
+			setTimeout(() => (popupDebounce = false), 1000);
 		}}
 	>
 		<PFP
