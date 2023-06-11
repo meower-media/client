@@ -331,9 +331,16 @@
 				on:submit|preventDefault={e => {
 					const username = e.target[0].value;
 					const password = e.target[1].value;
+					const confirmPassword = e.target[2].value;
+
 					if (!(username && password)) {
 						loginStatus =
 							"You must specify a username and a password to create an account!";
+						return false;
+					}
+					if (!(password === confirmPassword)) {
+						loginStatus =
+							"Make sure you have entered your password correctly!";
 						return false;
 					}
 
@@ -422,6 +429,7 @@
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
 				<input type="password" placeholder="Password" minlength="8" maxlength="255" />
+				<input type="password" placeholder="Confirm password" minlength="8" maxlength="255" autocomplete="new-password"/>
 				<p class="checkboxes">
 					<input
 						id="remember-me"
