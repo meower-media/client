@@ -3,7 +3,7 @@
 // (like https://http.meower.org@evilsite.bad)!
 export const IMAGE_HOST_WHITELIST = [
     // Meower
-    "https://meower.org",
+    "https://meower.org/",
     "https://http.meower.org/",
     "https://assets.meower.org/",
     "https://forums.meower.org/",
@@ -30,5 +30,5 @@ export const IMAGE_HOST_WHITELIST = [
 
     // Discord
     "https://cdn.discordapp.com/",
-    "https://media.discordapp.net"
+    "https://media.discordapp.net/"
 ];
