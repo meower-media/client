@@ -84,9 +84,8 @@
 		overflow: auto;
 		transform: translate(-50%, -50%);
 		padding: 1em;
-		border-radius: 0.2em;
 		background-color: var(--background);
 		border: solid 2px var(--orange);
-		border-radius: 1px;
+		border-radius: 5px;
 	}
 </style>
