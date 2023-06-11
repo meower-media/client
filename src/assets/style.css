@@ -94,10 +94,10 @@ select {
 }
 
 button,
-input[type="text"],
-input[type="search"],
-input[type="password"],
-textarea,
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="password"]:focus,
+textarea:focus,
 select:focus {
 	border-radius: 2px;
 }
