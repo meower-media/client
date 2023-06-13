@@ -340,7 +340,7 @@
 					}
 					if (!(password === confirmPassword)) {
 						loginStatus =
-							"Make sure you have entered your password correctly!";
+							"Passwords do not match! Make sure you have entered your password correctly.";
 						return false;
 					}
 
