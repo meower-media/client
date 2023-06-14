@@ -338,7 +338,7 @@
 							"You must specify a username and a password to create an account!";
 						return false;
 					}
-					if (!(password === confirmPassword)) {
+					if (password !== confirmPassword)) {
 						loginStatus =
 							"Passwords do not match! Make sure you have entered your password correctly.";
 						return false;
