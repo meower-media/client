@@ -4,6 +4,7 @@
 	import version from "../lib/version.js";
 	import {profileClicked, mainPage as page} from "../lib/stores.js";
 	import meowy from "../assets/meowy.svg";
+	import Changelog from "./Changelog.svelte";
 
 	const CONTRIBUTORS = [
 		"CST1229",
@@ -29,6 +30,8 @@
 		profileClicked.set(username);
 		page.set("profile");
 	}
+
+	var _Changelog = false
 </script>
 
 <Container>
@@ -97,8 +100,25 @@
 		</li>
 	</ul>
 </Container>
+{#if !_Changelog}
+	<button
+		class="long"
+		title="View Changelog"
+		on:click={() => (_Changelog = true)}
+		>View Changelog</button
+	>
+{/if}
+{#if _Changelog}
+	<Changelog />
+{/if}
 
 <style>
+	.long {
+		width: 100%;
+		margin: 0;
+		margin-bottom: -2px;
+	}
+
 	h1 {
 		margin: 0;
 	}
