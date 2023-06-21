@@ -162,7 +162,7 @@
 
 		background-color: var(--background);
 		border: solid 2px var(--orange);
-		border-radius: 1px;
+		border-radius: 5px;
 		box-sizing: border-box;
 
 		position: sticky;

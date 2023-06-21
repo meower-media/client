@@ -7,10 +7,24 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.6.2</h2>
+	<ul>
+		<li>
+			Fixed the group chats list going blank when leaving a group chat
+		</li>
+		<li>
+			Made everything else rounded instead of just containers
+		</li>
+		<li>
+			Added an updated logo
+		</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.6.1</h2>
 	<ul>
 		<li>
-			Fixed a bug where the profile dropdown menu wasn't able to be opened on some iOS browsers and Safari for macOS.
+			Fixed a bug where the profile dropdown menu wasn't able to be opened on some iOS browsers and Safari for macOS
 		</li>
 		<li>
 			no select the kitty >:/
