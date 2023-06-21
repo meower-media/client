@@ -15,6 +15,9 @@
 		<li>
 			Made everything else rounded and not just containers.
 		</li>
+		<li>
+			Add updated logo.
+		</li>
 	</ul>
 </Container>
 <Container>
