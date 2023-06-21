@@ -10,13 +10,13 @@
 	<h2>1.6.2</h2>
 	<ul>
 		<li>
-			Fixed a bug where the group chats list would go blank when leaving a group chat.
+			Fixed the group chats list going blank when leaving a group chat
 		</li>
 		<li>
-			Made everything else rounded and not just containers.
+			Made everything else rounded instead of just containers
 		</li>
 		<li>
-			Add updated logo.
+			Added an updated logo
 		</li>
 	</ul>
 </Container>
