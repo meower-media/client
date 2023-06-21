@@ -7,6 +7,17 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.6.2</h2>
+	<ul>
+		<li>
+			Fixed a bug where the group chats list would go blank when leaving a group chat.
+		</li>
+		<li>
+			Made everything else rounded and not just containers.
+		</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.6.1</h2>
 	<ul>
 		<li>
