@@ -174,7 +174,7 @@
 									val: $chatid,
 								},
 							}).then(() => {
-								items = items.filter(v => {v._id !== $chatid});
+								items = items.filter(v => v._id !== $chatid);
 								toLeaveChat = false;
 							});
 						}}>Yes</button
