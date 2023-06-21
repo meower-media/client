@@ -24,7 +24,7 @@
 	<h2>1.6.1</h2>
 	<ul>
 		<li>
-			Fixed a bug where the profile dropdown menu wasn't able to be opened on some iOS browsers and Safari for macOS.
+			Fixed a bug where the profile dropdown menu wasn't able to be opened on some iOS browsers and Safari for macOS
 		</li>
 		<li>
 			no select the kitty >:/
