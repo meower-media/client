@@ -48,7 +48,8 @@
 		userToMod,
 		user,
 		spinner,
-		modPanelOpen
+		modPanelOpen,
+		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
@@ -268,5 +269,18 @@
 		--background: #202020;
 		--foreground: white;
 		--foreground-orange: white;
+	}
+	#main.theme-custom {
+		--orange: {customTheme.mainColor};
+		--orange-button: var(--orange);
+		--orange-light: #419498;
+		--orange-dark: #0f474a;
+		--orange-scrollbar-back: #0a4346;
+		--background: white;
+		--foreground: black;
+		--foreground-orange: white;
+
+		--pfp-bg: white;
+		--pfp-outline: #d9d9d9;
 	}
 </style>
