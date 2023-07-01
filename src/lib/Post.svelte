@@ -4,8 +4,6 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
-    import twemoji from "twemoji";
-    import { toHTMLElement } from "./twemoji-utils.js";
 
 	import LiText from "./LiText.svelte";
 
@@ -15,14 +13,12 @@
 		user,
 		chatid,
 		ulist,
-		mainPage as page
+		mainPage as page,
+		modalShown,
+		modalPage,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "./modals.js";
-
-
-	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js"
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
@@ -35,15 +31,51 @@
 
 	let bridged = false;
 	let webhook = false;
+	let dev = false;
+	let frien = false;
 
 	let images = [];
+
+	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
+	// WARNING: Put a / at the end of each URL so it can't be bypassed
+	// (like https://http.meower.org@evilsite.bad)!
+	const IMAGE_HOST_WHITELIST = [
+		// Meower
+		"https://http.meower.org/",
+		"https://assets.meower.org/",
+		"https://forums.meower.org/",
+		"https://go.meower.org/", // not everyone can add urls to go.meower.org, should be fine
+		"https://nc.meower.org/",
+
+		// cubeupload
+		"https://u.cubeupload.com/",
+		"https://cubeupload.com/",
+
+		// ImgBB
+		"https://i.ibb.co/",
+
+		// Tenor
+		"https://media.tenor.com/",
+		"https://tenor.com/",
+		"https://c.tenor.com/",
+
+		// Scratch (assets file uploading exists)
+		"https://assets.scratch.mit.edu/",
+		"https://cdn2.scratch.mit.edu/",
+		"https://cdn.scratch.mit.edu/",
+		"https://uploads.scratch.mit.edu/",
+
+		// Discord
+		"https://cdn.discordapp.com/",
+		"https://discord.com/",
+	];
 
 	// TODO: make bridged tag a setting
 
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	export function initPostUser() {
+	function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
@@ -56,7 +88,13 @@
 
 		if (bridged || webhook) {
 			post.user = post.content.split(": ")[0];
-			post.content = post.content.slice(post.content.indexOf(": ") + 2);
+			post.content = post.content.slice(post.content.indexOf(": ") + 1);
+		}
+		if (["dev","server","wlodekm3","wlodekm","mdwalters","underfanreal1"].includes(post.user.toLowerCase())) {
+			dev = true
+		}
+		if (["3r1s_s"].includes(post.user.toLowerCase())) {
+			frien = true
 		}
 
 		// Match image syntax
@@ -94,6 +132,64 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
+	
+function format( input ) {
+	let out = input
+	let formating = {
+		"b":"<b>",
+		"/b":"</b>",
+		"i":"<i>",
+		"/i":"</i>",
+		"u":"<ins>",
+		"/u":"</ins>",
+		"bq":"<blockquote>",
+		"/bq":"</blockquote>",
+		"s":"<strike>",
+		"/s":"</strike>",
+		"list":"<ul>",
+		"/list":"</ul>",
+		"item":"<li>",
+		"/item":"</li>",
+		"table":"<table>",
+		"/table":"</table>",
+		"row":"<tr>",
+		"/row":"</tr>",
+		"header":"<th>",
+		"/header":"</th>",
+		"data":"<td>",
+		"/data":"</td>",
+	}
+	Object.keys(formating).forEach(function(key) {
+		out = out.replaceAll(`${"["+key+"]"}`, formating[key]);
+	})
+	return out
+}
+	function deHTML( input ) {
+		let dhout = input
+		dhout = dhout.replaceAll("&", "&amp;");
+		dhout = dhout.replaceAll("<", "&lt;");
+		dhout = dhout.replaceAll(">", "&gt;");
+		dhout = dhout.replaceAll('"', "&quot;");
+		dhout = dhout.replaceAll("'", "&apos;");
+		return dhout
+	}
+	function linkify(inputText) {
+		var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+		//URLs starting with http://, https://, or ftp://
+		replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+		replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+		//URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+		replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+		replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+		//Change email addresses to mailto:: links.
+		replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+		replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+		return replacedText;
+	}
 	
 
 	$: noPFP =
@@ -145,7 +241,8 @@
 									return;
 								}
 								postClicked.set(post);
-								Modals.showModal("deletePost")
+								modalPage.set("deletePost");
+								modalShown.set(true);
 							}}
 						/>
 					{:else}
@@ -153,7 +250,8 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								Modals.showModal("reportPost")
+								modalPage.set("reportPost");
+								modalShown.set(true);
 							}}
 						/>
 					{/if}
@@ -218,6 +316,20 @@
 						title="This post was posted by the @Webhooks bot. The username may not mean the user actually posted it!"
 					/>
 				{/if}
+				
+				{#if dev}
+					<Badge
+						text="DEV"
+						title="This post was made by a developer of streamilator"
+					/>
+				{/if}
+				
+				{#if frien}
+					<Badge
+						text="Frien :>"
+						title="This post was made by a user that is a friend of the creator of this client."
+					/>
+				{/if}
 
 				<!-- disabled until proper bot badges are added
 				{#if post.isvbot && !webhook}
@@ -240,10 +352,7 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{@html twemoji.parse(toHTMLElement(post.content).innerText, {
-        folder: "svg",
-        ext: ".svg"
-    })}</p>
+	<p class="post-content">{@html format(linkify(deHTML(post.content)))}</p>
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"
@@ -310,5 +419,24 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.25em;
+	}
+	
+	:global(blockquote) {
+		border-left: 3px solid var(--orange);
+		margin: .25em .25em .25em 0;
+		padding: .25em .25em .25em .625em;
+		background-color: rgba(255,255,255,0.05);
+		padding-right: 0;
+		margin-right: 0.4em;
+		border-radius: 0.15em;
+	}
+	
+	:global(table, td, th) {
+		border: 2px var(--orange) solid;
+		border-radius: 4px;
+	}
+	
+	:global(th, td) {
+		padding-inline-start: 1px;
 	}
 </style>
