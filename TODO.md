@@ -5,4 +5,4 @@
 - Bring back tweemoji
 - DevTools
 - Discord like message stuff (From F client 1.5)
-- Emoji selector (ig that would be neat)
+- ~~Emoji selector (ig that would be neat)~~ (if BM couldn't do it i prob wont)
