@@ -17,6 +17,18 @@
 	import Loading from "../Loading.svelte";
 	import * as clm from "../clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../urls.js";
+	import {
+		mainPage as page,
+		user,
+		profileClicked,
+		modalShown,
+		modalPage,
+		lastTyped,
+		screen,
+		chatName,chatid,chatMembers,chatOwner,
+		windowStyle,
+		basicModalTitle, basicModalDesc
+	} from "../stores.js";
 	const PFP_COUNT = 38;
 	var pfp_temp = $user.pfp_data
 	var result_eval, code_eval
@@ -116,18 +128,6 @@
 		.then(response => response.text())
 		.then(response => console.log(response))
 	}
-	
-	import {
-		mainPage as page,
-		user,
-		profileClicked,
-		modalShown,
-		modalPage,
-		lastTyped,
-		screen,
-		chatName,chatid,chatMembers,chatOwner,
-		windowStyle,
-	} from "../stores.js";
 	// export const chatName = writable("");
 	// export const chatid = writable("");
 	// export const chatMembers = writable([]);
@@ -316,6 +316,49 @@
 		</small>
 	</Container>
 	<Container>
+		<h1>Set server urls </h1>
+		Set to another meower server.
+		<br>
+		<hr>
+		<form 
+			class="createpost"
+			autocomplete="off"
+			on:submit|preventDefault={async e => {	
+				basicModalTitle = e.target[0]
+				basicModalDesc  = e.target[1]
+			}}
+		>
+			<input
+				type="text"
+				class="white"
+				placeholder="Modal Title"
+				name="switchserver"
+				autocomplete="false"
+				on:keydown={(event) => {
+					if (event.key == "Enter" && !shiftHeld) {
+						event.preventDefault();
+						document.getElementById("submitpost5").click();
+					}
+				}}
+			>
+			<input
+				type="text"
+				class="white"
+				placeholder="Modal Description"
+				name="switchapi"
+				autocomplete="false"
+				on:keydown={(event) => {
+					if (event.key == "Enter" && !shiftHeld) {
+						event.preventDefault();
+						document.getElementById("submitpost5").click();
+					}
+				}}
+			>
+			<button id="submitpost5">Connect</button>
+		</form>
+		<br>
+	</Container>
+	<Container>
 		<div class="settings-controls">
 			<button
 				class="circle settings"
@@ -324,7 +367,7 @@
 			/>
 		</div>
 		<h1>group cat</h1>
-		Groupcat
+		bottom text
 	</Container>
 	{#await loadProfile()}
 			<Loading />
