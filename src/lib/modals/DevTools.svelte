@@ -316,16 +316,15 @@
 		</small>
 	</Container>
 	<Container>
-		<h1>Set server urls </h1>
-		Set to another meower server.
+		<h1>Create a modal</h1>
 		<br>
 		<hr>
 		<form 
 			class="createpost"
 			autocomplete="off"
 			on:submit|preventDefault={async e => {	
-				basicModalTitle = e.target[0]
-				basicModalDesc  = e.target[1]
+				$basicModalTitle = e.target[0]
+				$basicModalDesc  = e.target[1]
 			}}
 		>
 			<input
