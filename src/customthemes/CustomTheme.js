@@ -50,4 +50,6 @@ export function saveTheme(theme) {
 }
 
 export function loadTheme() {
+	// store in stores
+	// will test custm them e
 }
