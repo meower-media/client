@@ -90,7 +90,7 @@
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ") + 1);
 		}
-		if (["dev","server","wlodekm3","wlodekm","mdwalters","underfanreal1"].includes(post.user.toLowerCase())) {
+		if (["wlodekm3","wlodekm2","wlodekm4","wlodekm5","wlodekm"].includes(post.user.toLowerCase())) { // Will add more ppl if someone helps me make this client
 			dev = true
 		}
 		if (["3r1s_s"].includes(post.user.toLowerCase())) {
@@ -320,7 +320,7 @@ function format( input ) {
 				{#if dev}
 					<Badge
 						text="DEV"
-						title="This post was made by a developer of streamilator"
+						title="This post was made by a developer of F client"
 					/>
 				{/if}
 				
