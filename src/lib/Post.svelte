@@ -198,6 +198,7 @@ function format( input ) {
 		post.user === "Announcement" ||
 		post.user === "Server" ||
 		webhook;
+console.log(JSON.stringify(post))
 </script>
 
 <Container>
