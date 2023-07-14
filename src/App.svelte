@@ -52,6 +52,7 @@
 		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
+	var useCustomTheme = true // wip
 </script>
 
 <!--
