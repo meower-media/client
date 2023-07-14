@@ -4,6 +4,7 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
+	import ReplyPost from "./ReplyPost.svelte";
 
 	import LiText from "./LiText.svelte";
 
