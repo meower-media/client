@@ -4,14 +4,9 @@
 
 // CST: maybe it should be JSON
 import {
-	orange,
-	orangeButton,
-	orangeLight,
-	orangeDark,
-	background,
-	foreground,
-	foregroundOrange,
-} from "stores"
+	customTheme,
+	user
+} from "../lib/stores.js"
 
 let fallback = {
 	orange: "f9a636",
@@ -22,10 +17,6 @@ let fallback = {
 	foreground: "000000",
 	foregroundOrange: "ffffff"
 };
-
-import {
-	user
-} from "../lib/stores.js";
 
 let _user = null;
 user.subscribe(v => {
@@ -58,7 +49,8 @@ export function saveTheme(theme) {
 
 }
 
-export function loadTheme() {
+export function loadTheme(theme) {
+	customTheme = stringToTheme(theme)
 	// store in stores
 	// will test custm them e
 }
