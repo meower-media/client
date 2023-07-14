@@ -57,18 +57,12 @@
 		orange: "#f9a636",
 		orangeButton: "#f9a636",
 		orangeLight: "#ffce8c",
-		orangeDark: "#b46d34",
-		background: "#ffffff",
-		foreground: "#000000",
-		foregroundOrange: "#ffffff"
+		orangeDark: "#b46d34"
 	},undefined:{
 		orange: "#f9a636",
 		orangeButton: "#f9a636",
 		orangeLight: "#ffce8c",
-		orangeDark: "#b46d34",
-		background: "#ffffff",
-		foreground: "#000000",
-		foregroundOrange: "#ffffff"
+		orangeDark: "#b46d34"
 	}}
 	const _customTheme = $customTheme;
 	_customTheme = themes[$user.theme];
@@ -104,9 +98,6 @@
 	style:--orange-button={$user.name ? $customTheme.orangeButton : null}
 	style:--orange-light={$user.name ? $customTheme.orangeLight : null}
 	style:--orange-dark={$user.name ? $customTheme.orangeDark : null}
-	style:--background={$user.name ? $customTheme.background : null}
-	style:--foreground={$user.name ? $customTheme.foreground : null}
-	style:--foreground-orange={$user.name ? $customTheme.foregroundOrange : null}
 
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
