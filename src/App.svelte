@@ -242,14 +242,10 @@
 		font-size: 15pt;
 	}
 
-	#main.theme-orange.mode-dark {
-		--orange: #b35305;
-		--orange-light: #dd7f14;
-		--orange-dark: #ac4718;
-		--orange-scrollbar-back: rgb(131, 45, 5);
-		--background: #020010;
-		--foreground: #eef;
-		--foreground-orange: #eef;
+	#main.mode-dark {
+		--background: #202020;
+		--foreground: white;
+		--foreground-orange: white;
 	}
 	#main.theme-blue {
 		/*--orange: #aa0000;
@@ -264,10 +260,5 @@
 		--foreground: black;
 		--foreground-orange: white;
 		scrollbar-color: unset;
-	}
-	#main.theme-blue.mode-dark {
-		--background: #202020;
-		--foreground: white;
-		--foreground-orange: white;
 	}
 </style>
