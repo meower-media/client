@@ -52,7 +52,7 @@
 		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-	import {loadTheme} from "./customthemes/CustomTheme.js";
+	import {stringToTheme} from "./customthemes/CustomTheme.js";
 	const themes = {
 		"orange":{
 			orange: "#f9a636",
@@ -76,7 +76,7 @@
 	
 	var _customTheme = $customTheme;
 	if(($user.theme).startsWith("custom:")) {
-		_customTheme = loadTheme[$user.theme];
+		_customTheme = stringToTheme($user.theme);
 	} else {
 		_customTheme = themes[$user.theme];
 	}
