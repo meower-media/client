@@ -3,6 +3,15 @@
 // Ex. custom:f9a636;ffffff;000000;ffffff;ffffff
 
 // CST: maybe it should be JSON
+import {
+	orange,
+	orangeButton,
+	orangeLight,
+	orangeDark,
+	background,
+	foreground,
+	foregroundOrange,
+} from "stores"
 
 let fallback = {
 	orange: "f9a636",
