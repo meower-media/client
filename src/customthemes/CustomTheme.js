@@ -9,13 +9,13 @@ import {
 } from "../lib/stores.js"
 
 let fallback = {
-	orange: "f9a636",
-	orangeButton: "f9a636",
-	orangeLight: "ffce8c",
-	orangeDark: "b46d34",
-	background: "ffffff",
-	foreground: "000000",
-	foregroundOrange: "ffffff"
+	orange: "#f9a636",
+	orangeButton: "#f9a636",
+	orangeLight: "#ffce8c",
+	orangeDark: "#b46d34",
+	background: "#ffffff",
+	foreground: "#000000",
+	foregroundOrange: "#ffffff"
 };
 
 let _user = null;
