@@ -284,18 +284,4 @@
 		--foreground: white;
 		--foreground-orange: white;
 	}
-	#main.theme-blue {
-		/*--orange: #aa0000;
-		--orange-light: #aa0000;
-		--orange-dark: #aa0000;
-		--orange-scrollbar-back: #aa0000;*/
-		--orange: #4d97ff;
-		--orange-light: #79b7ff;
-		--orange-dark: #3685eb;
-		--orange-scrollbar-back: #374eb1;
-		--background: white;
-		--foreground: black;
-		--foreground-orange: white;
-		scrollbar-color: unset;
-	}
 </style>
