@@ -20,7 +20,7 @@
     let darkMode = !$user.mode;
 	let theme = $user.theme;
 
-	if (!selections.includes(theme)) {
+	if (!selections.includes(theme) && !theme.startsWith("custom:")) {
 		theme = "orange";
 		error = true;
 	}
@@ -93,6 +93,11 @@
 				}}>{">"}</button
 			>
 		</div>
+		<button
+			on:click={() => {
+				customThemeChange()
+			}}>Select custom theme</button
+		>
 		{#if error}
 			<p class="theme-invalid">
 				Your previous theme was invalid, so it was reset to orange.
