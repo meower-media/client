@@ -52,8 +52,8 @@
 		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
-	import {loadTheme} from "./customthemes/SustomTheme.js";
-	const themes = [{
+	import {loadTheme} from "./customthemes/CustomTheme.js";
+	const themes = {"orange":{
 		orange: "#f9a636",
 		orangeButton: "#f9a636",
 		orangeLight: "#ffce8c",
@@ -61,7 +61,8 @@
 		background: "#ffffff",
 		foreground: "#000000",
 		foregroundOrange: "#ffffff"
-	}]
+	}}
+	$customTheme = themes($user.theme)
 	// var useCustomTheme = true // wip
 </script>
 
