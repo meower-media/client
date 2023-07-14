@@ -62,7 +62,7 @@
 		foreground: "#000000",
 		foregroundOrange: "#ffffff"
 	}}
-	customTheme.set(themes(user.theme))
+	customTheme.set(themes[user.theme])
 	// var useCustomTheme = true // wip
 </script>
 
