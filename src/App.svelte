@@ -64,7 +64,7 @@
 		orangeLight: "#ffce8c",
 		orangeDark: "#b46d34"
 	}}
-	const _customTheme = $customTheme;
+	var _customTheme = $customTheme;
 	_customTheme = themes[$user.theme];
 	customTheme.set(_customTheme);
 	console.log(`CT ${$customTheme} : ${JSON.stringify(themes[user.theme])} : ${$user.theme}`)
