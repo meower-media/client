@@ -276,7 +276,7 @@
 					(Several features will be unavailable while not logged in.)
 				</p>
 				<div>
-					<p class="small">Meower Svelte v{version}</p>
+					<p class="small">Meower F client rewritten v{version}</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
