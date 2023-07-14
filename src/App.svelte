@@ -63,6 +63,8 @@
 	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
 	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
 	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
+
+	k
 -->
 
 <main
@@ -75,6 +77,13 @@
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
+	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orangeButton : null}
+	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
 
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
