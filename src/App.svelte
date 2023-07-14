@@ -53,17 +53,26 @@
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 	import {loadTheme} from "./customthemes/CustomTheme.js";
-	const themes = {"orange":{
-		orange: "#f9a636",
-		orangeButton: "#f9a636",
-		orangeLight: "#ffce8c",
-		orangeDark: "#b46d34"
-	},undefined:{
-		orange: "#f9a636",
-		orangeButton: "#f9a636",
-		orangeLight: "#ffce8c",
-		orangeDark: "#b46d34"
-	}}
+	const themes = {
+		"orange":{
+			orange: "#f9a636",
+			orangeButton: "#f9a636",
+			orangeLight: "#ffce8c",
+			orangeDark: "#b46d34"
+		},
+		"blue":{
+			orange: #4d97ff,
+			orange-light: #79b7ff,
+			orange-dark: #3685eb,
+			orange-scrollbar-back: #374eb1,
+		},
+		undefined:{
+			orange: "#f9a636",
+			orangeButton: "#f9a636",
+			orangeLight: "#ffce8c",
+			orangeDark: "#b46d34"
+		}
+	}
 	
 	var _customTheme = $customTheme;
 	if(($user.theme).startsWith("custom:")) {
