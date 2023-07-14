@@ -61,6 +61,14 @@
 		background: "#ffffff",
 		foreground: "#000000",
 		foregroundOrange: "#ffffff"
+	},undefined:{
+		orange: "#f9a636",
+		orangeButton: "#f9a636",
+		orangeLight: "#ffce8c",
+		orangeDark: "#b46d34",
+		background: "#ffffff",
+		foreground: "#000000",
+		foregroundOrange: "#ffffff"
 	}}
 	$customTheme = themes[user.theme]
 	console.log(`CT ${$customTheme} : ${themes[user.theme]} : ${user.theme}`)
