@@ -63,7 +63,7 @@
 	style:--orange-dark={$user.name ? $customTheme.orangeDark : null}
 	style:--background={$user.name ? $customTheme.background : null}
 	style:--foreground={$user.name ? $customTheme.foreground : null}
-	style:--foreground-orange={$user.name && useCustomTheme ? $customTheme.foregroundOrange : null}
+	style:--foreground-orange={$user.name ? $customTheme.foregroundOrange : null}
 
 	k
 -->
