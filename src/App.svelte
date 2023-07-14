@@ -62,9 +62,9 @@
 		},
 		"blue":{
 			orange:                "#4d97ff",
-			orange-light:          "#79b7ff",
-			orange-dark:           "#3685eb",
-			orange-scrollbar-back: "#374eb1",
+			orangeButton:          "#4d97ff",
+			orangeLight:           "#79b7ff",
+			orangeDark:            "#3685eb"
 		},
 		undefined:{
 			orange: "#f9a636",
