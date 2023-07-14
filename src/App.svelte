@@ -52,6 +52,16 @@
 		customTheme
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
+	import {loadTheme} from "./customthemes/SustomTheme.js";
+	const themes = [{
+		orange: "#f9a636",
+		orangeButton: "#f9a636",
+		orangeLight: "#ffce8c",
+		orangeDark: "#b46d34",
+		background: "#ffffff",
+		foreground: "#000000",
+		foregroundOrange: "#ffffff"
+	}]
 	// var useCustomTheme = true // wip
 </script>
 
