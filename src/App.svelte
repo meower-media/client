@@ -64,10 +64,15 @@
 		orangeLight: "#ffce8c",
 		orangeDark: "#b46d34"
 	}}
+	
 	var _customTheme = $customTheme;
-	_customTheme = themes[$user.theme];
+	if(($user.theme).startsWith("custom:")) {
+		_customTheme = loadTheme[$user.theme];
+	} else {
+		_customTheme = themes[$user.theme];
+	}
 	customTheme.set(_customTheme);
-	console.log(`CT ${$customTheme} : ${JSON.stringify(themes[user.theme])} : ${$user.theme}`)
+	
 	// var useCustomTheme = true // wip
 </script>
 
