@@ -44,13 +44,3 @@ export function stringToTheme(string) {
 		return fallback;
 	}
 }
-
-export function saveTheme(theme) {
-
-}
-
-export function loadTheme(theme) {
-	customTheme = stringToTheme(theme)
-	// store in stores
-	// will test custm them e
-}
