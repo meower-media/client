@@ -70,7 +70,7 @@
 		foreground: "#000000",
 		foregroundOrange: "#ffffff"
 	}}
-	$customTheme.set(themes[$user.theme])
+	$customTheme = themes[$user.theme]
 	console.log(`CT ${$customTheme} : ${JSON.stringify(themes[user.theme])} : ${$user.theme}`)
 	// var useCustomTheme = true // wip
 </script>
