@@ -68,7 +68,7 @@
 				loginStatus = "Connecting...";
 				await connect();
 
-				if (
+				/* if (
 					localStorage.getItem("meower_savedusername") &&
 					localStorage.getItem("meower_savedpassword")
 				) {
@@ -77,9 +77,9 @@
 						localStorage.getItem("meower_savedpassword"),
 						true
 					);
-				} else {
+				} else { */
 					await mainSetup();
-				}
+				// }
 			} else if (value === "autoReconnect") {
 				loginStatus = "";
 				await connect();

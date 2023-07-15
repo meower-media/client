@@ -3,20 +3,20 @@
 // Ex. custom:f9a636;ffffff;000000;ffffff;ffffff
 
 // CST: maybe it should be JSON
+import {
+	customTheme,
+	user
+} from "../lib/stores.js"
 
 let fallback = {
-	orange: "f9a636",
-	orangeButton: "f9a636",
-	orangeLight: "ffce8c",
-	orangeDark: "b46d34",
-	background: "ffffff",
-	foreground: "000000",
-	foregroundOrange: "ffffff"
+	orange: "#f9a636",
+	orangeButton: "#f9a636",
+	orangeLight: "#ffce8c",
+	orangeDark: "#b46d34",
+	background: "#ffffff",
+	foreground: "#000000",
+	foregroundOrange: "#ffffff"
 };
-
-import {
-	user
-} from "../lib/stores.js";
 
 let _user = null;
 user.subscribe(v => {
@@ -43,13 +43,4 @@ export function stringToTheme(string) {
 	} catch (e) {
 		return fallback;
 	}
-}
-
-export function saveTheme(theme) {
-
-}
-
-export function loadTheme() {
-	// store in stores
-	// will test custm them e
 }
