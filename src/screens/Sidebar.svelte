@@ -183,15 +183,6 @@
 				<span class="label">About</span>
 			</button>
 		-->
-		<button on:click={() => goto("changelog")} class="changelog-btn round">
-			<img
-				src={changelog}
-				alt="changelog"
-				height="auto"
-				draggable={false}
-			/>
-			<span class="label">Changelog</span>
-		</button>
 		<button
 			on:click={() => {
 				popupShown = true;

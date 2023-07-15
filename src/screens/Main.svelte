@@ -6,7 +6,7 @@
 	import Groupchat from "./Groupchat.svelte";
 	import Profile from "./Profile.svelte";
 	import Recent from "./Recent.svelte";
-	import Settings from "./Settings.svelte";
+	import Settings from "./Settings2.svelte";
 	import Groupcat from "./Groupcat.svelte";
 	import Search from "./Search.svelte";
 	import Changelog from "./Changelog.svelte";
