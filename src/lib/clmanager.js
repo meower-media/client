@@ -25,7 +25,7 @@ const disconnectCodes = [
 	"E:018 | Account Banned",
 	"E:020 | Kicked",
 	"E:110 | ID conflict",
-	"E:119 | IP Blocked"
+	"E:119 | IP Blocked",
 ];
 
 let _user = null;
@@ -145,11 +145,15 @@ export async function connect() {
 
 			// get disconnect reason
 			let _disconnectReason = "";
-			disconnectReason.subscribe(v => {_disconnectReason = v});
+			disconnectReason.subscribe(v => {
+				_disconnectReason = v;
+			});
 
 			// get whether an auto reconnect has already been attempted
 			let _attemptedAutoReconnect = false;
-			attemptedAutoReconnect.subscribe(v => {_attemptedAutoReconnect = v});
+			attemptedAutoReconnect.subscribe(v => {
+				_attemptedAutoReconnect = v;
+			});
 
 			// attempt reconnect otherwise fully disconnect
 			if (

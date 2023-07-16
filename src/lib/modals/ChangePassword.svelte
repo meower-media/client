@@ -7,7 +7,11 @@
 
 	import {tick} from "svelte";
 
-	let changeStatus, oldPassword, newPassword, newPasswordConfirmation, submitButton;
+	let changeStatus,
+		oldPassword,
+		newPassword,
+		newPasswordConfirmation,
+		submitButton;
 
 	function changePassword() {
 		if (newPassword !== newPasswordConfirmation) {
@@ -17,15 +21,15 @@
 		submitButton.disabled = true;
 
 		clm.meowerRequest({
-				cmd: "direct",
+			cmd: "direct",
+			val: {
+				cmd: "change_pswd",
 				val: {
-					cmd: "change_pswd",
-					val: {
-						old: oldPassword,
-						new: newPassword,
-					},
+					old: oldPassword,
+					new: newPassword,
 				},
-			})
+			},
+		})
 			.then(async () => {
 				$modalShown = false;
 
@@ -101,7 +105,9 @@
 			>
 			<button
 				type="submit"
-				disabled={!oldPassword || !newPassword || !newPasswordConfirmation}
+				disabled={!oldPassword ||
+					!newPassword ||
+					!newPasswordConfirmation}
 				bind:this={submitButton}
 				on:click={() => {
 					changePassword();

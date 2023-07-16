@@ -7,7 +7,7 @@
 		modalShown,
 		modalPage,
 		authHeader,
-		user
+		user,
 	} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	const link = clm.link;
@@ -84,12 +84,10 @@
 				loginStatus = "";
 				await connect();
 				let _authHeader = {};
-				authHeader.subscribe(authHeader => {_authHeader = authHeader});
-				doLogin(
-					_authHeader.username,
-					_authHeader.token,
-					true
-				);
+				authHeader.subscribe(authHeader => {
+					_authHeader = authHeader;
+				});
+				doLogin(_authHeader.username, _authHeader.token, true);
 			} else if (value === "reconnect") {
 				loginStatus = "";
 				await connect();
@@ -117,7 +115,12 @@
 	 * @param {string} username
 	 * @param {string} password
 	 */
-	function doLogin(username, password, autoLogin = false, savedLogin = false) {
+	function doLogin(
+		username,
+		password,
+		autoLogin = false,
+		savedLogin = false
+	) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -183,7 +186,9 @@
 							loginStatus = "Invalid username!";
 							break;
 						case "I:011 | Invalid Password":
-							loginStatus = savedLogin ? "Session expired! Please login again." : "Invalid password!";
+							loginStatus = savedLogin
+								? "Session expired! Please login again."
+								: "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
 							$modalPage = "banned";
@@ -386,9 +391,9 @@
 										val.payload.token
 									);
 								}
-								
+
 								mainPage.set("oobe");
-								await sleep(10)
+								await sleep(10);
 								screen.set("main");
 							} else {
 								loginStatus = "Unexpected error logging in!";
@@ -421,7 +426,12 @@
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
 				<br />
-				<input type="password" placeholder="Password" minlength="8" maxlength="255" />
+				<input
+					type="password"
+					placeholder="Password"
+					minlength="8"
+					maxlength="255"
+				/>
 				<p class="checkboxes">
 					<input
 						id="remember-me"

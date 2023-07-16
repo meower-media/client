@@ -47,7 +47,7 @@
 		userToMod,
 		user,
 		spinner,
-		modPanelOpen
+		modPanelOpen,
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 </script>
@@ -73,7 +73,6 @@
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
-
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
@@ -134,7 +133,7 @@
 	{/if}
 
 	{#if $modalShown}
-			<!-- Login, signup -->
+		<!-- Login, signup -->
 		{#if $modalPage === "login"}
 			<LoginModal />
 		{:else if $modalPage === "signup"}

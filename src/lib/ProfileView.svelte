@@ -60,9 +60,13 @@
 				{/if}
 				<div class="profile-header-info" class:small>
 					{#if small}
-						<h2 class="profile-username"><LiText text={data._id} /></h2>
+						<h2 class="profile-username">
+							<LiText text={data._id} />
+						</h2>
 					{:else}
-						<h1 class="profile-username"><LiText text={data._id} /></h1>
+						<h1 class="profile-username">
+							<LiText text={data._id} />
+						</h1>
 					{/if}
 					<div class="profile-active">
 						{#if data.banned == false}

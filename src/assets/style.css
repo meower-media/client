@@ -43,6 +43,8 @@
 	position: absolute;
 	top: 0.25em;
 	right: 0.25em;
+	display: flex;
+	gap: 0.25em;
 }
 
 .image_1 {
@@ -68,7 +70,7 @@ body,
 img.emoji {
 	height: 1em;
 	width: 1em;
-    vertical-align: bottom;
+	vertical-align: bottom;
 }
 
 button,
@@ -235,6 +237,13 @@ input[type="checkbox"] {
 	background-position: center;
 	background-size: 1.3em;
 	background-repeat: no-repeat;
+}
+
+.settings-controls button.circle,
+.settings-controls input[type="checkbox"] {
+	border: none;
+	margin: 0;
+	margin-left: 0.125em;
 }
 
 input[type="checkbox"] {

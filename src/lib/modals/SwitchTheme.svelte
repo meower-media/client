@@ -6,7 +6,7 @@
 
 	import * as Modals from "../modals.js";
 
-    import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
+	import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
 
 	const themePreviews = import.meta.glob("../../assets/themePreviews/*.png", {
 		import: "default",
@@ -17,7 +17,7 @@
 
 	let error = false;
 
-    let darkMode = !$user.mode;
+	let darkMode = !$user.mode;
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
@@ -32,29 +32,31 @@
 	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 	let themeName = themeCaps + darkModeStr;
 
-    /**
-     * @type {string}
-     */
+	/**
+	 * @type {string}
+	 */
 	// @ts-ignore
 	let currentPreviewImage =
-		themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+		themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+		defaultPreview;
 
 	function changeTheme() {
 		selection = clamp(selection, 0, 3);
 		theme = selections[selection];
-        darkMode = false;
-        if (theme.startsWith("dark-")) {
-            darkMode = true;
-            theme = theme.substring(5);
-        }
+		darkMode = false;
+		if (theme.startsWith("dark-")) {
+			darkMode = true;
+			theme = theme.substring(5);
+		}
 
 		darkModeStr = darkMode ? "Dark" : "Light";
 		themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 		themeName = themeCaps + darkModeStr; // Change vars
-        
+
 		// @ts-ignore
 		currentPreviewImage =
-			themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+			themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+			defaultPreview;
 	}
 
 	function customThemeChange() {
@@ -150,7 +152,7 @@
 
 	.layout-text {
 		text-align: center;
-        margin: 0.75em 0;
-        font-size: 80%;
+		margin: 0.75em 0;
+		font-size: 80%;
 	}
 </style>

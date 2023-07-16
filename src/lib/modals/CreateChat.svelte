@@ -7,7 +7,8 @@
 
 	import {tick} from "svelte";
 
-	let createStatus, chatNickname = "";
+	let createStatus,
+		chatNickname = "";
 
 	function doCreate() {
 		try {
@@ -64,8 +65,8 @@
 				disabled={!chatNickname}
 				on:click={() => {
 					doCreate();
-				}}
-			>Create</button>
+				}}>Create</button
+			>
 		</div>
 	</div>
 </Modal>

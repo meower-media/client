@@ -9,7 +9,6 @@
 	import Settings from "./Settings2.svelte";
 	import Groupcat from "./Groupcat.svelte";
 	import Search from "./Search.svelte";
-	import Changelog from "./Changelog.svelte";
 	import About from "./About.svelte";
 	import SearchResults from "./SearchResults.svelte";
 	import OOBEMain from "./OOBE/OOBEMain.svelte";
@@ -39,8 +38,6 @@
 			<SearchResults />
 		{:else if $page === "chatlist"}
 			<Chatlist />
-		{:else if $page === "changelog"}
-			<Changelog />
 		{:else if $page === "about"}
 			<About />
 		{:else if $page === "profile"}

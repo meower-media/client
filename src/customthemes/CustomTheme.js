@@ -11,12 +11,10 @@ let fallback = {
 	orangeDark: "b46d34",
 	background: "ffffff",
 	foreground: "000000",
-	foregroundOrange: "ffffff"
+	foregroundOrange: "ffffff",
 };
 
-import {
-	user
-} from "../lib/stores.js";
+import {user} from "../lib/stores.js";
 
 let _user = null;
 user.subscribe(v => {
@@ -38,16 +36,13 @@ export function stringToTheme(string) {
 			orangeDark: json.orangeDark,
 			background: json.background,
 			foreground: json.foreground,
-			foregroundOrange: json.foregroundOrange
+			foregroundOrange: json.foregroundOrange,
 		});
 	} catch (e) {
 		return fallback;
 	}
 }
 
-export function saveTheme(theme) {
+export function saveTheme(theme) {}
 
-}
-
-export function loadTheme() {
-}
+export function loadTheme() {}

@@ -131,7 +131,7 @@
 				class="long"
 				title={data.quote ? "Update Quote" : "Set Quote"}
 				on:click={() => {
-					Modals.showModal("setQuote")
+					Modals.showModal("setQuote");
 				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
 			>
 		{/if}
@@ -147,15 +147,18 @@
 		>
 
 		{#if $user.name && $profileClicked !== $user.name}
-			<button class="long" on:click={() => {
-				Modals.showModal("addMember2")
-			}}>Add to Chat</button>
+			<button
+				class="long"
+				on:click={() => {
+					Modals.showModal("addMember2");
+				}}>Add to Chat</button
+			>
 			{#if $user.lvl < 1}
 				<button
 					class="long"
 					title="Report User"
 					on:click={() => {
-						Modals.showModal("reportUser")
+						Modals.showModal("reportUser");
 					}}>Report User</button
 				>
 			{:else}

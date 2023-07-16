@@ -32,7 +32,7 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		let  i = 0;
+		let i = 0;
 
 		// Match image syntax
 		// ([title: https://url])
@@ -80,12 +80,7 @@
 
 	function change() {
 		const full =
-			$postInput.value +
-			" [" +
-			imgName.value +
-			": " +
-			imgUrl.value +
-			"]";
+			$postInput.value + " [" + imgName.value + ": " + imgUrl.value + "]";
 		post.content = full;
 		initPostUser();
 
@@ -116,10 +111,11 @@
 				result.value[2].toLowerCase().startsWith(o.toLowerCase())
 			)
 		) {
-			postErrors = "This image is not on the image host whitelist! Allowed image hosts are: " +
-			IMAGE_HOST_WHITELIST.map(
-				url => url.replaceAll("https://", "").replaceAll("/", "")
-			).join(", ");
+			postErrors =
+				"This image is not on the image host whitelist! Allowed image hosts are: " +
+				IMAGE_HOST_WHITELIST.map(url =>
+					url.replaceAll("https://", "").replaceAll("/", "")
+				).join(", ");
 		} else {
 			postErrors = "";
 		}
@@ -216,11 +212,7 @@
 				disabled={postErrors !== ""}
 				on:click={() => {
 					$postInput.value +=
-						" [" +
-						imgName.value +
-						": " +
-						imgUrl.value +
-						"]";
+						" [" + imgName.value + ": " + imgUrl.value + "]";
 					$modalShown = false;
 				}}
 			>

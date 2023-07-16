@@ -1,18 +1,11 @@
-<!-- You probably know what this is. -->
 <script>
-	import Container from "../lib/Container.svelte";
-
-	import {user, modalShown, modalPage} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "../lib/modals.js";
-	import * as BGM from "../lib/BGM.js";
+	import {user} from "../../lib/stores.js";
+	import Container from "../../lib/Container.svelte";
+	import * as clm from "../../lib/clmanager.js";
+	import * as Modals from "../../lib/modals.js";
+	import * as BGM from "../../lib/BGM.js";
 </script>
 
-<Container>
-	<h1>Settings</h1>
-	You can change your settings here. These will save to your account, so they will
-	carry over into other clients.
-</Container>
 <Container>
 	<div class="settings-controls">
 		<button
@@ -95,57 +88,3 @@
 		Click the cog button to change the song.
 	{/if}
 </Container>
-{#if $user.name}
-	<Container>
-		<div class="settings-controls">
-			<button
-				class="circle settings"
-				on:click={() => {
-					$modalPage = "changePassword";
-					$modalShown = true;
-				}}
-			/>
-		</div>
-
-		<h2>Change Password</h2>
-		Change your account password.
-	</Container>
-	<Container>
-		<div class="settings-controls">
-			<button
-				class="circle settings"
-				on:click={() => {
-					$modalPage = "deleteAccount";
-					$modalShown = true;
-				}}
-			/>
-		</div>
-
-		<h2>Delete Account</h2>
-		Permanently delete your Meower account.
-		<b class="important">THIS CANNOT BE UNDONE!</b>
-	</Container>
-{/if}
-
-<!--
-	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
--->
-<style>
-	.settings-controls {
-		position: absolute;
-		top: 0.25em;
-		right: 0.25em;
-		display: flex;
-		gap: 0.25em;
-	}
-
-	input[type="checkbox"],
-	button.circle {
-		border: none;
-		margin: 0;
-		margin-left: 0.125em;
-	}
-	.important {
-		color: crimson;
-	}
-</style>

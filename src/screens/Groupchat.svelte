@@ -88,7 +88,10 @@
 							profileClicked_GC.set(chatmember);
 						}}
 					>
-						<Member member={chatmember} owner={chatmember === $chatOwner} />
+						<Member
+							member={chatmember}
+							owner={chatmember === $chatOwner}
+						/>
 					</button>
 				{/each}
 			</div>
@@ -105,12 +108,12 @@
 						}}
 					/>
 					{#if $mobile && $chatid !== "livechat"}
-							<button
-								class="circle join"
-								on:click={() => {
-									showMembers = !showMembers;
-								}}
-							/>
+						<button
+							class="circle join"
+							on:click={() => {
+								showMembers = !showMembers;
+							}}
+						/>
 					{/if}
 				</div>
 			</div>

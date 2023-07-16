@@ -97,12 +97,12 @@
 	.bgm-name {
 		font-weight: bold;
 		font-size: 2.5em;
-        text-align: center;
+		text-align: center;
 	}
 
 	.bgm-author {
 		font-size: 0.5em;
-        text-align: center;
-        font-weight: normal;
+		text-align: center;
+		font-weight: normal;
 	}
 </style>

@@ -1,9 +1,5 @@
 <script>
-	import {
-		sidebarLocked,
-        OOBEPage,
-		mainPage
-	} from "../../lib/stores.js";
+	import {sidebarLocked, OOBEPage, mainPage} from "../../lib/stores.js";
 
 	import OOBECustomizePFP from "./OOBE_CustomizePFP.svelte";
 	import OOBECustomizeTheme from "./OOBE_CustomizeTheme.svelte";
@@ -17,7 +13,12 @@
 			<OOBECustomizeTheme />
 		{:else if $OOBEPage == 2}
 			<h1>That's it!</h1>
-			<button on:click={() => {sidebarLocked.set(false); mainPage.set("home")}}>Let's go!</button>
+			<button
+				on:click={() => {
+					sidebarLocked.set(false);
+					mainPage.set("home");
+				}}>Let's go!</button
+			>
 		{:else}
 			<p>{$OOBEPage}</p>
 		{/if}
@@ -30,8 +31,8 @@
 		display: table;
 	}
 
-    .fullcenter {
-        width: 100vw;
+	.fullcenter {
+		width: 100vw;
 		height: calc(100vh - 4rem);
 		box-sizing: border-box;
 
@@ -41,5 +42,5 @@
 		display: table-cell;
 		vertical-align: middle;
 		padding: 0.5em;
-    }
+	}
 </style>

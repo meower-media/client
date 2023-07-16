@@ -1,5 +1,10 @@
 <script>
-	import {mainPage as page, profileClicked, searchQuery, searchType} from "../lib/stores.js";
+	import {
+		mainPage as page,
+		profileClicked,
+		searchQuery,
+		searchType,
+	} from "../lib/stores.js";
 	import {apiUrl} from "../lib/urls.js";
 	import Loading from "../lib/Loading.svelte";
 	import Container from "../lib/Container.svelte";
@@ -155,7 +160,9 @@
 				</div>
 			{:then stats}
 				There {stats.posts == 1 ? "is" : "are"}
-				<LargeCount num={stats.posts} /> post{stats.posts == 1 ? "" : "s"},
+				<LargeCount num={stats.posts} /> post{stats.posts == 1
+					? ""
+					: "s"},
 				<LargeCount num={stats.chats} /> chats and
 				<LargeCount num={stats.users} /> users on Meower.
 			{/await}

@@ -3,8 +3,11 @@
 
 	import {modalShown, basicModalDesc, basicModalTitle} from "../stores.js";
 
-	let Desc = ($basicModalDesc != "") && $basicModalDesc || "Error loading description."
-	let Title = ($basicModalTitle != "") && $basicModalTitle || "Error loading title"
+	let Desc =
+		($basicModalDesc != "" && $basicModalDesc) ||
+		"Error loading description.";
+	let Title =
+		($basicModalTitle != "" && $basicModalTitle) || "Error loading title";
 </script>
 
 <Modal

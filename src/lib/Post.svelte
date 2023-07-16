@@ -4,8 +4,8 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
-    import twemoji from "twemoji";
-    import { toHTMLElement } from "./twemoji-utils.js";
+	import twemoji from "twemoji";
+	import {toHTMLElement} from "./twemoji-utils.js";
 
 	import LiText from "./LiText.svelte";
 
@@ -15,14 +15,13 @@
 		user,
 		chatid,
 		ulist,
-		mainPage as page
+		mainPage as page,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as Modals from "./modals.js";
 
-
-	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js"
+	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js";
 
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
@@ -94,7 +93,6 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
-	
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -145,7 +143,7 @@
 									return;
 								}
 								postClicked.set(post);
-								Modals.showModal("deletePost")
+								Modals.showModal("deletePost");
 							}}
 						/>
 					{:else}
@@ -153,7 +151,7 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								Modals.showModal("reportPost")
+								Modals.showModal("reportPost");
 							}}
 						/>
 					{/if}
@@ -240,10 +238,12 @@
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">{@html twemoji.parse(toHTMLElement(post.content).innerText, {
-        folder: "svg",
-        ext: ".svg"
-    })}</p>
+	<p class="post-content">
+		{@html twemoji.parse(toHTMLElement(post.content).innerText, {
+			folder: "svg",
+			ext: ".svg",
+		})}
+	</p>
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"

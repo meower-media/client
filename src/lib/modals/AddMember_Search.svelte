@@ -4,10 +4,10 @@
 	import {
 		modalShown,
 		mainPage as page,
-        searchQuery, 
-        searchType
+		searchQuery,
+		searchType,
 	} from "../stores.js";
-    import * as Modals from "../modals.js";
+	import * as Modals from "../modals.js";
 
 	let username;
 </script>
@@ -21,9 +21,9 @@
 	<div slot="default">
 		<form
 			on:submit|preventDefault={e => {
-                searchQuery.set(e.target[0].value);
+				searchQuery.set(e.target[0].value);
 				searchType.set("users");
-				Modals.showModal("searchResults")
+				Modals.showModal("searchResults");
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>

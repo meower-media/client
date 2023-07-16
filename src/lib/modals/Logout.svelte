@@ -1,11 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {
-		setupPage,
-		screen,
-		modalShown,
-	} from "../stores.js";
+	import {setupPage, screen, modalShown} from "../stores.js";
 	import * as clm from "../clmanager.js";
 
 	import {tick} from "svelte";
@@ -28,6 +24,7 @@
 			>
 			<button
 				on:click={async () => {
+					localStorage.clear();
 					await clm.disconnect();
 					modalShown.set(false);
 					screen.set("setup");

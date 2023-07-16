@@ -8,7 +8,7 @@
 		modalShown,
 		modalPage,
 		modPanelOpen,
-		sidebarLocked
+		sidebarLocked,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 
@@ -78,7 +78,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
 	{#if $sidebarLocked}
-		<div class="locked"></div>
+		<div class="locked" />
 	{/if}
 	<div class="logo">
 		<button class="logo-inner" title="Home" on:click={() => goto("home")}>
@@ -115,7 +115,11 @@
 	>
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
-	<button on:click={() => goto("search")} title="Search" class="search-btn round">
+	<button
+		on:click={() => goto("search")}
+		title="Search"
+		class="search-btn round"
+	>
 		<img
 			src={search}
 			alt="Search"
@@ -158,17 +162,14 @@
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div
-		on:click|stopPropagation
-		class="popup"
-	>
+	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {
 				$profileClicked = $user.name;
 				goto("profile");
 			}}
 			class="profile-btn round"
-			title = "Profile"
+			title="Profile"
 		>
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>

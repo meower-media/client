@@ -16,7 +16,7 @@
 		chatOwner,
 		chatMembers,
 	} from "../stores.js";
-	
+
 	import ProfileView from "../ProfileView.svelte";
 
 	function filter1(v) {
@@ -54,7 +54,7 @@
 			<button
 				class="long"
 				on:click={() => {
-					console.log(shiftHeld)
+					console.log(shiftHeld);
 					if (shiftHeld) {
 						clm.meowerRequest({
 							cmd: "direct",

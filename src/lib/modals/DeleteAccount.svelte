@@ -12,11 +12,10 @@
 	function deleteAccount() {
 		submitButton.disabled = true;
 
-		clm
-			.meowerRequest({
-				cmd: "direct",
-				val: {cmd: "del_account", val: password},
-			})
+		clm.meowerRequest({
+			cmd: "direct",
+			val: {cmd: "del_account", val: password},
+		})
 			.then(async () => {
 				$modalShown = false;
 
@@ -51,9 +50,9 @@
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
 		<span style="color: red;"
-			>Deleting your account will erase all data from our database,
-			this action is irreversible! Are you absolutely sure you would
-			like to permanently delete your account?</span
+			>Deleting your account will erase all data from our database, this
+			action is irreversible! Are you absolutely sure you would like to
+			permanently delete your account?</span
 		><br /><br />
 		{#if deleteStatus}
 			<label for="password-input" style="color: red;"

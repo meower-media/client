@@ -19,6 +19,7 @@
 		"vite": "^3.0.0"
 	},
 	"dependencies": {
+		"lucide-svelte": "^0.260.0",
 		"twemoji": "^14.0.2"
 	}
 }

@@ -1,11 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {
-		modalShown,
-		chatid,
-		chatMembers,
-	} from "../stores.js";
+	import {modalShown, chatid, chatMembers} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
 

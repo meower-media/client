@@ -12,7 +12,7 @@
 	} from "./stores";
 	import {tick} from "svelte";
 	import * as Modals from "./modals.js";
-	import { onMount } from "svelte/internal";
+	import {onMount} from "svelte/internal";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -248,7 +248,12 @@
 		}}
 	>
 		<div class="input-row">
-			<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
+			<input
+				class="grow white"
+				type="text"
+				placeholder="Username..."
+				value={$userToMod}
+			/>
 			<button class="static">Send</button>
 		</div>
 		<textarea
@@ -277,7 +282,7 @@
 				}
 				announceMsg = "";
 				$announcementToSend = text;
-				Modals.showModal("announce")
+				Modals.showModal("announce");
 			}}
 		>
 			<textarea
