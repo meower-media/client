@@ -23,12 +23,13 @@
 
 	let showTabs = !$mobile;
 	let hoveringTab = "";
-	let selectedTab = "profile";
+	let selectedTab = $user.name ? "profile" : "appearance";
 </script>
 
 <div class="settings">
 	<div id="tabs">
 		<div id="tabs-inner">
+			{#if $user.name}
 			<button
 				class="tab-button {selectedTab == 'profile' ? 'selected' : ''}"
 				style={hoveringTab == "profile" ? "color: #fff;" : ""}
@@ -50,6 +51,7 @@
 					strokeWidth="2.5"
 				/>Profile</button
 			>
+			{/if}
 			<button
 				class="tab-button {selectedTab == 'appearance'
 					? 'selected'
@@ -74,6 +76,7 @@
 				/>Appearance</button
 			>
 
+			{#if $user.name}
 			<hr style="width: 90%;" />
 
 			<button
@@ -214,6 +217,7 @@
 					strokeWidth="2.5"
 				/>Bots</button
 			>
+			{/if}
 
 			<hr style="width: 88%;" />
 
