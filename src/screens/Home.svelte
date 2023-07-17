@@ -10,13 +10,16 @@
 
 <div class="home">
 	<Container>
+		<h1>Home</h1>
 		<div class="overflow">
 			{#if $ulist.length == 1}
 				You are the only user online.
 			{:else if $ulist.length == 0}
 				Nobody is online.
 			{:else}
-				<span style="font-size: 22px;"><b>{$ulist.length}</b> users online</span> <br>{$ulist.join(", ")}
+				There are currently {$ulist.length} users online ({$ulist.join(
+					", "
+				)}).
 			{/if}
 		</div>
 	</Container>
@@ -26,9 +29,5 @@
 <style>
 	.home {
 		height: 100%;
-	}
-
-	.overflow {
-		font-size: 16px;
 	}
 </style>
