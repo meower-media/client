@@ -70,6 +70,7 @@
 		gap: 0.5em;
 		padding: 0 0.5em;
 		box-sizing: border-box;
+		border: none;
 	}
 
 	.member-name {

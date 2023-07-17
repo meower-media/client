@@ -70,12 +70,6 @@
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
 		<div class="theme-select">
-			<button
-				on:click={() => {
-					selection -= 1;
-					changeTheme();
-				}}>{"<"}</button
-			>
 			<div class="theme-middle">
 				<img
 					src={currentPreviewImage}
@@ -86,6 +80,14 @@
 					{themeCaps + " (" + darkModeStr + ")"}
 				</div>
 			</div>
+		</div>
+		<div class="theme-middle">
+			<button
+				on:click={() => {
+					selection -= 1;
+					changeTheme();
+				}}>{"<"}</button
+			>
 			<button
 				on:click={() => {
 					selection += 1;
@@ -121,12 +123,22 @@
 </Modal>
 
 <style>
+	div {
+		width: 100%;
+	}
+
+	img {
+		max-width: 100%;
+		align-self: center;
+	}
+
 	.theme-select {
 		margin-top: 1rem;
 		display: flex;
 		flex-wrap: nowrap;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: 10px;
 	}
 
 	.theme-preview {

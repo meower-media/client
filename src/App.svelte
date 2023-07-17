@@ -220,17 +220,18 @@
 
 		font-family: Simvoni, sans-serif;
 
-		--orange: #f9a636;
+		--orange: #f7b374;
 		--orange-button: var(--orange);
-		--orange-light: #ffce8c;
-		--orange-dark: #b46d34;
-		--orange-scrollbar-back: #a15d04;
+		--orange-light: #f7ca8c;
+		--orange-dark: #d4905d;
+		--orange-scrollbar-back: #b47842;
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;
 
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
+		--container-color: #e7e7e7;
 
 		background-color: var(--background);
 		color: var(--foreground);
@@ -239,31 +240,32 @@
 	}
 
 	#main.theme-orange.mode-dark {
-		--orange: #b35305;
-		--orange-light: #dd7f14;
-		--orange-dark: #ac4718;
-		--orange-scrollbar-back: rgb(131, 45, 5);
-		--background: #020010;
-		--foreground: #eef;
-		--foreground-orange: #eef;
+		--orange: #d48650;
+		--orange-light: #e9aa70;
+		--orange-dark: #b5693a;
+		--orange-scrollbar-back: #9d5732;
+		--background: #282828;
+		--foreground: #f0f0f0;
+		--foreground-orange: #f0f0f0;
+		--container-color: #131313;
 	}
+
 	#main.theme-blue {
-		/*--orange: #aa0000;
-		--orange-light: #aa0000;
-		--orange-dark: #aa0000;
-		--orange-scrollbar-back: #aa0000;*/
-		--orange: #4d97ff;
-		--orange-light: #79b7ff;
-		--orange-dark: #3685eb;
-		--orange-scrollbar-back: #374eb1;
+		--orange: #75a3c7;
+		--orange-light: #99bfe6;
+		--orange-dark: #598dbd;
+		--orange-scrollbar-back: #466f95;
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;
 		scrollbar-color: unset;
+		--container-color: #e7e7e7;
 	}
+
 	#main.theme-blue.mode-dark {
-		--background: #202020;
-		--foreground: white;
-		--foreground-orange: white;
+		--background: #222f3e;
+		--foreground: #f5f6fa;
+		--foreground-orange: #f5f6fa;
+		--container-color: #131313;
 	}
 </style>

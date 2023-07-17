@@ -16,7 +16,6 @@
 	import PFP from "../lib/PFP.svelte";
 
 	import {tick} from "svelte";
-	import {fade} from "svelte/transition";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
@@ -28,7 +27,6 @@
 	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
 	import shield from "../assets/shield.svg";
-	import info from "../assets/info.svg";
 
 	let popupShown = false;
 	let popupDebounce = false;
@@ -81,7 +79,7 @@
 		<div class="locked"></div>
 	{/if}
 	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => goto("home")}>
+		<button class="logo-inner"  style="border: none;" title="Home" on:click={() => goto("home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -91,12 +89,11 @@
 			/>
 		</button>
 	</div>
-	<button on:click={() => goto("home")} title="Home" class="home-btn round">
+	<button on:click={() => goto("home")} title="Home">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
 		on:click={() => goto("inbox")}
-		class="round"
 		title="The Inbox"
 		class:new-msgs={$user.unread_inbox}
 	>
@@ -111,11 +108,10 @@
 			}
 		}}
 		title="Group Chats"
-		class="gc-btn round"
 	>
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
-	<button on:click={() => goto("search")} title="Search" class="search-btn round">
+	<button on:click={() => goto("search")} title="Search">
 		<img
 			src={search}
 			alt="Search"
@@ -127,7 +123,6 @@
 	{#if $user.lvl >= 1}
 		<button
 			on:click={() => ($modPanelOpen = !$modPanelOpen)}
-			class="modpanel-btn round"
 			title="Moderator Panel"
 		>
 			<img
@@ -167,13 +162,12 @@
 				$profileClicked = $user.name;
 				goto("profile");
 			}}
-			class="profile-btn round"
 			title = "Profile"
 		>
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>
 		</button>
-		<button on:click={() => goto("settings")} class="settings-btn round">
+		<button on:click={() => goto("settings")}>
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
@@ -333,8 +327,7 @@
 	button.toggle-popup {
 		padding: 0.1em;
 		background-color: var(--pfp-bg) !important;
-		border: solid 1.5px var(--pfp-outline);
-		border-bottom-width: 5px;
+		border: solid 1.5px;
 		overflow: hidden;
 	}
 
@@ -352,7 +345,7 @@
 
 		position: absolute;
 		right: 0;
-		z-index: -1;
+		z-index: 99;
 
 		display: inline-flex;
 		flex-direction: column;
@@ -379,10 +372,20 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5em;
+		border-radius: 10px;
+		border: 2px solid var(--orange-dark);
 	}
 	.popup > button > img {
 		width: 1.5em;
 		height: 1.5em;
 		object-fit: contain;
+	}
+
+	.sidebar button {
+		border-color: var(--orange-dark);
+		border-radius: 10px;
+		outline: none;
+		box-shadow: none;
+		border: 2px solid var(--orange-dark);
 	}
 </style>

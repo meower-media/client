@@ -207,7 +207,7 @@
 
 				{#if bridged}
 					<Badge
-						text="BRIDGED"
+						text=""
 						title="This post is bridged from an external service by a bot"
 					/>
 				{/if}
@@ -255,7 +255,6 @@
 
 <style>
 	.pfp {
-		margin-right: 0.2em;
 		padding: 0;
 		border: none;
 		background: none !important;
@@ -278,15 +277,11 @@
 		gap: 0.5em;
 	}
 	.creator h2 {
-		font-size: 200%;
+		font-size: 150%;
 		margin: 0;
 		overflow-wrap: anywhere;
 	}
-	:global(main.input-hover) .pfp:hover:not(:active) :global(.pfp),
-	:global(main.input-touch) .pfp:active :global(.pfp),
-	.pfp:focus-visible :global(.pfp) {
-		transform: scale(1.1);
-	}
+
 	.post-content {
 		white-space: pre-wrap;
 	}

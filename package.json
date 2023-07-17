@@ -20,5 +20,7 @@
 	},
 	"dependencies": {
 		"twemoji": "^14.0.2"
-	}
+	},
+	"background_color": "#ffffff",
+    "theme_color": "#000"
 }

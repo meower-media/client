@@ -288,7 +288,7 @@
 			<textarea
 				type="text"
 				class="white"
-				placeholder="Write something..."
+				placeholder="Message..."
 				name="input"
 				autocomplete="false"
 				maxlength="500"
@@ -471,6 +471,7 @@
 		flex-grow: 1;
 		resize: none;
 		max-height: 300px;
+		border-radius: 10px;
 	}
 
 	.post-errors {
