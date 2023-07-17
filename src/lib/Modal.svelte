@@ -85,7 +85,7 @@
 		transform: translate(-50%, -50%);
 		padding: 1em;
 		background-color: var(--background);
-		border: none;
+		border: solid 2px var(--orange);
 		border-radius: 5px;
 	}
 </style>

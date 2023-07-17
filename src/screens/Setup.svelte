@@ -579,9 +579,4 @@
 		text-align: left;
 		font-size: 90%;
 	}
-
-	button {
-		border: 2px solid var(--orange-dark);
-		margin-bottom: 5px;
-	}
 </style>
