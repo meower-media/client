@@ -21,8 +21,8 @@
 		background-color: var(--orange);
 		color: var(--foreground-orange);
 
-		height: 1.1em;
-		border-radius: calc(1.1em / 2);
+		height: 0.7em;
+		border-radius: 100%;
 		padding: 0 0.33em;
 
 		display: inline-flex;
@@ -32,6 +32,8 @@
 		overflow: hidden;
 
 		cursor: default;
+		font-size: 15px;
+		align-self: center;
 	}
 
 	.badge.hastitle {

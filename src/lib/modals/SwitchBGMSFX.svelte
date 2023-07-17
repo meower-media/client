@@ -34,18 +34,20 @@
 	<h2 slot="header">Select Song</h2>
 	<div slot="default">
 		<div class="bgm-select">
-			<button
-				on:click={() => {
-					bgmTrack -= 1;
-					ChangeTrack();
-				}}>{"<"}</button
-			>
 			<div class="bgm-name">
 				{bgmName}
 				<div class="bgm-author">
 					by {selections[bgmTrack]["author"]}
 				</div>
 			</div>
+		</div>
+		<div class="bgm-select">
+			<button
+				on:click={() => {
+					bgmTrack -= 1;
+					ChangeTrack();
+				}}>{"<"}</button
+			>
 			<button
 				on:click={() => {
 					bgmTrack += 1;

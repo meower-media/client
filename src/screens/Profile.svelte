@@ -218,4 +218,8 @@
 		display: flex;
 		flex-wrap: wrap;
 	}
+
+	button {
+		margin-bottom: 3px !important;
+	}
 </style>

@@ -86,11 +86,6 @@
 </script>
 
 <div class="ModPanel">
-	<p>
-		Be careful, most these actions (except for sending announcements) have
-		no confirmation.<br />Also, performing an action on a user/post also
-		closes that user/post's report, if there's one.
-	</p>
 	<h2>Get User Info</h2>
 	<form
 		on:submit|preventDefault={async e => {
@@ -443,5 +438,17 @@
 
 	.align-right {
 		float: right;
+	}
+
+	input, button, select {
+		border: none;
+	}
+
+	a {
+		color: var(--orange);
+	}
+
+	button {
+		max-height: 2em;
 	}
 </style>

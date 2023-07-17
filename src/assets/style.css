@@ -53,9 +53,13 @@
 }
 
 body {
-	margin: 0;
+	margin: 0 auto;
 	overflow: hidden;
-	background-color: #f9a636;
+	background-color: #000000;
+}
+
+html {
+	background-color: #000000;
 }
 
 #app,
@@ -77,8 +81,7 @@ input[type="search"],
 input[type="password"],
 textarea,
 select {
-	border: solid 2px var(--foreground-orange);
-	border-radius: 5px;
+	border-radius: 10px;
 	outline: none;
 
 	background-color: var(--orange);
@@ -97,7 +100,7 @@ input[type="text"]:focus,
 input[type="search"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-	border-radius: 2px;
+	border-radius: 10px;
 }
 
 input[type="text"],
@@ -105,10 +108,18 @@ input[type="search"],
 input[type="password"],
 textarea {
 	min-width: 5em;
+	border-radius: 10px;
+	border-color: var(--orange-dark);
+}
+
+input[type="text"],
+input[type="search"],
+input[type="password"] {
+	margin-bottom: 7px;
 }
 
 button + button {
-	margin-left: -0.15rem;
+	margin-left: 0.07rem;
 }
 
 input:not(.white)::placeholder {
@@ -152,42 +163,14 @@ input[type="search"].white,
 input[type="password"].white,
 textarea,
 select.white {
-	background-color: var(--background);
-	border-color: var(--orange);
+	background-color: var(--container-color);
 	color: var(--foreground);
 	font-weight: normal;
 }
 
 button.white {
 	background-color: var(--background);
-	border-color: var(--orange);
 	color: var(--orange-button);
-}
-
-main.input-hover input[type="text"].white:not(:disabled):hover,
-main.input-hover input[type="password"].white:not(:disabled):hover,
-main.input-hover input[type="search"].white:not(:disabled):hover,
-main.input-hover textarea:not(:disabled):hover,
-main.input-touch input[type="text"].white:not(:disabled):active,
-main.input-touch input[type="password"].white:not(:disabled):active,
-main.input-touch input[type="search"].white:not(:disabled):active,
-main.input-touch textarea:not(:disabled):active,
-main.input-hover button:not(.circle).white:not(:disabled):hover,
-input[type="text"].white:focus-visible,
-input[type="password"].white:focus-visible,
-input[type="search"].white:focus-visible,
-#main textarea:focus-visible,
-#main textarea:focus-visible,
-button:not(.circle).white:focus-visible {
-	border-color: var(--orange-light);
-}
-
-#main input[type="text"].white:not(:disabled):focus,
-#main input[type="password"].white:not(:disabled):focus,
-#main input[type="search"].white:not(:disabled):focus,
-#main textarea:focus,
-button:not(.circle).white:active {
-	border-color: var(--orange-dark);
 }
 
 textarea {
@@ -219,8 +202,8 @@ details > summary {
 
 button.circle,
 input[type="checkbox"] {
-	border: solid 2px var(--foreground-orange);
-	border-radius: 100%;
+	border: none;
+	border-radius: 10px;
 	outline: none;
 
 	background-color: var(--orange);
@@ -296,13 +279,6 @@ button.reload {
 	background-size: 70%;
 }
 
-main.input-hover input[type="checkbox"]:hover:not(:active),
-main.input-hover button.circle:not(:disabled):hover:not(:active),
-main.input-touch input[type="checkbox"]:active,
-main.input-touch button.circle:not(:disabled):active {
-	transform: scale(1.2);
-}
-
 input[type="checkbox"]:checked {
 	background-image: url("./on.svg");
 }
@@ -326,12 +302,13 @@ a {
 }
 
 hr {
-	height: 2px;
+	height: 0px;
 	border-radius: 2px;
 	color: var(--orange);
 	background-color: var(--orange);
 	border: none;
 }
+
 .nojs {
 	text-align: center;
 	display: flex;
@@ -347,4 +324,12 @@ hr {
 	font-family: simvoni, sans-serif;
 	color: white;
 	font-weight: bold;
+}
+
+.createpost button, textarea {
+	border: none;
+}
+
+button {
+	border: none;
 }
