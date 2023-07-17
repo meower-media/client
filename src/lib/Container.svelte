@@ -6,8 +6,9 @@
 
 <style>
 	div {
-		background-color: var(--container-color);
-		border-radius: 10px;
+		background-color: var(--background);
+		border: solid 2px var(--orange);
+		border-radius: 5px;
 		padding: 0.6em;
 		margin-bottom: 0.4em;
 		overflow-wrap: break-word;

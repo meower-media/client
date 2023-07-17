@@ -10,6 +10,8 @@
 
 <Container>
 	<h1>Settings</h1>
+	You can change your settings here. These will save to your account, so they will
+	carry over into other clients.
 </Container>
 <Container>
 	<div class="settings-controls">
