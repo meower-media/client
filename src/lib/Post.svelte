@@ -43,7 +43,7 @@
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	export function initPostUser() {
+	export async function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
@@ -81,6 +81,12 @@
 				)
 			)
 				return;
+
+			const resp = await fetch(result.value[2],{headers: {"Access-Control-Allow-Origin": "*"}})
+
+			if (!resp.ok) {
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
 
 			images.push({
 				title: result.value[1],
