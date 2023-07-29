@@ -1,3 +1,8 @@
+/* 
+	Common CSS (CSS thats used all around meower) 
+	(And the nojs screen is here too)
+*/
+
 @font-face {
 	font-family: simvoni;
 	src: url(./font/Simvoni.ttf);
