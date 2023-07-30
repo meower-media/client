@@ -27,6 +27,7 @@
 	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
 
 	import {onMount, tick} from "svelte";
+	import Attachment from "./Attachment.svelte";
 
 	export let post = {};
 	export let buttons = true;
@@ -82,7 +83,7 @@
 			)
 				return;
 
-			const resp = await fetch(result.value[2],{headers: {"Access-Control-Allow-Origin": "*"}})
+			const resp = await fetch(result.value[2])
 
 			if (!resp.ok) {
 				throw new Error("Response code is not OK; code is " + resp.status);
@@ -91,6 +92,7 @@
 			images.push({
 				title: result.value[1],
 				url: result.value[2],
+				type: resp.headers.get("Content-Type")
 			});
 			// Prevent flooding
 			if (images.length >= 3) break;
@@ -251,10 +253,8 @@
         ext: ".svg"
     })}</p>
 	<div class="post-images">
-		{#each images as { title, url }}
-			<a href={url} target="_blank" rel="noreferrer"
-				><img src={url} alt={title} {title} class="post-image" />
-			</a>
+		{#each images as { title, url, type }}
+			<Attachment title={title} url={url} type={type} />
 		{/each}
 	</div>
 </Container>
@@ -305,11 +305,6 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
-	}
-
-	.post-image {
-		max-height: 12em;
-		max-width: 100%;
 	}
 
 	.post-images {
