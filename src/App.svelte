@@ -84,6 +84,11 @@
 	
 	// var useCustomTheme = true // wip
 	console.log($user)
+	var isKeyPressed = { 
+	   'd': false, // Dev toools (Alt Shift D)
+	   'i': false, // Was planned to be dev tools (Alt Shift I)
+	   's': false, // Planned to be in a shortcut for settings
+	}
 	document.onkeydown = (keyDownEvent) => { 
 		isKeyPressed[keyDownEvent.key] = true;
 		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
