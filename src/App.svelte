@@ -83,6 +83,7 @@
 	customTheme.set(_customTheme);
 	
 	// var useCustomTheme = true // wip
+	console.log($user.mode)
 </script>
 
 <!--
