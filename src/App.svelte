@@ -89,13 +89,29 @@
 	   'i': false, // Was planned to be dev tools (Alt Shift I)
 	   's': false, // Planned to be in a shortcut for settings
 	}
-	document.onkeydown = (keyDownEvent) => { 
-		isKeyPressed[keyDownEvent.key] = true;
-		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
-			$modalShown = true
-			$modalPage = "devTools"
-		};
-	}
+	
+	document.onkeydown = (keyDownEvent) => {
+	  
+	 //Prevent default key actions, if desired
+	 keyDownEvent.preventDefault();
+	  
+	// Track down key click
+	 isKeyPressed[keyDownEvent.key] = true;
+	  
+	// Check described custom shortcut
+	if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
+		$modalShown = true
+		$modalPage = "devTools"
+	};
+	  
+	document.onkeyup = (keyUpEvent) => {
+	  
+	 // Prevent default key actions, if desired
+	 keyUpEvent.preventDefault();
+	  
+	 // Track down key release
+	 isKeyPressed[keyDownEvent.key] = false;
+	};
 </script>
 
 <!--
