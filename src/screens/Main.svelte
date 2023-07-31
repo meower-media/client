@@ -25,7 +25,7 @@
 	  get: (searchParams, prop) => searchParams.get(prop),
 	});
 	// Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
-	let userFromURL = params.some_key; // "some_value"
+	let userFromURL = params.user; // "some_value"
 	if(userFromURL) {
 		$page = "profile"
 		$profileClicked = userFromURL
