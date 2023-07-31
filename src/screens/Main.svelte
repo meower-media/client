@@ -20,7 +20,7 @@
 
 	// LoadTheme()
 
-	import {mainPage as page} from "../lib/stores.js";
+	import {mainPage as page, profileClicked} from "../lib/stores.js";
 	const params = new Proxy(new URLSearchParams(window.location.search), {
 	  get: (searchParams, prop) => searchParams.get(prop),
 	});
