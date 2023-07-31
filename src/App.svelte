@@ -84,13 +84,13 @@
 	
 	// var useCustomTheme = true // wip
 	console.log($user)
-	document.onkeydown = (keyDownEvent) => { 
- 
-	isKeyPressed[keyDownEvent.key] = true;
-	if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
-		$modalShown = true
-		$modalPage = "devTools"
-	};
+	document.onkeydown = (keyDownEvent) => { =
+		isKeyPressed[keyDownEvent.key] = true;
+		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
+			$modalShown = true
+			$modalPage = "devTools"
+		};
+	}
 </script>
 
 <!--
