@@ -91,18 +91,18 @@
 	}
 	
 	document.onkeydown = (keyDownEvent) => {
+		//Prevent default key actions, if desired
+		keyDownEvent.preventDefault();
 	  
-	 //Prevent default key actions, if desired
-	 keyDownEvent.preventDefault();
+		// Track down key click
+		isKeyPressed[keyDownEvent.key] = true;
 	  
-	// Track down key click
-	 isKeyPressed[keyDownEvent.key] = true;
-	  
-	// Check described custom shortcut
-	if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
-		$modalShown = true
-		$modalPage = "devTools"
-	};
+		// Check described custom shortcut
+		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
+			$modalShown = true
+			$modalPage = "devTools"
+		};
+	}
 	  
 	document.onkeyup = (keyUpEvent) => {
 	  
