@@ -84,6 +84,23 @@
 	
 	// var useCustomTheme = true // wip
 	console.log($user)
+	var isKeyPressed = { 
+	   'd': false, // Dev toools (Alt Shift D)
+	   'i': false, // Was planned to be dev tools (Alt Shift I)
+	   's': false, // Planned to be in a shortcut for settings
+	}
+	window.onkeydown = function (e) {
+		isKeyPressed[e.key] = true;
+		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
+			$modalShown = true
+			$modalPage = "devTools"
+		};
+	};
+	
+	window.onkeyup = function (e) {
+		isKeyPressed[e.key] = false;
+	};
+
 </script>
 
 <!--
