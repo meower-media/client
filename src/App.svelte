@@ -91,7 +91,7 @@
 	}
 	window.onkeydown = function (e) {
 		isKeyPressed[e.key] = true;
-		if isKeyPressed["d"] console.log(`D ${e.altKey} ${e.shiftKey}`)
+		if (isKeyPressed["d"]) console.log(`D ${e.altKey} ${e.shiftKey}`)
 		if (isKeyPressed["d"] && e.altKey && e.shiftKey) {
 			$modalShown = true
 			$modalPage = "devTools"
