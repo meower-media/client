@@ -479,7 +479,7 @@
 
 <style>
 	.setup {
-		background-color: var(--orange);
+		background-color: var(--background);
 		color: var(--foreground-orange);
 		font-size: 150%;
 
@@ -578,5 +578,9 @@
 	.checkboxes {
 		text-align: left;
 		font-size: 90%;
+	}
+
+	.setup p {
+		color: var(--foreground);
 	}
 </style>
