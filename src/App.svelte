@@ -303,4 +303,8 @@
 		--foreground: white;
 		--foreground-orange: white;
 	}
+
+	.setup.mode-dark {
+		background: var(--background)
+	}
 </style>
