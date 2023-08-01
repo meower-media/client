@@ -10,8 +10,12 @@
 		$modalShown = false;
 	}}
 >
-	<image src={$imageClicked.url}>
-    <center><a href={$imageClicked.url} target="black">Open the original image</a></center>
+    <div slot="default">
+        <image src={$imageClicked.url}></image>
+        <center>
+            <a href={$imageClicked.url} target="black">Open the original image</a>
+        </center>
+    </div>
 </Modal>
 
 <style>
