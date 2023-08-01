@@ -2,7 +2,7 @@
 	import Modal from "../Modal.svelte";
 
 	import {modalShown, modalPage, imageClicked} from "../stores.js";
-    console.log(imageClicked)
+    console.log($imageClicked)
 </script>
 
 <Modal
@@ -10,7 +10,7 @@
 		$modalShown = false;
 	}}
 >
-	<image src={imageClicked}>
+	<image src={$imageClicked}>
 </Modal>
 
 <style>
