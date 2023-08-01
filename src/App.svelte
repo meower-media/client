@@ -30,6 +30,8 @@
 	import SwitchBGMSFXModal from "./lib/modals/SwitchBGMSFX.svelte";
 	import BasicModal from "./lib/modals/Basic.svelte";
 	import DevTooldModal from "./lib/modals/DevTools.svelte";
+	import CustomThemeModal from "./lib/modals/CustomTheme.svelte";
+	import ImageModal from "./lib/modals/Image.svelte";
 
 	import ModPanel from "./lib/ModPanel.svelte";
 
@@ -248,6 +250,10 @@
 			<BasicModal />
 		{:else if $modalPage === "devTools"}
 			<DevTooldModal /> <!-- wip dev tools -->
+		{:else if $modalPage === "customTheme"}
+			<CustomThemeModal />
+		{:else if $modalPage === "image"}
+			<ImageModal />
 		{:else}
 			<ErrorModal />
 		{/if}

@@ -373,7 +373,7 @@ function format( input ) {
 				src={url} 
 				alt={title} {title} 
 				class="post-image"
-				onclick={openImage({url})}
+				onclick="openImage({url})"
 			/>
 		{/each}
 	</div>
@@ -448,12 +448,12 @@ function format( input ) {
 		border-radius: 0.15em;
 	}
 	
-	:global(table, td, th) {
+	:global(table), :global(td), :global(th) {
 		border: 2px var(--orange) solid;
 		border-radius: 4px;
 	}
 	
-	:global(th, td) {
+	:global(th), :global(td) {
 		padding-inline-start: 1px;
 	}
 </style>
