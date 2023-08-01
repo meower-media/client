@@ -1,10 +1,10 @@
 <script>
 	import Modal from "../lib/Modal.svelte";
-	import Loading from "../Loading.svelte";
+	import Loading from "../lib/Loading.svelte";
 
-	import {modalShown, modalPage} from "../stores.js";
+	import {modalShown, modalPage} from "../lib/stores.js";
 
-	import * as clm from "../clmanager.js";
+	import * as clm from "../libclmanager.js";
 
 	let loading = false;
     let newTheme, theme
