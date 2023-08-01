@@ -4,7 +4,7 @@
 
 	import {modalShown, modalPage} from "../lib/stores.js";
 
-	import * as clm from "../libclmanager.js";
+	import * as clm from "../lib/clmanager.js";
 
 	let loading = false;
     let newTheme, theme
