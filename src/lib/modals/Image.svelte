@@ -11,7 +11,7 @@
 	}}
 >
     <div slot="default">
-        <image src={$imageClicked.url}></image>
+        <img src={$imageClicked.url} title="image.png" />
         <center>
             <a href={$imageClicked.url} target="black">Open the original image</a>
         </center>
