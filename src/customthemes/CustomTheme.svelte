@@ -2,100 +2,14 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, authHeader, user} from "../stores.js";
+	import {modalShown, modalPage} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
-	import * as BGM from "../BGM.js";
 
 	let loading = false;
-	let loginStatus = "";
-	let username = "";
-	let password = "";
-	let rememberMe = false;
+    let newTheme, theme
 
 	function doLogin() {
-		try {
-			loading = true;
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "authpswd",
-					val: {
-						username: username,
-						pswd: password,
-					},
-				},
-			})
-				.then(async val => {
-					try {
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: val.payload.username,
-							},
-						});
-
-						modalShown.set(false);
-
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							})
-						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
-						BGM.playBGM($user.bgm_song);
-					} catch (e) {
-						loading = false;
-						loginStatus =
-							"Unexpected " + e + " error getting user data!";
-					}
-				})
-				.catch(code => {
-					loading = false;
-					switch (code) {
-						case "E:103 | ID not found":
-							loginStatus = "Invalid username!";
-							break;
-						case "I:011 | Invalid Password":
-							loginStatus = "Invalid password!";
-							break;
-						case "E:018 | Account Banned":
-							modalPage.set("banned");
-							break;
-						case "E:019 | Illegal characters detected":
-							loginStatus =
-								"Usernames must not have spaces or other special characters!";
-							break;
-						case "E:106 | Too many requests":
-							loginStatus =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							loginStatus = `Unexpected ${code} error!`;
-					}
-				});
-		} catch (e) {
-			console.log(e);
-			loading = false;
-			loginStatus = "Error logging in: " + e;
-		}
 	}
 </script>
 

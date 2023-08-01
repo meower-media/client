@@ -17,6 +17,7 @@
 		mainPage as page,
 		modalShown,
 		modalPage,
+		imageClicked
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
@@ -199,7 +200,12 @@ function format( input ) {
 		post.user === "Announcement" ||
 		post.user === "Server" ||
 		webhook;
-console.log(JSON.stringify(post))
+	console.log(JSON.stringify(post))
+	function openImage(url) {
+		$modalShown = true
+		$modalPage = "image"
+		$imageClicked = url
+	}
 </script>
 
 <Container>
@@ -363,9 +369,12 @@ console.log(JSON.stringify(post))
     {/if}
 	<div class="post-images">
 		{#each images as { title, url }}
-			<a href={url} target="_blank" rel="noreferrer"
-				><img src={url} alt={title} {title} class="post-image" />
-			</a>
+			<img 
+				src={url} 
+				alt={title} {title} 
+				class="post-image"
+				onclick={openImage({url})}
+			/>
 		{/each}
 	</div>
 </Container>
