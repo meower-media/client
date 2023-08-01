@@ -1,5 +1,5 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../lib/Modal.svelte";
 	import Loading from "../Loading.svelte";
 
 	import {modalShown, modalPage} from "../stores.js";
