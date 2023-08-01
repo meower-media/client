@@ -10,16 +10,14 @@
         $modalShown = false;
     }}
 >
-    <center>
-        <img src={$imageClicked.url} title="image.png" />
+    <center slot="header">
+        <img src={$imageClicked.url} alt="An embed viewed in full screen" title="image.png" />
     </center>
-    <div slot="default">
-        <center>
-            <a href={$imageClicked.url} target="black" style="max-width: 100%"
-                >Open the original image</a
-            >
-        </center>
-    </div>
+    <center slot="default">
+        <a href={$imageClicked.url} target="black" style="max-width: 100%"
+            >Open the original image</a
+        >
+    </center>
 </Modal>
 
 <style>
