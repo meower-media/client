@@ -373,7 +373,7 @@ function format( input ) {
 				src={url} 
 				alt={title} {title} 
 				class="post-image"
-				onclick={openImage({url})}
+				on:click={openImage({url})}
 			/>
 		{/each}
 	</div>
