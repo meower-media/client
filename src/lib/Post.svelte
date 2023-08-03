@@ -402,8 +402,7 @@
 		{:else}
 			<Repost
 				post={post.content
-					.split(" ")
-					.splice(1, 1)[0]
+					.split(" ")[0]
 					.replace("[", "")
 					.replace("]", "")}
 			/>
