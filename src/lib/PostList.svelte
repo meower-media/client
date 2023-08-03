@@ -315,7 +315,8 @@
 					}
 				}}
 				on:keydown={event => {
-					if (event.key == "Enter" && !shiftHeld) {
+					if (event.key == "Enter" && !shiftHeld) { 
+						console.log(shiftHeld)
 						event.preventDefault();
 						if (!submitBtn.disabled) submitBtn.click();
 					}

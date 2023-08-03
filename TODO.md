@@ -3,7 +3,7 @@
 
 
 Doing:
- - Make it so that when you click on an image instead of taking you to the url it opens up a modal where you can see the image almost full screen
+ - fixing critical bugs (replies, shift enter)
 
 Will do:
  - Embeds for youtube videos
@@ -24,3 +24,4 @@ Partialy Done:
 Done:
  - Clickable Links
  - DevTools
+ - Make it so that when you click on an image instead of taking you to the url it opens up a modal where you can see the image almost full screen
