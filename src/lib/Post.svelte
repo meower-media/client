@@ -5,6 +5,7 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
 	import ReplyPost from "./ReplyPost.svelte";
+	import Repost from "./Repost.svelte";
 
 	import LiText from "./LiText.svelte";
 
@@ -17,14 +18,17 @@
 		mainPage as page,
 		modalShown,
 		modalPage,
-		imageClicked
+		imageClicked,
 	} from "../lib/stores.js";
-	import {shiftHeld} from "../lib/keyDetect.js";
+	import { shiftHeld } from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-//
-	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
+	//
+	import {
+		default as loadProfile,
+		profileCache,
+	} from "../lib/loadProfile.js";
 
-	import {onMount, tick} from "svelte";
+	import { onMount, tick } from "svelte";
 
 	export let post = {};
 	export let buttons = true;
@@ -92,11 +96,20 @@
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ") + 1);
 		}
-		if (["wlodekm3","wlodekm2","wlodekm4","wlodekm5","wlodekm"].includes(post.user.toLowerCase())) { // Will add more ppl if someone helps me make this client
-			dev = true
+		if (
+			[
+				"wlodekm3",
+				"wlodekm2",
+				"wlodekm4",
+				"wlodekm5",
+				"wlodekm",
+			].includes(post.user.toLowerCase())
+		) {
+			// Will add more ppl if someone helps me make this client
+			dev = true;
 		}
 		if (["3r1s_s"].includes(post.user.toLowerCase())) {
-			frien = true
+			frien = true;
 		}
 
 		// Match image syntax
@@ -116,7 +129,7 @@
 			}
 
 			if (
-				!IMAGE_HOST_WHITELIST.some(o =>
+				!IMAGE_HOST_WHITELIST.some((o) =>
 					result.value[2].toLowerCase().startsWith(o.toLowerCase())
 				)
 			)
@@ -134,65 +147,75 @@
 		if (!webhook) loadProfile(post.user);
 	}
 	onMount(initPostUser);
-	
-function format( input ) {
-	let out = input
-	let formating = {
-		"b":"<b>",
-		"/b":"</b>",
-		"i":"<i>",
-		"/i":"</i>",
-		"u":"<ins>",
-		"/u":"</ins>",
-		"bq":"<blockquote>",
-		"/bq":"</blockquote>",
-		"s":"<strike>",
-		"/s":"</strike>",
-		"list":"<ul>",
-		"/list":"</ul>",
-		"item":"<li>",
-		"/item":"</li>",
-		"table":"<table>",
-		"/table":"</table>",
-		"row":"<tr>",
-		"/row":"</tr>",
-		"header":"<th>",
-		"/header":"</th>",
-		"data":"<td>",
-		"/data":"</td>",
+
+	function format(input) {
+		let out = input;
+		let formating = {
+			b: "<b>",
+			"/b": "</b>",
+			i: "<i>",
+			"/i": "</i>",
+			u: "<ins>",
+			"/u": "</ins>",
+			bq: "<blockquote>",
+			"/bq": "</blockquote>",
+			s: "<strike>",
+			"/s": "</strike>",
+			list: "<ul>",
+			"/list": "</ul>",
+			item: "<li>",
+			"/item": "</li>",
+			table: "<table>",
+			"/table": "</table>",
+			row: "<tr>",
+			"/row": "</tr>",
+			header: "<th>",
+			"/header": "</th>",
+			data: "<td>",
+			"/data": "</td>",
+		};
+		Object.keys(formating).forEach(function (key) {
+			out = out.replaceAll(`${"[" + key + "]"}`, formating[key]);
+		});
+		return out;
 	}
-	Object.keys(formating).forEach(function(key) {
-		out = out.replaceAll(`${"["+key+"]"}`, formating[key]);
-	})
-	return out
-}
-	function deHTML( input ) {
-		let dhout = input
+	function deHTML(input) {
+		let dhout = input;
 		dhout = dhout.replaceAll("&", "&amp;");
 		dhout = dhout.replaceAll("<", "&lt;");
 		dhout = dhout.replaceAll(">", "&gt;");
 		dhout = dhout.replaceAll('"', "&quot;");
 		dhout = dhout.replaceAll("'", "&apos;");
-		return dhout
+		return dhout;
 	}
 	function linkify(inputText) {
 		var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
 		//URLs starting with http://, https://, or ftp://
-		replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-		replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+		replacePattern1 =
+			/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+		replacedText = inputText.replace(
+			replacePattern1,
+			'<a href="$1" target="_blank">$1</a>'
+		);
 
 		//URLs starting with "www." (without // before it, or it'd re-link the ones done above).
 		replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-		replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+		replacedText = replacedText.replace(
+			replacePattern2,
+			'$1<a href="http://$2" target="_blank">$2</a>'
+		);
 
 		//Change email addresses to mailto:: links.
-		replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-		replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+		replacePattern3 =
+			/(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+		replacedText = replacedText.replace(
+			replacePattern3,
+			'<a href="mailto:$1">$1</a>'
+		);
 
 		return replacedText;
 	}
-	
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -200,11 +223,11 @@ function format( input ) {
 		post.user === "Announcement" ||
 		post.user === "Server" ||
 		webhook;
-	console.log(JSON.stringify(post))
+	console.log(JSON.stringify(post));
 	function openImage(url) {
-		$modalShown = true
-		$modalPage = "image"
-		$imageClicked = url
+		$modalShown = true;
+		$modalPage = "image";
+		$imageClicked = url;
 	}
 </script>
 
@@ -218,7 +241,8 @@ function format( input ) {
 						on:click={() => {
 							let existingText = input.value;
 
-							const mentionRegex = /^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i;
+							const mentionRegex =
+								/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i;
 							const mention = `@${post.user} [${post.post_id}] `;
 
 							if (mentionRegex.test(existingText)) {
@@ -324,14 +348,14 @@ function format( input ) {
 						title="This post was posted by the @Webhooks bot. The username may not mean the user actually posted it!"
 					/>
 				{/if}
-				
+
 				{#if dev}
 					<Badge
 						text="DEV"
 						title="This post was made by a developer of F client"
 					/>
 				{/if}
-				
+
 				{#if frien}
 					<Badge
 						text="Frien :>"
@@ -361,23 +385,45 @@ function format( input ) {
 		</div>
 	</div>
 	{#if post.content.search(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
-        <br>
-        <ReplyPost post={post.content.split(" ").splice(1, 1)[0].replace("[", "").replace("]", "")} />
+		<br />
 		{#if post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
-	    	<p class="post-content">{post.content.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}</p>
+			<ReplyPost
+				post={post.content
+					.split(" ")
+					.splice(1, 1)[0]
+					.replace("[", "")
+					.replace("]", "")}
+			/>
+			<p class="post-content">
+				{post.content
+					.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i)
+					.join(" ")}
+			</p>
 		{:else}
-	    	<p class="post-content">{post.content.split(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}</p>
+			<Repost
+				post={post.content
+					.split(" ")
+					.splice(1, 1)[0]
+					.replace("[", "")
+					.replace("]", "")}
+			/>
+			<p class="post-content">
+				{post.content.split(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}
+			</p>
 		{/if}
-    {:else}
-		<p class="post-content">{@html format(linkify(deHTML(post.content)))}</p>
-    {/if}
+	{:else}
+		<p class="post-content">
+			{@html format(linkify(deHTML(post.content)))}
+		</p>
+	{/if}
 	<div class="post-images">
 		{#each images as { title, url }}
-			<img 
-				src={url} 
-				alt={title} {title} 
+			<img
+				src={url}
+				alt={title}
+				{title}
 				class="post-image"
-				on:click={openImage({url})}
+				on:click={openImage({ url })}
 			/>
 		{/each}
 	</div>
@@ -441,23 +487,26 @@ function format( input ) {
 		flex-wrap: wrap;
 		gap: 0.25em;
 	}
-	
+
 	:global(blockquote) {
 		border-left: 3px solid var(--orange);
-		margin: .25em .25em .25em 0;
-		padding: .25em .25em .25em .625em;
-		background-color: rgba(255,255,255,0.05);
+		margin: 0.25em 0.25em 0.25em 0;
+		padding: 0.25em 0.25em 0.25em 0.625em;
+		background-color: rgba(255, 255, 255, 0.05);
 		padding-right: 0;
 		margin-right: 0.4em;
 		border-radius: 0.15em;
 	}
-	
-	:global(table), :global(td), :global(th) {
+
+	:global(table),
+	:global(td),
+	:global(th) {
 		border: 2px var(--orange) solid;
 		border-radius: 4px;
 	}
-	
-	:global(th), :global(td) {
+
+	:global(th),
+	:global(td) {
 		padding-inline-start: 1px;
 	}
 </style>
