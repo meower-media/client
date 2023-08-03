@@ -159,8 +159,8 @@
 			list: "<ul>",
 			item: "<li>",
 			table: "<table>",
-			row: "<tr>",
-			header: "<th>",
+			tr: "<tr>",
+			th: "<th>",
 			data: "<td>",
 		};
 		Object.keys(formating).forEach(function (key) {
