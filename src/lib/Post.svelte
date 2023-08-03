@@ -375,7 +375,7 @@
 			{/if}
 		</div>
 	</div>
-	{#if post.content.search(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
+	{#if post.content.search(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1 || (post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1)}
 		<br />
 		{#if post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
 			<ReplyPost
