@@ -1,8 +1,26 @@
 # TODO list
 <sub>TODO list for f client 1.6</sub>
 
-- Themes using JSON
-- Bring back tweemoji
-- DevTools
-- Discord like message stuff (From F client 1.5)
-- ~~Emoji selector (ig that would be neat)~~ (if BM couldn't do it i prob wont)
+
+Doing:
+ - Make it so that when you click on an image instead of taking you to the url it opens up a modal where you can see the image almost full screen
+
+Will do:
+ - Embeds for youtube videos
+ - Bring back tweemoji
+ - Discord like message stuff (From F client 1.5)
+ - Emoji selector (ig that would be neat)
+
+
+Want to do but idk how:
+ - Uncensor posts
+
+
+
+Partialy Done:
+ - Custom themes
+ - Dev tools on <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>D</kbd> (Needs fixing)
+
+Done:
+ - Clickable Links
+ - DevTools

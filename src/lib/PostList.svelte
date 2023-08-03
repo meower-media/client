@@ -20,6 +20,7 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
+    import EmojiPicker from 'svelte-emoji-picker';
 	import {
 		authHeader,
 		user,
@@ -321,6 +322,7 @@
 				}}
 				bind:this={postInput}
 			/>
+			<EmojiPicker bind:value={postInput}
 			<button
 				class="upload-image"
 				name="addImage"
@@ -328,8 +330,11 @@
 				on:click|preventDefault={() => {
 					postInput_2.set(postInput);
 					Modals.showModal("addImg");
-				}}>+</button
+				}}
 			>
+			+
+			</button>
+			
 			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
 		</form>
 	{/if}
