@@ -323,17 +323,7 @@
 				bind:this={postInput}
 			/>
 			<EmojiPicker bind:value={postInput}
-			<button
-				class="upload-image"
-				name="addImage"
-				title="Add an image"
-				on:click|preventDefault={() => {
-					postInput_2.set(postInput);
-					Modals.showModal("addImg");
-				}}
-			>
-			+
-			</button>
+			<button	class="upload-image" name="addImage" title="Add an image" on:click|preventDefault={() => { postInput_2.set(postInput); Modals.showModal("addImg");}}>+</button>
 			
 			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
 		</form>
