@@ -152,30 +152,20 @@
 		let out = input;
 		let formating = {
 			b: "<b>",
-			"/b": "</b>",
 			i: "<i>",
-			"/i": "</i>",
 			u: "<ins>",
-			"/u": "</ins>",
 			bq: "<blockquote>",
-			"/bq": "</blockquote>",
 			s: "<strike>",
-			"/s": "</strike>",
 			list: "<ul>",
-			"/list": "</ul>",
 			item: "<li>",
-			"/item": "</li>",
 			table: "<table>",
-			"/table": "</table>",
 			row: "<tr>",
-			"/row": "</tr>",
 			header: "<th>",
-			"/header": "</th>",
 			data: "<td>",
-			"/data": "</td>",
 		};
 		Object.keys(formating).forEach(function (key) {
 			out = out.replaceAll(`${"[" + key + "]"}`, formating[key]);
+			out = out.replaceAll(`${"[/" + key + "]"}`, `/${formating[key]}`);
 		});
 		return out;
 	}
@@ -229,6 +219,7 @@
 		$modalPage = "image";
 		$imageClicked = url;
 	}
+	post.content = format(linkify(deHTML(post.content)))
 </script>
 
 <Container>
@@ -395,7 +386,7 @@
 					.replace("]", "")}
 			/>
 			<p class="post-content">
-				{post.content
+				{@html post.content
 					.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i)
 					.join(" ")}
 			</p>
@@ -407,12 +398,12 @@
 					.replace("]", "")}
 			/>
 			<p class="post-content">
-				{post.content.split(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}
+				{@html post.content.split(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}
 			</p>
 		{/if}
 	{:else}
 		<p class="post-content">
-			{@html format(linkify(deHTML(post.content)))}
+			{@html post.content}
 		</p>
 	{/if}
 	<div class="post-images">
