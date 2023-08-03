@@ -286,52 +286,57 @@
 				return false;
 			}}
 		>
-			<textarea
-				type="text"
-				class="white"
-				placeholder="Write something..."
-				name="input"
-				autocomplete="false"
-				maxlength="500"
-				rows="1"
-				use:autoresize
-				on:input={() => {
-					if ($lastTyped + 1500 < +new Date()) {
-						lastTyped.set(+new Date());
-						clm.link.send({
-							cmd: "direct",
+		<textarea
+			type="text"
+			class="white"
+			placeholder="Write something..."
+			name="input"
+			autocomplete="false"
+			maxlength="500"
+			rows="1"
+			use:autoresize
+			on:input={() => {
+				if ($lastTyped + 1500 < +new Date()) {
+					lastTyped.set(+new Date());
+					clm.link.send({
+						cmd: "direct",
+						val: {
+							cmd: "set_chat_state",
 							val: {
-								cmd: "set_chat_state",
-								val: {
-									chatid:
-										postOrigin === "home"
-											? "livechat"
-											: postOrigin,
-									state: postOrigin === "home" ? 101 : 100,
-								},
+								chatid:
+									postOrigin === "home"
+										? "livechat"
+										: postOrigin,
+								state: postOrigin === "home" ? 101 : 100,
 							},
-							listener: "typing_indicator",
-						});
-					}
-				}}
-				on:keydown={event => {
-					if (event.key == "Enter" && !shiftHeld) { 
-						console.log(shiftHeld)
-						event.preventDefault();
-						if (!submitBtn.disabled) submitBtn.click();
-					}
-				}}
-				bind:this={postInput}
-			/>
-			<!-- <EmojiPicker bind:value={postInput} /> -->
-			<button	class="upload-image" name="addImage" title="Add an image" on:click|preventDefault={() => { postInput_2.set(postInput); Modals.showModal("addImg");}}>+</button>
-			
-			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
-		</form>
+						},
+						listener: "typing_indicator",
+					});
+				}
+			}}
+			on:keydown={event => {
+				if (event.key == "Enter" && !shiftHeld) {
+					event.preventDefault();
+					if (!submitBtn.disabled) submitBtn.click();
+				}
+			}}
+			bind:this={postInput}
+		/>
+		<button
+			class="upload-image"
+			name="addImage"
+			title="Add an image"
+			on:click|preventDefault={() => {
+				postInput_2.set(postInput);
+				Modals.showModal("addImg");
+			}}>+</button
+		>
+		<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
+	</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
 	{#if postOrigin}
-		<TypingIndicator forPage={postOrigin} />
+	<TypingIndicator forPage={postOrigin} />
 	{/if}
 	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
