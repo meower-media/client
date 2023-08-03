@@ -360,10 +360,14 @@ function format( input ) {
 			{/if}
 		</div>
 	</div>
-	{#if post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
+	{#if post.content.search(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
         <br>
         <ReplyPost post={post.content.split(" ").splice(1, 1)[0].replace("[", "").replace("]", "")} />
-	    <p class="post-content">{post.content.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}</p>
+		{#if post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1}
+	    	<p class="post-content">{post.content.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}</p>
+		{:else}
+	    	<p class="post-content">{post.content.split(/^\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")}</p>
+		{/if}
     {:else}
 		<p class="post-content">{@html format(linkify(deHTML(post.content)))}</p>
     {/if}
