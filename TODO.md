@@ -9,11 +9,11 @@ Will do:
  - Embeds for youtube videos
  - Bring back tweemoji
  - Discord like message stuff (From F client 1.5)
- - Emoji selector (ig that would be neat)
 
 
 Want to do but idk how:
  - Uncensor posts
+ - Emoji selector (ig that would be neat)
 
 
 
