@@ -132,8 +132,7 @@
 				!IMAGE_HOST_WHITELIST.some((o) =>
 					result.value[2].toLowerCase().startsWith(o.toLowerCase())
 				)
-			)
-				return;
+			) console.log(`image host not whitelisted ${result.value[2].toLowerCase()}`);return;
 
 			images.push({
 				title: result.value[1],
