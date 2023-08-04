@@ -4,19 +4,19 @@ export var isKeyPressed = {
 	's': false, // Planned to be in a shortcut for settings
  }
 
-window.onkeydown = function (e) {
+ document.addEventListener('keydown',function (e) {
 	if (!e) e = window.event;
 	isKeyPressed[e.key] = true;
 	shiftHeld = e.shiftKey;
 	altHeld = e.altKey
-};
+});;
 
-window.onkeyup = function (e) {
+document.addEventListener('keyup',function (e) {
 	if (!e) e = window.event;
 	isKeyPressed[e.key] = false;
 	shiftHeld = e.shiftKey;
 	altHeld = e.altKey
-};
+});;
 
 window.onmousemove = function (e) {
 	if (!e) e = window.event;
