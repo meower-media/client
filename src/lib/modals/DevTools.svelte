@@ -8,7 +8,7 @@
 	import {link} from "../clmanager.js"
 	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
-	import {shiftHeld} from "../keyDetect.js";
+	import {shiftHeld, altHeld, isKeyPressed} from "../keyDetect.js";
 	
 	import {profileCache} from "../loadProfile.js";
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -156,6 +156,8 @@
 			<li>chatName: {JSON.stringify($chatName)} </li>
 			<li>windowStyle: {JSON.stringify($windowStyle)} </li>
 		</ul>
+		<h4>KeyDetect</h4>
+		{JSON.stringify(shiftHeld, altHeld, isKeyPressed)}
 	</Container>
 <!-- 	<Container style="height: 150px;">
 		<div class="settings-controls">
