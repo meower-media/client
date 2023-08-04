@@ -55,6 +55,7 @@
 	} from "./lib/stores.js";
 	import {tick} from "svelte";
 	import {stringToTheme} from "./customthemes/CustomTheme.js";
+	import {altHeld, shiftHeld, isKeyPressed} from "./lib/keyDetect.js";
 	const themes = {
 		"orange":{
 			orange: "#f9a636",
@@ -83,26 +84,15 @@
 		_customTheme = themes[$user.theme];
 	}
 	customTheme.set(_customTheme);
+
+	documentaddEventListener('keyup',function(){
+		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
+			$modalShown = true
+			$modalPage = "devTools"
+		};});
 	
 	// var useCustomTheme = true // wip
 	console.log($user)
-	var isKeyPressed = { 
-	   'd': false, // Dev toools (Alt Shift D)
-	   'i': false, // Was planned to be dev tools (Alt Shift I)
-	   's': false, // Planned to be in a shortcut for settings
-	}
-	window.onkeydown = function (e) {
-		isKeyPressed[e.key] = true;
-		if (isKeyPressed["d"]) console.log(`D ${e.altKey} ${e.shiftKey}`)
-		if (isKeyPressed["d"] && e.altKey && e.shiftKey) {
-			$modalShown = true
-			$modalPage = "devTools"
-		};
-	};
-	
-	window.onkeyup = function (e) {
-		isKeyPressed[e.key] = false;
-	};
 
 </script>
 
