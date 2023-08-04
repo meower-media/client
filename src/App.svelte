@@ -85,7 +85,7 @@
 	}
 	customTheme.set(_customTheme);
 
-	document.addEventListener('keyup',function(){
+	document.addEventListener('keyup',function(keydownEvent){
 		if (isKeyPressed["d"] && keydownEvent.altKey && keydownEvent.shiftKey) {
 			$modalShown = true
 			$modalPage = "devTools"
