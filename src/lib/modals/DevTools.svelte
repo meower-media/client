@@ -157,7 +157,7 @@
 			<li>windowStyle: {JSON.stringify($windowStyle)} </li>
 		</ul>
 		<h4>KeyDetect</h4>
-		{JSON.stringify(shiftHeld, altHeld, isKeyPressed)}
+		{JSON.stringify({shiftHeld:shiftHeld, altHeld:altHeld, isKeyPressed:isKeyPressed})}
 	</Container>
 <!-- 	<Container style="height: 150px;">
 		<div class="settings-controls">
