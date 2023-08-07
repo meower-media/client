@@ -113,8 +113,8 @@
 	id="main"
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
-	class:mode-light={!($user.mode === false) && $user.name}
-	class:mode-dark={$user.mode === false || !($user.name)}
+	class:mode-light={$user.mode === true && ($user.name || $screen !== "setup")}
+	class:mode-dark={$user.mode === false || !($user.name || $screen !== "setup")}
 	class:layout-old={$user.layout === "old"}
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
