@@ -427,8 +427,10 @@
 						id="remember-me"
 						type="checkbox"
 						bind:checked={rememberMe}
+						disabled
 					/>
 					<label for="remember-me"> Save this login </label>
+					<small>Disabled due to errors caused by this feature</small>
 					<br />
 					<input
 						id="accept-terms"

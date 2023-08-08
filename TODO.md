@@ -3,12 +3,14 @@
 
 
 Doing:
- - fixing critical bugs (replies, shift enter)
+ ...
 
 Will do:
  - Embeds for youtube videos
  - Bring back tweemoji
  - Discord like message stuff (From F client 1.5)
+ - fix replies with links
+ - fix save login
 
 
 Want to do but idk how:
@@ -22,6 +24,8 @@ Partialy Done:
  - Dev tools on <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>D</kbd> (Needs fixing)
 
 Done:
+ - pfps from old f client
+ - fixed shift enter
  - Clickable Links
  - DevTools
  - Make it so that when you click on an image instead of taking you to the url it opens up a modal where you can see the image almost full screen
