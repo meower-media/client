@@ -9,7 +9,6 @@
 	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
 	import {shiftHeld, altHeld, isKeyPressed} from "../keyDetect.js";
-	import {_customTheme} from "../../App.svelte"
 	
 	import {profileCache} from "../loadProfile.js";
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -28,7 +27,8 @@
 		screen,
 		chatName,chatid,chatMembers,chatOwner,
 		windowStyle,
-		basicModalTitle, basicModalDesc
+		basicModalTitle, basicModalDesc,
+		customTheme
 	} from "../stores.js";
 	const PFP_COUNT = 38;
 	var pfp_temp = $user.pfp_data
@@ -162,7 +162,7 @@
 		altHeld: <span>{altHeld}</span>
 		isKeyPressed: <span>{JSON.stringify(isKeyPressed)}</span>
 		<h4>Other</h4>
-		Theme (_customTheme): {JSON.stringify(_customTheme)}
+		Theme (customTheme): {JSON.stringify(customTheme)}
 	</Container>
 <!-- 	<Container style="height: 150px;">
 		<div class="settings-controls">

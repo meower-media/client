@@ -56,7 +56,7 @@
 	import {tick} from "svelte";
 	import {stringToTheme} from "./customthemes/CustomTheme.js";
 	import {altHeld, shiftHeld, isKeyPressed} from "./lib/keyDetect.js";
-	export var _customTheme
+	var _customTheme
 	const themes = {
 		"orange":{
 			orange: "#f9a636",
