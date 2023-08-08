@@ -77,7 +77,7 @@
 		}
 	}
 	
-	var _customTheme = $customTheme;
+	export var _customTheme = $customTheme;
 	if(($user.theme).startsWith("custom:")) {
 		_customTheme = stringToTheme($user.theme);
 	} else {

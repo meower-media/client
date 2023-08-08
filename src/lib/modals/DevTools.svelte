@@ -9,6 +9,7 @@
 	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
 	import {shiftHeld, altHeld, isKeyPressed} from "../keyDetect.js";
+	import {customTheme} from "../App.svelte"
 	
 	import {profileCache} from "../loadProfile.js";
 	import {autoresize} from "svelte-textarea-autoresize";
