@@ -1,5 +1,6 @@
 <script>
 	import Container from "./Container.svelte";
+	import { meowerRequest } from "./clmanager";
 
     export let title;
     export let url;
@@ -8,7 +9,6 @@
     let typesplit = type.split(";")[0].split("/")[0]
 
     let show = true
-    let other = false
 </script>
 
 <div class="AttachmentClass">
@@ -21,6 +21,13 @@
             <a href={url} target="_blank" rel="noreferrer">
                 <!-- svelte-ignore a11y-media-has-caption -->
                 <video src={url} controls class="post-image" />
+            </a>
+        {:else if typesplit == "audio"}
+            <a href={url} target="_blank" rel="noreferrer">
+                <!-- svelte-ignore a11y-media-has-caption -->
+                <audio controls>
+                    <source src={url}>
+                </audio>
             </a>
         {:else}
             <a href={url} target="_blank" rel="noreferrer">Other File Type ({type})</a>

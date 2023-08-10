@@ -1,4 +1,7 @@
-// Some goofy code
+// This holds all the info for BGM
+
+// MODDERS AND CUSTOM CLIENT CREATORS:
+// Sorry
 
 export const audioData = [
     {"name":"Night sky", "author":"Meguy7878", "file":"0c38836da69714eae0f2a6662f9cbc58.wav"},
