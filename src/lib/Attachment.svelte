@@ -13,25 +13,21 @@
 
 <div class="AttachmentClass">
     {#if show}
-        {#if typesplit == "image"}
-            <a href={url} target="_blank" rel="noreferrer">
+        <a href={url} target="_blank" rel="noreferrer">
+            {#if typesplit == "image"}
                 <img src={url} alt={title} {title} class="post-image" />
-            </a>
-        {:else if typesplit == "video"}
-            <a href={url} target="_blank" rel="noreferrer">
+            {:else if typesplit == "video"}
                 <!-- svelte-ignore a11y-media-has-caption -->
                 <video src={url} controls class="post-image" />
-            </a>
-        {:else if typesplit == "audio"}
-            <a href={url} target="_blank" rel="noreferrer">
+            {:else if typesplit == "audio"}
                 <!-- svelte-ignore a11y-media-has-caption -->
                 <audio controls>
                     <source src={url}>
                 </audio>
-            </a>
-        {:else}
-            <a href={url} target="_blank" rel="noreferrer">Other File Type ({type})</a>
-        {/if}
+            {:else}
+                Other File Type ({type})
+            {/if}
+        </a>
     {/if}
 </div>
 
