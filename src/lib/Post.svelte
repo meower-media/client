@@ -10,12 +10,10 @@
 	import LiText from "./LiText.svelte";
 
 	import {
-		profileClicked,
 		postClicked,
 		user,
 		chatid,
 		ulist,
-		mainPage as page,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
@@ -23,9 +21,10 @@
 
 	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js";
 
-	import {default as loadProfile, profileCache} from "../lib/loadProfile.js";
+	import {default as loadProfile} from "../lib/loadProfile.js";
 
-	import {onMount, tick} from "svelte";
+	import {goto} from '@roxi/routify';
+	import {onMount} from "svelte";
 
 	export let post = {};
 	export let buttons = true;
@@ -162,10 +161,7 @@
 			class="pfp"
 			on:click={async () => {
 				if (noPFP) return;
-				page.set("");
-				await tick();
-				profileClicked.set(post.user);
-				page.set("profile");
+				$goto(`/users/${post.user}`);
 			}}
 		>
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}

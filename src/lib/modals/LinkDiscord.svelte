@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, mainPage as page} from "../stores.js";
+	import {modalShown} from "../stores.js";
 
 	import {tick} from "svelte";
 

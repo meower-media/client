@@ -3,7 +3,6 @@
 
 	import {
 		modalShown,
-		mainPage as page,
 		searchQuery,
 		searchType,
 	} from "../stores.js";

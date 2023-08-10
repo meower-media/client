@@ -1,10 +1,8 @@
 <script>
-	import Container from "../../lib/Container.svelte";
 	import PFP from "../../lib/PFP.svelte";
-	import {apiUrl, encodeApiURLParams} from "../../lib/urls.js";
 	import * as clm from "../../lib/clmanager.js";
 
-	import {user, mainPage as page} from "../../lib/stores.js";
+	import {user} from "../../lib/stores.js";
 
 	import {profileCache} from "../../lib/loadProfile.js";
 

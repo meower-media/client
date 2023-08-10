@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {mainPage as page, profileClicked} from "../stores.js";
+	import {profileClicked} from "../stores.js";
 	import PagedList from "../PagedList.svelte";
 	import Container from "../Container.svelte";
 	import * as Modals from "../modals.js";

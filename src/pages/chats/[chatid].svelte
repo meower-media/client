@@ -3,22 +3,101 @@
 -->
 <script>
 	import {
+        chatid,
 		chatName,
 		chatMembers,
-		chatid,
 		chatOwner,
 		modalShown,
 		modalPage,
-		user,
+        basicModalTitle,
+        basicModalDesc,
 		profileClicked_GC,
-	} from "../lib/stores.js";
-	import {mobile} from "../lib/responsiveness.js";
-	import Member from "../lib/Member.svelte";
-	import Container from "../lib/Container.svelte";
-	import * as clm from "../lib/clmanager.js";
-	import PostList from "../lib/PostList.svelte";
+	} from "../../lib/stores.js";
+	import {mobile} from "../../lib/responsiveness.js";
+	import Member from "../../lib/Member.svelte";
+	import Container from "../../lib/Container.svelte";
+	import * as clm from "../../lib/clmanager.js";
+	import PostList from "../../lib/PostList.svelte";
+
+    import {goto, params} from '@roxi/routify';
+	import {onDestroy, onMount} from "svelte/internal";
 
 	let showMembers = !$mobile;
+
+    $: $chatid = $params.chatid;
+
+    let chatData = {};
+    onMount(async () => {
+        if ($chatid === "livechat") {
+            clm.link.send({
+				cmd: "direct",
+				val: {
+					cmd: "set_chat_state",
+					val: {
+						state: 1,
+						chatid: $chatid,
+					},
+				},
+			});
+        }
+
+        if (!$chatName || !$chatMembers || !$chatOwner) {
+            try {
+                await clm.meowerRequest({
+                    cmd: "direct",
+                    val: {
+                        cmd: "get_chat_data",
+                        val: $chatid,
+                    },
+                });
+            } catch (e) {
+                $basicModalTitle = "Chat Not Found";
+                if (e === "E:103 | ID not found") {
+                    $basicModalDesc = `This chat (${$chatid}) doesn't exist or you don't have access to it.`;
+                } else {
+                    $basicModalDesc = `Unexpected ${e} error getting chat data!`;
+                }
+                $modalPage = "BasicModal";
+                $modalShown = true;
+
+                $goto("/chats");
+            }
+
+            const evId = clm.link.on("direct", cmd => {
+                if (cmd.val.mode === "chat_data") {
+                    chatData = cmd.val.payload;
+
+                    if (chatData.chatid !== $chatid) return;
+
+                    $chatName = chatData.nickname;
+                    $chatMembers = chatData.members;
+                    $chatOwner = chatData.owner;
+                }
+		    });
+
+            onDestroy(() => { clm.link.off(evId); });
+        }
+    });
+
+    onDestroy(() => {
+        if ($chatid === "livechat") {
+            clm.link.send({
+				cmd: "direct",
+				val: {
+					cmd: "set_chat_state",
+					val: {
+						state: 0,
+						chatid: $chatid,
+					},
+				},
+			});
+        }
+
+        $chatid = "";
+        $chatName = "";
+        $chatMembers = [];
+        $chatOwner = "";
+    });
 </script>
 
 <!--
@@ -31,9 +110,9 @@
 		<Container>
 			<h1 class="chat-name">
 				{$chatName}
-				<span class="chat-id">(<code>{$chatid}</code>)</span>
+				<span class="chat-id">(<code>{$params.chatid}</code>)</span>
 			</h1>
-			{#if $chatid !== "livechat"}
+			{#if $params.chatid !== "livechat"}
 				<div class="settings-controls">
 					<button
 						class="circle members"
@@ -45,38 +124,13 @@
 			{/if}
 		</Container>
 		<PostList
-			fetchUrl={$chatid === "livechat" ? null : `posts/${$chatid}`}
-			postOrigin={$chatid}
+			fetchUrl={$params.chatid === "livechat" ? null : `posts/${$params.chatid}`}
+			postOrigin={$params.chatid}
 			chatName={$chatName}
 			canPost={true}
-			on:loaded={() => {
-				if ($chatid === "livechat") {
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "set_chat_state",
-							val: {
-								state: 1,
-								chatid: $chatid,
-							},
-						},
-					});
-				} else {
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "set_chat_state",
-							val: {
-								state: 1,
-								chatid: $chatid,
-							},
-						},
-					});
-				}
-			}}
 		/>
 	</div>
-	{#if showMembers && $chatid !== "livechat"}
+	{#if showMembers && $params.chatid !== "livechat"}
 		<div id="members">
 			<div id="members-inner">
 				{#each $chatMembers as chatmember}
@@ -107,7 +161,7 @@
 							modalShown.set(true);
 						}}
 					/>
-					{#if $mobile && $chatid !== "livechat"}
+					{#if $mobile && $params.chatid !== "livechat"}
 						<button
 							class="circle join"
 							on:click={() => {

@@ -1,11 +1,12 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, mainPage} from "../stores.js";
+	import {modalShown} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
 
 	import {tick} from "svelte";
+	import { goto } from "@roxi/routify";
 
 	let createStatus,
 		chatNickname = "";
@@ -22,8 +23,7 @@
 			})
 				.then(() => {
 					modalShown.set(false);
-					mainPage.set("blank");
-					tick().then(() => mainPage.set("chatlist"));
+					$goto("/chats");
 				})
 				.catch(code => {
 					createStatus = `Unexpected ${code} error!`;

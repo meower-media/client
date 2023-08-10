@@ -1,5 +1,5 @@
 <script>
-	import * as Modals from "../../lib/modals.js";
+	import * as Modals from "../modals.js";
 	Modals.showModal("switchTheme");
 </script>
 

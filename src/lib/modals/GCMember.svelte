@@ -10,14 +10,14 @@
 		modalPage,
 		profileClicked_GC,
 		user,
-		profileClicked,
-		mainPage as page,
 		chatid,
 		chatOwner,
 		chatMembers,
 	} from "../stores.js";
 
 	import ProfileView from "../ProfileView.svelte";
+
+	import {goto} from '@roxi/routify';
 
 	function filter1(v) {
 		return v !== $profileClicked_GC;
@@ -36,18 +36,7 @@
 			class="long"
 			on:click={() => {
 				$modalShown = false;
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: "set_chat_state",
-						val: {
-							state: 0,
-							chatid: $chatid,
-						},
-					},
-				});
-				profileClicked.set($profileClicked_GC);
-				page.set("profile");
+				$goto(`/users/${$profileClicked_GC}`);
 			}}>View full profile</button
 		>
 		{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}

@@ -3,9 +3,10 @@
  */
 
 import {writable} from "svelte/store";
+import { systemDarkMode } from "./responsiveness.js";
 
-export const screen = writable("setup");
-export const mainPage = writable("home");
+// Used for setup screen
+export const setup = writable(true);
 export const setupPage = writable("logo");
 
 // Used for modal overlay
@@ -25,8 +26,8 @@ export const attemptedAutoReconnect = writable(false);
 export const lastTyped = writable(0);
 
 // Current chat stuff
-export const chatName = writable("");
 export const chatid = writable("");
+export const chatName = writable("");
 export const chatMembers = writable([]);
 export const chatOwner = writable("");
 
@@ -61,7 +62,7 @@ export const user = writable({
 	lvl: 0,
 	unread_inbox: false,
 	theme: "orange",
-	mode: true,
+	mode: !systemDarkMode(),
 	sfx: true,
 	bgm: false,
 	bgm_song: 2,

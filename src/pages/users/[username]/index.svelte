@@ -3,23 +3,21 @@
 	import {
 		userToMod,
 		modPanelOpen,
-		profileClicked,
 		user,
-		mainPage as page,
-	} from "../lib/stores.js";
-	import * as Modals from "../lib/modals.js";
+	} from "../../../lib/stores.js";
+	import * as Modals from "../../../lib/modals.js";
 
-	import {profileCache} from "../lib/loadProfile.js";
+	import {profileCache} from "../../../lib/loadProfile.js";
 
-	import ProfileView from "../lib/ProfileView.svelte";
+	import ProfileView from "../../../lib/ProfileView.svelte";
 
-	import PFP from "../lib/PFP.svelte";
-	import Loading from "../lib/Loading.svelte";
-	import Container from "../lib/Container.svelte";
-	import * as clm from "../lib/clmanager.js";
-	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
+	import PFP from "../../../lib/PFP.svelte";
+	import Loading from "../../../lib/Loading.svelte";
+	import Container from "../../../lib/Container.svelte";
+	import * as clm from "../../../lib/clmanager.js";
+	import {apiUrl, encodeApiURLParams} from "../../../lib/urls.js";
 
-	import {tick} from "svelte";
+    import {params, goto} from '@roxi/routify';
 
 	const PFP_COUNT = 34;
 
@@ -27,7 +25,7 @@
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
-		let path = `users/${$profileClicked}`;
+		let path = `users/${$params.username}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
 		const resp = await fetch(`${apiUrl}${path}`);
 		if (!resp.ok) {
@@ -63,14 +61,31 @@
 			<Loading />
 		</div>
 	{:then data}
-		<ProfileView username={$profileClicked} />
+		<ProfileView username={$params.username} />
 
-		{#if data.quote}
-			<Container>
-				<h3>Quote</h3>
-				<p>"<i>{data.quote}</i>"</p>
-			</Container>
-		{/if}
+        {#if $user.name == $params.username}
+            <Container>
+                <h3>Quote</h3>
+                <input
+                    type="text"
+                    class="modal-input white"
+                    style="font-style: italic"
+                    placeholder="Write something..."
+                    maxlength="360"
+                    bind:value={$user.quote}
+                    on:change={async () => {
+                        await clm.updateProfile();
+                    }}
+                />
+            </Container>
+        {:else}
+            {#if data.quote}
+                <Container>
+                    <h3>Quote</h3>
+                    <p>"<i>{data.quote}</i>"</p>
+                </Container>
+            {/if}
+        {/if}
 
 		{#if pfpSwitcher}
 			<Container>
@@ -120,33 +135,22 @@
 					{/if}
 				</div>
 			</Container>
-		{:else if $profileClicked === $user.name}
+		{:else if $params.username === $user.name}
 			<button
 				class="long"
 				title="Change Profile Picture"
 				on:click={() => (pfpSwitcher = true)}
 				>Change Profile Picture</button
 			>
-			<button
-				class="long"
-				title={data.quote ? "Update Quote" : "Set Quote"}
-				on:click={() => {
-					Modals.showModal("setQuote");
-				}}>{data.quote ? "Update Quote" : "Set Quote"}</button
-			>
 		{/if}
 
 		<button
 			class="long"
 			title="View Recent Posts"
-			on:click={() => {
-				window.scrollTo(0, 0);
-				page.set("blank");
-				tick().then(() => page.set("recent"));
-			}}>View Recent Posts</button
+			on:click={() => {$goto("./posts")}}>View Recent Posts</button
 		>
 
-		{#if $user.name && $profileClicked !== $user.name}
+		{#if $user.name && $params.username !== $user.name}
 			<button
 				class="long"
 				on:click={() => {
@@ -166,14 +170,14 @@
 					class="long"
 					title="Moderate User"
 					on:click={() => {
-						$userToMod = $profileClicked;
+						$userToMod = $params.username;
 						$modPanelOpen = true;
 					}}>Moderate User</button
 				>
 			{/if}
 		{/if}
 	{:catch e}
-		<ProfileView username={$profileClicked} />
+		<ProfileView username={$params.username} />
 	{/await}
 </div>
 

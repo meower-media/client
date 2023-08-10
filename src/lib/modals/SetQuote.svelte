@@ -1,14 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {user, modalShown, mainPage as page} from "../stores.js";
-	import {shiftHeld} from "../keyDetect.js";
+	import {user, modalShown} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
-
-	import {tick} from "svelte";
-
-	import {autoresize} from "svelte-textarea-autoresize";
 </script>
 
 <Modal
@@ -22,10 +17,8 @@
 			on:submit|preventDefault={async e => {
 				modalShown.set(false);
 
+				$user.quote = e.target[0].value;
 				await clm.updateProfile();
-
-				page.set("blank");
-				tick().then(() => page.set("profile"));
 			}}
 		>
 			<span
@@ -37,7 +30,7 @@
 				class="modal-input white"
 				placeholder="Write something..."
 				maxlength="360"
-				bind:value={$user.quote}
+				value={$user.quote}
 			/><br /><br />
 			<div class="modal-buttons">
 				<button

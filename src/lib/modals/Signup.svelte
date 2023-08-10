@@ -5,14 +5,13 @@
 	import {
 		modalShown,
 		modalPage,
-		mainPage,
 		authHeader,
 		user,
 	} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
 
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
 	let loading = false;
 	let loginStatus = "";
@@ -75,8 +74,7 @@
 							);
 						}
 
-						mainPage.set("blank");
-						tick().then(() => mainPage.set("oobe"));
+						$goto("/setup");
 					} else {
 						loginStatus = "Unexpected error logging in!";
 					}

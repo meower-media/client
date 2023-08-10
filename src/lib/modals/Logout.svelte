@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {setupPage, screen, modalShown} from "../stores.js";
+	import {setup, setupPage, modalShown} from "../stores.js";
 	import * as clm from "../clmanager.js";
 
 	import {tick} from "svelte";
@@ -27,7 +27,7 @@
 					localStorage.clear();
 					await clm.disconnect();
 					modalShown.set(false);
-					screen.set("setup");
+					setup.set(true);
 					await tick();
 					setupPage.set("reconnect");
 				}}>Logout</button

@@ -1,18 +1,47 @@
+<!--
+	Home except it's now implemented.
+-->
 <script>
-	import {
-		mainPage as page,
-		profileClicked,
-		searchQuery,
-		searchType,
-	} from "../lib/stores.js";
-	import {apiUrl} from "../lib/urls.js";
-	import Loading from "../lib/Loading.svelte";
+    import Loading from "../lib/Loading.svelte";
+	import PostList from "../lib/PostList.svelte";
 	import Container from "../lib/Container.svelte";
-	import LargeCount from "../lib/LargeCount.svelte";
+    import LargeCount from "../lib/LargeCount.svelte";
 
-	let errors = "";
+    import {apiUrl} from "../lib/urls.js";
+
+    import {params, goto} from "@roxi/routify";
+
+    let errors = "";
+
+    console.log($params.type);
+    console.log($params.q);
 </script>
 
+{#if $params.type && $params.q}
+<div class="search-results">
+    <Container>
+        <h1>Search Results for "{$params.q}"</h1>
+    </Container>
+    <PostList
+        fetchUrl="search/{$params.type}"
+        queryParams={{q: $params.q}}
+        postOrigin=""
+        canPost={false}
+    >
+        <Container slot="error" let:error>
+            Error loading results. Please try again.
+            <pre><code>{error}</code></pre>
+        </Container>
+        <Container slot="empty">No results found.</Container>
+    </PostList>
+</div>
+
+<style>
+	h1 {
+		margin: 0;
+	}
+</style>
+{:else}
 <div class="Search">
 	<Container>
 		<h1>Search</h1>
@@ -27,9 +56,7 @@
 				// @ts-ignore
 				const input = e.target.elements.query;
 
-				searchQuery.set(input.value);
-				searchType.set("home");
-				page.set("searchresults");
+				$goto(`/search?type=posts&q=${input.value}`);
 			}}
 		>
 			<input
@@ -59,9 +86,7 @@
 				// @ts-ignore
 				const input = e.target.elements.query;
 
-				searchQuery.set(input.value);
-				searchType.set("users");
-				page.set("searchresults");
+				$goto(`/search?type=users&q=${input.value}`);
 			}}
 		>
 			<input
@@ -120,8 +145,7 @@
 					const resp = await fetch(url);
 					if (!resp.ok) userNotFound();
 
-					profileClicked.set(username);
-					page.set("profile");
+                    $goto(`/users/${username}`);
 				} catch (e) {
 					errors = e;
 				} finally {
@@ -194,3 +218,4 @@
 		flex-shrink: 0;
 	}
 </style>
+{/if}

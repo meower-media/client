@@ -4,7 +4,7 @@
 
 import Cloudlink from "./cloudlink.js";
 import {
-	screen,
+	setup,
 	setupPage,
 	ulist,
 	user,
@@ -162,7 +162,7 @@ export async function connect() {
 				e.reason !== "Intentional disconnect"
 			) {
 				attemptedAutoReconnect.set(true);
-				screen.set("setup");
+				setup.set(true);
 				disconnected.set(false);
 				await tick();
 				await sleep(1000);

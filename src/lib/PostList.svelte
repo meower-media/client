@@ -109,10 +109,17 @@
 		 */
 		const json = await resp.json();
 
+		let posts = [];
+		if (json.autoget) {
+			posts = json.autoget;
+		} else {
+			posts = [json];
+		}
+		
 		/**
 		 * @type {Array<import("./types.js").ListPost | import("./types.js").User>}
 		 */
-		result = json.autoget.map(post => {
+		result = posts.map(post => {
 			if ("lower_username" in post) {
 				/** @type import("./types.js").User */
 				// @ts-ignore

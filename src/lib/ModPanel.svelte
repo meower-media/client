@@ -4,13 +4,11 @@
 	import * as clm from "./clmanager.js";
 	import {levels} from "./formatting.js";
 	import {
-		mainPage as page,
 		userToMod,
-		profileClicked,
 		announcementToSend,
 		user,
 	} from "./stores";
-	import {tick} from "svelte";
+	import {goto} from '@roxi/routify';
 	import * as Modals from "./modals.js";
 	import {onMount} from "svelte/internal";
 
@@ -68,13 +66,6 @@
 			level: 3,
 		},
 	];
-
-	async function gotoProfile(username) {
-		page.set("");
-		await tick();
-		profileClicked.set(username);
-		page.set("profile");
-	}
 
 	let items = [];
 
@@ -176,7 +167,7 @@
 			<a
 				href="/"
 				on:click|preventDefault={() =>
-					gotoProfile(ipData.user.username)}>{ipData.user.username}</a
+					$goto(`/users/${ipData.user.username}`)}>{ipData.user.username}</a
 			><br />
 			<b>Quote:</b>
 			<i>"{ipData.user.quote}"</i><br />
@@ -195,7 +186,7 @@
 				<a
 					href="/"
 					on:click|preventDefault={() =>
-						gotoProfile(ipData.last_user)}>{ipData.last_user}</a
+						$goto(`/users/${ipData.last_user}`)}>{ipData.last_user}</a
 				><br />
 				<b>Users on IP:</b>
 				<ul>
@@ -204,7 +195,7 @@
 							<a
 								href="/"
 								on:click|preventDefault={() =>
-									gotoProfile(username)}>{username}</a
+									$goto(`/users/${username}`)}>{username}</a
 							>
 						</li>
 					{/each}

@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, modalShown} from "../stores.js";
+	import {setup, setupPage, modalShown} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
 
@@ -21,7 +21,7 @@
 
 				localStorage.clear();
 
-				screen.set("setup");
+				setup.set(true);
 				await tick();
 				setupPage.set("reconnect");
 			})
