@@ -214,15 +214,15 @@ export async function connect() {
 						screen.set("setup");
 						return;
 					}
-
-					// refresh screen
-					screen.set("blank");
-					await tick();
-					screen.set("main");
-
-					// hide modal
-					reconnecting.set(false);
 				}
+
+				// refresh screen
+				screen.set("blank");
+				await tick();
+				screen.set("main");
+
+				// hide modal
+				reconnecting.set(false);
 			});
 			try {
 				link.warn("manager", "connection lost with error:", e.code);
