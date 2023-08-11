@@ -56,7 +56,7 @@
 				// @ts-ignore
 				const input = e.target.elements.query;
 
-				$goto(`/search?type=posts&q=${input.value}`);
+				$goto(`/search?type=home&q=${input.value}`);
 			}}
 		>
 			<input
