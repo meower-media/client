@@ -26,6 +26,7 @@
 
     $: $chatid = $params.chatid;
 
+	let chatDataEvId;
     let chatData = {};
     onMount(async () => {
         if ($chatid === "livechat") {
@@ -42,44 +43,51 @@
         }
 
         if (!$chatName || !$chatMembers || !$chatOwner) {
-            try {
-                await clm.meowerRequest({
-                    cmd: "direct",
-                    val: {
-                        cmd: "get_chat_data",
-                        val: $chatid,
-                    },
-                });
-            } catch (e) {
-                $basicModalTitle = "Chat Not Found";
-                if (e === "E:103 | ID not found") {
-                    $basicModalDesc = `This chat (${$chatid}) doesn't exist or you don't have access to it.`;
-                } else {
-                    $basicModalDesc = `Unexpected ${e} error getting chat data!`;
-                }
-                $modalPage = "BasicModal";
-                $modalShown = true;
+			if ($chatid === "livechat") {
+				$chatName = "Livechat";
+				$chatMembers = [];
+				$chatOwner = "Server";
+			} else {
+				try {
+					chatDataEvId = clm.link.on("direct", cmd => {
+						if (cmd.val.mode === "chat_data") {
+							chatData = cmd.val.payload;
 
-                $goto("/chats");
-            }
+							if (chatData.chatid !== $chatid) return;
 
-            const evId = clm.link.on("direct", cmd => {
-                if (cmd.val.mode === "chat_data") {
-                    chatData = cmd.val.payload;
+							$chatName = chatData.nickname;
+							$chatMembers = chatData.members;
+							$chatOwner = chatData.owner;
+						}
+					});
 
-                    if (chatData.chatid !== $chatid) return;
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "get_chat_data",
+							val: $chatid,
+						},
+					});
+				} catch (e) {
+					if (e === "E:103 | ID not found") {
+						$basicModalTitle = "Chat Not Found";
+						$basicModalDesc = `This chat (${$chatid}) doesn't exist or you don't have access to it.`;
+					} else {
+						$basicModalTitle = "Failed Getting Chat";
+						$basicModalDesc = `Unexpected ${e} error getting chat data!`;
+					}
+					$modalPage = "BasicModal";
+					$modalShown = true;
 
-                    $chatName = chatData.nickname;
-                    $chatMembers = chatData.members;
-                    $chatOwner = chatData.owner;
-                }
-		    });
-
-            onDestroy(() => { clm.link.off(evId); });
+					$goto("/chats");
+				}
+			}
         }
     });
 
     onDestroy(() => {
+		if (chatDataEvId) onDestroy(() => { clm.link.off(chatDataEvId); });
+
         if ($chatid === "livechat") {
             clm.link.send({
 				cmd: "direct",
