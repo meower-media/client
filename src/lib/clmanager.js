@@ -181,7 +181,10 @@ export async function connect() {
 				// re-authenticate
 				let _authHeader = {};
 				authHeader.subscribe(v => (_authHeader = v));
-				if (!_authHeader.username || !_authHeader.token) return;
+				if (!_authHeader.username || !_authHeader.token) {
+					reconnecting.set(false);
+					return;
+				}
 				try {
 					const authVal = await meowerRequest({
 						cmd: "direct",
@@ -206,7 +209,9 @@ export async function connect() {
 							name: authVal.payload.username,
 						})
 					);
+					reconnecting.set(false);
 				} catch (e) {
+					reconnecting.set(false);
 					screen.set("blank");
 					await tick();
 					setupPage.set("reconnect");
@@ -218,9 +223,6 @@ export async function connect() {
 				screen.set("blank");
 				await tick();
 				screen.set("main");
-
-				// hide reconnecting modal
-				reconnecting.set(false);
 			});
 			try {
 				link.warn("manager", "connection lost with error:", e.code);
