@@ -181,48 +181,48 @@ export async function connect() {
 				// re-authenticate
 				let _authHeader = {};
 				authHeader.subscribe(v => (_authHeader = v));
-				if (!_authHeader.username || !_authHeader.token) {
-					reconnecting.set(false);
-					return;
-				}
-				try {
-					const authVal = await meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "authpswd",
+				if (_authHeader.username && _authHeader.token) {
+					try {
+						const authVal = await meowerRequest({
+							cmd: "direct",
 							val: {
-								username: _authHeader.username,
-								pswd: _authHeader.token,
+								cmd: "authpswd",
+								val: {
+									username: _authHeader.username,
+									pswd: _authHeader.token,
+								},
 							},
-						},
-					});
-					const profileVal = await meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "get_profile",
-							val: authVal.payload.username,
-						},
-					});
-					user.update(v =>
-						Object.assign(v, {
-							...profileVal.payload,
-							name: authVal.payload.username,
-						})
-					);
-					reconnecting.set(false);
-				} catch (e) {
-					reconnecting.set(false);
+						});
+						const profileVal = await meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "get_profile",
+								val: authVal.payload.username,
+							},
+						});
+						user.update(v =>
+							Object.assign(v, {
+								...profileVal.payload,
+								name: authVal.payload.username,
+							})
+						);
+					} catch (e) {
+						reconnecting.set(false);
+						screen.set("blank");
+						await tick();
+						setupPage.set("reconnect");
+						screen.set("setup");
+						return;
+					}
+
+					// refresh screen
 					screen.set("blank");
 					await tick();
-					setupPage.set("reconnect");
-					screen.set("setup");
-					return;
-				}
+					screen.set("main");
 
-				// refresh screen
-				screen.set("blank");
-				await tick();
-				screen.set("main");
+					// hide modal
+					reconnecting.set(false);
+				}
 			});
 			try {
 				link.warn("manager", "connection lost with error:", e.code);
