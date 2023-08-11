@@ -1,9 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {setup, setupPage, modalShown} from "../stores.js";
-	import * as clm from "../clmanager.js";
+	import {screen, setupPage, modalShown, authHeader} from "../stores.js";
 
+	import {goto} from "@roxi/routify";
 	import {tick} from "svelte";
 </script>
 
@@ -25,9 +25,10 @@
 			<button
 				on:click={async () => {
 					localStorage.clear();
-					await clm.disconnect();
+					authHeader.set({});
 					modalShown.set(false);
-					setup.set(true);
+					$goto("/");
+					screen.set("setup");
 					await tick();
 					setupPage.set("reconnect");
 				}}>Logout</button

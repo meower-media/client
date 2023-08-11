@@ -1,11 +1,10 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
 	import {
-		setup as setupShown,
+		screen,
 		setupPage as page,
 		modalShown,
 		modalPage,
-		authHeader,
 		user,
 	} from "./stores.js";
 	import * as clm from "./clmanager.js";
@@ -84,14 +83,6 @@
 				} else {
 					await mainSetup();
 				}
-			} else if (value === "autoReconnect") {
-				loginStatus = "";
-				await connect();
-				let _authHeader = {};
-				authHeader.subscribe(authHeader => {
-					_authHeader = authHeader;
-				});
-				doLogin(_authHeader.username, _authHeader.token, true);
 			} else if (value === "reconnect") {
 				loginStatus = "";
 				await connect();
@@ -114,7 +105,7 @@
 			page.set("welcome");
 		} else {
 			page.set("blank");
-			setupShown.set(false);
+			screen.set("main");
 		}
 	}
 
@@ -144,6 +135,7 @@
 			})
 				.then(async val => {
 					try {
+						loginStatus = "Getting user data...";
 						const profileVal = await clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -157,22 +149,9 @@
 								name: val.payload.username,
 							})
 						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						localStorage.setItem(
-							"meower_savedusername",
-							username
-						);
-						localStorage.setItem(
-							"meower_savedpassword",
-							val.payload.token
-						);
-
+						loginStatus = "";
 						BGM.playBGM($user.bgm_song);
-						setupShown.set(false);
+						screen.set("main");
 					} catch (e) {
 						localStorage.clear();
 						console.error(
@@ -235,8 +214,6 @@
 				<div class="connecting">{loginStatus}</div>
 			</div>
 		</div>
-	{:else if $page === "autoReconnect"}
-		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
@@ -277,7 +254,7 @@
 						on:click={() => {
 							loginStatus = "";
 							page.set("blank");
-							setupShown.set(false);
+							screen.set("main");
 						}}>Skip</button
 					>
 					<p class="small">
@@ -355,10 +332,7 @@
 						listener: "join",
 					})
 						.then(async val => {
-							if (
-								val.mode === "auth" &&
-								val.payload.username === username
-							) {
+							try {
 								loginStatus = "Getting user data...";
 								const profileVal = await clm.meowerRequest({
 									cmd: "direct",
@@ -373,27 +347,15 @@
 										name: val.payload.username,
 									})
 								);
-								authHeader.set({
-									username: val.payload.username,
-									token: val.payload.token,
-								});
-
 								loginStatus = "";
-
-								localStorage.setItem(
-									"meower_savedusername",
-									username
-								);
-								localStorage.setItem(
-									"meower_savedpassword",
-									val.payload.token
-								);
-
 								$goto("/oobe");
-								await sleep(10);
-								setupShown.set(false);
-							} else {
-								loginStatus = "Unexpected error logging in!";
+								screen.set("main");
+							} catch (e) {
+								localStorage.clear();
+								console.error(
+									"Unexpected " + e + " error getting user data!"
+								);
+								link.disconnect(1000, "Failed to load userdata");
 							}
 						})
 						.catch(code => {

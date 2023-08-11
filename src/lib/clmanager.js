@@ -4,19 +4,19 @@
 
 import Cloudlink from "./cloudlink.js";
 import {
-	setup,
+	screen,
 	setupPage,
 	ulist,
 	user,
+	authHeader,
 	spinner,
+	reconnecting,
 	disconnected,
 	disconnectReason,
-	attemptedAutoReconnect,
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
 import {tick} from "svelte";
-import sleep from "../lib/sleep.js";
 
 /**
  * A list of status codes that indicate the client will be disconnected.
@@ -73,6 +73,11 @@ let disconnectEvent = null;
  */
 let ulistEvent = null;
 /**
+ * A variable used to keep track of the manager's main auth event.
+ * @type any
+ */
+let authEvent = null;
+/**
  * A variable used to keep track of new inbox messages.
  * @type any
  */
@@ -106,6 +111,10 @@ export async function connect() {
 		link.off(ulistEvent);
 		ulistEvent = null;
 	}
+	if (authEvent) {
+		link.off(authEvent);
+		authEvent = null;
+	}
 	if (inboxMessageEvent) {
 		link.off(inboxMessageEvent);
 		inboxMessageEvent = null;
@@ -125,49 +134,101 @@ export async function connect() {
 	link.once("connectionstart", () => {
 		connectEvent = link.on("connected", () => {
 			disconnected.set(false);
-			attemptedAutoReconnect.set(false);
 			pingInterval = setInterval(() => {
 				link.send({cmd: "ping", val: ""});
 			}, 10000);
 		});
 		disconnectEvent = link.on("disconnected", async e => {
-			// clear values and listeners
-			ulist.set([]);
-			let tmp_unloaded = unloadedProfile();
-			tmp_unloaded.theme = _user.theme;
-			tmp_unloaded.mode = _user.mode;
-			tmp_unloaded.layout = _user.layout;
-			user.set(tmp_unloaded);
-			if (pingInterval) {
-				clearInterval(pingInterval);
-				pingInterval = null;
+			// make sure connection was started (we can know by checking if pingInterval is set)
+			if (!pingInterval) return;
+
+			// clear ping interval
+			clearInterval(pingInterval);
+			pingInterval = null;
+
+			// show disconnected modal if disconnect reason is set
+			let _disconnectedReason; 
+			disconnectReason.subscribe(v => {
+				if (v) {
+					disconnected.set(true);
+					return;
+				}
+			});
+
+			if (e.code === 1000 || e.code === 1001) {
+				ulist.set([]);
+				user.set(unloadedProfile());
+				return;
 			}
 
-			// get disconnect reason
-			let _disconnectReason = "";
-			disconnectReason.subscribe(v => {
-				_disconnectReason = v;
+			const onErrorEv = link.on("error", async (e) => {
+				link.error("manager", "auto-reconnection failed:", e);
+				reconnecting.set(true);
+				try {
+					await link.connect(linkUrl);
+				} catch (e) {
+					link.error("manager", "connection error:", e);
+					link.off(onErrorEv);
+					reconnecting.set(false);
+					disconnectReason.set(e.reason);
+					disconnected.set(true);
+				}
 			});
+			link.once("connected", async () => {
+				link.log("manager", "connection restored");
+				link.off(onErrorEv);
 
-			// get whether an auto reconnect has already been attempted
-			let _attemptedAutoReconnect = false;
-			attemptedAutoReconnect.subscribe(v => {
-				_attemptedAutoReconnect = v;
-			});
+				// re-authenticate
+				let _authHeader = {};
+				authHeader.subscribe(v => (_authHeader = v));
+				if (!_authHeader.username || !_authHeader.token) return;
+				try {
+					const authVal = await meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "authpswd",
+							val: {
+								username: _authHeader.username,
+								pswd: _authHeader.token,
+							},
+						},
+					});
+					const profileVal = await meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "get_profile",
+							val: authVal.payload.username,
+						},
+					});
+					user.update(v =>
+						Object.assign(v, {
+							...profileVal.payload,
+							name: authVal.payload.username,
+						})
+					);
+				} catch (e) {
+					screen.set("blank");
+					await tick();
+					setupPage.set("reconnect");
+					screen.set("setup");
+					return;
+				}
 
-			// attempt reconnect otherwise fully disconnect
-			if (
-				!_attemptedAutoReconnect &&
-				!disconnectCodes.includes(_disconnectReason) &&
-				e.reason !== "Intentional disconnect"
-			) {
-				attemptedAutoReconnect.set(true);
-				setup.set(true);
-				disconnected.set(false);
+				// refresh screen
+				screen.set("blank");
 				await tick();
-				await sleep(1000);
-				setupPage.set("autoReconnect");
-			} else {
+				screen.set("main");
+
+				// hide reconnecting modal
+				reconnecting.set(false);
+			});
+			try {
+				link.warn("manager", "connection lost with error:", e.code);
+				await link.connect(linkUrl);
+			} catch (e) {
+				link.error("manager", "connection error:", e);
+				link.off(onErrorEv);
+				disconnectReason.set(e.reason);
 				disconnected.set(true);
 			}
 		});
@@ -178,6 +239,22 @@ export async function connect() {
 			}
 			ulist.set(_ulist);
 		});
+		authEvent = link.on("direct", async cmd => {
+			if (cmd.val.mode == "auth") {
+				authHeader.set({
+					username: cmd.val.payload.username,
+					token: cmd.val.payload.token,
+				});
+				localStorage.setItem(
+					"meower_savedusername",
+					cmd.val.payload.username
+				);
+				localStorage.setItem(
+					"meower_savedpassword",
+					cmd.val.payload.token
+				);
+			}
+		});
 		inboxMessageEvent = link.on("direct", cmd => {
 			if (cmd.val.mode == "inbox_message") {
 				_user.unread_inbox = true;
@@ -186,9 +263,8 @@ export async function connect() {
 		});
 		disconnectRequest = link.on("direct", cmd => {
 			if (disconnectCodes.includes(cmd.val)) {
-				link.disconnect();
 				disconnectReason.set(cmd.val);
-				disconnected.set(true);
+				link.disconnect(1000, "Requested disconnect");
 				link.log("manager", "requested disconnect:", cmd.val);
 			}
 		});
@@ -225,16 +301,6 @@ export async function disconnect() {
 	}
 	link.log("manager", "safely disconnecting");
 	return new Promise(resolve => {
-		ulist.set([]);
-		user.set(unloadedProfile());
-		if (disconnectEvent) {
-			link.off(disconnectEvent);
-			disconnectEvent = null;
-		}
-		if (pingInterval) {
-			clearInterval(pingInterval);
-			pingInterval = null;
-		}
 		link.once("disconnected", resolve);
 		link.disconnect(1000, "Intentional disconnect");
 	});

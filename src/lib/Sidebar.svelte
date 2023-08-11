@@ -56,7 +56,14 @@
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
-		on:click={() => $goto("/inbox")}
+		on:click={() => {
+			if (!$user.name) {
+				$modalPage = "signup";
+				$modalShown = true;
+				return;
+			}
+			$goto("/inbox")
+		}}
 		class="round"
 		title="The Inbox"
 		class:new-msgs={$user.unread_inbox}
@@ -68,6 +75,11 @@
 			if (shiftHeld) {
 				$goto("/groupcat");
 			} else {
+				if (!$user.name) {
+					$modalPage = "signup";
+					$modalShown = true;
+					return;
+				}
 				$goto("/chats");
 			}
 		}}
@@ -126,6 +138,11 @@
 	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {
+				if (!$user.name) {
+					$modalPage = "signup";
+					$modalShown = true;
+					return;
+				}
 				$profileClicked = $user.name;
 				$goto(`/users/${$user.name}`);
 				popupShown = false;

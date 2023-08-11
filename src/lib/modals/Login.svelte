@@ -2,16 +2,16 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, authHeader, user} from "../stores.js";
+	import {modalShown, modalPage, user} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
+	const link = clm.link;
 	import * as BGM from "../BGM.js";
 
 	let loading = false;
 	let loginStatus = "";
 	let username = "";
 	let password = "";
-	let rememberMe = false;
 
 	function doLogin() {
 		try {
@@ -35,36 +35,21 @@
 								val: val.payload.username,
 							},
 						});
-
-						modalShown.set(false);
-
 						user.update(v =>
 							Object.assign(v, {
 								...profileVal.payload,
 								name: val.payload.username,
 							})
 						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
+						loginStatus = "";
 						BGM.playBGM($user.bgm_song);
+						modalShown.set(false);
 					} catch (e) {
-						loading = false;
-						loginStatus =
-							"Unexpected " + e + " error getting user data!";
+						localStorage.clear();
+						console.error(
+							"Unexpected " + e + " error getting user data!"
+						);
+						link.disconnect(1000, "Failed to load userdata");
 					}
 				})
 				.catch(code => {
@@ -141,16 +126,7 @@
 					placeholder="Password"
 					maxlength="255"
 					value={password}
-				/><br />
-				<p class="checkboxes">
-					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Remember me </label>
-				</p>
-				<br />
+				/><br /><br /><br />
 				<div class="modal-buttons">
 					<a
 						href="/"
@@ -180,13 +156,5 @@
 		display: inline-block;
 		height: 0;
 		overflow: visible;
-	}
-	label,
-	.checkboxes input {
-		vertical-align: middle;
-	}
-	.checkboxes {
-		text-align: left;
-		font-size: 95%;
 	}
 </style>

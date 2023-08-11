@@ -39,10 +39,11 @@
 	import * as BGM from "../lib/BGM.js";
 
 	import {
-		setup,
+		screen,
 		setupPage,
 		modalShown,
 		modalPage,
+		reconnecting,
 		disconnected,
 		disconnectReason,
 		userToMod,
@@ -98,10 +99,7 @@
 			<h2 slot="header">Me-owch.</h2>
 			<div slot="default">
 				<p>
-					{#if $disconnectReason === ""}
-						Something went wrong and the connection to Meower was
-						lost.
-					{:else if $disconnectReason === "Failed to load userdata"}
+					{#if $disconnectReason === "Failed to load userdata"}
 						An unexpected error occurred while trying to load your
 						userdata! Check console for more information.
 					{:else if $disconnectReason === "E:119 | IP Blocked"}
@@ -123,7 +121,7 @@
 				</p>
 				<button
 					on:click={async () => {
-						setup.set(true);
+						screen.set("setup");
 						disconnected.set(false);
 						await tick();
 						setupPage.set("reconnect");
@@ -131,9 +129,16 @@
 				>
 			</div>
 		</Modal>
-	{/if}
-
-	{#if $modalShown}
+	{:else if $reconnecting}
+		<Modal>
+			<h2 slot="header">Reconnecting...</h2>
+			<div slot="default">
+				<p>
+					Looks like we're having some problems connecting you to Meower. Give us a moment and we'll reconnect you as soon as possible...
+				</p>
+			</div>
+		</Modal>
+	{:else if $modalShown}
 		<!-- Login, signup -->
 		{#if $modalPage === "login"}
 			<LoginModal />
@@ -193,7 +198,9 @@
 		{/if}
 	{/if}
 
-	{#if $setup}
+	{#if $screen === "blank"}
+		<div id="blank"></div>
+	{:else if $screen === "setup"}
 		<Setup />
 	{:else}
         <div class="main-screen">
@@ -207,7 +214,7 @@
         </div>
 	{/if}
 
-	{#if $spinner}
+	{#if $spinner || $reconnecting}
 		<div class="spinner-container">
 			<Spinner />
 		</div>

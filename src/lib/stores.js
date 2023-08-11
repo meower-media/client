@@ -6,7 +6,7 @@ import {writable} from "svelte/store";
 import { systemDarkMode } from "./responsiveness.js";
 
 // Used for setup screen
-export const setup = writable(true);
+export const screen = writable("setup");
 export const setupPage = writable("logo");
 
 // Used for modal overlay
@@ -18,9 +18,9 @@ export const basicModalTitle = writable("");
 export const basicModalDesc = writable("");
 
 // Used for the disconnected screen
+export const reconnecting = writable(false);
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
-export const attemptedAutoReconnect = writable(false);
 
 // Last typed timestamp
 export const lastTyped = writable(0);

@@ -5,11 +5,11 @@
 	import {
 		modalShown,
 		modalPage,
-		authHeader,
 		user,
 	} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
+	const link = clm.link;
 
 	import {goto} from "@roxi/routify";
 
@@ -32,14 +32,9 @@
 						pswd: password,
 					},
 				},
-				listener: "join",
 			})
 				.then(async val => {
-					if (
-						val.mode === "auth" &&
-						val.payload.username === username
-					) {
-						loginStatus = "Getting user data...";
+					try {
 						const profileVal = await clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -47,36 +42,21 @@
 								val: val.payload.username,
 							},
 						});
-
-						modalShown.set(false);
-
 						user.update(v =>
 							Object.assign(v, {
 								...profileVal.payload,
 								name: val.payload.username,
 							})
 						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
 						loginStatus = "";
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
 						$goto("/oobe");
-					} else {
-						loginStatus = "Unexpected error logging in!";
+						modalShown.set(false);
+					} catch (e) {
+						localStorage.clear();
+						console.error(
+							"Unexpected " + e + " error getting user data!"
+						);
+						link.disconnect(1000, "Failed to load userdata");
 					}
 				})
 				.catch(code => {
@@ -153,13 +133,6 @@
 					value={password}
 				/><br />
 				<p class="checkboxes">
-					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Remember me </label>
-					<br />
 					<input
 						id="accept-terms"
 						type="checkbox"

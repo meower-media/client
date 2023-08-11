@@ -4,13 +4,9 @@ import {user} from "./stores.js";
 // Music that runs in the background
 
 let _user = null;
-user.subscribe(v => {
+user.subscribe(async v => {
 	_user = v;
-	if (_user.name)
-		localStorage.setItem(
-			"meower_savedconfig",
-			JSON.stringify({theme: _user.theme, mode: _user.mode})
-		);
+	await playBGM(_user.bgm_song);
 });
 
 let audio;
