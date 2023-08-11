@@ -42,7 +42,7 @@
 	let acceptTerms = false;
 
 	let requireLogin = false;
-	$: requireLogin = ($isActive("./setup") || $isActive("./inbox") || $isActive("./chats", {}, { strict: false }));
+	$: requireLogin = ($isActive("./oobe") || $isActive("./inbox") || $isActive("./chats", {}, { strict: false }));
 
 	onMount(() => {
 		page.subscribe(async value => {
@@ -389,7 +389,7 @@
 									val.payload.token
 								);
 
-								$goto("/setup");
+								$goto("/oobe");
 								await sleep(10);
 								setupShown.set(false);
 							} else {

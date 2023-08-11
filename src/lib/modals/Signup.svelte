@@ -74,7 +74,7 @@
 							);
 						}
 
-						$goto("/setup");
+						$goto("/oobe");
 					} else {
 						loginStatus = "Unexpected error logging in!";
 					}

@@ -1,3 +1,5 @@
+<!-- routify:options bundle=true -->
+
 <!-- Meower Svelte, the app itself. -->
 <script>
     import Setup from "../lib/Setup.svelte";

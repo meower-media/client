@@ -1,3 +1,5 @@
+<!-- routify:options bundle=false -->
+
 <script>
 	import Container from "../lib/Container.svelte";
 </script>

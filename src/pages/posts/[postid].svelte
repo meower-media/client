@@ -1,3 +1,5 @@
+<!-- routify:options bundle=false -->
+
 <!-- The individual post page. Pretty pointless without things like comments. -->
 <script>
     import PostList from "../../lib/PostList.svelte";
