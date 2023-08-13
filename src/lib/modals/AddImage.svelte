@@ -1,3 +1,5 @@
+<!--Adding images. not really-->
+
 <script>
 	import Modal from "../Modal.svelte";
 

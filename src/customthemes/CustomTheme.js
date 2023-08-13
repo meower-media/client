@@ -1,3 +1,5 @@
+// Custom themes. Unused
+
 // Save layout
 // custom:mainhex;backgroundhex;foregroundhex;foreground2hex;pfphex
 // Ex. custom:f9a636;ffffff;000000;ffffff;ffffff

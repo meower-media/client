@@ -1,7 +1,8 @@
-<script>
-	import Container from "./Container.svelte";
-	import { meowerRequest } from "./clmanager";
+<!--
+    Generic meower attachment wrapper
+-->
 
+<script>
     export let title;
     export let url;
     export let type;
