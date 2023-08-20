@@ -6,7 +6,7 @@
 		user,
 		authHeader,
 	} from "../lib/stores.js";
-	import unloadedProfile from "src/lib/unloadedProfile.js";
+	import unloadedProfile from "../lib/unloadedProfile.js";
 
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
