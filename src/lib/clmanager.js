@@ -276,7 +276,7 @@ export async function connect() {
 			ulist.set(_ulist);
 		});
 		authEvent = link.on("direct", async cmd => {
-			if (cmd.val.mode == "auth") {
+			if (cmd.val.mode === "auth") {
 				authHeader.set({
 					username: cmd.val.payload.username,
 					token: cmd.val.payload.token,
@@ -292,17 +292,19 @@ export async function connect() {
 			}
 		});
 		inboxMessageEvent = link.on("direct", cmd => {
-			if (cmd.val.mode == "inbox_message") {
+			if (cmd.val.mode === "inbox_message") {
 				_user.unread_inbox = true;
 				user.set(_user);
 			}
 		});
-		configUpdateEvent = link.on("sync_state", cmd => {
-			_user = {
-				..._user,
-				...cmd.val,
-			};
-			user.set(_user);
+		configUpdateEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "update_config") {
+				_user = {
+					..._user,
+					...cmd.val.payload,
+				};
+				user.set(_user);
+			}
 		});
 		disconnectRequest = link.on("direct", async cmd => {
 			if (disconnectCodes.includes(cmd.val)) {
