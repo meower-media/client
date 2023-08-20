@@ -8,6 +8,7 @@
 	import * as modals from "../modals.js";
 
 	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
 	let deleteStatus, password, submitButton;
 
