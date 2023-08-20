@@ -6,14 +6,14 @@
 		user,
 		authHeader,
 	} from "../lib/stores.js";
-	import {unloadedProfile} from "../lib/unloadedProfile.js";
+	import unloadedProfile from "../lib/unloadedprofile.js";
 
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
-	
+
 	onMount(async () => {
 		localStorage.clear();
-		user.set(unloadedProfile);
+		user.set(unloadedProfile());
 		authHeader.set({});
 		modalShown.set(false);
 		$goto("/");

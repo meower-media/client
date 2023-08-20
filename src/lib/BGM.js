@@ -1,7 +1,7 @@
 import {audioData} from "./BGMdata.js";
 import {user} from "./stores.js";
 
-import {unloadedProfile} from "./unloadedProfile.js";
+import unloadedProfile from "./unloadedprofile.js";
 
 // Music that runs in the background
 
@@ -17,7 +17,7 @@ if (window.meower_audio) {
 let playingBGM = null;
 let hasPlayedNow = false;
 
-let _user = unloadedProfile;
+let _user = unloadedProfile();
 user.subscribe(async v => {
 	_user = v;
 	await playBGM(_user.bgm_song);

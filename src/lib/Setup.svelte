@@ -7,7 +7,7 @@
 	// @ts-ignore
 	window.clm = clm;
 
-	import {unloadedProfile} from "./unloadedProfile.js";
+	import unloadedProfile from "./unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
@@ -94,7 +94,7 @@
 	 */
 	async function mainSetup() {
 		localStorage.clear();
-		user.set(unloadedProfile);
+		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
 		await sleep(500);
