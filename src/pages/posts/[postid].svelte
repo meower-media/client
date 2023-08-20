@@ -7,8 +7,6 @@
 
 <!-- routify:options bundle=false -->
 
-
-
 <PostList
 	fetchUrl={"posts"}
 	postOrigin={null}

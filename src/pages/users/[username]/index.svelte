@@ -179,7 +179,6 @@
 							Modals.showModal("reportUser");
 						}}>Report User</button
 					>
-					
 				{/if}
 			{/if}
 		{:catch e}

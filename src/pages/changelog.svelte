@@ -10,14 +10,18 @@
 <Container>
 	<h2>1.7.0</h2>
 	<ul>
-		<li>
-			Routing (you can now share links to specific pages on Meower!)
-		</li>
+		<li>Routing (you can now share links to specific pages on Meower!)</li>
 		<li>Better auto-reconnection</li>
 		<li>User config syncing across logged in clients</li>
 		<li>Fixed some bugs with background music randomly restarting</li>
-		<li>Made it so if you change settings as a guest and then create a new account, these settings will be carried across into your new account</li>
-		<li>Removed option to not save your login (this is to support the better auto-reconnection system)</li>
+		<li>
+			Made it so if you change settings as a guest and then create a new
+			account, these settings will be carried across into your new account
+		</li>
+		<li>
+			Removed option to not save your login (this is to support the better
+			auto-reconnection system)
+		</li>
 		<li>Slightly different colors for dark mode themes</li>
 		<li>Some other minor optimizations and refinements</li>
 	</ul>

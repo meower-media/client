@@ -70,7 +70,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Join Meower</h2>
 	<div slot="default">
@@ -130,7 +132,9 @@
 				<div class="modal-buttons">
 					<a
 						href="/"
-						on:click|preventDefault={() => { modals.showModal("login"); }}>Login to Meower</a
+						on:click|preventDefault={() => {
+							modals.showModal("login");
+						}}>Login to Meower</a
 					>
 					<button type="submit" disabled={!acceptTerms}
 						>Create Account</button

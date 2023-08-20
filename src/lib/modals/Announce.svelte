@@ -9,7 +9,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Send Announcement</h2>
 	<div slot="default">
@@ -37,7 +39,9 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click={() => { modals.closeModal(); }}>Cancel</button
+					on:click={() => {
+						modals.closeModal();
+					}}>Cancel</button
 				>
 				{#await sleep(1500)}
 					<button disabled type="submit">Send</button>

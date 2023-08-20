@@ -62,7 +62,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
@@ -98,7 +100,9 @@
 		<p class="layout-text">(Change the layout in the settings.)</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => { modals.closeModal(); }}>Close</button
+				on:click={() => {
+					modals.closeModal();
+				}}>Close</button
 			>
 			<button
 				on:click={() => {

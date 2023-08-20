@@ -127,7 +127,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Add Image to Post</h2>
 	<div slot="default">
@@ -204,7 +206,9 @@
 		<p class="post-errors">{postErrors}</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => { modals.closeModal(); }}>Close</button
+				on:click={() => {
+					modals.closeModal();
+				}}>Close</button
 			>
 			<button
 				disabled={postErrors !== ""}

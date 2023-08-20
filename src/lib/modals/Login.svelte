@@ -45,7 +45,11 @@
 						console.error(
 							"Unexpected " + e + " error getting user data!"
 						);
-						modals.showModal("basic", "Error", "An unexpected error occurred while trying to load your userdata! Check console for more information.");
+						modals.showModal(
+							"basic",
+							"Error",
+							"An unexpected error occurred while trying to load your userdata! Check console for more information."
+						);
 					}
 					loginStatus = "";
 					BGM.playBGM($user.bgm_song);
@@ -84,7 +88,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Login to Meower</h2>
 	<div slot="default">
@@ -127,7 +133,9 @@
 				<div class="modal-buttons">
 					<a
 						href="/"
-						on:click|preventDefault={() => { modals.showModal("signup") }}>Join Meower</a
+						on:click|preventDefault={() => {
+							modals.showModal("signup");
+						}}>Join Meower</a
 					>
 					<button type="submit">Login</button>
 				</div>

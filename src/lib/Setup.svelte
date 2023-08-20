@@ -1,10 +1,6 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
-	import {
-		screen,
-		setupPage as page,
-		user,
-	} from "./stores.js";
+	import {screen, setupPage as page, user} from "./stores.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
 	const link = clm.link;
@@ -154,7 +150,11 @@
 						console.error(
 							"Unexpected " + e + " error getting user data!"
 						);
-						modals.showModal("basic", "Error", "An unexpected error occurred while trying to load your userdata! Check console for more information.");
+						modals.showModal(
+							"basic",
+							"Error",
+							"An unexpected error occurred while trying to load your userdata! Check console for more information."
+						);
 					}
 					loginStatus = "";
 					BGM.playBGM($user.bgm_song);

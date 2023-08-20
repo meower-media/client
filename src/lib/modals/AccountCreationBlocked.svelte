@@ -5,7 +5,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Account Creation Blocked</h2>
 	<div slot="default">
@@ -25,7 +27,9 @@
 				>Terms of Service</a
 			>
 			<button
-				on:click={() => { modals.closeModal(); }}>Close</button
+				on:click={() => {
+					modals.closeModal();
+				}}>Close</button
 			>
 		</div>
 	</div>

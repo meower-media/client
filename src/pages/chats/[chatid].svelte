@@ -68,9 +68,17 @@
 					});
 				} catch (e) {
 					if (e === "E:103 | ID not found") {
-						modals.showModal("basic", "Chat not found", `The chat you requested (${$chatid}) doesn't exist or you don't have access to it.`);
+						modals.showModal(
+							"basic",
+							"Chat not found",
+							`The chat you requested (${$chatid}) doesn't exist or you don't have access to it.`
+						);
 					} else {
-						modals.showModal("basic", "Failed Getting Chat", `Unexpected ${e} error getting chat data!`);
+						modals.showModal(
+							"basic",
+							"Failed Getting Chat",
+							`Unexpected ${e} error getting chat data!`
+						);
 					}
 					$goto("/chats");
 				}
@@ -78,7 +86,8 @@
 		}
 
 		chatDeleteEvId = clm.link.on("direct", cmd => {
-			if (cmd.val.mode === "delete" && cmd.val.id === $chatid) $goto("/chats");
+			if (cmd.val.mode === "delete" && cmd.val.id === $chatid)
+				$goto("/chats");
 		});
 	});
 
@@ -166,7 +175,9 @@
 				<div class="settings-controls">
 					<button
 						class="circle plus"
-						on:click={() => { modals.showModal("addMemberMode"); }}
+						on:click={() => {
+							modals.showModal("addMemberMode");
+						}}
 					/>
 					{#if $mobile && $params.chatid !== "livechat"}
 						<button

@@ -25,7 +25,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">{$profileClicked_GC}'s Profile</h2>
 	<div slot="default">
@@ -62,7 +64,9 @@
 		{/if}
 		<button
 			class="long"
-			on:click={() => { modals.closeModal(); }}>Close</button
+			on:click={() => {
+				modals.closeModal();
+			}}>Close</button
 		>
 	</div>
 </Modal>

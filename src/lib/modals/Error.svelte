@@ -14,4 +14,3 @@
 		<p>No modal found by the name of {$modalPage}</p>
 	</div>
 </Modal>
-

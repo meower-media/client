@@ -77,7 +77,9 @@
 		<div class="settings-controls">
 			<button
 				class="circle plus"
-				on:click={() => { modals.showModal("createChat"); }}
+				on:click={() => {
+					modals.showModal("createChat");
+				}}
 			/>
 		</div>
 	</Container>

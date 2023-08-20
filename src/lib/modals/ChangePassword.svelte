@@ -64,7 +64,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Change Password</h2>
 	<div slot="default">
@@ -99,7 +101,9 @@
 		<div class="modal-buttons">
 			<button
 				type="button"
-				on:click={() => { modals.closeModal(); }}>Cancel</button
+				on:click={() => {
+					modals.closeModal();
+				}}>Cancel</button
 			>
 			<button
 				type="submit"

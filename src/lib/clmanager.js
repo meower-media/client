@@ -198,7 +198,11 @@ export async function connect() {
 					if (e === "E:119 | IP Blocked") {
 						modals.showModal("ipBlocked");
 					} else {
-						modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+						modals.showModal(
+							"basic",
+							"Connection Error",
+							"Failed connecting to WebSocket server. View console for more information."
+						);
 					}
 				}
 			});
@@ -256,7 +260,11 @@ export async function connect() {
 				if (e === "E:119 | IP Blocked") {
 					modals.showModal("ipBlocked");
 				} else {
-					modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+					modals.showModal(
+						"basic",
+						"Connection Error",
+						"Failed connecting to WebSocket server. View console for more information."
+					);
 				}
 			}
 		});
@@ -313,7 +321,11 @@ export async function connect() {
 		if (e === "E:119 | IP Blocked") {
 			modals.showModal("ipBlocked");
 		} else {
-			modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+			modals.showModal(
+				"basic",
+				"Connection Error",
+				"Failed connecting to WebSocket server. View console for more information."
+			);
 		}
 		return e;
 	}

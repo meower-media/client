@@ -10,7 +10,9 @@
 </script>
 
 <Modal
-	on:close={() => { modals.closeModal(); }}
+	on:close={() => {
+		modals.closeModal();
+	}}
 >
 	<h2 slot="header">Logout Everywhere</h2>
 	<div slot="default">
@@ -21,7 +23,9 @@
 		<br /><br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => { modals.closeModal(); }}>Cancel</button
+				on:click={() => {
+					modals.closeModal();
+				}}>Cancel</button
 			>
 			<button
 				on:click={async () => {
