@@ -115,7 +115,7 @@
 		} else {
 			posts = [json];
 		}
-		
+
 		/**
 		 * @type {Array<import("./types.js").ListPost | import("./types.js").User>}
 		 */

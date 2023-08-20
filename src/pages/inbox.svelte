@@ -17,6 +17,7 @@
 	<PostList
 		on:loaded={() => {
 			// Mark inbox as read
+			if (!$user.unread_inbox) return;
 			$user.unread_inbox = false;
 			clm.updateProfile();
 		}}

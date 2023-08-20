@@ -1,7 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, chatid, chatMembers} from "../stores.js";
+	import {chatid, chatMembers} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 
@@ -9,9 +11,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
@@ -26,7 +26,7 @@
 				});
 				$chatMembers.push(username);
 				chatMembers.set($chatMembers);
-				$modalShown = false;
+				modals.closeModal();
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>
@@ -44,9 +44,7 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click|preventDefault={() => {
-						$modalShown = false;
-					}}>Cancel</button
+					on:click|preventDefault={() => { modals.closeModal(); }}>Cancel</button
 				>
 				<button type="submit" disabled={!username}>Add member</button>
 			</div>
@@ -58,6 +56,5 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
 	}
 </style>

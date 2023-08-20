@@ -4,7 +4,7 @@
 	import {profileClicked} from "../stores.js";
 	import PagedList from "../PagedList.svelte";
 	import Container from "../Container.svelte";
-	import * as Modals from "../modals.js";
+	import * as modals from "../modals.js";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
@@ -59,9 +59,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		Modals.CloseModal();
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
@@ -87,7 +85,7 @@
 												},
 											},
 										});
-										Modals.CloseModal();
+										modals.closeModal();
 									}}
 								/>
 							</div>

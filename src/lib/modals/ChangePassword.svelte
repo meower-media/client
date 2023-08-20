@@ -1,11 +1,10 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, modalShown} from "../stores.js";
-
+	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
 	let changeStatus,
 		oldPassword,
@@ -31,18 +30,21 @@
 			},
 		})
 			.then(async () => {
-				$modalShown = false;
+				modals.closeModal();
 
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "del_tokens", val: ""},
-				});
+				try {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "del_tokens",
+							val: "",
+						},
+					});
+				} catch (e) {
+					changeStatus = `Unexpected ${e} error!`;
+				}
 
-				localStorage.clear();
-
-				screen.set("setup");
-				await tick();
-				setupPage.set("reconnect");
+				$goto("/logout");
 			})
 			.catch(code => {
 				submitButton.disabled = false;
@@ -62,9 +64,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Change Password</h2>
 	<div slot="default">
@@ -99,9 +99,7 @@
 		<div class="modal-buttons">
 			<button
 				type="button"
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
+				on:click={() => { modals.closeModal(); }}>Cancel</button
 			>
 			<button
 				type="submit"

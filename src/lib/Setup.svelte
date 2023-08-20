@@ -3,16 +3,15 @@
 	import {
 		screen,
 		setupPage as page,
-		modalShown,
-		modalPage,
 		user,
 	} from "./stores.js";
 	import * as clm from "./clmanager.js";
+	import * as modals from "./modals.js";
 	const link = clm.link;
 	// @ts-ignore
 	window.clm = clm;
 
-	import unloadedProfile from "./unloadedprofile.js";
+	import unloadedProfile from "./unloadedProfile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
@@ -23,8 +22,8 @@
 	import version from "./version.js";
 	import * as BGM from "./BGM.js";
 
-	import {isActive, goto} from '@roxi/routify';
-	
+	import {isActive, goto} from "@roxi/routify";
+	import Error from "./modals/Error.svelte";
 
 	let logo,
 		setup,
@@ -41,7 +40,10 @@
 	let acceptTerms = false;
 
 	let requireLogin = false;
-	$: requireLogin = ($isActive("./oobe") || $isActive("./inbox") || $isActive("./chats", {}, { strict: false }));
+	$: requireLogin =
+		$isActive("./oobe") ||
+		$isActive("./inbox") ||
+		$isActive("./chats", {}, {strict: false});
 
 	onMount(() => {
 		page.subscribe(async value => {
@@ -49,7 +51,6 @@
 
 			setup.classList.remove("white");
 			if (value === "logo") {
-				clm.disconnect();
 				loginStatus = "";
 
 				await tick();
@@ -149,16 +150,15 @@
 								name: val.payload.username,
 							})
 						);
-						loginStatus = "";
-						BGM.playBGM($user.bgm_song);
-						screen.set("main");
 					} catch (e) {
-						localStorage.clear();
 						console.error(
 							"Unexpected " + e + " error getting user data!"
 						);
-						link.disconnect(1000, "Failed to load userdata");
+						modals.showModal("basic", "Error", "An unexpected error occurred while trying to load your userdata! Check console for more information.");
 					}
+					loginStatus = "";
+					BGM.playBGM($user.bgm_song);
+					screen.set("main");
 				})
 				.catch(code => {
 					if (autoLogin) return mainSetup();
@@ -173,8 +173,7 @@
 								: "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							$modalPage = "banned";
-							$modalShown = true;
+							modals.showModal("banned");
 							loginStatus = "";
 							break;
 						case "E:019 | Illegal characters detected":
@@ -258,7 +257,8 @@
 						}}>Skip</button
 					>
 					<p class="small">
-						(Several features will be unavailable while not logged in.)
+						(Several features will be unavailable while not logged
+						in.)
 					</p>
 				{:else}
 					<p class="small">
@@ -332,31 +332,14 @@
 						listener: "join",
 					})
 						.then(async val => {
-							try {
-								loginStatus = "Getting user data...";
-								const profileVal = await clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "get_profile",
-										val: val.payload.username,
-									},
-								});
-								user.update(v =>
-									Object.assign(v, {
-										...profileVal.payload,
-										name: val.payload.username,
-									})
-								);
-								loginStatus = "";
-								$goto("/oobe");
-								screen.set("main");
-							} catch (e) {
-								localStorage.clear();
-								console.error(
-									"Unexpected " + e + " error getting user data!"
-								);
-								link.disconnect(1000, "Failed to load userdata");
-							}
+							user.update(v =>
+								Object.assign(v, {
+									name: val.payload.username,
+								})
+							);
+							loginStatus = "";
+							$goto("/oobe");
+							screen.set("main");
 						})
 						.catch(code => {
 							switch (code) {
@@ -365,8 +348,7 @@
 										"That username already exists!";
 									break;
 								case "E:119 | IP Blocked":
-									$modalPage = "ipBanned";
-									$modalShown = true;
+									modals.showModal("accountCreationBlocked");
 									loginStatus = "";
 									break;
 								case "E:019 | Illegal characters detected":
@@ -541,7 +523,8 @@
 		font-size: 90%;
 	}
 
-	button, input {
+	button,
+	input {
 		margin-bottom: 0.2cm;
 	}
 

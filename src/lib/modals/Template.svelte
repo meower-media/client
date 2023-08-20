@@ -1,30 +1,19 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage} from "../stores.js";
+	import * as modals from "../modals.js";
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Template Modal</h2>
 	<div slot="default">
-		<p>Template</p>
-		<small class="smol">(PS to developers: your code is working!!!!)</small>
+		<p>blah blah blah</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Close</button
+				on:click={() => { modals.closeModal(); }}>Close</button
 			>
 		</div>
 	</div>
 </Modal>
-
-<style>
-	.smol {
-		font-size: 8px;
-	}
-</style>

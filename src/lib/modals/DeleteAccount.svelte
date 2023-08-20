@@ -1,9 +1,11 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, modalShown} from "../stores.js";
+	import {screen, setupPage} from "../stores.js";
 
 	import * as clm from "../clmanager.js";
+
+	import * as modals from "../modals.js";
 
 	import {tick} from "svelte";
 
@@ -17,7 +19,7 @@
 			val: {cmd: "del_account", val: password},
 		})
 			.then(async () => {
-				$modalShown = false;
+				modals.closeModal();
 
 				localStorage.clear();
 
@@ -43,9 +45,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
@@ -70,9 +70,7 @@
 		<div class="modal-buttons">
 			<button
 				type="button"
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
+				on:click={() => { modals.closeModal(); }}>Cancel</button
 			>
 			<button
 				type="submit"

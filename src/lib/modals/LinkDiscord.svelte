@@ -1,9 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown} from "../stores.js";
-
-	import {tick} from "svelte";
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 
@@ -11,9 +9,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Link Discord Account</h2>
 	<div slot="default">
@@ -25,7 +21,7 @@
 					name: "discord",
 					val: e.target[0].value,
 				});
-				$modalShown = false;
+				modals.closeModal();
 			}}
 		>
 			<label for="userinput"><b>Link token</b></label>
@@ -43,9 +39,7 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click|preventDefault={() => {
-						$modalShown = false;
-					}}>Cancel</button
+					on:click|preventDefault={() => { modals.closeModal(); }}>Cancel</button
 				>
 				<button type="submit" disabled={!token}>Send Request</button>
 			</div>

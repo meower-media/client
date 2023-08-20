@@ -2,10 +2,10 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, user} from "../stores.js";
+	import {user} from "../stores.js";
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
-	const link = clm.link;
 	import * as BGM from "../BGM.js";
 
 	let loading = false;
@@ -41,16 +41,15 @@
 								name: val.payload.username,
 							})
 						);
-						loginStatus = "";
-						BGM.playBGM($user.bgm_song);
-						modalShown.set(false);
 					} catch (e) {
-						localStorage.clear();
 						console.error(
 							"Unexpected " + e + " error getting user data!"
 						);
-						link.disconnect(1000, "Failed to load userdata");
+						modals.showModal("basic", "Error", "An unexpected error occurred while trying to load your userdata! Check console for more information.");
 					}
+					loginStatus = "";
+					BGM.playBGM($user.bgm_song);
+					modals.closeModal();
 				})
 				.catch(code => {
 					loading = false;
@@ -62,7 +61,7 @@
 							loginStatus = "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							modalPage.set("banned");
+							modals.showModal("banned");
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =
@@ -85,9 +84,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Login to Meower</h2>
 	<div slot="default">
@@ -130,9 +127,7 @@
 				<div class="modal-buttons">
 					<a
 						href="/"
-						on:click|preventDefault={() => {
-							modalPage.set("signup");
-						}}>Join Meower</a
+						on:click|preventDefault={() => { modals.showModal("signup") }}>Join Meower</a
 					>
 					<button type="submit">Login</button>
 				</div>

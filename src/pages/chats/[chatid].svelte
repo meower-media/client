@@ -3,34 +3,32 @@
 -->
 <script>
 	import {
-        chatid,
+		chatid,
 		chatName,
 		chatMembers,
 		chatOwner,
-		modalShown,
-		modalPage,
-        basicModalTitle,
-        basicModalDesc,
 		profileClicked_GC,
 	} from "../../lib/stores.js";
+	import * as modals from "../../lib/modals.js";
 	import {mobile} from "../../lib/responsiveness.js";
 	import Member from "../../lib/Member.svelte";
 	import Container from "../../lib/Container.svelte";
 	import * as clm from "../../lib/clmanager.js";
 	import PostList from "../../lib/PostList.svelte";
 
-    import {goto, params} from '@roxi/routify';
+	import {goto, params} from "@roxi/routify";
 	import {onDestroy, onMount} from "svelte/internal";
 
 	let showMembers = !$mobile;
 
-    $: $chatid = $params.chatid;
+	$: $chatid = $params.chatid;
 
 	let chatDataEvId;
-    let chatData = {};
-    onMount(async () => {
-        if ($chatid === "livechat") {
-            clm.link.send({
+	let chatDeleteEvId;
+	let chatData = {};
+	onMount(async () => {
+		if ($chatid === "livechat") {
+			clm.link.send({
 				cmd: "direct",
 				val: {
 					cmd: "set_chat_state",
@@ -40,9 +38,9 @@
 					},
 				},
 			});
-        }
+		}
 
-        if (!$chatName || !$chatMembers || !$chatOwner) {
+		if (!$chatName || !$chatMembers || !$chatOwner) {
 			if ($chatid === "livechat") {
 				$chatName = "Livechat";
 				$chatMembers = [];
@@ -70,26 +68,29 @@
 					});
 				} catch (e) {
 					if (e === "E:103 | ID not found") {
-						$basicModalTitle = "Chat Not Found";
-						$basicModalDesc = `This chat (${$chatid}) doesn't exist or you don't have access to it.`;
+						modals.showModal("basic", "Chat not found", `The chat you requested (${$chatid}) doesn't exist or you don't have access to it.`);
 					} else {
-						$basicModalTitle = "Failed Getting Chat";
-						$basicModalDesc = `Unexpected ${e} error getting chat data!`;
+						modals.showModal("basic", "Failed Getting Chat", `Unexpected ${e} error getting chat data!`);
 					}
-					$modalPage = "BasicModal";
-					$modalShown = true;
-
 					$goto("/chats");
 				}
 			}
-        }
-    });
+		}
 
-    onDestroy(() => {
-		if (chatDataEvId) onDestroy(() => { clm.link.off(chatDataEvId); });
+		chatDeleteEvId = clm.link.on("direct", cmd => {
+			if (cmd.val.mode === "delete" && cmd.val.id === $chatid) $goto("/chats");
+		});
+	});
 
-        if ($chatid === "livechat") {
-            clm.link.send({
+	onDestroy(() => {
+		if (chatDataEvId)
+			onDestroy(() => {
+				clm.link.off(chatDataEvId);
+				clm.link.off(chatDeleteEvId);
+			});
+
+		if ($chatid === "livechat") {
+			clm.link.send({
 				cmd: "direct",
 				val: {
 					cmd: "set_chat_state",
@@ -99,13 +100,13 @@
 					},
 				},
 			});
-        }
+		}
 
-        $chatid = "";
-        $chatName = "";
-        $chatMembers = [];
-        $chatOwner = "";
-    });
+		$chatid = "";
+		$chatName = "";
+		$chatMembers = [];
+		$chatOwner = "";
+	});
 </script>
 
 <!--
@@ -132,7 +133,9 @@
 			{/if}
 		</Container>
 		<PostList
-			fetchUrl={$params.chatid === "livechat" ? null : `posts/${$params.chatid}`}
+			fetchUrl={$params.chatid === "livechat"
+				? null
+				: `posts/${$params.chatid}`}
 			postOrigin={$params.chatid}
 			chatName={$chatName}
 			canPost={true}
@@ -145,8 +148,7 @@
 					<button
 						class="member-button"
 						on:click={() => {
-							modalPage.set("gcMember");
-							modalShown.set(true);
+							modals.showModal("gcMember");
 							profileClicked_GC.set(chatmember);
 						}}
 					>
@@ -164,10 +166,7 @@
 				<div class="settings-controls">
 					<button
 						class="circle plus"
-						on:click={() => {
-							modalPage.set("addMemberMode");
-							modalShown.set(true);
-						}}
+						on:click={() => { modals.showModal("addMemberMode"); }}
 					/>
 					{#if $mobile && $params.chatid !== "livechat"}
 						<button

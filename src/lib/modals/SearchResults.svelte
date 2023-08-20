@@ -1,16 +1,15 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, modalPage, searchQuery, searchType} from "../stores.js";
+	import {searchQuery, searchType} from "../stores.js";
+	import * as modals from "../modals.js";
 
 	import PostList from "../PostList.svelte";
 	import Container from "../Container.svelte";
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Results</h2>
 	<div slot="default">

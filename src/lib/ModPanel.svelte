@@ -3,12 +3,8 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import * as clm from "./clmanager.js";
 	import {levels} from "./formatting.js";
-	import {
-		userToMod,
-		announcementToSend,
-		user,
-	} from "./stores";
-	import {goto} from '@roxi/routify';
+	import {userToMod, announcementToSend, user} from "./stores";
+	import {goto} from "@roxi/routify";
 	import * as Modals from "./modals.js";
 	import {onMount} from "svelte/internal";
 
@@ -167,7 +163,8 @@
 			<a
 				href="/"
 				on:click|preventDefault={() =>
-					$goto(`/users/${ipData.user.username}`)}>{ipData.user.username}</a
+					$goto(`/users/${ipData.user.username}`)}
+				>{ipData.user.username}</a
 			><br />
 			<b>Quote:</b>
 			<i>"{ipData.user.quote}"</i><br />
@@ -180,13 +177,14 @@
 			{#if $user.lvl >= 2}
 				<b>IP:</b>
 				{ipData.ip}<br />
-				<b>IP banned?</b>
+				<b>IP blocked?</b>
 				{ipData.banned ? "Yes" : "No"}<br />
 				<b>Last user on IP:</b>
 				<a
 					href="/"
 					on:click|preventDefault={() =>
-						$goto(`/users/${ipData.last_user}`)}>{ipData.last_user}</a
+						$goto(`/users/${ipData.last_user}`)}
+					>{ipData.last_user}</a
 				><br />
 				<b>Users on IP:</b>
 				<ul>

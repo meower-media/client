@@ -1,10 +1,11 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user} from "../stores.js";
-	import * as clm from "../clmanager.js";
+	import {user} from "../stores.js";
 
-	import * as Modals from "../modals.js";
+	import * as modals from "../modals.js";
+
+	import * as clm from "../clmanager.js";
 
 	import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
 
@@ -58,16 +59,10 @@
 			themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
 			defaultPreview;
 	}
-
-	function customThemeChange() {
-		Modals.showModal("customTheme");
-	}
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
@@ -103,9 +98,7 @@
 		<p class="layout-text">(Change the layout in the settings.)</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Close</button
+				on:click={() => { modals.closeModal(); }}>Close</button
 			>
 			<button
 				on:click={() => {
@@ -115,7 +108,7 @@
 					user.set(_user);
 
 					clm.updateProfile();
-					$modalShown = false;
+					modals.closeModal();
 				}}>OK</button
 			>
 		</div>

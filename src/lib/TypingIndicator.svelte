@@ -9,29 +9,27 @@
 	export let forPage = "home";
 
 	let _typing = [];
-	let lastPerson = null;
 	typing.subscribe(val => {
 		_typing = val[forPage];
 		if (_typing === undefined) _typing = [];
 		_typing = _typing.filter(selectedUser => selectedUser !== $user.name);
-		lastPerson = _typing.pop();
 	});
 </script>
 
-{#if lastPerson}
+{#if _typing.length > 0}
 	<Container>
 		<span class="loading">
 			<span class="circle circle1" />
 			<span class="circle circle2" />
 			<span class="circle circle3" />
-			{#if _typing.length === 0}
-				<span class="text"><b>{lastPerson}</b> is typing...</span>
-			{:else if _typing.length === 1}
-				<span class="text"><b>{_typing[0]}</b> and <b>{lastPerson}</b> is typing...</span>
-			{:else if _typing.length >= 4}
-				<span class="text">5 or more people are typing..</span>
-			{:else}
-				<span class="text">{#each _typing as username}<b>{username}</b>, {/each}and <b>{lastPerson}</b> are typing...</span>
+			{#if _typing.length === 1}
+				<span class="text"><b>{_typing[0]}</b> is typing...</span>
+			{:else if _typing.length === 2}
+				<span class="text"
+					><b>{_typing[0]}</b> and <b>{_typing[1]}</b> are typing...</span
+				>
+			{:else if _typing.length >= 3}
+				<span class="text">3 or more people are typing...</span>
 			{/if}
 		</span>
 	</Container>

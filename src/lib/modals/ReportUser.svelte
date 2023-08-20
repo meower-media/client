@@ -1,15 +1,15 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, profileClicked} from "../stores.js";
+	import {profileClicked} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Report User</h2>
 	<div slot="default">
@@ -17,13 +17,11 @@
 		<br /><br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
+				on:click={() => { modals.closeModal(); }}>Cancel</button
 			>
 			<button
-				on:click={() => {
-					clm.meowerRequest({
+				on:click={async () => {
+					await clm.meowerRequest({
 						cmd: "direct",
 						val: {
 							cmd: "report",
@@ -33,7 +31,7 @@
 							},
 						},
 					});
-					$modalShown = false;
+					modals.closeModal();
 				}}>Report</button
 			>
 		</div>

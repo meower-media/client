@@ -3,7 +3,7 @@
  */
 
 import {writable} from "svelte/store";
-import { systemDarkMode } from "./responsiveness.js";
+import {systemDarkMode} from "./responsiveness.js";
 
 // Used for setup screen
 export const screen = writable("setup");
@@ -18,6 +18,7 @@ export const basicModalTitle = writable("");
 export const basicModalDesc = writable("");
 
 // Used for the disconnected screen
+export const intentionalDisconnect = writable(false);
 export const reconnecting = writable(false);
 export const disconnected = writable(false);
 export const disconnectReason = writable("");

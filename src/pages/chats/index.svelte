@@ -10,11 +10,10 @@
 	import {
 		chatName,
 		chatid,
-		modalPage,
-		modalShown,
 		chatMembers,
 		chatOwner,
 	} from "../../lib/stores.js";
+	import * as modals from "../../lib/modals.js";
 	import PagedList from "../../lib/PagedList.svelte";
 	import Container from "../../lib/Container.svelte";
 	import * as clm from "../../lib/clmanager.js";
@@ -22,8 +21,7 @@
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
 
-    import {goto} from '@roxi/routify';
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 	import Modal from "../../lib/Modal.svelte";
 
 	let items;
@@ -79,10 +77,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle plus"
-				on:click={() => {
-					modalPage.set("createChat");
-					modalShown.set(true);
-				}}
+				on:click={() => { modals.showModal("createChat"); }}
 			/>
 		</div>
 	</Container>

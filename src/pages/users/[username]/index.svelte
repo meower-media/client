@@ -1,10 +1,6 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
-	import {
-		userToMod,
-		modPanelOpen,
-		user,
-	} from "../../../lib/stores.js";
+	import {userToMod, modPanelOpen, user} from "../../../lib/stores.js";
 	import * as Modals from "../../../lib/modals.js";
 
 	import {profileCache} from "../../../lib/loadProfile.js";
@@ -17,7 +13,8 @@
 	import * as clm from "../../../lib/clmanager.js";
 	import {apiUrl, encodeApiURLParams} from "../../../lib/urls.js";
 
-    import {params, goto} from '@roxi/routify';
+	import {params, goto} from "@roxi/routify";
+	import {tick} from "svelte";
 
 	const PFP_COUNT = 34;
 
@@ -53,133 +50,143 @@
 		const pfp = $user.pfp_data;
 		pfpOverflow = pfp < 0 || pfp > PFP_COUNT;
 	}
+
+	let hidden = false;
+	params.subscribe(async () => {
+		hidden = true;
+		await tick();
+		hidden = false;
+	});
 </script>
 
-<div class="OtherProfile">
-	{#await loadProfile()}
-		<div class="fullcenter">
-			<Loading />
-		</div>
-	{:then data}
-		<ProfileView username={$params.username} />
+{#if !hidden}
+	<div style="--username: {$params.username}">
+		{#await loadProfile()}
+			<div class="fullcenter">
+				<Loading />
+			</div>
+		{:then data}
+			<ProfileView username={$params.username} />
 
-        {#if $user.name == $params.username}
-            <Container>
-                <h3>Quote</h3>
-                <input
-                    type="text"
-                    class="modal-input white"
-                    style="font-style: italic"
-                    placeholder="Write something..."
-                    maxlength="360"
-                    bind:value={$user.quote}
-                    on:change={async () => {
-                        await clm.updateProfile();
-                    }}
-                />
-            </Container>
-        {:else}
-            {#if data.quote}
-                <Container>
-                    <h3>Quote</h3>
-                    <p>"<i>{data.quote}</i>"</p>
-                </Container>
-            {/if}
-        {/if}
+			{#if $user.name == $params.username}
+				<Container>
+					<h3>Quote</h3>
+					<input
+						type="text"
+						class="modal-input white"
+						style="font-style: italic"
+						placeholder="Write something..."
+						maxlength="360"
+						bind:value={$user.quote}
+						on:change={async () => {
+							await clm.updateProfile();
+						}}
+					/>
+				</Container>
+			{:else if data.quote}
+				<Container>
+					<h3>Quote</h3>
+					<p>"<i>{data.quote}</i>"</p>
+				</Container>
+			{/if}
 
-		{#if pfpSwitcher}
-			<Container>
-				<h2>Profile Picture</h2>
-				<div id="pfp-list">
-					{#if pfpOverflow && $user.pfp_data < 0}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
-							class="pfp selected"
-							><PFP
-								online={false}
-								icon={$user.pfp_data}
-								alt="Profile picture {$user.pfp_data}"
-							/></button
-						>
-					{/if}
-					{#each pfps as pfp}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-								$user.pfp_data = pfp;
-								save();
-							}}
-							class="pfp"
-							class:selected={$user.pfp_data === pfp}
-							><PFP
-								online={false}
-								icon={pfp}
-								alt="Profile picture {pfp}"
-							/></button
-						>
-					{/each}
-					{#if pfpOverflow && $user.pfp_data > 0}
-						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
-							class="pfp selected"
-							><PFP
-								online={false}
-								icon={$user.pfp_data}
-								alt="Profile picture {$user.pfp_data}"
-							/></button
-						>
-					{/if}
-				</div>
-			</Container>
-		{:else if $params.username === $user.name}
-			<button
-				class="long"
-				title="Change Profile Picture"
-				on:click={() => (pfpSwitcher = true)}
-				>Change Profile Picture</button
-			>
-		{/if}
-
-		<button
-			class="long"
-			title="View Recent Posts"
-			on:click={() => {$goto("./posts")}}>View Recent Posts</button
-		>
-
-		{#if $user.name && $params.username !== $user.name}
-			<button
-				class="long"
-				on:click={() => {
-					Modals.showModal("addMember2");
-				}}>Add to Chat</button
-			>
-			{#if $user.lvl < 1}
+			{#if pfpSwitcher}
+				<Container>
+					<h2>Profile Picture</h2>
+					<div id="pfp-list">
+						{#if pfpOverflow && $user.pfp_data < 0}
+							<button
+								on:click={() => {
+									pfpSwitcher = false;
+								}}
+								class="pfp selected"
+								><PFP
+									online={false}
+									icon={$user.pfp_data}
+									alt="Profile picture {$user.pfp_data}"
+								/></button
+							>
+						{/if}
+						{#each pfps as pfp}
+							<button
+								on:click={() => {
+									pfpSwitcher = false;
+									$user.pfp_data = pfp;
+									save();
+								}}
+								class="pfp"
+								class:selected={$user.pfp_data === pfp}
+								><PFP
+									online={false}
+									icon={pfp}
+									alt="Profile picture {pfp}"
+								/></button
+							>
+						{/each}
+						{#if pfpOverflow && $user.pfp_data > 0}
+							<button
+								on:click={() => {
+									pfpSwitcher = false;
+								}}
+								class="pfp selected"
+								><PFP
+									online={false}
+									icon={$user.pfp_data}
+									alt="Profile picture {$user.pfp_data}"
+								/></button
+							>
+						{/if}
+					</div>
+				</Container>
+			{:else if $params.username === $user.name}
 				<button
 					class="long"
-					title="Report User"
-					on:click={() => {
-						Modals.showModal("reportUser");
-					}}>Report User</button
-				>
-			{:else}
-				<button
-					class="long"
-					title="Moderate User"
-					on:click={() => {
-						$userToMod = $params.username;
-						$modPanelOpen = true;
-					}}>Moderate User</button
+					title="Change Profile Picture"
+					on:click={() => (pfpSwitcher = true)}
+					>Change Profile Picture</button
 				>
 			{/if}
-		{/if}
-	{:catch e}
-		<ProfileView username={$params.username} />
-	{/await}
-</div>
+
+			<button
+				class="long"
+				title="View Recent Posts"
+				on:click={() => {
+					$goto("./posts");
+				}}>View Recent Posts</button
+			>
+
+			{#if $user.name && $params.username !== $user.name}
+				<button
+					class="long"
+					on:click={() => {
+						Modals.showModal("addMember2");
+					}}>Add to Chat</button
+				>
+				{#if $user.lvl >= 1}
+					<button
+						class="long"
+						title="Moderate User"
+						on:click={() => {
+							$userToMod = $params.username;
+							$modPanelOpen = true;
+						}}>Moderate User</button
+					>
+				{:else}
+					<button
+						class="long"
+						title="Report User"
+						on:click={() => {
+							Modals.showModal("reportUser");
+						}}>Report User</button
+					>
+					
+				{/if}
+			{/if}
+		{:catch e}
+			<ProfileView username={$params.username} />
+		{/await}
+	</div>
+{/if}
 
 <style>
 	.fullcenter {
@@ -199,7 +206,7 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
+		margin-bottom: 0.2em;
 	}
 
 	.pfp {

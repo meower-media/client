@@ -28,7 +28,7 @@ if (PointerEvent) {
 
 export function systemDarkMode() {
 	if (window.matchMedia) {
-		return window.matchMedia('(prefers-color-scheme: dark)').matches;
+		return window.matchMedia("(prefers-color-scheme: dark)").matches;
 	} else {
 		return false;
 	}

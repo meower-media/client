@@ -2,14 +2,11 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {
-		modalShown,
-		modalPage,
-		user,
-	} from "../stores.js";
+	import {user} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
-	const link = clm.link;
 
 	import {goto} from "@roxi/routify";
 
@@ -34,30 +31,14 @@
 				},
 			})
 				.then(async val => {
-					try {
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: val.payload.username,
-							},
-						});
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							})
-						);
-						loginStatus = "";
-						$goto("/oobe");
-						modalShown.set(false);
-					} catch (e) {
-						localStorage.clear();
-						console.error(
-							"Unexpected " + e + " error getting user data!"
-						);
-						link.disconnect(1000, "Failed to load userdata");
-					}
+					user.update(v =>
+						Object.assign(v, {
+							name: val.payload.username,
+						})
+					);
+					loginStatus = "";
+					$goto("/oobe");
+					modals.closeModal();
 				})
 				.catch(code => {
 					loading = false;
@@ -66,7 +47,7 @@
 							loginStatus = "That username already exists!";
 							break;
 						case "E:119 | IP Blocked":
-							$modalPage = "ipBanned";
+							modals.showModal("accountCreationBlocked");
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =
@@ -89,9 +70,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Join Meower</h2>
 	<div slot="default">
@@ -151,9 +130,7 @@
 				<div class="modal-buttons">
 					<a
 						href="/"
-						on:click|preventDefault={() => {
-							modalPage.set("login");
-						}}>Login to Meower</a
+						on:click|preventDefault={() => { modals.showModal("login"); }}>Login to Meower</a
 					>
 					<button type="submit" disabled={!acceptTerms}
 						>Create Account</button

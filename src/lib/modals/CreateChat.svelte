@@ -5,8 +5,7 @@
 
 	import * as clm from "../clmanager.js";
 
-	import {tick} from "svelte";
-	import { goto } from "@roxi/routify";
+	import {goto} from "@roxi/routify";
 
 	let createStatus,
 		chatNickname = "";

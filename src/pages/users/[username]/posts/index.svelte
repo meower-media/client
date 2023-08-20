@@ -2,7 +2,7 @@
 	Home but it's a user's posts.
 -->
 <script>
-	import {params} from '@roxi/routify';
+	import {params} from "@roxi/routify";
 	import Container from "../../../../lib/Container.svelte";
 	import PostList from "../../../../lib/PostList.svelte";
 </script>

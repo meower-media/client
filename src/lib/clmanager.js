@@ -5,17 +5,18 @@
 import Cloudlink from "./cloudlink.js";
 import {
 	screen,
-	setupPage,
 	ulist,
 	user,
 	authHeader,
 	spinner,
+	intentionalDisconnect,
 	reconnecting,
 	disconnected,
 	disconnectReason,
 } from "./stores.js";
-import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
+import * as modals from "./modals.js";
+
 import {tick} from "svelte";
 
 /**
@@ -24,7 +25,7 @@ import {tick} from "svelte";
 const disconnectCodes = [
 	"E:018 | Account Banned",
 	"E:020 | Kicked",
-	"E:110 | ID conflict",
+	"I:024 | Logged out",
 	"E:119 | IP Blocked",
 ];
 
@@ -36,6 +37,22 @@ user.subscribe(v => {
 			"meower_savedconfig",
 			JSON.stringify({theme: _user.theme, mode: _user.mode})
 		);
+});
+
+/**
+ * Listens to username and token updates that could happen by other tabs.
+ */
+addEventListener("storage", event => {
+	if (event.key === "meower_savedusername") {
+		if (event.newValue !== _user.name) {
+			modals.showModal("loggedOut");
+		}
+	} else if (event.key === "meower_savedpassword") {
+		authHeader.set({
+			username: _user.name,
+			token: event.newValue,
+		});
+	}
 });
 
 // Load saved config from local storage
@@ -83,6 +100,11 @@ let authEvent = null;
  */
 let inboxMessageEvent = null;
 /**
+ * A variable used to keep track of user config updates.
+ * @type any
+ */
+let configUpdateEvent = null;
+/**
  * A variable used to keep track of any disconnection requests.
  * @type any
  */
@@ -119,6 +141,10 @@ export async function connect() {
 		link.off(inboxMessageEvent);
 		inboxMessageEvent = null;
 	}
+	if (configUpdateEvent) {
+		link.off(configUpdateEvent);
+		configUpdateEvent = null;
+	}
 	if (disconnectRequest) {
 		link.off(disconnectRequest);
 		disconnectRequest = null;
@@ -147,7 +173,7 @@ export async function connect() {
 			pingInterval = null;
 
 			// show disconnected modal if disconnect reason is set
-			let _disconnectedReason; 
+			let _disconnectedReason;
 			disconnectReason.subscribe(v => {
 				if (v) {
 					disconnected.set(true);
@@ -155,13 +181,13 @@ export async function connect() {
 				}
 			});
 
-			if (e.code === 1000 || e.code === 1001) {
-				ulist.set([]);
-				user.set(unloadedProfile());
-				return;
-			}
+			let _intentionalDisconnect;
+			intentionalDisconnect.subscribe(v => {
+				_intentionalDisconnect = v;
+			});
+			if (_intentionalDisconnect) return;
 
-			const onErrorEv = link.on("error", async (e) => {
+			const onErrorEv = link.on("error", async e => {
 				link.error("manager", "auto-reconnection failed:", e);
 				reconnecting.set(true);
 				try {
@@ -169,9 +195,11 @@ export async function connect() {
 				} catch (e) {
 					link.error("manager", "connection error:", e);
 					link.off(onErrorEv);
-					reconnecting.set(false);
-					disconnectReason.set(e.reason);
-					disconnected.set(true);
+					if (e === "E:119 | IP Blocked") {
+						modals.showModal("ipBlocked");
+					} else {
+						modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+					}
 				}
 			});
 			link.once("connected", async () => {
@@ -207,12 +235,7 @@ export async function connect() {
 							})
 						);
 					} catch (e) {
-						reconnecting.set(false);
-						screen.set("blank");
-						await tick();
-						setupPage.set("reconnect");
-						screen.set("setup");
-						return;
+						modals.showModal("loggedOut");
 					}
 				}
 
@@ -230,8 +253,11 @@ export async function connect() {
 			} catch (e) {
 				link.error("manager", "connection error:", e);
 				link.off(onErrorEv);
-				disconnectReason.set(e.reason);
-				disconnected.set(true);
+				if (e === "E:119 | IP Blocked") {
+					modals.showModal("ipBlocked");
+				} else {
+					modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+				}
 			}
 		});
 		ulistEvent = link.on("ulist", cmd => {
@@ -263,11 +289,18 @@ export async function connect() {
 				user.set(_user);
 			}
 		});
-		disconnectRequest = link.on("direct", cmd => {
+		configUpdateEvent = link.on("sync_state", cmd => {
+			_user = {
+				..._user,
+				...cmd.val,
+			};
+			user.set(_user);
+		});
+		disconnectRequest = link.on("direct", async cmd => {
 			if (disconnectCodes.includes(cmd.val)) {
-				disconnectReason.set(cmd.val);
-				link.disconnect(1000, "Requested disconnect");
-				link.log("manager", "requested disconnect:", cmd.val);
+				link.log("manager", "Requested disconnect:", cmd.val);
+				modals.showModal("loggedOut");
+				await disconnect();
 			}
 		});
 	});
@@ -276,9 +309,12 @@ export async function connect() {
 	try {
 		return await link.connect(linkUrl);
 	} catch (e) {
-		disconnectReason.set(e);
-		disconnected.set(true);
 		link.error("manager", "conenction error:", e);
+		if (e === "E:119 | IP Blocked") {
+			modals.showModal("ipBlocked");
+		} else {
+			modals.showModal("basic", "Connection Error", "Failed connecting to WebSocket server. View console for more information.");
+		}
 		return e;
 	}
 }
@@ -302,6 +338,7 @@ export async function disconnect() {
 		return new Promise(r => r());
 	}
 	link.log("manager", "safely disconnecting");
+	intentionalDisconnect.set(true);
 	return new Promise(resolve => {
 		link.once("disconnected", resolve);
 		link.disconnect(1000, "Intentional disconnect");
@@ -355,6 +392,7 @@ export async function meowerRequest(data) {
  */
 export async function updateProfile() {
 	const profile = _user;
+	if (!profile.name) return;
 	return meowerRequest({
 		cmd: "direct",
 		val: {

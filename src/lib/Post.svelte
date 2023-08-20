@@ -9,12 +9,7 @@
 
 	import LiText from "./LiText.svelte";
 
-	import {
-		postClicked,
-		user,
-		chatid,
-		ulist,
-	} from "../lib/stores.js";
+	import {postClicked, user, chatid, ulist} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as Modals from "./modals.js";
@@ -23,7 +18,7 @@
 
 	import {default as loadProfile} from "../lib/loadProfile.js";
 
-	import {goto} from '@roxi/routify';
+	import {goto} from "@roxi/routify";
 	import {onMount} from "svelte";
 
 	export let post = {};

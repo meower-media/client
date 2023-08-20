@@ -1,17 +1,11 @@
 <script>
-	import {sidebarLocked, OOBEPage, user} from "../lib/stores.js";
-
 	import OOBECustomizePFP from "../lib/OOBE/CustomizePFP.svelte";
 	import OOBECustomizeTheme from "../lib/OOBE/CustomizeTheme.svelte";
 
+	import {sidebarLocked, OOBEPage, user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as BGM from "../lib/BGM.js";
-	import { goto } from "@roxi/routify";
 
-	const _user = $user;
-	_user.bgm = false;
-	user.set(_user);
-	BGM.playBGM(_user.bgm_song);
+	import {goto} from "@roxi/routify";
 
 	clm.updateProfile();
 
@@ -24,27 +18,27 @@
 </script>
 
 <div class="wrapper">
-    <div class="main">
-        <div class="setup">
-            <div class="fullcenter">
-                {#if $OOBEPage == 0}
-                    <OOBECustomizePFP />
-                {:else if $OOBEPage == 1}
-                    <OOBECustomizeTheme />
-                {:else if $OOBEPage == 2}
-                    <h1>That's it!</h1>
-                    <button
-                        on:click={() => {
-                            sidebarLocked.set(false);
-                            $goto("/home");
-                        }}>Let's go!</button
-                    >
-                {:else}
-                    <p>{$OOBEPage}</p>
-                {/if}
-            </div>
-        </div>
-    </div>
+	<div class="main">
+		<div class="setup">
+			<div class="fullcenter">
+				{#if $OOBEPage == 0}
+					<OOBECustomizePFP />
+				{:else if $OOBEPage == 1}
+					<OOBECustomizeTheme />
+				{:else if $OOBEPage == 2}
+					<h1>That's it!</h1>
+					<button
+						on:click={() => {
+							sidebarLocked.set(false);
+							$goto("/home");
+						}}>Let's go!</button
+					>
+				{:else}
+					<p>{$OOBEPage}</p>
+				{/if}
+			</div>
+		</div>
+	</div>
 	<div class="footer">
 		<button
 			class="full"
@@ -79,10 +73,10 @@
 		width: 100%;
 		height: 100%;
 	}
-	
-    .main {
-        height: calc(100% - 3em);
-    }
+
+	.main {
+		height: calc(100% - 3em);
+	}
 
 	.setup {
 		text-align: center;

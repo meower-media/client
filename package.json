@@ -1,13 +1,13 @@
 {
 	"name": "meower-svelte",
 	"private": true,
-	"version": "1.6.2",
+	"version": "1.7.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"dev-host": "vite --host",
 		"dev:routify": "routify",
-    	"build": "routify -b && vite build",
+		"build": "routify -b && vite build",
 		"preview": "vite preview",
 		"format": "prettier -w ."
 	},

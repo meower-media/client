@@ -1,13 +1,9 @@
 import {audioData} from "./BGMdata.js";
 import {user} from "./stores.js";
 
-// Music that runs in the background
+import unloadedProfile from "./unloadedProfile.js";
 
-let _user = null;
-user.subscribe(async v => {
-	_user = v;
-	await playBGM(_user.bgm_song);
-});
+// Music that runs in the background
 
 let audio;
 // @ts-ignore
@@ -21,13 +17,20 @@ if (window.meower_audio) {
 let playingBGM = null;
 let hasPlayedNow = false;
 
+let _user = unloadedProfile();
+user.subscribe(async v => {
+	_user = v;
+	await playBGM(_user.bgm_song);
+});
+
 export async function playBGM(id) {
 	try {
-		playingBGM = id;
 		if (!_user.bgm) {
 			stopBGM();
 			return;
 		}
+		if (id === playingBGM) return;
+		playingBGM = id;
 		if (audio) {
 			audio.pause();
 		}

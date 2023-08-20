@@ -3,12 +3,11 @@
 	import {
 		user,
 		profileClicked,
-		modalShown,
-		modalPage,
 		modPanelOpen,
 		sidebarLocked,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
+	import * as modals from "../lib/modals.js";
 
 	import PFP from "../lib/PFP.svelte";
 
@@ -26,7 +25,7 @@
 	import logout from "../assets/logout.svg";
 	import changelog from "../assets/changelog.svg";
 
-	import { goto } from '@roxi/routify'
+	import {goto} from "@roxi/routify";
 
 	let popupShown = false;
 	let popupDebounce = false;
@@ -42,7 +41,7 @@
 		<div class="locked" />
 	{/if}
 	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => $goto('/home')}>
+		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -58,11 +57,10 @@
 	<button
 		on:click={() => {
 			if (!$user.name) {
-				$modalPage = "signup";
-				$modalShown = true;
+				modals.showModal("signup");
 				return;
 			}
-			$goto("/inbox")
+			$goto("/inbox");
 		}}
 		class="round"
 		title="The Inbox"
@@ -76,8 +74,7 @@
 				$goto("/groupcat");
 			} else {
 				if (!$user.name) {
-					$modalPage = "signup";
-					$modalShown = true;
+					modals.showModal("signup");
 					return;
 				}
 				$goto("/chats");
@@ -139,8 +136,7 @@
 		<button
 			on:click={() => {
 				if (!$user.name) {
-					$modalPage = "signup";
-					$modalShown = true;
+					modals.showModal("signup");
 					return;
 				}
 				$profileClicked = $user.name;
@@ -153,22 +149,24 @@
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>
 		</button>
-		<button on:click={() => {
-			$goto("/settings");
-			popupShown = false;
-		}} class="settings-btn round">
+		<button
+			on:click={() => {
+				$goto("/settings");
+				popupShown = false;
+			}}
+			class="settings-btn round"
+		>
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
-		<button on:click={() => {
-			$goto("/changelog");
-			popupShown = false;
-		}} class="changelog-btn round">
-			<img
-				src={changelog}
-				alt="Changelog"
-				draggable={false}
-			/>
+		<button
+			on:click={() => {
+				$goto("/changelog");
+				popupShown = false;
+			}}
+			class="changelog-btn round"
+		>
+			<img src={changelog} alt="Changelog" draggable={false} />
 			<span class="label">Changelog</span>
 		</button>
 		<!-- still WIP
@@ -180,8 +178,7 @@
 		<button
 			on:click={() => {
 				popupShown = true;
-				modalPage.set("logout");
-				modalShown.set(true);
+				modals.showModal("logout");
 			}}
 			class="logout-btn round"
 		>

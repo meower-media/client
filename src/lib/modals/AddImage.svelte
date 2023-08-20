@@ -1,7 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, postInput, user} from "../stores.js";
+	import {postInput, user} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import LiText from "../LiText.svelte";
 
@@ -125,9 +127,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Add Image to Post</h2>
 	<div slot="default">
@@ -204,16 +204,14 @@
 		<p class="post-errors">{postErrors}</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Close</button
+				on:click={() => { modals.closeModal(); }}>Close</button
 			>
 			<button
 				disabled={postErrors !== ""}
 				on:click={() => {
 					$postInput.value +=
 						" [" + imgName.value + ": " + imgUrl.value + "]";
-					$modalShown = false;
+					modals.closeModal();
 				}}
 			>
 				Add
@@ -226,7 +224,7 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
+		margin-bottom: 0.2em;
 	}
 
 	.pfp {

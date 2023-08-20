@@ -1,13 +1,12 @@
-<!-- routify:options bundle=true -->
-
 <!-- Meower Svelte, the app itself. -->
 <script>
-    import Setup from "../lib/Setup.svelte";
+	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
 	import LoginModal from "../lib/modals/Login.svelte";
 	import SignupModal from "../lib/modals/Signup.svelte";
 	import BannedModal from "../lib/modals/Banned.svelte";
-	import IPBannedModal from "../lib/modals/IPBanned.svelte";
+	import IPBlockedModal from "../lib/modals/IPBlocked.svelte";
+	import AccountCreationBlocked from "../lib/modals/AccountCreationBlocked.svelte";
 	import DeletePostModal from "../lib/modals/DeletePost.svelte";
 	import ReportPostModal from "../lib/modals/ReportPost.svelte";
 	import ReportUserModal from "../lib/modals/ReportUser.svelte";
@@ -15,8 +14,9 @@
 	import AddMemberModal from "../lib/modals/AddMember.svelte";
 	import RemoveMemberModal from "../lib/modals/RemoveMember.svelte";
 	import CreateChatModal from "../lib/modals/CreateChat.svelte";
-	import SetQuoteModal from "../lib/modals/SetQuote.svelte";
+	import AddImgModal from "../lib/modals/AddImage.svelte";
 	import ChangePasswordModal from "../lib/modals/ChangePassword.svelte";
+	import LogoutEverywhereModal from "../lib/modals/LogoutEverywhere.svelte";
 	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "../lib/modals/Error.svelte";
 	import LogoutModal from "../lib/modals/Logout.svelte";
@@ -26,11 +26,11 @@
 	import AddMemberModeModal from "../lib/modals/AddMember_Mode.svelte";
 	import SearchResultsModal from "../lib/modals/SearchResults.svelte";
 	import SwitchThemeModal from "../lib/modals/SwitchTheme.svelte";
-	import AddImgModal from "../lib/modals/AddImage.svelte";
+	import LoggedOut from "../lib/modals/LoggedOut.svelte";
 	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
 	import BasicModal from "../lib/modals/Basic.svelte";
 
-    import Sidebar from "../lib/Sidebar.svelte";
+	import Sidebar from "../lib/Sidebar.svelte";
 	import ModPanel from "../lib/ModPanel.svelte";
 
 	import Spinner from "../lib/Spinner.svelte";
@@ -53,6 +53,10 @@
 	} from "../lib/stores.js";
 	import {tick} from "svelte";
 </script>
+
+<!-- routify:options bundle=true -->
+
+
 
 <!--
 	in main:
@@ -94,7 +98,7 @@
 		</div>
 	{/if}
 
-	{#if $disconnected}
+	{#if $disconnected && false}
 		<Modal>
 			<h2 slot="header">Me-owch.</h2>
 			<div slot="default">
@@ -104,18 +108,12 @@
 						userdata! Check console for more information.
 					{:else if $disconnectReason === "E:119 | IP Blocked"}
 						The server has blocked your IP address ({link.ip}).
-					{:else if $disconnectReason == "E:110 | ID conflict"}
-						There has been a hiccup! Looks like you logged into
-						Meower from another device.
-						<br /><br />
-						Please check any devices currently logged into Meower and
-						try again.
 					{:else if $disconnectReason == "E:018 | Account Banned"}
 						You have been banned by a moderator.
 					{:else if $disconnectReason == "E:020 | Kicked"}
 						You have been kicked by a moderator.
 					{:else}
-						We ran into an error trying to connect to the server.
+						We ran into an error trying to connect to Meower.
 						<pre><code>{$disconnectReason}</code></pre>
 					{/if}
 				</p>
@@ -134,7 +132,9 @@
 			<h2 slot="header">Reconnecting...</h2>
 			<div slot="default">
 				<p>
-					Looks like we're having some problems connecting you to Meower. Give us a moment and we'll reconnect you as soon as possible...
+					Looks like we're having some problems connecting you to
+					Meower. Give us a moment and we'll reconnect you as soon as
+					possible...
 				</p>
 			</div>
 		</Modal>
@@ -147,8 +147,10 @@
 			<!-- Bans -->
 		{:else if $modalPage === "banned"}
 			<BannedModal />
-		{:else if $modalPage === "ipBanned"}
-			<IPBannedModal />
+		{:else if $modalPage === "ipBlocked"}
+			<IPBlockedModal />
+		{:else if $modalPage === "accountCreationBlocked"}
+			<AccountCreationBlocked />
 			<!-- Confirmations -->
 		{:else if $modalPage === "deletePost"}
 			<DeletePostModal />
@@ -158,6 +160,8 @@
 			<ReportUserModal />
 		{:else if $modalPage === "searchResults"}
 			<SearchResultsModal />
+		{:else if $modalPage === "logoutEverywhere"}
+			<LogoutEverywhereModal />
 		{:else if $modalPage === "deleteAccount"}
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
@@ -167,8 +171,6 @@
 			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
-		{:else if $modalPage === "setQuote"}
-			<SetQuoteModal />
 		{:else if $modalPage === "addImg"}
 			<AddImgModal />
 		{:else if $modalPage === "changePassword"}
@@ -191,7 +193,9 @@
 			<SwitchThemeModal />
 		{:else if $modalPage === "switchBGM"}
 			<SwitchBGMSFXModal />
-		{:else if $modalPage === "BasicModal"}
+		{:else if $modalPage === "loggedOut"}
+			<LoggedOut />
+		{:else if $modalPage === "basic"}
 			<BasicModal />
 		{:else}
 			<ErrorModal />
@@ -199,19 +203,19 @@
 	{/if}
 
 	{#if $screen === "blank"}
-		<div id="blank"></div>
+		<div id="blank" />
 	{:else if $screen === "setup"}
 		<Setup />
 	{:else}
-        <div class="main-screen">
-            <div class="transition" />
-            <div class="sidebar">
-                <Sidebar />
-            </div>
-            <div class="view">
-                <slot />
-            </div>
-        </div>
+		<div class="main-screen">
+			<div class="transition" />
+			<div class="sidebar">
+				<Sidebar />
+			</div>
+			<div class="view">
+				<slot />
+			</div>
+		</div>
 	{/if}
 
 	{#if $spinner || $reconnecting}
@@ -282,7 +286,7 @@
 		--foreground-orange: white;
 	}
 
-    .main-screen {
+	.main-screen {
 		box-sizing: border-box;
 
 		display: flex;

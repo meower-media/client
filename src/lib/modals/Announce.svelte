@@ -1,6 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
-	import {modalShown, announcementToSend} from "../stores.js";
+	import {announcementToSend} from "../stores.js";
+	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 	import sleep from "../sleep";
 
@@ -8,9 +9,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Send Announcement</h2>
 	<div slot="default">
@@ -26,7 +25,7 @@
 						},
 					});
 					sendStatus = "";
-					$modalShown = false;
+					modals.closeModal();
 				} catch (e) {
 					console.error(e);
 					sendStatus = "Error: " + e;
@@ -38,9 +37,7 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click={() => {
-						$modalShown = false;
-					}}>Cancel</button
+					on:click={() => { modals.closeModal(); }}>Cancel</button
 				>
 				{#await sleep(1500)}
 					<button disabled type="submit">Send</button>

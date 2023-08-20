@@ -4,7 +4,7 @@
  * @returns {object} The unloaded profile.
  */
 
-import { systemDarkMode } from "./responsiveness.js";
+import {systemDarkMode} from "./responsiveness.js";
 
 export default function unloadedProfile() {
 	return {

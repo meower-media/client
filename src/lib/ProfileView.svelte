@@ -6,7 +6,7 @@
 	import PFP from "./PFP.svelte";
 	import {levels} from "./formatting.js";
 	import LiText from "./LiText.svelte";
-	import {goto} from '@roxi/routify';
+	import {goto} from "@roxi/routify";
 
 	export let username = "";
 	export let profile = null;

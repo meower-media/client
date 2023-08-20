@@ -3,14 +3,13 @@
 	import Post from "../Post.svelte";
 
 	import * as clm from "../clmanager.js";
+	import * as modals from "../modals.js";
 
-	import {modalShown, postClicked} from "../stores.js";
+	import {postClicked} from "../stores.js";
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Delete Post</h2>
 	<div slot="default">
@@ -19,9 +18,7 @@
 		<br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
+				on:click={() => { modals.closeModal(); }}>Cancel</button
 			>
 			<button
 				autofocus
@@ -33,7 +30,7 @@
 							val: $postClicked.post_id,
 						},
 					});
-					$modalShown = false;
+					modals.closeModal();
 				}}>Delete</button
 			>
 		</div>

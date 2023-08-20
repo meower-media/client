@@ -1,20 +1,14 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {
-		modalShown,
-		searchQuery,
-		searchType,
-	} from "../stores.js";
-	import * as Modals from "../modals.js";
+	import {searchQuery, searchType} from "../stores.js";
+	import * as modals from "../modals.js";
 
 	let username;
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
@@ -22,7 +16,7 @@
 			on:submit|preventDefault={e => {
 				searchQuery.set(e.target[0].value);
 				searchType.set("users");
-				Modals.showModal("searchResults");
+				modals.showModal("searchResults");
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>
@@ -40,9 +34,7 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click|preventDefault={() => {
-						$modalShown = false;
-					}}>Cancel</button
+					on:click|preventDefault={() => { modals.closeModal(); }}>Cancel</button
 				>
 				<button type="submit" disabled={!username}>Search</button>
 			</div>
@@ -54,6 +46,5 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
 	}
 </style>

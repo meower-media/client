@@ -1,16 +1,13 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, modalShown, authHeader} from "../stores.js";
+	import * as modals from "../modals.js";
 
 	import {goto} from "@roxi/routify";
-	import {tick} from "svelte";
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Logout</h2>
 	<div slot="default">
@@ -18,19 +15,11 @@
 		<br /><br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
+				on:click={() => { modals.closeModal(); }}>Cancel</button
 			>
 			<button
-				on:click={async () => {
-					localStorage.clear();
-					authHeader.set({});
-					modalShown.set(false);
-					$goto("/");
-					screen.set("setup");
-					await tick();
-					setupPage.set("reconnect");
+				on:click={() => {
+					$goto("/logout");
 				}}>Logout</button
 			>
 		</div>

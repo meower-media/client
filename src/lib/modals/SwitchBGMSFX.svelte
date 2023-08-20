@@ -1,7 +1,8 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user} from "../stores.js";
+	import {user} from "../stores.js";
+	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 	import {audioData} from "../BGMdata.js";
 	import * as BGM from "../BGM.js";
@@ -27,9 +28,7 @@
 </script>
 
 <Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
+	on:close={() => { modals.closeModal(); }}
 >
 	<h2 slot="header">Select Song</h2>
 	<div slot="default">
@@ -62,7 +61,7 @@
 			<button
 				on:click={() => {
 					BGM.playBGM($user.bgm_song); // why
-					$modalShown = false;
+					modals.closeModal();
 				}}>Cancel</button
 			>
 			<button
@@ -73,7 +72,7 @@
 
 					clm.updateProfile();
 					BGM.playBGM(bgmTrack + 1);
-					$modalShown = false;
+					modals.closeModal();
 				}}>OK</button
 			>
 		</div>
