@@ -31,7 +31,7 @@
 >
 	<h2 slot="header">{$profileClicked_GC}'s Profile</h2>
 	<div slot="default">
-		<ProfileView username={$profileClicked_GC} />
+		<ProfileView username={$profileClicked_GC} canClick={true} />
 		<button
 			class="long"
 			on:click={() => {

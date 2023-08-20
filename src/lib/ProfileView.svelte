@@ -1,6 +1,19 @@
+<!--
+	Profile view thing to make codebase better
+
+	(Arrow I swear if you comment that this makes your life harder)
+
+	Args:
+		Username: The profile username
+		Profile: Custom profile JSON, Optional
+		Small: If True, the View will be shorter
+		CanClick: If True, when you click the PFP, it will go to their profile
+		CloseCurrentModal (Defaults to true): If false, the current Modal wont close when Clicking the PFP 
+-->
+
 <script>
 	import loadProfile from "./loadProfile.js";
-	import {profileClicked, mainPage as page, ulist, user} from "./stores.js";
+	import {profileClicked, mainPage as page, ulist, user, modalShown} from "./stores.js";
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
@@ -12,6 +25,7 @@
 	export let profile = null;
 	export let small = false;
 	export let canClick = false;
+	export let CloseCurrentModal = true;
 
 	function load() {
 		if (profile) {
@@ -33,6 +47,9 @@
 					<button
 						class="clickable-pfp"
 						on:click={async () => {
+							if (CloseCurrentModal) {
+								modalShown.set(false)
+							}
 							page.set("");
 							await tick();
 							profileClicked.set(data._id);

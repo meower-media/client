@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user} from "../stores.js";
+	import {customTheme, modalShown, useCustomTheme, user} from "../stores.js";
 	import * as clm from "../clmanager.js";
 
 	import * as Modals from "../modals.js";
@@ -13,7 +13,7 @@
 		eager: true,
 	});
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
+	let selections = ["orange", "dark-orange", "blue", "dark-blue","custom"];
 
 	let error = false;
 
@@ -21,8 +21,13 @@
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
-		theme = "orange";
-		error = true;
+		if (!theme.startsWith("custom:")) {
+			theme = "orange";
+			error = true;
+		} else {
+			theme = "custom";
+			darkMode = false
+		}
 	}
 
 	const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
@@ -31,7 +36,14 @@
 	let darkModeStr = (!darkMode && "Light") || "Dark";
 	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 	let themeName = themeCaps + darkModeStr;
+	let CustomTheme = false;
 
+	if (theme != "custom") {
+		CustomTheme = false
+	} else {
+		CustomTheme = true
+	}
+	
     /**
      * @type {string}
      */
@@ -40,21 +52,29 @@
 		themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
 
 	function changeTheme() {
-		selection = clamp(selection, 0, 3);
-		theme = selections[selection];
-        darkMode = false;
-        if (theme.startsWith("dark-")) {
-            darkMode = true;
-            theme = theme.substring(5);
-        }
+		if (selection < 0) {selection = selections.length-1}
 
-		darkModeStr = darkMode ? "Dark" : "Light";
-		themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
-		themeName = themeCaps + darkModeStr; // Change vars
-        
-		// @ts-ignore
-		currentPreviewImage =
-			themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+		selection = selection % selections.length;
+		theme = selections[selection];
+
+		if (theme != "custom") {
+			CustomTheme = false
+			darkMode = false;
+			if (theme.startsWith("dark-")) {
+				darkMode = true;
+				theme = theme.substring(5);
+			}
+
+			darkModeStr = darkMode ? "Dark" : "Light";
+			themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
+			themeName = themeCaps + darkModeStr; // Change vars
+			
+			// @ts-ignore
+			currentPreviewImage =
+				themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+		} else {
+			CustomTheme = true
+		}
 	}
 
 	function customThemeChange() {
@@ -77,14 +97,22 @@
 				}}>{"<"}</button
 			>
 			<div class="theme-middle">
-				<img
-					src={currentPreviewImage}
-					class="theme-preview"
-					alt={themeName}
-				/>
-				<div class="theme-name">
-					{themeCaps + " (" + darkModeStr + ")"}
-				</div>
+				{#if !CustomTheme}
+					<img
+						src={currentPreviewImage}
+						class="theme-preview"
+						alt={themeName}
+					/>
+					<div class="theme-name">
+						{themeCaps + " (" + darkModeStr + ")"}
+					</div>
+				{:else}
+					<button on:click={() => {customThemeChange()}}>Press me</button>
+					<br /><br />
+					<div class="theme-name">
+						Custom Theme
+					</div>
+				{/if}
 			</div>
 			<button
 				on:click={() => {
@@ -105,17 +133,24 @@
 					$modalShown = false;
 				}}>Close</button
 			>
-			<button
-				on:click={() => {
-					const _user = $user;
-					_user.theme = theme;
-					_user.mode = !darkMode;
-					user.set(_user);
+			{#if !CustomTheme}
+				<button
+					on:click={() => {
+						const _user = $user;
+						_user.theme = theme;
+						_user.mode = !darkMode;
+						user.set(_user);
 
-					clm.updateProfile();
-					$modalShown = false;
-				}}>OK</button
-			>
+						clm.updateProfile();
+						$modalShown = false;
+						useCustomTheme.set(false)
+					}}>OK</button
+				>
+			{:else}
+				<button
+					disabled
+				>Ok</button>
+			{/if}
 		</div>
 	</div>
 </Modal>
