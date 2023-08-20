@@ -1,7 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, postInput, user} from "../stores.js";
+	import {postInput, user} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import LiText from "../LiText.svelte";
 
@@ -32,7 +34,7 @@
 	function initPostUser() {
 		if (!post.user) return;
 
-		let  i = 0;
+		let i = 0;
 
 		// Match image syntax
 		// ([title: https://url])
@@ -80,12 +82,7 @@
 
 	function change() {
 		const full =
-			$postInput.value +
-			" [" +
-			imgName.value +
-			": " +
-			imgUrl.value +
-			"]";
+			$postInput.value + " [" + imgName.value + ": " + imgUrl.value + "]";
 		post.content = full;
 		initPostUser();
 
@@ -116,10 +113,11 @@
 				result.value[2].toLowerCase().startsWith(o.toLowerCase())
 			)
 		) {
-			postErrors = "This image is not on the image host whitelist! Allowed image hosts are: " +
-			IMAGE_HOST_WHITELIST.map(
-				url => url.replaceAll("https://", "").replaceAll("/", "")
-			).join(", ");
+			postErrors =
+				"This image is not on the image host whitelist! Allowed image hosts are: " +
+				IMAGE_HOST_WHITELIST.map(url =>
+					url.replaceAll("https://", "").replaceAll("/", "")
+				).join(", ");
 		} else {
 			postErrors = "";
 		}
@@ -130,7 +128,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Add Image to Post</h2>
@@ -209,19 +207,15 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					$modalShown = false;
+					modals.closeModal();
 				}}>Close</button
 			>
 			<button
 				disabled={postErrors !== ""}
 				on:click={() => {
 					$postInput.value +=
-						" [" +
-						imgName.value +
-						": " +
-						imgUrl.value +
-						"]";
-					$modalShown = false;
+						" [" + imgName.value + ": " + imgUrl.value + "]";
+					modals.closeModal();
 				}}
 			>
 				Add
@@ -234,7 +228,7 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
+		margin-bottom: 0.2em;
 	}
 
 	.pfp {

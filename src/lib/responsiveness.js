@@ -25,3 +25,11 @@ export function updateTouch(e) {
 if (PointerEvent) {
 	window.addEventListener("pointerdown", updateTouch);
 }
+
+export function systemDarkMode() {
+	if (window.matchMedia) {
+		return window.matchMedia("(prefers-color-scheme: dark)").matches;
+	} else {
+		return false;
+	}
+}

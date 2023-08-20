@@ -1,12 +1,13 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user} from "../stores.js";
+	import {user} from "../stores.js";
+
+	import * as modals from "../modals.js";
+
 	import * as clm from "../clmanager.js";
 
-	import * as Modals from "../modals.js";
-
-    import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
+	import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
 
 	const themePreviews = import.meta.glob("../../assets/themePreviews/*.png", {
 		import: "default",
@@ -17,7 +18,7 @@
 
 	let error = false;
 
-    let darkMode = !$user.mode;
+	let darkMode = !$user.mode;
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
@@ -32,39 +33,37 @@
 	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 	let themeName = themeCaps + darkModeStr;
 
-    /**
-     * @type {string}
-     */
+	/**
+	 * @type {string}
+	 */
 	// @ts-ignore
 	let currentPreviewImage =
-		themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+		themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+		defaultPreview;
 
 	function changeTheme() {
 		selection = clamp(selection, 0, 3);
 		theme = selections[selection];
-        darkMode = false;
-        if (theme.startsWith("dark-")) {
-            darkMode = true;
-            theme = theme.substring(5);
-        }
+		darkMode = false;
+		if (theme.startsWith("dark-")) {
+			darkMode = true;
+			theme = theme.substring(5);
+		}
 
 		darkModeStr = darkMode ? "Dark" : "Light";
 		themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 		themeName = themeCaps + darkModeStr; // Change vars
-        
+
 		// @ts-ignore
 		currentPreviewImage =
-			themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
-	}
-
-	function customThemeChange() {
-		Modals.showModal("customTheme");
+			themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+			defaultPreview;
 	}
 </script>
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Select a Theme</h2>
@@ -102,7 +101,7 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					$modalShown = false;
+					modals.closeModal();
 				}}>Close</button
 			>
 			<button
@@ -113,7 +112,7 @@
 					user.set(_user);
 
 					clm.updateProfile();
-					$modalShown = false;
+					modals.closeModal();
 				}}>OK</button
 			>
 		</div>
@@ -150,7 +149,7 @@
 
 	.layout-text {
 		text-align: center;
-        margin: 0.75em 0;
-        font-size: 80%;
+		margin: 0.75em 0;
+		font-size: 80%;
 	}
 </style>

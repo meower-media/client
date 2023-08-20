@@ -3,16 +3,10 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import * as clm from "./clmanager.js";
 	import {levels} from "./formatting.js";
-	import {
-		mainPage as page,
-		userToMod,
-		profileClicked,
-		announcementToSend,
-		user,
-	} from "./stores";
-	import {tick} from "svelte";
+	import {userToMod, announcementToSend, user} from "./stores";
+	import {goto} from "@roxi/routify";
 	import * as Modals from "./modals.js";
-	import { onMount } from "svelte/internal";
+	import {onMount} from "svelte/internal";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -68,13 +62,6 @@
 			level: 3,
 		},
 	];
-
-	async function gotoProfile(username) {
-		page.set("");
-		await tick();
-		profileClicked.set(username);
-		page.set("profile");
-	}
 
 	let items = [];
 
@@ -176,7 +163,8 @@
 			<a
 				href="/"
 				on:click|preventDefault={() =>
-					gotoProfile(ipData.user.username)}>{ipData.user.username}</a
+					$goto(`/users/${ipData.user.username}`)}
+				>{ipData.user.username}</a
 			><br />
 			<b>Quote:</b>
 			<i>"{ipData.user.quote}"</i><br />
@@ -189,13 +177,14 @@
 			{#if $user.lvl >= 2}
 				<b>IP:</b>
 				{ipData.ip}<br />
-				<b>IP banned?</b>
+				<b>IP blocked?</b>
 				{ipData.banned ? "Yes" : "No"}<br />
 				<b>Last user on IP:</b>
 				<a
 					href="/"
 					on:click|preventDefault={() =>
-						gotoProfile(ipData.last_user)}>{ipData.last_user}</a
+						$goto(`/users/${ipData.last_user}`)}
+					>{ipData.last_user}</a
 				><br />
 				<b>Users on IP:</b>
 				<ul>
@@ -204,7 +193,7 @@
 							<a
 								href="/"
 								on:click|preventDefault={() =>
-									gotoProfile(username)}>{username}</a
+									$goto(`/users/${username}`)}>{username}</a
 							>
 						</li>
 					{/each}
@@ -248,7 +237,12 @@
 		}}
 	>
 		<div class="input-row">
-			<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
+			<input
+				class="grow white"
+				type="text"
+				placeholder="Username..."
+				value={$userToMod}
+			/>
 			<button class="static">Send</button>
 		</div>
 		<textarea
@@ -277,7 +271,7 @@
 				}
 				announceMsg = "";
 				$announcementToSend = text;
-				Modals.showModal("announce")
+				Modals.showModal("announce");
 			}}
 		>
 			<textarea

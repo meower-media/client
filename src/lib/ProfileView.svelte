@@ -1,12 +1,12 @@
 <script>
 	import loadProfile from "./loadProfile.js";
-	import {profileClicked, mainPage as page, ulist, user} from "./stores.js";
+	import {ulist, user} from "./stores.js";
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
 	import {levels} from "./formatting.js";
 	import LiText from "./LiText.svelte";
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
 	export let username = "";
 	export let profile = null;
@@ -33,10 +33,7 @@
 					<button
 						class="clickable-pfp"
 						on:click={async () => {
-							page.set("");
-							await tick();
-							profileClicked.set(data._id);
-							page.set("profile");
+							$goto(`/users/${data._id}`);
 						}}
 					>
 						<PFP
@@ -60,9 +57,13 @@
 				{/if}
 				<div class="profile-header-info" class:small>
 					{#if small}
-						<h2 class="profile-username"><LiText text={data._id} /></h2>
+						<h2 class="profile-username">
+							<LiText text={data._id} />
+						</h2>
 					{:else}
-						<h1 class="profile-username"><LiText text={data._id} /></h1>
+						<h1 class="profile-username">
+							<LiText text={data._id} />
+						</h1>
 					{/if}
 					<div class="profile-active">
 						{#if data.banned == false}

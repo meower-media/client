@@ -1,6 +1,6 @@
 <script>
 	// Badges, not like #1 or something.
-	
+
 	export let text = "BADGE";
 	export let title = null;
 	export let checkmark = false;

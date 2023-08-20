@@ -2,9 +2,9 @@
 <script>
 	import Container from "../lib/Container.svelte";
 
-	import {user, modalShown, modalPage} from "../lib/stores.js";
+	import {user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "../lib/modals.js";
+	import * as modals from "../lib/modals.js";
 	import * as BGM from "../lib/BGM.js";
 </script>
 
@@ -35,13 +35,15 @@
 		<button
 			class="circle settings"
 			on:click={() => {
-				Modals.showModal("switchTheme");
+				modals.showModal("switchTheme");
 			}}
 		/>
 	</div>
 
 	<h2>Theme</h2>
-	The theme is currently set to {$user.theme} ({$user.mode ? "light" : "dark"}).
+	The theme is currently set to {$user.theme} ({$user.mode
+		? "light"
+		: "dark"}).
 </Container>
 <Container>
 	<div class="settings-controls">
@@ -69,7 +71,7 @@
 			<button
 				class="circle settings"
 				on:click={() => {
-					Modals.showModal("switchBGM");
+					modals.showModal("switchBGM");
 				}}
 			/>
 		{/if}
@@ -99,8 +101,7 @@
 			<button
 				class="circle settings"
 				on:click={() => {
-					$modalPage = "changePassword";
-					$modalShown = true;
+					modals.showModal("changePassword");
 				}}
 			/>
 		</div>
@@ -113,8 +114,20 @@
 			<button
 				class="circle settings"
 				on:click={() => {
-					$modalPage = "deleteAccount";
-					$modalShown = true;
+					modals.showModal("logoutEverywhere");
+				}}
+			/>
+		</div>
+
+		<h2>Logout Everywhere</h2>
+		Revoke all logged in sessions.
+	</Container>
+	<Container>
+		<div class="settings-controls">
+			<button
+				class="circle settings"
+				on:click={() => {
+					modals.showModal("deleteAccount");
 				}}
 			/>
 		</div>
@@ -124,10 +137,6 @@
 		<b class="important">THIS CANNOT BE UNDONE!</b>
 	</Container>
 {/if}
-
-<!--
-	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
--->
 
 <style>
 	.settings-controls {

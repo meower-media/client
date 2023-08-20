@@ -2,17 +2,13 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {
-		modalShown,
-		modalPage,
-		mainPage,
-		authHeader,
-		user,
-	} from "../stores.js";
+	import {user} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
 	let loading = false;
 	let loginStatus = "";
@@ -33,53 +29,16 @@
 						pswd: password,
 					},
 				},
-				listener: "join",
 			})
 				.then(async val => {
-					if (
-						val.mode === "auth" &&
-						val.payload.username === username
-					) {
-						loginStatus = "Getting user data...";
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: val.payload.username,
-							},
-						});
-
-						modalShown.set(false);
-
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							})
-						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						loginStatus = "";
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
-						mainPage.set("blank");
-						tick().then(() => mainPage.set("oobe"));
-					} else {
-						loginStatus = "Unexpected error logging in!";
-					}
+					user.update(v =>
+						Object.assign(v, {
+							name: val.payload.username,
+						})
+					);
+					loginStatus = "";
+					$goto("/oobe");
+					modals.closeModal();
 				})
 				.catch(code => {
 					loading = false;
@@ -88,7 +47,7 @@
 							loginStatus = "That username already exists!";
 							break;
 						case "E:119 | IP Blocked":
-							$modalPage = "ipBanned";
+							modals.showModal("accountCreationBlocked");
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =
@@ -112,7 +71,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Join Meower</h2>
@@ -156,13 +115,6 @@
 				/><br />
 				<p class="checkboxes">
 					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Remember me </label>
-					<br />
-					<input
 						id="accept-terms"
 						type="checkbox"
 						bind:checked={acceptTerms}
@@ -181,7 +133,7 @@
 					<a
 						href="/"
 						on:click|preventDefault={() => {
-							modalPage.set("login");
+							modals.showModal("login");
 						}}>Login to Meower</a
 					>
 					<button type="submit" disabled={!acceptTerms}

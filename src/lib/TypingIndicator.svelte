@@ -3,7 +3,7 @@
 -->
 <script>
 	import Container from "../lib/Container.svelte";
-	import {mainPage as page, user} from "../lib/stores.js";
+	import {user} from "../lib/stores.js";
 	import {typing} from "../lib/typingIndicator.js";
 
 	export let forPage = "home";
@@ -16,7 +16,7 @@
 	});
 </script>
 
-{#if ($page === "home" || $page == "groupchat") && _typing.length > 0}
+{#if _typing.length > 0}
 	<Container>
 		<span class="loading">
 			<span class="circle circle1" />
@@ -24,16 +24,12 @@
 			<span class="circle circle3" />
 			{#if _typing.length === 1}
 				<span class="text"><b>{_typing[0]}</b> is typing...</span>
-			{:else if _typing.length >= 5}
-				<span class="text"><b>5 or more people</b> are typing..</span>
-			{:else}
+			{:else if _typing.length === 2}
 				<span class="text"
-					><b
-						>{_typing.splice(_typing.length - 1, 1).join(", ")} and {_typing[
-							_typing.length - 1
-						]}</b
-					> are typing...</span
+					><b>{_typing[0]}</b> and <b>{_typing[1]}</b> are typing...</span
 				>
+			{:else if _typing.length >= 3}
+				<span class="text">3 or more people are typing...</span>
 			{/if}
 		</span>
 	</Container>
