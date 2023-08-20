@@ -335,10 +335,12 @@
 							user.update(v =>
 								Object.assign(v, {
 									name: val.payload.username,
+									layout: "new",
 								})
 							);
 							loginStatus = "";
 							$goto("/oobe");
+							await tick();
 							screen.set("main");
 						})
 						.catch(code => {

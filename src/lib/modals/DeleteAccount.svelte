@@ -20,12 +20,7 @@
 		})
 			.then(async () => {
 				modals.closeModal();
-
-				localStorage.clear();
-
-				screen.set("setup");
-				await tick();
-				setupPage.set("reconnect");
+				$goto("/logout");
 			})
 			.catch(code => {
 				submitButton.disabled = false;
