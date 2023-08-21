@@ -1,3 +1,4 @@
+<!-- routify:options bundle=false -->
 <script>
 	import Container from "../lib/Container.svelte";
 </script>
@@ -7,75 +8,72 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.7.0</h2>
+	<ul>
+		<li>Routing (you can now share links to specific pages on Meower!)</li>
+		<li>Better auto-reconnection</li>
+		<li>User config syncing across logged in clients</li>
+		<li>Fixed some bugs with background music randomly restarting</li>
+		<li>
+			Made it so if you change settings as a guest and then create a new
+			account, these settings will be carried across into your new account
+		</li>
+		<li>
+			Removed option to not save your login (this is to support the better
+			auto-reconnection system)
+		</li>
+		<li>Slightly different colors for dark mode themes</li>
+		<li>Some other minor optimizations and refinements</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.6.2</h2>
 	<ul>
 		<li>
 			Fixed the group chats list going blank when leaving a group chat
 		</li>
-		<li>
-			Made everything else rounded instead of just containers
-		</li>
-		<li>
-			Added an updated logo
-		</li>
+		<li>Made everything else rounded instead of just containers</li>
+		<li>Added an updated logo</li>
 	</ul>
 </Container>
 <Container>
 	<h2>1.6.1</h2>
 	<ul>
 		<li>
-			Fixed a bug where the profile dropdown menu wasn't able to be opened on some iOS browsers and Safari for macOS
+			Fixed a bug where the profile dropdown menu wasn't able to be opened
+			on some iOS browsers and Safari for macOS
 		</li>
-		<li>
-			no select the kitty >:/
-		</li>
+		<li>no select the kitty >:/</li>
 	</ul>
 </Container>
 <Container>
 	<h2>1.6.0</h2>
 	Way too many minor changes to list, so here are some of the highlights:
 	<ul>
+		<li>Added post and user searching</li>
+		<li>Moved some of the less-used sidebar buttons into a dropdown</li>
+		<li>Twemojis are now used for sent emojis</li>
+		<li>Added an actual moderator panel (for moderators)</li>
+		<li>Added an out-of-box experience screen when creating an account</li>
 		<li>
-			Added post and user searching
-		</li>
-		<li>
-			Moved some of the less-used sidebar buttons into a dropdown
-		</li>
-		<li>
-			Twemojis are now used for sent emojis
-		</li>
-		<li>
-			Added an actual moderator panel (for moderators)
-		</li>
-		<li>
-			Added an out-of-box experience screen when creating an account
-		</li>
-		<li>
-			New "Add image" button next to the Post button (to make adding images easier and more known)
+			New "Add image" button next to the Post button (to make adding
+			images easier and more known)
 		</li>
 		<li>
 			Server auto-reconnection when a connection is unexpectedly dropped
 		</li>
+		<li>Background music (disabled by default for new accounts)</li>
+		<li>Previews of themes while selecting a new theme</li>
+		<li>Ability to add users to group chats through their profile page</li>
 		<li>
-			Background music (disabled by default for new accounts)
+			New search option for adding users to group chats (no more having to
+			copy and paste usernames!)
 		</li>
+		<li>Fixed some problems with notification sounds playing at random</li>
+		<li>Crown icon on group chat owners</li>
 		<li>
-			Previews of themes while selecting a new theme
-		</li>
-		<li>
-			Ability to add users to group chats through their profile page
-		</li>
-		<li>
-			New search option for adding users to group chats (no more having to copy and paste usernames!)
-		</li>
-		<li>
-			Fixed some problems with notification sounds playing at random
-		</li>
-		<li>
-			Crown icon on group chat owners
-		</li>
-		<li>
-			Members list for group chats is now full-screen when toggled and completely hidden when not toggled on mobile
+			Members list for group chats is now full-screen when toggled and
+			completely hidden when not toggled on mobile
 		</li>
 	</ul>
 </Container>

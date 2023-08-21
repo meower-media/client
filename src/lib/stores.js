@@ -3,9 +3,10 @@
  */
 
 import {writable} from "svelte/store";
+import {systemDarkMode} from "./responsiveness.js";
 
+// Used for setup screen
 export const screen = writable("setup");
-export const mainPage = writable("home");
 export const setupPage = writable("logo");
 
 // Used for modal overlay
@@ -17,16 +18,17 @@ export const basicModalTitle = writable("");
 export const basicModalDesc = writable("");
 
 // Used for the disconnected screen
+export const intentionalDisconnect = writable(false);
+export const reconnecting = writable(false);
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
-export const attemptedAutoReconnect = writable(false);
 
 // Last typed timestamp
 export const lastTyped = writable(0);
 
 // Current chat stuff
-export const chatName = writable("");
 export const chatid = writable("");
+export const chatName = writable("");
 export const chatMembers = writable([]);
 export const chatOwner = writable("");
 
@@ -46,7 +48,7 @@ export const searchQuery = writable("");
 export const searchType = writable("");
 
 // OOBE
-export const sidebarLocked = writable(false);
+export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);
 
 // Image adding stuff
@@ -61,7 +63,7 @@ export const user = writable({
 	lvl: 0,
 	unread_inbox: false,
 	theme: "orange",
-	mode: true,
+	mode: !systemDarkMode(),
 	sfx: true,
 	bgm: false,
 	bgm_song: 2,

@@ -1,74 +1,34 @@
 <!-- RIP -->
 <script>
 	import {
-		mainPage as page,
 		user,
 		profileClicked,
-		chatid,
-		modalShown,
-		modalPage,
 		modPanelOpen,
-		sidebarLocked
+		OOBERunning,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
+	import * as modals from "../lib/modals.js";
 
-	import * as clm from "../lib/clmanager.js";
 	import PFP from "../lib/PFP.svelte";
 
-	import {tick} from "svelte";
 	import {fade} from "svelte/transition";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
-	import gc from "../assets/chat.svg";
+
 	import mail from "../assets/mail.svg";
+	import gc from "../assets/chat.svg";
+	import search from "../assets/search.svg";
+	import shield from "../assets/shield.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
-	import search from "../assets/search.svg";
 	import changelog from "../assets/changelog.svg";
-	import shield from "../assets/shield.svg";
-	import info from "../assets/info.svg";
+
+	import {goto} from "@roxi/routify";
 
 	let popupShown = false;
 	let popupDebounce = false;
-
-	/**
-	 * @param {any} newPage Goes to a page while also refreshing it.
-	 */
-	function goto(newPage, resetScroll = true) {
-		popupShown = false;
-		if (
-			!$user.name &&
-			newPage !== "home" &&
-			newPage !== "settings" &&
-			newPage !== "changelog" &&
-			newPage !== "about" &&
-			newPage !== "search"
-		) {
-			modalPage.set("signup");
-			modalShown.set(true);
-			return;
-		}
-		if (resetScroll) {
-			window.scrollTo(0, 0);
-		}
-		if ($page === "groupchat") {
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "set_chat_state",
-					val: {
-						state: 0,
-						chatid: $chatid,
-					},
-				},
-			});
-		}
-		chatid.set("");
-		page.set("blank");
-		tick().then(() => page.set(newPage));
-	}
 </script>
 
 <!-- Wait, isn't it a topbar on old layout? -->
@@ -77,11 +37,11 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
-	{#if $sidebarLocked}
-		<div class="locked"></div>
+	{#if $OOBERunning}
+		<div class="locked" />
 	{/if}
 	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => goto("home")}>
+		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -91,11 +51,17 @@
 			/>
 		</button>
 	</div>
-	<button on:click={() => goto("home")} title="Home" class="home-btn round">
+	<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
-		on:click={() => goto("inbox")}
+		on:click={() => {
+			if (!$user.name) {
+				modals.showModal("signup");
+				return;
+			}
+			$goto("/inbox");
+		}}
 		class="round"
 		title="The Inbox"
 		class:new-msgs={$user.unread_inbox}
@@ -105,9 +71,13 @@
 	<button
 		on:click={() => {
 			if (shiftHeld) {
-				goto("groupcat");
+				$goto("/groupcat");
 			} else {
-				goto("chatlist");
+				if (!$user.name) {
+					modals.showModal("signup");
+					return;
+				}
+				$goto("/chats");
 			}
 		}}
 		title="Group Chats"
@@ -115,7 +85,11 @@
 	>
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
-	<button on:click={() => goto("search")} title="Search" class="search-btn round">
+	<button
+		on:click={() => $goto("/search")}
+		title="Search"
+		class="search-btn round"
+	>
 		<img
 			src={search}
 			alt="Search"
@@ -158,24 +132,42 @@
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div
-		on:click|stopPropagation
-		class="popup"
-	>
+	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {
+				if (!$user.name) {
+					modals.showModal("signup");
+					return;
+				}
 				$profileClicked = $user.name;
-				goto("profile");
+				$goto(`/users/${$user.name}`);
+				popupShown = false;
 			}}
 			class="profile-btn round"
-			title = "Profile"
+			title="Profile"
 		>
 			<img src={profile} alt="Profile" draggable={false} />
 			<span class="label">Profile</span>
 		</button>
-		<button on:click={() => goto("settings")} class="settings-btn round">
+		<button
+			on:click={() => {
+				$goto("/settings");
+				popupShown = false;
+			}}
+			class="settings-btn round"
+		>
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
+		</button>
+		<button
+			on:click={() => {
+				$goto("/changelog");
+				popupShown = false;
+			}}
+			class="changelog-btn round"
+		>
+			<img src={changelog} alt="Changelog" draggable={false} />
+			<span class="label">Changelog</span>
 		</button>
 		<!-- still WIP
 			<button on:click={() => goto("about")} class="about-btn round">
@@ -183,20 +175,10 @@
 				<span class="label">About</span>
 			</button>
 		-->
-		<button on:click={() => goto("changelog")} class="changelog-btn round">
-			<img
-				src={changelog}
-				alt="changelog"
-				height="auto"
-				draggable={false}
-			/>
-			<span class="label">Changelog</span>
-		</button>
 		<button
 			on:click={() => {
 				popupShown = true;
-				modalPage.set("logout");
-				modalShown.set(true);
+				modals.showModal("logout");
 			}}
 			class="logout-btn round"
 		>

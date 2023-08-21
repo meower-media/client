@@ -5,18 +5,19 @@
 import Cloudlink from "./cloudlink.js";
 import {
 	screen,
-	setupPage,
 	ulist,
 	user,
+	authHeader,
 	spinner,
+	intentionalDisconnect,
+	reconnecting,
 	disconnected,
 	disconnectReason,
-	attemptedAutoReconnect,
 } from "./stores.js";
-import unloadedProfile from "./unloadedprofile.js";
 import {linkUrl} from "./urls.js";
+import * as modals from "./modals.js";
+
 import {tick} from "svelte";
-import sleep from "../lib/sleep.js";
 
 /**
  * A list of status codes that indicate the client will be disconnected.
@@ -24,8 +25,8 @@ import sleep from "../lib/sleep.js";
 const disconnectCodes = [
 	"E:018 | Account Banned",
 	"E:020 | Kicked",
-	"E:110 | ID conflict",
-	"E:119 | IP Blocked"
+	"I:024 | Logged out",
+	"E:119 | IP Blocked",
 ];
 
 let _user = null;
@@ -36,6 +37,22 @@ user.subscribe(v => {
 			"meower_savedconfig",
 			JSON.stringify({theme: _user.theme, mode: _user.mode})
 		);
+});
+
+/**
+ * Listens to username and token updates that could happen by other tabs.
+ */
+addEventListener("storage", event => {
+	if (event.key === "meower_savedusername") {
+		if (event.newValue !== _user.name) {
+			modals.showModal("loggedOut");
+		}
+	} else if (event.key === "meower_savedpassword") {
+		authHeader.set({
+			username: _user.name,
+			token: event.newValue,
+		});
+	}
 });
 
 // Load saved config from local storage
@@ -73,10 +90,20 @@ let disconnectEvent = null;
  */
 let ulistEvent = null;
 /**
+ * A variable used to keep track of the manager's main auth event.
+ * @type any
+ */
+let authEvent = null;
+/**
  * A variable used to keep track of new inbox messages.
  * @type any
  */
 let inboxMessageEvent = null;
+/**
+ * A variable used to keep track of user config updates.
+ * @type any
+ */
+let configUpdateEvent = null;
 /**
  * A variable used to keep track of any disconnection requests.
  * @type any
@@ -106,9 +133,17 @@ export async function connect() {
 		link.off(ulistEvent);
 		ulistEvent = null;
 	}
+	if (authEvent) {
+		link.off(authEvent);
+		authEvent = null;
+	}
 	if (inboxMessageEvent) {
 		link.off(inboxMessageEvent);
 		inboxMessageEvent = null;
+	}
+	if (configUpdateEvent) {
+		link.off(configUpdateEvent);
+		configUpdateEvent = null;
 	}
 	if (disconnectRequest) {
 		link.off(disconnectRequest);
@@ -125,46 +160,104 @@ export async function connect() {
 	link.once("connectionstart", () => {
 		connectEvent = link.on("connected", () => {
 			disconnected.set(false);
-			attemptedAutoReconnect.set(false);
 			pingInterval = setInterval(() => {
 				link.send({cmd: "ping", val: ""});
 			}, 10000);
 		});
 		disconnectEvent = link.on("disconnected", async e => {
-			// clear values and listeners
-			ulist.set([]);
-			let tmp_unloaded = unloadedProfile();
-			tmp_unloaded.theme = _user.theme;
-			tmp_unloaded.mode = _user.mode;
-			tmp_unloaded.layout = _user.layout;
-			user.set(tmp_unloaded);
-			if (pingInterval) {
-				clearInterval(pingInterval);
-				pingInterval = null;
-			}
+			// make sure connection was started (we can know by checking if pingInterval is set)
+			if (!pingInterval) return;
 
-			// get disconnect reason
-			let _disconnectReason = "";
-			disconnectReason.subscribe(v => {_disconnectReason = v});
+			// clear ping interval
+			clearInterval(pingInterval);
+			pingInterval = null;
 
-			// get whether an auto reconnect has already been attempted
-			let _attemptedAutoReconnect = false;
-			attemptedAutoReconnect.subscribe(v => {_attemptedAutoReconnect = v});
+			// show disconnected modal if disconnect reason is set
+			let _disconnectedReason;
+			disconnectReason.subscribe(v => {
+				if (v) {
+					disconnected.set(true);
+					return;
+				}
+			});
 
-			// attempt reconnect otherwise fully disconnect
-			if (
-				!_attemptedAutoReconnect &&
-				!disconnectCodes.includes(_disconnectReason) &&
-				e.reason !== "Intentional disconnect"
-			) {
-				attemptedAutoReconnect.set(true);
-				screen.set("setup");
-				disconnected.set(false);
+			let _intentionalDisconnect;
+			intentionalDisconnect.subscribe(v => {
+				_intentionalDisconnect = v;
+			});
+			if (_intentionalDisconnect) return;
+
+			const onErrorEv = link.on("error", async e => {
+				link.error("manager", "auto-reconnection failed:", e);
+				reconnecting.set(true);
+				try {
+					await link.connect(linkUrl);
+				} catch (e) {
+					link.error("manager", "connection error:", e);
+					link.off(onErrorEv);
+					if (e === "E:119 | IP Blocked") {
+						modals.showModal("ipBlocked");
+					} else {
+						modals.showModal("connectionFailed");
+					}
+				}
+			});
+			link.once("connected", async () => {
+				link.log("manager", "connection restored");
+				link.off(onErrorEv);
+
+				// re-authenticate
+				let _authHeader = {};
+				authHeader.subscribe(v => (_authHeader = v));
+				if (_authHeader.username && _authHeader.token) {
+					try {
+						const authVal = await meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "authpswd",
+								val: {
+									username: _authHeader.username,
+									pswd: _authHeader.token,
+								},
+							},
+						});
+						const profileVal = await meowerRequest({
+							cmd: "direct",
+							val: {
+								cmd: "get_profile",
+								val: authVal.payload.username,
+							},
+						});
+						user.update(v =>
+							Object.assign(v, {
+								...profileVal.payload,
+								name: authVal.payload.username,
+							})
+						);
+					} catch (e) {
+						modals.showModal("loggedOut");
+					}
+				}
+
+				// refresh screen
+				screen.set("blank");
 				await tick();
-				await sleep(1000);
-				setupPage.set("autoReconnect");
-			} else {
-				disconnected.set(true);
+				screen.set("main");
+
+				// hide modal
+				reconnecting.set(false);
+			});
+			try {
+				link.warn("manager", "connection lost with error:", e.code);
+				await link.connect(linkUrl);
+			} catch (e) {
+				link.error("manager", "connection error:", e);
+				link.off(onErrorEv);
+				if (e === "E:119 | IP Blocked") {
+					modals.showModal("ipBlocked");
+				} else {
+					modals.showModal("connectionFailed");
+				}
 			}
 		});
 		ulistEvent = link.on("ulist", cmd => {
@@ -174,18 +267,42 @@ export async function connect() {
 			}
 			ulist.set(_ulist);
 		});
+		authEvent = link.on("direct", async cmd => {
+			if (cmd.val.mode === "auth") {
+				authHeader.set({
+					username: cmd.val.payload.username,
+					token: cmd.val.payload.token,
+				});
+				localStorage.setItem(
+					"meower_savedusername",
+					cmd.val.payload.username
+				);
+				localStorage.setItem(
+					"meower_savedpassword",
+					cmd.val.payload.token
+				);
+			}
+		});
 		inboxMessageEvent = link.on("direct", cmd => {
-			if (cmd.val.mode == "inbox_message") {
+			if (cmd.val.mode === "inbox_message") {
 				_user.unread_inbox = true;
 				user.set(_user);
 			}
 		});
-		disconnectRequest = link.on("direct", cmd => {
+		configUpdateEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "update_config") {
+				_user = {
+					..._user,
+					...cmd.val.payload,
+				};
+				user.set(_user);
+			}
+		});
+		disconnectRequest = link.on("direct", async cmd => {
 			if (disconnectCodes.includes(cmd.val)) {
-				link.disconnect();
-				disconnectReason.set(cmd.val);
-				disconnected.set(true);
-				link.log("manager", "requested disconnect:", cmd.val);
+				link.log("manager", "Requested disconnect:", cmd.val);
+				modals.showModal("loggedOut");
+				await disconnect();
 			}
 		});
 	});
@@ -194,9 +311,12 @@ export async function connect() {
 	try {
 		return await link.connect(linkUrl);
 	} catch (e) {
-		disconnectReason.set(e);
-		disconnected.set(true);
 		link.error("manager", "conenction error:", e);
+		if (e === "E:119 | IP Blocked") {
+			modals.showModal("ipBlocked");
+		} else {
+			modals.showModal("connectionFailed");
+		}
 		return e;
 	}
 }
@@ -220,17 +340,8 @@ export async function disconnect() {
 		return new Promise(r => r());
 	}
 	link.log("manager", "safely disconnecting");
+	intentionalDisconnect.set(true);
 	return new Promise(resolve => {
-		ulist.set([]);
-		user.set(unloadedProfile());
-		if (disconnectEvent) {
-			link.off(disconnectEvent);
-			disconnectEvent = null;
-		}
-		if (pingInterval) {
-			clearInterval(pingInterval);
-			pingInterval = null;
-		}
 		link.once("disconnected", resolve);
 		link.disconnect(1000, "Intentional disconnect");
 	});
@@ -283,6 +394,7 @@ export async function meowerRequest(data) {
  */
 export async function updateProfile() {
 	const profile = _user;
+	if (!profile.name) return;
 	return meowerRequest({
 		cmd: "direct",
 		val: {

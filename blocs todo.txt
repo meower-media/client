@@ -1,9 +1,0 @@
-Oh my god this still exists after so long
-
-I'd recommend you make a separate branch for each feature instead of dumping them all together into a branch - Tnix
-
-https://github.com/orgs/meower-media-co/projects/20/views/1
-
-tnix or someone:
-- Fix modal importing
-- fix stupid button inperfections and css

@@ -34,7 +34,7 @@ export default async function loadProfile(username, ignoreSpecialUsers) {
 	profileCache.set(_profileCache);
 
 	try {
-		const resp = await fetch(`${apiUrl}/users/${username}`);
+		const resp = await fetch(`${apiUrl}users/${username}`);
 
 		if (!resp.ok) {
 			throw new Error("response code not OK; code " + resp.status);

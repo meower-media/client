@@ -2,12 +2,13 @@
 	import Modal from "../Modal.svelte";
 
 	import {
-		modalShown,
 		profileClicked_GC,
 		chatName,
 		chatid,
 		chatMembers,
 	} from "../stores.js";
+
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 
@@ -18,7 +19,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Remove Member</h2>
@@ -30,7 +31,7 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					$modalShown = false;
+					modals.closeModal();
 				}}>Cancel</button
 			>
 			<button
@@ -46,7 +47,7 @@
 						},
 					});
 					chatMembers.set($chatMembers.filter(filter1));
-					$modalShown = false;
+					modals.closeModal();
 				}}>Remove</button
 			>
 		</div>

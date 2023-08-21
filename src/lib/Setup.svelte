@@ -1,29 +1,24 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
-	import {
-		screen,
-		setupPage as page,
-		mainPage,
-		modalShown,
-		modalPage,
-		authHeader,
-		user
-	} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
+	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
+	import * as clm from "./clmanager.js";
+	import * as modals from "./modals.js";
 	const link = clm.link;
 	// @ts-ignore
 	window.clm = clm;
 
-	import unloadedProfile from "../lib/unloadedprofile.js";
+	import unloadedProfile from "./unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
 
 	import {tick, onMount} from "svelte";
 	import {fade} from "svelte/transition";
-	import sleep from "../lib/sleep.js";
-	import version from "../lib/version.js";
-	import * as BGM from "../lib/BGM.js";
+	import sleep from "./sleep.js";
+	import version from "./version.js";
+	import * as BGM from "./BGM.js";
+
+	import {isActive, goto} from "@roxi/routify";
 
 	let logo,
 		setup,
@@ -37,8 +32,11 @@
 		await new Promise(resolve => link.once("connected", resolve));
 	}
 
-	let rememberMe = false;
 	let acceptTerms = false;
+
+	let requireLogin = false;
+	$: requireLogin =
+		$isActive("./inbox") || $isActive("./chats", {}, {strict: false});
 
 	onMount(() => {
 		page.subscribe(async value => {
@@ -46,7 +44,6 @@
 
 			setup.classList.remove("white");
 			if (value === "logo") {
-				clm.disconnect();
 				loginStatus = "";
 
 				await tick();
@@ -80,16 +77,6 @@
 				} else {
 					await mainSetup();
 				}
-			} else if (value === "autoReconnect") {
-				loginStatus = "";
-				await connect();
-				let _authHeader = {};
-				authHeader.subscribe(authHeader => {_authHeader = authHeader});
-				doLogin(
-					_authHeader.username,
-					_authHeader.token,
-					true
-				);
 			} else if (value === "reconnect") {
 				loginStatus = "";
 				await connect();
@@ -107,8 +94,13 @@
 		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
-		await sleep(600);
-		page.set("welcome");
+		await sleep(500);
+		if (requireLogin || $isActive("./index")) {
+			page.set("welcome");
+		} else {
+			page.set("blank");
+			screen.set("main");
+		}
 	}
 
 	/**
@@ -117,7 +109,12 @@
 	 * @param {string} username
 	 * @param {string} password
 	 */
-	function doLogin(username, password, autoLogin = false, savedLogin = false) {
+	function doLogin(
+		username,
+		password,
+		autoLogin = false,
+		savedLogin = false
+	) {
 		try {
 			loginStatus = "Logging in...";
 			clm.meowerRequest({
@@ -132,6 +129,7 @@
 			})
 				.then(async val => {
 					try {
+						loginStatus = "Getting user data...";
 						const profileVal = await clm.meowerRequest({
 							cmd: "direct",
 							val: {
@@ -145,35 +143,19 @@
 								name: val.payload.username,
 							})
 						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						if (
-							rememberMe ||
-							localStorage.getItem("meower_savedusername") ===
-								username
-						) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
-						BGM.playBGM($user.bgm_song);
-						screen.set("main");
 					} catch (e) {
-						localStorage.clear();
 						console.error(
 							"Unexpected " + e + " error getting user data!"
 						);
-						link.disconnect(1000, "Failed to load userdata");
+						modals.showModal(
+							"basic",
+							"Error",
+							"An unexpected error occurred while trying to load your userdata! Check console for more information."
+						);
 					}
+					loginStatus = "";
+					BGM.playBGM($user.bgm_song);
+					screen.set("main");
 				})
 				.catch(code => {
 					if (autoLogin) return mainSetup();
@@ -183,11 +165,12 @@
 							loginStatus = "Invalid username!";
 							break;
 						case "I:011 | Invalid Password":
-							loginStatus = savedLogin ? "Session expired! Please login again." : "Invalid password!";
+							loginStatus = savedLogin
+								? "Session expired! Please login again."
+								: "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							$modalPage = "banned";
-							$modalShown = true;
+							modals.showModal("banned");
 							loginStatus = "";
 							break;
 						case "E:019 | Illegal characters detected":
@@ -227,8 +210,6 @@
 				<div class="connecting">{loginStatus}</div>
 			</div>
 		</div>
-	{:else if $page === "autoReconnect"}
-		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
@@ -251,7 +232,6 @@
 				{#if localStorage.getItem("meower_savedusername")}
 					<button
 						on:click={() => {
-							rememberMe = true;
 							doLogin(
 								localStorage.getItem("meower_savedusername"),
 								localStorage.getItem("meower_savedpassword"),
@@ -265,16 +245,23 @@
 					>
 					<p class="small">{loginStatus}</p>
 				{/if}
-				<button
-					on:click={() => {
-						loginStatus = "";
-						page.set("blank");
-						screen.set("main");
-					}}>Skip</button
-				>
-				<p class="small">
-					(Several features will be unavailable while not logged in.)
-				</p>
+				{#if !requireLogin}
+					<button
+						on:click={() => {
+							loginStatus = "";
+							page.set("blank");
+							screen.set("main");
+						}}>Skip</button
+					>
+					<p class="small">
+						(Several features will be unavailable while not logged
+						in.)
+					</p>
+				{:else}
+					<p class="small">
+						(You need to be logged in for this page.)
+					</p>
+				{/if}
 				<div>
 					<p class="small">Meower Svelte v{version}</p>
 					<img src={meowy} alt="" height="64" />
@@ -298,16 +285,7 @@
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
-				<br />
 				<input type="password" placeholder="Password" maxlength="255" />
-				<p class="checkboxes">
-					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Save this login </label>
-				</p>
 				<span class="login-status">{loginStatus}</span>
 				<div class="buttons">
 					<button
@@ -351,48 +329,15 @@
 						listener: "join",
 					})
 						.then(async val => {
-							if (
-								val.mode === "auth" &&
-								val.payload.username === username
-							) {
-								loginStatus = "Getting user data...";
-								const profileVal = await clm.meowerRequest({
-									cmd: "direct",
-									val: {
-										cmd: "get_profile",
-										val: val.payload.username,
-									},
-								});
-								user.update(v =>
-									Object.assign(v, {
-										...profileVal.payload,
-										name: val.payload.username,
-									})
-								);
-								authHeader.set({
-									username: val.payload.username,
-									token: val.payload.token,
-								});
-
-								loginStatus = "";
-
-								if (rememberMe) {
-									localStorage.setItem(
-										"meower_savedusername",
-										username
-									);
-									localStorage.setItem(
-										"meower_savedpassword",
-										val.payload.token
-									);
-								}
-								
-								mainPage.set("oobe");
-								await sleep(10)
-								screen.set("main");
-							} else {
-								loginStatus = "Unexpected error logging in!";
-							}
+							user.update(v =>
+								Object.assign(v, {
+									name: val.payload.username,
+									layout: "new",
+								})
+							);
+							loginStatus = "";
+							OOBERunning.set(true);
+							screen.set("main");
 						})
 						.catch(code => {
 							switch (code) {
@@ -401,8 +346,7 @@
 										"That username already exists!";
 									break;
 								case "E:119 | IP Blocked":
-									$modalPage = "ipBanned";
-									$modalShown = true;
+									modals.showModal("accountCreationBlocked");
 									loginStatus = "";
 									break;
 								case "E:019 | Illegal characters detected":
@@ -420,16 +364,13 @@
 				}}
 			>
 				<input type="text" placeholder="Username" maxlength="20" />
-				<br />
-				<input type="password" placeholder="Password" minlength="8" maxlength="255" />
+				<input
+					type="password"
+					placeholder="Password"
+					minlength="8"
+					maxlength="255"
+				/>
 				<p class="checkboxes">
-					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Save this login </label>
-					<br />
 					<input
 						id="accept-terms"
 						type="checkbox"
@@ -578,5 +519,16 @@
 	.checkboxes {
 		text-align: left;
 		font-size: 90%;
+	}
+
+	button,
+	input {
+		margin-bottom: 0.2cm;
+	}
+
+	.buttons {
+		display: grid;
+		grid-auto-flow: column;
+		grid-column-gap: 8px;
 	}
 </style>
