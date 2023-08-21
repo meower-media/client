@@ -1,9 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user, customTheme} from "../stores.js";
+	import {modalShown, user, customTheme, useCustomTheme} from "../stores.js";
     import * as clm from "../clmanager.js";
-    import {saveTheme,fallback} from "../CustomTheme.js"
+    import {saveTheme,fallback,previewTheme} from "../CustomTheme.js"
 
     let MainColor = $customTheme.orange
     let Add = $customTheme.tinting
@@ -35,6 +35,19 @@
         <input type="color" id="Fg2" bind:value={Foreground2}>
         <br>
         <br>
+        <button
+            on:click={() => {
+                previewTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
+            }}>Preview</button
+        >
+        <button
+            on:click={() => {
+                useCustomTheme.set(false)
+                clm.updateProfile();
+            }}>Disable Preview</button
+        >
+        <br>
+        <br>
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
@@ -51,7 +64,6 @@
 				}}>Reset</button>
             <button
                 on:click={() => {
-
                     saveTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
 
                     clm.updateProfile();

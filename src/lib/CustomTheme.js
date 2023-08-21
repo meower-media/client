@@ -102,6 +102,25 @@ export function saveTheme(theme) {
 	customTheme.set(stringToTheme(_user.theme))
 }
 
+export function previewTheme(theme) {
+	// theme json: {"Orange":"hex","Add": "10","background":"hex","foreground":hex, "foregroundOrange": "hex"}
+	var orangeLight = "#"+addHexColor(theme.Orange.slice(1),theme.Add.slice(1))
+	var orangeDark = "#"+removeHexColor(theme.Orange.slice(1),theme.Add.slice(1))
+
+	var themejson = Object.assign({}, fallback);
+
+	themejson.orange = theme.Orange
+	themejson.orangeDark = orangeDark
+	themejson.orangeLight = orangeLight
+	themejson.tinting = theme.Add
+	themejson.background = theme.Bg
+	themejson.foreground = theme.Fg
+	themejson.foregroundOrange = theme.Fg2
+	
+	useCustomTheme.set(true)
+	customTheme.set(themejson)
+}
+
 export function loadTheme() {
 	if (_user.theme.startsWith("custom:")) {
 		useCustomTheme.set(true)
