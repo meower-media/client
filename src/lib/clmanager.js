@@ -198,9 +198,7 @@ export async function connect() {
 					if (e === "E:119 | IP Blocked") {
 						modals.showModal("ipBlocked");
 					} else {
-						modals.showModal(
-							"connectionFailed"
-						);
+						modals.showModal("connectionFailed");
 					}
 				}
 			});
@@ -258,9 +256,7 @@ export async function connect() {
 				if (e === "E:119 | IP Blocked") {
 					modals.showModal("ipBlocked");
 				} else {
-					modals.showModal(
-						"connectionFailed"
-					);
+					modals.showModal("connectionFailed");
 				}
 			}
 		});
@@ -319,9 +315,7 @@ export async function connect() {
 		if (e === "E:119 | IP Blocked") {
 			modals.showModal("ipBlocked");
 		} else {
-			modals.showModal(
-				"connectionFailed"
-			);
+			modals.showModal("connectionFailed");
 		}
 		return e;
 	}

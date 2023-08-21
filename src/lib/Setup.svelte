@@ -36,8 +36,7 @@
 
 	let requireLogin = false;
 	$: requireLogin =
-		$isActive("./inbox") ||
-		$isActive("./chats", {}, {strict: false});
+		$isActive("./inbox") || $isActive("./chats", {}, {strict: false});
 
 	onMount(() => {
 		page.subscribe(async value => {

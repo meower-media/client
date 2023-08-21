@@ -4,8 +4,8 @@
 
 	import {OOBERunning, OOBEPage} from "../stores.js";
 	import * as clm from "../clmanager.js";
-    
-	import { onMount } from "svelte";
+
+	import {onMount} from "svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
 	$: allowNext = $OOBEPage < 2;

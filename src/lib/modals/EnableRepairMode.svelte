@@ -29,7 +29,10 @@
 				}
 			}}
 		>
-			<p>Are you sure? This will disconnect everyone and prevent anyone from being able to reconnect!</p>
+			<p>
+				Are you sure? This will disconnect everyone and prevent anyone
+				from being able to reconnect!
+			</p>
 			<div class="modal-buttons">
 				<button
 					type="button"

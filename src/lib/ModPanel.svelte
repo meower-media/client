@@ -26,7 +26,8 @@
 		{
 			cmd: "force_kick",
 			name: "Force kick",
-			description: "Forcibly destroy this user's connections; use this to remove a softlocked account from the ulist.",
+			description:
+				"Forcibly destroy this user's connections; use this to remove a softlocked account from the ulist.",
 			level: 1,
 		},
 		{
@@ -387,8 +388,16 @@
 	{#if $user.lvl < 4}
 		<p>Level 4+ ({levels[4]} and above) only.</p>
 	{:else}
-		<button on:click={() => { modals.showModal("kickAllUsers"); }}>Kick all users</button>
-		<button on:click={() => { modals.showModal("enableRepairMode"); }}>Enable repair mode</button>
+		<button
+			on:click={() => {
+				modals.showModal("kickAllUsers");
+			}}>Kick all users</button
+		>
+		<button
+			on:click={() => {
+				modals.showModal("enableRepairMode");
+			}}>Enable repair mode</button
+		>
 	{/if}
 </div>
 
