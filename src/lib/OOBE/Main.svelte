@@ -1,20 +1,19 @@
 <script>
-	import OOBECustomizePFP from "../lib/OOBE/CustomizePFP.svelte";
-	import OOBECustomizeTheme from "../lib/OOBE/CustomizeTheme.svelte";
+	import OOBECustomizePFP from "./CustomizePFP.svelte";
+	import OOBECustomizeTheme from "./CustomizeTheme.svelte";
 
-	import {sidebarLocked, OOBEPage, user} from "../lib/stores.js";
-	import * as clm from "../lib/clmanager.js";
-
-	import {goto} from "@roxi/routify";
-
-	clm.updateProfile();
-
-	OOBEPage.set(0);
+	import {OOBERunning, OOBEPage} from "../stores.js";
+	import * as clm from "../clmanager.js";
+    
+	import { onMount } from "svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
 	$: allowNext = $OOBEPage < 2;
 
-	sidebarLocked.set(true);
+	onMount(() => {
+		clm.updateProfile();
+		OOBEPage.set(0);
+	});
 </script>
 
 <div class="wrapper">
@@ -29,8 +28,7 @@
 					<h1>That's it!</h1>
 					<button
 						on:click={() => {
-							sidebarLocked.set(false);
-							$goto("/home");
+							OOBERunning.set(false);
 						}}>Let's go!</button
 					>
 				{:else}
@@ -52,8 +50,7 @@
 		<button
 			class="center full"
 			on:click={() => {
-				sidebarLocked.set(false);
-				$goto("/home");
+				OOBERunning.set(false);
 			}}>Skip</button
 		>
 		<button

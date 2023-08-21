@@ -12,7 +12,7 @@
 	import {postClicked, user, chatid, ulist} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "./modals.js";
+	import * as modals from "./modals.js";
 
 	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js";
 
@@ -137,7 +137,7 @@
 									return;
 								}
 								postClicked.set(post);
-								Modals.showModal("deletePost");
+								modals.showModal("deletePost");
 							}}
 						/>
 					{:else}
@@ -145,7 +145,7 @@
 							class="circle report"
 							on:click={() => {
 								postClicked.set(post);
-								Modals.showModal("reportPost");
+								modals.showModal("reportPost");
 							}}
 						/>
 					{/if}

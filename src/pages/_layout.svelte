@@ -2,6 +2,7 @@
 <script>
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
+	import ConnectionFailed from "../lib/modals/ConnectionFailed.svelte";
 	import LoginModal from "../lib/modals/Login.svelte";
 	import SignupModal from "../lib/modals/Signup.svelte";
 	import BannedModal from "../lib/modals/Banned.svelte";
@@ -21,6 +22,8 @@
 	import ErrorModal from "../lib/modals/Error.svelte";
 	import LogoutModal from "../lib/modals/Logout.svelte";
 	import AnnounceModal from "../lib/modals/Announce.svelte";
+	import KickAllUsers from "../lib/modals/KickAllUsers.svelte";
+	import EnableRepairMode from "../lib/modals/EnableRepairMode.svelte";
 	import AddMember2Modal from "../lib/modals/AddMember_2.svelte";
 	import AddMemberSearchModal from "../lib/modals/AddMember_Search.svelte";
 	import AddMemberModeModal from "../lib/modals/AddMember_Mode.svelte";
@@ -29,6 +32,8 @@
 	import LoggedOut from "../lib/modals/LoggedOut.svelte";
 	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
 	import BasicModal from "../lib/modals/Basic.svelte";
+
+	import OOBE from "../lib/OOBE/Main.svelte";
 
 	import Sidebar from "../lib/Sidebar.svelte";
 	import ModPanel from "../lib/ModPanel.svelte";
@@ -47,6 +52,7 @@
 		disconnected,
 		disconnectReason,
 		userToMod,
+		OOBERunning,
 		user,
 		spinner,
 		modPanelOpen,
@@ -96,36 +102,7 @@
 		</div>
 	{/if}
 
-	{#if $disconnected && false}
-		<Modal>
-			<h2 slot="header">Me-owch.</h2>
-			<div slot="default">
-				<p>
-					{#if $disconnectReason === "Failed to load userdata"}
-						An unexpected error occurred while trying to load your
-						userdata! Check console for more information.
-					{:else if $disconnectReason === "E:119 | IP Blocked"}
-						The server has blocked your IP address ({link.ip}).
-					{:else if $disconnectReason == "E:018 | Account Banned"}
-						You have been banned by a moderator.
-					{:else if $disconnectReason == "E:020 | Kicked"}
-						You have been kicked by a moderator.
-					{:else}
-						We ran into an error trying to connect to Meower.
-						<pre><code>{$disconnectReason}</code></pre>
-					{/if}
-				</p>
-				<button
-					on:click={async () => {
-						screen.set("setup");
-						disconnected.set(false);
-						await tick();
-						setupPage.set("reconnect");
-					}}>Reconnect</button
-				>
-			</div>
-		</Modal>
-	{:else if $reconnecting}
+	{#if $reconnecting}
 		<Modal>
 			<h2 slot="header">Reconnecting...</h2>
 			<div slot="default">
@@ -166,6 +143,10 @@
 			<LogoutModal />
 		{:else if $modalPage === "announce"}
 			<AnnounceModal />
+		{:else if $modalPage === "kickAllUsers"}
+			<KickAllUsers />
+		{:else if $modalPage === "enableRepairMode"}
+			<EnableRepairMode />
 			<!-- Text inputs -->
 		{:else if $modalPage === "createChat"}
 			<CreateChatModal />
@@ -187,6 +168,8 @@
 		{:else if $modalPage === "removeMember"}
 			<RemoveMemberModal />
 			<!-- Misc -->
+		{:else if $modalPage === "connectionFailed"}
+			<ConnectionFailed />
 		{:else if $modalPage === "switchTheme"}
 			<SwitchThemeModal />
 		{:else if $modalPage === "switchBGM"}
@@ -211,7 +194,11 @@
 				<Sidebar />
 			</div>
 			<div class="view">
-				<slot />
+				{#if $OOBERunning}
+					<OOBE />
+				{:else}
+					<slot />
+				{/if}
 			</div>
 		</div>
 	{/if}

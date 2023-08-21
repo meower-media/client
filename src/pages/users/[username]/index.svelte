@@ -1,7 +1,7 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
 	import {userToMod, modPanelOpen, user} from "../../../lib/stores.js";
-	import * as Modals from "../../../lib/modals.js";
+	import * as modals from "../../../lib/modals.js";
 
 	import {profileCache} from "../../../lib/loadProfile.js";
 
@@ -159,7 +159,7 @@
 				<button
 					class="long"
 					on:click={() => {
-						Modals.showModal("addMember2");
+						modals.showModal("addMember2");
 					}}>Add to Chat</button
 				>
 				{#if $user.lvl >= 1}
@@ -176,7 +176,7 @@
 						class="long"
 						title="Report User"
 						on:click={() => {
-							Modals.showModal("reportUser");
+							modals.showModal("reportUser");
 						}}>Report User</button
 					>
 				{/if}

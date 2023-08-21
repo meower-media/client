@@ -48,7 +48,7 @@ export const searchQuery = writable("");
 export const searchType = writable("");
 
 // OOBE
-export const sidebarLocked = writable(false);
+export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);
 
 // Image adding stuff

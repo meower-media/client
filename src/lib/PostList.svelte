@@ -31,7 +31,7 @@
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
-	import * as Modals from "./modals.js";
+	import * as modals from "./modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
@@ -333,7 +333,7 @@
 				title="Add an image"
 				on:click|preventDefault={() => {
 					postInput_2.set(postInput);
-					Modals.showModal("addImg");
+					modals.showModal("addImg");
 				}}>+</button
 			>
 			<button bind:this={submitBtn} name="submit" disabled={!postInput}

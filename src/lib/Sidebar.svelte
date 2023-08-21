@@ -4,7 +4,7 @@
 		user,
 		profileClicked,
 		modPanelOpen,
-		sidebarLocked,
+		OOBERunning,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as modals from "../lib/modals.js";
@@ -37,7 +37,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
-	{#if $sidebarLocked}
+	{#if $OOBERunning}
 		<div class="locked" />
 	{/if}
 	<div class="logo">

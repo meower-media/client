@@ -2,20 +2,17 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {user} from "../stores.js";
+	import {OOBERunning, user} from "../stores.js";
 
 	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
-
-	import {goto} from "@roxi/routify";
 
 	let loading = false;
 	let loginStatus = "";
 	let username = "";
 	let password = "";
 	let acceptTerms = false;
-	let rememberMe = false;
 
 	function doLogin() {
 		try {
@@ -38,7 +35,7 @@
 						})
 					);
 					loginStatus = "";
-					$goto("/oobe");
+					OOBERunning.set(true);
 					modals.closeModal();
 				})
 				.catch(code => {

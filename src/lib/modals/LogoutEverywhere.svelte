@@ -42,7 +42,7 @@
 					}
 
 					$goto("/logout");
-				}}>Logout Everywhere</button
+				}}>Confirm</button
 			>
 		</div>
 	</div>

@@ -1,11 +1,11 @@
 <script>
-	import * as Modals from "../modals.js";
-	Modals.showModal("switchTheme");
+	import * as modals from "../modals.js";
+	modals.showModal("switchTheme");
 </script>
 
 <div class="content">
 	<h1>Set your theme</h1>
-	<button on:click={() => Modals.showModal("switchTheme")}
+	<button on:click={() => modals.showModal("switchTheme")}
 		>Change Theme</button
 	>
 	<br /><br />

@@ -199,9 +199,7 @@ export async function connect() {
 						modals.showModal("ipBlocked");
 					} else {
 						modals.showModal(
-							"basic",
-							"Connection Error",
-							"Failed connecting to WebSocket server. View console for more information."
+							"connectionFailed"
 						);
 					}
 				}
@@ -261,9 +259,7 @@ export async function connect() {
 					modals.showModal("ipBlocked");
 				} else {
 					modals.showModal(
-						"basic",
-						"Connection Error",
-						"Failed connecting to WebSocket server. View console for more information."
+						"connectionFailed"
 					);
 				}
 			}
@@ -324,9 +320,7 @@ export async function connect() {
 			modals.showModal("ipBlocked");
 		} else {
 			modals.showModal(
-				"basic",
-				"Connection Error",
-				"Failed connecting to WebSocket server. View console for more information."
+				"connectionFailed"
 			);
 		}
 		return e;

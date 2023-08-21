@@ -1,6 +1,6 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
-	import {screen, setupPage as page, user} from "./stores.js";
+	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
 	const link = clm.link;
@@ -19,7 +19,6 @@
 	import * as BGM from "./BGM.js";
 
 	import {isActive, goto} from "@roxi/routify";
-	import Error from "./modals/Error.svelte";
 
 	let logo,
 		setup,
@@ -37,7 +36,6 @@
 
 	let requireLogin = false;
 	$: requireLogin =
-		$isActive("./oobe") ||
 		$isActive("./inbox") ||
 		$isActive("./chats", {}, {strict: false});
 
@@ -339,8 +337,7 @@
 								})
 							);
 							loginStatus = "";
-							$goto("/oobe");
-							await tick();
+							OOBERunning.set(true);
 							screen.set("main");
 						})
 						.catch(code => {
