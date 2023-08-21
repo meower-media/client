@@ -1,12 +1,12 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown} from "../stores.js";
+	import * as modals from "../modals.js";
 </script>
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Account Banned</h2>
@@ -27,7 +27,7 @@
 			>
 			<button
 				on:click={() => {
-					$modalShown = false;
+					modals.closeModal();
 				}}>Close</button
 			>
 		</div>

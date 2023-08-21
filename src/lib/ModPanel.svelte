@@ -3,16 +3,10 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import * as clm from "./clmanager.js";
 	import {levels} from "./formatting.js";
-	import {
-		mainPage as page,
-		userToMod,
-		profileClicked,
-		announcementToSend,
-		user,
-	} from "./stores";
-	import {tick} from "svelte";
-	import * as Modals from "./modals.js";
-	import { onMount } from "svelte/internal";
+	import {userToMod, announcementToSend, user} from "./stores";
+	import {goto} from "@roxi/routify";
+	import * as modals from "./modals.js";
+	import {onMount} from "svelte/internal";
 
 	let ipData = null;
 	let infoMsg = "";
@@ -27,6 +21,13 @@
 			cmd: "kick",
 			name: "Kick",
 			description: "Disconnect this user; they can just reconnect.",
+			level: 1,
+		},
+		{
+			cmd: "force_kick",
+			name: "Force kick",
+			description:
+				"Forcibly destroy this user's connections; use this to remove a softlocked account from the ulist.",
 			level: 1,
 		},
 		{
@@ -68,13 +69,6 @@
 			level: 3,
 		},
 	];
-
-	async function gotoProfile(username) {
-		page.set("");
-		await tick();
-		profileClicked.set(username);
-		page.set("profile");
-	}
 
 	let items = [];
 
@@ -176,7 +170,8 @@
 			<a
 				href="/"
 				on:click|preventDefault={() =>
-					gotoProfile(ipData.user.username)}>{ipData.user.username}</a
+					$goto(`/users/${ipData.user.username}`)}
+				>{ipData.user.username}</a
 			><br />
 			<b>Quote:</b>
 			<i>"{ipData.user.quote}"</i><br />
@@ -189,13 +184,14 @@
 			{#if $user.lvl >= 2}
 				<b>IP:</b>
 				{ipData.ip}<br />
-				<b>IP banned?</b>
+				<b>IP blocked?</b>
 				{ipData.banned ? "Yes" : "No"}<br />
 				<b>Last user on IP:</b>
 				<a
 					href="/"
 					on:click|preventDefault={() =>
-						gotoProfile(ipData.last_user)}>{ipData.last_user}</a
+						$goto(`/users/${ipData.last_user}`)}
+					>{ipData.last_user}</a
 				><br />
 				<b>Users on IP:</b>
 				<ul>
@@ -204,7 +200,7 @@
 							<a
 								href="/"
 								on:click|preventDefault={() =>
-									gotoProfile(username)}>{username}</a
+									$goto(`/users/${username}`)}>{username}</a
 							>
 						</li>
 					{/each}
@@ -248,7 +244,12 @@
 		}}
 	>
 		<div class="input-row">
-			<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
+			<input
+				class="grow white"
+				type="text"
+				placeholder="Username..."
+				value={$userToMod}
+			/>
 			<button class="static">Send</button>
 		</div>
 		<textarea
@@ -259,39 +260,6 @@
 			<div class="msg">{alertMsg}</div>
 		{/if}
 	</form>
-	<h2>Send Announcement</h2>
-	{#if $user.lvl < 3}
-		<p>Level 3+ ({levels[3]} and above) only.</p>
-	{:else}
-		<form
-			on:submit|preventDefault={async e => {
-				/** @type {HTMLFormElement} */
-				// @ts-ignore
-				const f = e.target;
-				// @ts-ignore
-				const text = f.elements[0].value;
-
-				if (!text) {
-					announceMsg = "You need to enter some text!";
-					return;
-				}
-				announceMsg = "";
-				$announcementToSend = text;
-				Modals.showModal("announce")
-			}}
-		>
-			<textarea
-				class="announce-textarea white"
-				placeholder="Announcement text here..."
-			/>
-			<div class="announce-buttons">
-				<button class="align-right">Send</button>
-				{#if announceMsg}
-					<div class="msg">{announceMsg}</div>
-				{/if}
-			</div>
-		</form>
-	{/if}
 	<h2>Moderate User</h2>
 	<form
 		on:submit|preventDefault={async e => {
@@ -375,6 +343,39 @@
 			<div class="msg">{actionMsg}</div>
 		{/if}
 	</form>
+	<h2>Send Announcement</h2>
+	{#if $user.lvl < 3}
+		<p>Level 3+ ({levels[3]} and above) only.</p>
+	{:else}
+		<form
+			on:submit|preventDefault={async e => {
+				/** @type {HTMLFormElement} */
+				// @ts-ignore
+				const f = e.target;
+				// @ts-ignore
+				const text = f.elements[0].value;
+
+				if (!text) {
+					announceMsg = "You need to enter some text!";
+					return;
+				}
+				announceMsg = "";
+				$announcementToSend = text;
+				modals.showModal("announce");
+			}}
+		>
+			<textarea
+				class="announce-textarea white"
+				placeholder="Announcement text here..."
+			/>
+			<div class="announce-buttons">
+				<button class="align-right">Send</button>
+				{#if announceMsg}
+					<div class="msg">{announceMsg}</div>
+				{/if}
+			</div>
+		</form>
+	{/if}
 	<h2>Reports</h2>
 	<PostList bind:items fetchUrl="reports" postOrigin="" canPost={false}>
 		<div slot="error" let:error>
@@ -383,6 +384,21 @@
 		</div>
 		<div slot="empty">Yay, the report queue is empty!</div>
 	</PostList>
+	<h2>Manage Server</h2>
+	{#if $user.lvl < 4}
+		<p>Level 4+ ({levels[4]} and above) only.</p>
+	{:else}
+		<button
+			on:click={() => {
+				modals.showModal("kickAllUsers");
+			}}>Kick all users</button
+		>
+		<button
+			on:click={() => {
+				modals.showModal("enableRepairMode");
+			}}>Enable repair mode</button
+		>
+	{/if}
 </div>
 
 <style>

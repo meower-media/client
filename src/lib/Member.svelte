@@ -43,7 +43,12 @@
 		<p class="member-name">{member}</p>
 
 		{#if owner}
-			<img src={crown} alt="Owner" class="owner-icon" title = "Owns this chat"/>
+			<img
+				src={crown}
+				alt="Owner"
+				class="owner-icon"
+				title="Owns this chat"
+			/>
 		{/if}
 	</div>
 {:else}

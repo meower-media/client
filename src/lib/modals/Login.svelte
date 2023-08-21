@@ -2,7 +2,8 @@
 	import Modal from "../Modal.svelte";
 	import Loading from "../Loading.svelte";
 
-	import {modalShown, modalPage, authHeader, user} from "../stores.js";
+	import {user} from "../stores.js";
+	import * as modals from "../modals.js";
 
 	import * as clm from "../clmanager.js";
 	import * as BGM from "../BGM.js";
@@ -11,7 +12,6 @@
 	let loginStatus = "";
 	let username = "";
 	let password = "";
-	let rememberMe = false;
 
 	function doLogin() {
 		try {
@@ -35,37 +35,25 @@
 								val: val.payload.username,
 							},
 						});
-
-						modalShown.set(false);
-
 						user.update(v =>
 							Object.assign(v, {
 								...profileVal.payload,
 								name: val.payload.username,
 							})
 						);
-						authHeader.set({
-							username: val.payload.username,
-							token: val.payload.token,
-						});
-
-						if (rememberMe) {
-							localStorage.setItem(
-								"meower_savedusername",
-								username
-							);
-							localStorage.setItem(
-								"meower_savedpassword",
-								val.payload.token
-							);
-						}
-
-						BGM.playBGM($user.bgm_song);
 					} catch (e) {
-						loading = false;
-						loginStatus =
-							"Unexpected " + e + " error getting user data!";
+						console.error(
+							"Unexpected " + e + " error getting user data!"
+						);
+						modals.showModal(
+							"basic",
+							"Error",
+							"An unexpected error occurred while trying to load your userdata! Check console for more information."
+						);
 					}
+					loginStatus = "";
+					BGM.playBGM($user.bgm_song);
+					modals.closeModal();
 				})
 				.catch(code => {
 					loading = false;
@@ -77,7 +65,7 @@
 							loginStatus = "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							modalPage.set("banned");
+							modals.showModal("banned");
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =
@@ -101,7 +89,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Login to Meower</h2>
@@ -141,21 +129,12 @@
 					placeholder="Password"
 					maxlength="255"
 					value={password}
-				/><br />
-				<p class="checkboxes">
-					<input
-						id="remember-me"
-						type="checkbox"
-						bind:checked={rememberMe}
-					/>
-					<label for="remember-me"> Remember me </label>
-				</p>
-				<br />
+				/><br /><br /><br />
 				<div class="modal-buttons">
 					<a
 						href="/"
 						on:click|preventDefault={() => {
-							modalPage.set("signup");
+							modals.showModal("signup");
 						}}>Join Meower</a
 					>
 					<button type="submit">Login</button>
@@ -180,13 +159,5 @@
 		display: inline-block;
 		height: 0;
 		overflow: visible;
-	}
-	label,
-	.checkboxes input {
-		vertical-align: middle;
-	}
-	.checkboxes {
-		text-align: left;
-		font-size: 95%;
 	}
 </style>

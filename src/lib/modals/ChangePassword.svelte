@@ -1,13 +1,16 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage, modalShown} from "../stores.js";
-
+	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 
-	import {tick} from "svelte";
+	import {goto} from "@roxi/routify";
 
-	let changeStatus, oldPassword, newPassword, newPasswordConfirmation, submitButton;
+	let changeStatus,
+		oldPassword,
+		newPassword,
+		newPasswordConfirmation,
+		submitButton;
 
 	function changePassword() {
 		if (newPassword !== newPasswordConfirmation) {
@@ -17,28 +20,31 @@
 		submitButton.disabled = true;
 
 		clm.meowerRequest({
-				cmd: "direct",
+			cmd: "direct",
+			val: {
+				cmd: "change_pswd",
 				val: {
-					cmd: "change_pswd",
-					val: {
-						old: oldPassword,
-						new: newPassword,
-					},
+					old: oldPassword,
+					new: newPassword,
 				},
-			})
+			},
+		})
 			.then(async () => {
-				$modalShown = false;
+				modals.closeModal();
 
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {cmd: "del_tokens", val: ""},
-				});
+				try {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "del_tokens",
+							val: "",
+						},
+					});
+				} catch (e) {
+					changeStatus = `Unexpected ${e} error!`;
+				}
 
-				localStorage.clear();
-
-				screen.set("setup");
-				await tick();
-				setupPage.set("reconnect");
+				$goto("/logout");
 			})
 			.catch(code => {
 				submitButton.disabled = false;
@@ -59,7 +65,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">Change Password</h2>
@@ -96,12 +102,14 @@
 			<button
 				type="button"
 				on:click={() => {
-					$modalShown = false;
+					modals.closeModal();
 				}}>Cancel</button
 			>
 			<button
 				type="submit"
-				disabled={!oldPassword || !newPassword || !newPasswordConfirmation}
+				disabled={!oldPassword ||
+					!newPassword ||
+					!newPasswordConfirmation}
 				bind:this={submitButton}
 				on:click={() => {
 					changePassword();

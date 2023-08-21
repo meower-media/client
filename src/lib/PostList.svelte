@@ -31,7 +31,7 @@
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
-	import * as Modals from "./modals.js";
+	import * as modals from "./modals.js";
 	import PagedList from "./PagedList.svelte";
 	import Container from "./Container.svelte";
 	import Post from "./Post.svelte";
@@ -109,10 +109,17 @@
 		 */
 		const json = await resp.json();
 
+		let posts = [];
+		if (json.autoget) {
+			posts = json.autoget;
+		} else {
+			posts = [json];
+		}
+
 		/**
 		 * @type {Array<import("./types.js").ListPost | import("./types.js").User>}
 		 */
-		result = json.autoget.map(post => {
+		result = posts.map(post => {
 			if ("lower_username" in post) {
 				/** @type import("./types.js").User */
 				// @ts-ignore
@@ -255,33 +262,32 @@
 				clm.meowerRequest({
 					cmd: "direct",
 					val: {
-						cmd:
-							postOrigin === "home"
-								? "post_home"
-								: "post_chat",
+						cmd: postOrigin === "home" ? "post_home" : "post_chat",
 						val:
 							postOrigin === "home"
 								? content
 								: {
 										p: content,
 										chatid: postOrigin,
-									},
+								  },
 					},
-				}).then(data => {
-					input.value = "";
-					input.rows = "1";
-					input.style.height = "45px";
-					submitBtn.disabled = false;
-				}).catch(code => {
-					submitBtn.disabled = false;
-					switch (code) {
-						case "E:106 | Too many requests":
-							postErrors = "You're posting too fast!";
-							break;
-						default:
-							postErrors = "Unexpected " + code + " error!";
-					}
-				});
+				})
+					.then(data => {
+						input.value = "";
+						input.rows = "1";
+						input.style.height = "45px";
+						submitBtn.disabled = false;
+					})
+					.catch(code => {
+						submitBtn.disabled = false;
+						switch (code) {
+							case "E:106 | Too many requests":
+								postErrors = "You're posting too fast!";
+								break;
+							default:
+								postErrors = "Unexpected " + code + " error!";
+						}
+					});
 				return false;
 			}}
 		>
@@ -327,10 +333,12 @@
 				title="Add an image"
 				on:click|preventDefault={() => {
 					postInput_2.set(postInput);
-					Modals.showModal("addImg");
+					modals.showModal("addImg");
 				}}>+</button
 			>
-			<button bind:this={submitBtn} name="submit" disabled={!postInput}>Post</button>
+			<button bind:this={submitBtn} name="submit" disabled={!postInput}
+				>Post</button
+			>
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>

@@ -6,18 +6,18 @@
 	import {shiftHeld} from "../keyDetect.js";
 
 	import {
-		modalShown,
-		modalPage,
 		profileClicked_GC,
 		user,
-		profileClicked,
-		mainPage as page,
 		chatid,
 		chatOwner,
 		chatMembers,
 	} from "../stores.js";
-	
+
+	import * as modals from "../modals.js";
+
 	import ProfileView from "../ProfileView.svelte";
+
+	import {goto} from "@roxi/routify";
 
 	function filter1(v) {
 		return v !== $profileClicked_GC;
@@ -26,7 +26,7 @@
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+		modals.closeModal();
 	}}
 >
 	<h2 slot="header">{$profileClicked_GC}'s Profile</h2>
@@ -35,26 +35,14 @@
 		<button
 			class="long"
 			on:click={() => {
-				$modalShown = false;
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: "set_chat_state",
-						val: {
-							state: 0,
-							chatid: $chatid,
-						},
-					},
-				});
-				profileClicked.set($profileClicked_GC);
-				page.set("profile");
+				modals.closeModal();
+				$goto(`/users/${$profileClicked_GC}`);
 			}}>View full profile</button
 		>
 		{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}
 			<button
 				class="long"
 				on:click={() => {
-					console.log(shiftHeld)
 					if (shiftHeld) {
 						clm.meowerRequest({
 							cmd: "direct",
@@ -67,9 +55,9 @@
 							},
 						});
 						chatMembers.set($chatMembers.filter(filter1));
-						$modalShown = false;
+						modals.closeModal();
 					} else {
-						modalPage.set("removeMember");
+						modals.showModal("removeMember");
 					}
 				}}>Remove from chat</button
 			>
@@ -77,7 +65,7 @@
 		<button
 			class="long"
 			on:click={() => {
-				$modalShown = false;
+				modals.closeModal();
 			}}>Close</button
 		>
 	</div>
@@ -87,6 +75,6 @@
 	.long {
 		width: 100%;
 		margin: 0;
-		margin-bottom: -2px;
+		margin-bottom: 0.2em;
 	}
 </style>

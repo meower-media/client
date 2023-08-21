@@ -26,7 +26,6 @@
  */
 
 import sleep from "./sleep.js";
-import {apiUrl} from "./urls.js";
 
 /**
  * A callback type used for packet events.
@@ -120,10 +119,10 @@ export default class Cloudlink {
 				}
 
 				this.ws = new WebSocket(server);
-				this.emit("connectionstart");
 				this.ws.addEventListener("open", async () => {
 					try {
-						this.log("connection", "connected to websockets");
+						this.emit("connectionstart");
+						this.log("connection", "connected to websocket");
 
 						await sleep(100);
 

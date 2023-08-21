@@ -9,7 +9,7 @@
 	}
 </script>
 
-{#if (isNaN(num) || num === Infinity || num === -Infinity) || magnitude < 1000}
+{#if isNaN(num) || num === Infinity || num === -Infinity || magnitude < 1000}
 	{num}
 {:else if magnitude < 1000000}
 	{round(num / 1000, 2)}k
