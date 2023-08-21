@@ -243,8 +243,8 @@
 	}
 
 	#main.theme-orange.mode-dark {
-		--orange: #ec932d;
-		--orange-light: #F9A535;
+		--orange: #e48b26;
+		--orange-light: #f9a535;
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #181818;
