@@ -19,6 +19,7 @@
 	import * as BGM from "./BGM.js";
 
 	import {isActive, goto} from "@roxi/routify";
+	import { loadTheme } from "./CustomTheme.js";
 
 	let logo,
 		setup,
@@ -155,6 +156,7 @@
 					}
 					loginStatus = "";
 					BGM.playBGM($user.bgm_song);
+					loadTheme()
 					screen.set("main");
 				})
 				.catch(code => {

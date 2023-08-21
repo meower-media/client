@@ -45,17 +45,16 @@
 
 	import {
 		screen,
-		setupPage,
 		modalShown,
 		modalPage,
 		reconnecting,
-		disconnected,
-		disconnectReason,
 		userToMod,
 		OOBERunning,
 		user,
 		spinner,
 		modPanelOpen,
+		customTheme,
+		useCustomTheme
 	} from "../lib/stores.js";
 	import {tick} from "svelte";
 </script>
@@ -75,6 +74,13 @@
 
 <main
 	id="main"
+	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orange : null}
+	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
+	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
+	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
+	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
+	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
 	class:mode-light={!($user.mode === false)}
