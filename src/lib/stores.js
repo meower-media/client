@@ -80,10 +80,10 @@ export const windowStyle = writable({});
 export const useCustomTheme = writable(false);
 export const customTheme = writable({
 	orange: "#f9a636",
-	orangeButton: "#f9a636",
 	orangeLight: "#ffce8c",
 	orangeDark: "#b46d34",
 	background: "#ffffff",
 	foreground: "#000000",
 	foregroundOrange: "#ffffff",
+	tinting: "#252525"
 });

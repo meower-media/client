@@ -1,7 +1,9 @@
 // This holds all the info for BGM
 
 // MODDERS AND CUSTOM CLIENT CREATORS:
-// Sorry
+//  Step 1: put your audio in src/assets/bgm/
+//  Step 2: add a new thing of JSON to the audioData List, in file put the name of the audio with its extension. then fill out the rest of the metadata
+//  Done!  
 
 export const audioData = [
     {"name":"Night sky", "author":"Meguy7878", "file":"0c38836da69714eae0f2a6662f9cbc58.wav"},
@@ -13,7 +15,8 @@ export const audioData = [
     {"name":"Untitled Song 2","author":"Dotumantaraye","file":"2c0293c58590d4d0ff3a0636f197d9ca.mp3"},
     {"name":"Meower is (not) dead","author":"Voxalice","file":"c25441be9d4f5547baf85cc444253259.mp3"},
     {"name":"The elevator of time","author":"Voxalice","file":"d56dc789ac58918b555c666935e56392.wav"},
-    {"name":"Meower is (not) dead Instrumental","author":"Voxalice","file":"8437988a9f23bb09fd6a50b280e5bed9.wav"}]
+    {"name":"Meower is (not) dead Instrumental","author":"Voxalice","file":"8437988a9f23bb09fd6a50b280e5bed9.wav"},
+]
 
 // Night sky: meguy
 // Meower is not dead, pb loop, elevator of time: voxalice

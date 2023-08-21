@@ -3,10 +3,13 @@
 
 	import {modalShown, user, customTheme} from "../stores.js";
     import * as clm from "../clmanager.js";
-    import {loadTheme, saveTheme} from "../CustomTheme.js"
+    import {saveTheme,fallback} from "../CustomTheme.js"
 
-    var MainColor = $customTheme.orange
-    var Add = "#101010"
+    let MainColor = $customTheme.orange
+    let Add = $customTheme.tinting
+    let Background = $customTheme.background
+    let Foreground = $customTheme.foreground
+    let Foreground2 = $customTheme.foregroundOrange
 </script>
 
 <Modal
@@ -22,6 +25,15 @@
         <label for="Tint">Tinting: </label>
         <input type="color" id="Tint" bind:value={Add}>
         <br>
+        <label for="Bg">Background: </label>
+        <input type="color" id="Bg" bind:value={Background}>
+        <br>
+        <label for="Fg">Foreground: </label>
+        <input type="color" id="Fg" bind:value={Foreground}>
+        <br>
+        <label for="Fg2">Foreground 2: </label>
+        <input type="color" id="Fg2" bind:value={Foreground2}>
+        <br>
         <br>
 		<div class="modal-buttons">
 			<button
@@ -30,8 +42,17 @@
 				}}>Close</button
 			>
             <button
+				on:click={() => {
+                    MainColor = fallback.orange
+                    Add = fallback.tinting
+                    Background = fallback.background
+                    Foreground = fallback.foreground
+                    Foreground2 = fallback.foregroundOrange
+				}}>Reset</button>
+            <button
                 on:click={() => {
-                    saveTheme({"Orange":MainColor,"Add":Add})
+
+                    saveTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
 
                     clm.updateProfile();
                     $modalShown = false;

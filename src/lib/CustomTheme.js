@@ -6,14 +6,14 @@
 
 // CST: maybe it should be JSON
 
-let fallback = {
+export let fallback = {
 	orange: "#f9a636",
-	orangeButton: "#f9a636",
 	orangeLight: "#ffce8c",
 	orangeDark: "#b46d34",
 	background: "#ffffff",
 	foreground: "#000000",
-	foregroundOrange: "#ffffff"
+	foregroundOrange: "#ffffff",
+	tinting: "#252525"
 };
 
 import {
@@ -35,15 +35,15 @@ export function stringToTheme(string) {
 	if (!string.startsWith("custom:")) return fallback;
 	try {
 		const json = JSON.parse(string.substring(7));
-		return Object.assign(fallback, {
+		return {
 			orange: json.orange,
-			orangeButton: json.orangeButton,
 			orangeLight: json.orangeLight,
 			orangeDark: json.orangeDark,
 			background: json.background,
 			foreground: json.foreground,
-			foregroundOrange: json.foregroundOrange
-		});
+			foregroundOrange: json.foregroundOrange,
+			tinting: json.tinting
+		};
 	} catch (e) {
 		return fallback;
 	}
@@ -86,18 +86,15 @@ export function saveTheme(theme) {
 	var orangeLight = "#"+addHexColor(theme.Orange.slice(1),theme.Add.slice(1))
 	var orangeDark = "#"+removeHexColor(theme.Orange.slice(1),theme.Add.slice(1))
 
-	alert(orangeLight)
-
-	if (orangeLight.length > 7) {orangeLight = "#ffffff"}
-	if (orangeDark.length > 7) {orangeLight = "#000000"}
-
-	alert(orangeLight)
-
-	var themejson = fallback
+	var themejson = Object.assign({}, fallback);
 
 	themejson.orange = theme.Orange
 	themejson.orangeDark = orangeDark
 	themejson.orangeLight = orangeLight
+	themejson.tinting = theme.Add
+	themejson.background = theme.Bg
+	themejson.foreground = theme.Fg
+	themejson.foregroundOrange = theme.Fg2
 	
 	_user.theme = themeToString(themejson);
 	user.set(_user);
