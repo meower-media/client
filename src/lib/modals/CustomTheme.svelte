@@ -10,6 +10,8 @@
     let Background = $customTheme.background
     let Foreground = $customTheme.foreground
     let Foreground2 = $customTheme.foregroundOrange
+
+    let PreviousCTheme = $useCustomTheme
 </script>
 
 <Modal
@@ -37,13 +39,14 @@
         <br>
         <button
             on:click={() => {
+                PreviousCTheme = $useCustomTheme
                 previewTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
             }}>Preview</button
         >
         <button
             on:click={() => {
+                PreviousCTheme = $useCustomTheme
                 useCustomTheme.set(false)
-                clm.updateProfile();
             }}>Disable Preview</button
         >
         <br>
@@ -52,6 +55,7 @@
 			<button
 				on:click={() => {
 					$modalShown = false;
+                    useCustomTheme.set(PreviousCTheme)
 				}}>Close</button
 			>
             <button
