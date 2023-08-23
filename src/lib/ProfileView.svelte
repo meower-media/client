@@ -13,7 +13,7 @@
 
 <script>
 	import loadProfile from "./loadProfile.js";
-	import {profileClicked, mainPage as page, ulist, user, modalShown} from "./stores.js";
+	import {ulist, user, modalShown} from "./stores.js";
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";

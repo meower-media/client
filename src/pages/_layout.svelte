@@ -32,6 +32,7 @@
 	import LoggedOut from "../lib/modals/LoggedOut.svelte";
 	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
 	import BasicModal from "../lib/modals/Basic.svelte";
+	import CustomThemeModal from "../lib/modals/CustomTheme.svelte";
 
 	import OOBE from "../lib/OOBE/Main.svelte";
 
@@ -180,6 +181,8 @@
 			<SwitchThemeModal />
 		{:else if $modalPage === "switchBGM"}
 			<SwitchBGMSFXModal />
+		{:else if $modalPage === "customTheme"}
+			<CustomThemeModal />
 		{:else if $modalPage === "loggedOut"}
 			<LoggedOut />
 		{:else if $modalPage === "basic"}
