@@ -1,9 +1,11 @@
 <!-- routify:options bundle=false -->
 <script>
-	import { modalPage, modalShown, OOBERunning } from "../lib/stores";
+	import { modalPage, modalShown, OOBERunning, GroupCats} from "../lib/stores";
 	import Container from "../lib/Container.svelte";
 
 	import version from "../lib/version.js";
+
+    let GCats = 100
 </script>
 
 <div>
@@ -34,7 +36,15 @@
         <h1>Group cats</h1>
         Crash your browser by changing the amount of group cats!
 
-        
+        <br>
+        <br>
+
+        <input type="number" placeholder="Enter a number" bind:value={GCats}/>
+        <button
+            on:click={() => {
+                GroupCats.set(GCats)
+            }}
+        >Update</button>
     </Container>
     <Container>
         <h1>Make your own!</h1>

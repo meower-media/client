@@ -142,7 +142,7 @@ input[type="password"]:not(.white):focus-visible {
 
 #main button:not(.circle):not(.white):not(:disabled):active,
 #main input[type="text"]:not(.white):not(:disabled):focus,
-#main input[type="searcg"]:not(.white):not(:disabled):focus,
+#main input[type="search"]:not(.white):not(:disabled):focus,
 #main input[type="password"]:not(.white):not(:disabled):focus {
 	background-color: var(--orange-dark);
 }
@@ -172,15 +172,18 @@ button.white {
 }
 
 main.input-hover input[type="text"].white:not(:disabled):hover,
+main.input-hover input[type="number"].white:not(:disabled):hover,
 main.input-hover input[type="password"].white:not(:disabled):hover,
 main.input-hover input[type="search"].white:not(:disabled):hover,
 main.input-hover textarea:not(:disabled):hover,
 main.input-touch input[type="text"].white:not(:disabled):active,
+main.input-touch input[type="number"].white:not(:disabled):active,
 main.input-touch input[type="password"].white:not(:disabled):active,
 main.input-touch input[type="search"].white:not(:disabled):active,
 main.input-touch textarea:not(:disabled):active,
 main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
+input[type="number"].white:focus-visible,
 input[type="password"].white:focus-visible,
 input[type="search"].white:focus-visible,
 #main textarea:focus-visible,

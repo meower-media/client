@@ -1,11 +1,12 @@
 <!-- 
-    MEOW VERSION 1.0 
+    MEOW VERSION 1.0.1
     Literally The script that generates the group cat page (minus the text) 
 -->
 <script>
 	import meowy from "../assets/meowy.svg";
+	import {GroupCats} from "../lib/stores";
 
-	let cats = new Array(100).fill({}).map(_ => {
+	let cats = new Array($GroupCats).fill({}).map(_ => {
 		return {
 			x: Math.random() * 100,
 			y: Math.random() * 100,
