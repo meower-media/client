@@ -1,77 +1,28 @@
 <!-- Meower Svelte, the app itself. -->
 <script>
 	import Setup from "../lib/Setup.svelte";
-	import Modal from "../lib/Modal.svelte";
-	import ConnectionFailed from "../lib/modals/ConnectionFailed.svelte";
-	import LoginModal from "../lib/modals/Login.svelte";
-	import SignupModal from "../lib/modals/Signup.svelte";
-	import BannedModal from "../lib/modals/Banned.svelte";
-	import IPBlockedModal from "../lib/modals/IPBlocked.svelte";
-	import AccountCreationBlocked from "../lib/modals/AccountCreationBlocked.svelte";
-	import DeletePostModal from "../lib/modals/DeletePost.svelte";
-	import ReportPostModal from "../lib/modals/ReportPost.svelte";
-	import ReportUserModal from "../lib/modals/ReportUser.svelte";
-	import GCMemberModal from "../lib/modals/GCMember.svelte";
-	import AddMemberModal from "../lib/modals/AddMember.svelte";
-	import RemoveMemberModal from "../lib/modals/RemoveMember.svelte";
-	import CreateChatModal from "../lib/modals/CreateChat.svelte";
-	import AddImgModal from "../lib/modals/AddImage.svelte";
-	import ChangePasswordModal from "../lib/modals/ChangePassword.svelte";
-	import LogoutEverywhereModal from "../lib/modals/LogoutEverywhere.svelte";
-	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
-	import ErrorModal from "../lib/modals/Error.svelte";
-	import LogoutModal from "../lib/modals/Logout.svelte";
-	import AnnounceModal from "../lib/modals/Announce.svelte";
-	import KickAllUsers from "../lib/modals/KickAllUsers.svelte";
-	import EnableRepairMode from "../lib/modals/EnableRepairMode.svelte";
-	import AddMember2Modal from "../lib/modals/AddMember_2.svelte";
-	import AddMemberSearchModal from "../lib/modals/AddMember_Search.svelte";
-	import AddMemberModeModal from "../lib/modals/AddMember_Mode.svelte";
-	import SearchResultsModal from "../lib/modals/SearchResults.svelte";
-	import SwitchThemeModal from "../lib/modals/SwitchTheme.svelte";
-	import LoggedOut from "../lib/modals/LoggedOut.svelte";
-	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
-	import BasicModal from "../lib/modals/Basic.svelte";
-	import CustomThemeModal from "../lib/modals/CustomTheme.svelte";
+	import Modals from "../lib/Modals.svelte";
 
 	import OOBE from "../lib/OOBE/Main.svelte";
 
 	import Sidebar from "../lib/Sidebar.svelte";
-	import ModPanel from "../lib/ModPanel.svelte";
 
 	import Spinner from "../lib/Spinner.svelte";
-	import {link} from "../lib/clmanager.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 
 	import {
 		screen,
-		modalShown,
-		modalPage,
 		reconnecting,
-		userToMod,
 		OOBERunning,
 		user,
 		spinner,
-		modPanelOpen,
 		customTheme,
 		useCustomTheme
 	} from "../lib/stores.js";
-	import {tick} from "svelte";
 </script>
 
 <!-- routify:options bundle=true -->
-
-<!--
-	in main:
-	style:--orange={$user.name && $useCustomTheme ? $customTheme.orange : null}
-	style:--orange-button={$user.name && $useCustomTheme ? $customTheme.orangeButton : null}
-	style:--orange-light={$user.name && $useCustomTheme ? $customTheme.orangeLight : null}
-	style:--orange-dark={$user.name && $useCustomTheme ? $customTheme.orangeDark : null}
-	style:--background={$user.name && $useCustomTheme ? $customTheme.background : null}
-	style:--foreground={$user.name && $useCustomTheme ? $customTheme.foreground : null}
-	style:--foreground-orange={$user.name && $useCustomTheme ? $customTheme.foregroundOrange : null}
--->
 
 <main
 	id="main"
@@ -93,104 +44,7 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-	{#if $modPanelOpen && $user.lvl >= 1}
-		<div class="mod-panel">
-			<Modal
-				on:close={() => {
-					$modPanelOpen = false;
-					$userToMod = "";
-				}}
-			>
-				<div slot="header">
-					<h1>Moderation Panel</h1>
-				</div>
-				<ModPanel />
-			</Modal>
-		</div>
-	{/if}
-
-	{#if $reconnecting}
-		<Modal>
-			<h2 slot="header">Reconnecting...</h2>
-			<div slot="default">
-				<p>
-					Looks like we're having some problems connecting you to
-					Meower. Give us a moment and we'll reconnect you as soon as
-					possible...
-				</p>
-			</div>
-		</Modal>
-	{:else if $modalShown}
-		<!-- Login, signup -->
-		{#if $modalPage === "login"}
-			<LoginModal />
-		{:else if $modalPage === "signup"}
-			<SignupModal />
-			<!-- Bans -->
-		{:else if $modalPage === "banned"}
-			<BannedModal />
-		{:else if $modalPage === "ipBlocked"}
-			<IPBlockedModal />
-		{:else if $modalPage === "accountCreationBlocked"}
-			<AccountCreationBlocked />
-			<!-- Confirmations -->
-		{:else if $modalPage === "deletePost"}
-			<DeletePostModal />
-		{:else if $modalPage === "reportPost"}
-			<ReportPostModal />
-		{:else if $modalPage === "reportUser"}
-			<ReportUserModal />
-		{:else if $modalPage === "searchResults"}
-			<SearchResultsModal />
-		{:else if $modalPage === "logoutEverywhere"}
-			<LogoutEverywhereModal />
-		{:else if $modalPage === "deleteAccount"}
-			<DeleteAccountModal />
-		{:else if $modalPage === "logout"}
-			<LogoutModal />
-		{:else if $modalPage === "announce"}
-			<AnnounceModal />
-		{:else if $modalPage === "kickAllUsers"}
-			<KickAllUsers />
-		{:else if $modalPage === "enableRepairMode"}
-			<EnableRepairMode />
-			<!-- Text inputs -->
-		{:else if $modalPage === "createChat"}
-			<CreateChatModal />
-		{:else if $modalPage === "addImg"}
-			<AddImgModal />
-		{:else if $modalPage === "changePassword"}
-			<ChangePasswordModal />
-			<!-- Group chats -->
-		{:else if $modalPage === "gcMember"}
-			<GCMemberModal />
-		{:else if $modalPage === "addMember"}
-			<AddMemberModal />
-		{:else if $modalPage === "addMember2"}
-			<AddMember2Modal />
-		{:else if $modalPage === "addMemberSearch"}
-			<AddMemberSearchModal />
-		{:else if $modalPage === "addMemberMode"}
-			<AddMemberModeModal />
-		{:else if $modalPage === "removeMember"}
-			<RemoveMemberModal />
-			<!-- Misc -->
-		{:else if $modalPage === "connectionFailed"}
-			<ConnectionFailed />
-		{:else if $modalPage === "switchTheme"}
-			<SwitchThemeModal />
-		{:else if $modalPage === "switchBGM"}
-			<SwitchBGMSFXModal />
-		{:else if $modalPage === "customTheme"}
-			<CustomThemeModal />
-		{:else if $modalPage === "loggedOut"}
-			<LoggedOut />
-		{:else if $modalPage === "basic"}
-			<BasicModal />
-		{:else}
-			<ErrorModal />
-		{/if}
-	{/if}
+	<Modals />
 
 	{#if $screen === "blank"}
 		<div id="blank" />

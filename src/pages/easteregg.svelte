@@ -53,12 +53,6 @@
         
     </Container>
     <Container>
-        <h1>Cool hidden things!</h1>
-        This is a little area of things that are normally unknown about svelte
-
-        
-    </Container>
-    <Container>
         <h1>OOBE</h1>
         Wanna see the OOBE?
 
