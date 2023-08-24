@@ -39,7 +39,7 @@ export const ulist = writable([]);
 export const userToMod = writable("");
 export const modPanelOpen = writable(false);
 
-// Last (blank) clicked
+// Last _____ clicked
 export const postClicked = writable({});
 export const profileClicked = writable("");
 export const profileClicked_GC = writable("");
@@ -77,6 +77,7 @@ export const spinner = writable(false);
 
 // What is this
 export const windowStyle = writable({});
+export const GroupCats = writable(200);
 
 // Custom theme
 export const useCustomTheme = writable(false);

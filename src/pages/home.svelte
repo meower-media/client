@@ -9,19 +9,6 @@
 </script>
 
 <div class="home">
-	<!--<button
-		on:click = {() => {
-			var modals = ["login","signup","banned","ipBlocked","accountCreationBlocked","deletePost","reportPost","reportUser ","searchResults","logoutEverywhere ","deleteAccount","logout","announce","kickAllUsers","enableRepairMode","createChat ","addImg","changePassword","gcMember ","addMember","addMember2","addMemberSearch","addMemberMode ","removeMember","connectionFailed","switchTheme","switchBGM","customTheme","loggedOut","basic"]
-			// Switchtheme broken
-
-			var randmodal = modals[Math.round(Math.random() * modals.length-1)]
-
-			alert(randmodal)
-		
-			modalPage.set(randmodal)
-			modalShown.set(true)
-		}}	
-	>Random Modal</button>-->
 	<Container>
 		<h1>Home</h1>
 		<div class="overflow">
