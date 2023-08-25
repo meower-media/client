@@ -47,10 +47,16 @@
         >Update</button>
     </Container>
     <Container>
+        <!--Posts, Profiles, Profile Views, and PFP (Later on, maybe GC Member list and postlist)-->
         <h1>Make your own!</h1>
-        Make your own profile, post or group chat member list with this!
+        Make your own profile, post, etc list with this!
 
-        
+        <Container>
+            <h1>Profile</h1>
+            Make your own profile, post or group chat member list with this!
+    
+            
+        </Container>
     </Container>
     <Container>
         <h1>OOBE</h1>

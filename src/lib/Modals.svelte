@@ -1,4 +1,5 @@
 <script>
+	// TODO: Make a way to import every modal without this mess
 	import Modal from "./Modal.svelte";
 	import ConnectionFailed from "./modals/ConnectionFailed.svelte";
 	import LoginModal from "./modals/Login.svelte";

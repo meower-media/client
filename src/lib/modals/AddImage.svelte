@@ -27,7 +27,6 @@
 		isDeleted: false,
 	};
 
-	// TODO: make bridged tag a setting
 	import {default as loadProfile} from "../loadProfile.js";
 
 	/**
@@ -156,7 +155,6 @@
 		<br /><br />
 		<h2>Preview</h2>
 		<div id="Preview">
-			<!--TODO: post preview-->
 			<Container>
 				<div class="post-header">
 					<button class="pfp">
