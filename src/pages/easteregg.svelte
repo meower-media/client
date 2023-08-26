@@ -87,7 +87,7 @@
 
             Enable Quote
             <br />
-            <input type="checkbox" bind:value={Profile_QuoteEnabled} class="modal-input white"/>
+            <input type="checkbox" bind:checked={Profile_QuoteEnabled} class="modal-input white"/>
             <br /><br />
 
             User Level
@@ -198,6 +198,11 @@
                     <p>"<i>{Profile_Quote}</i>"</p>
                 </Container>
             {/if}
+        </Container>
+
+        <Container>
+            <h1>Post</h1>
+            For now this is only restricted to post content
         </Container>
     </Container>
     <Container>
