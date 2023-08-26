@@ -6,6 +6,8 @@
 	import version from "../lib/version.js";
 
     let GCats = 100
+
+    let Profile_Username = "EasterEgg"
 </script>
 
 <div>
@@ -36,8 +38,7 @@
         <h1>Group cats</h1>
         Crash your browser by changing the amount of group cats!
 
-        <br>
-        <br>
+        <br /><br />
 
         <input type="number" placeholder="Enter a number" bind:value={GCats}/>
         <button
@@ -51,11 +52,41 @@
         <h1>Make your own!</h1>
         Make your own profile, post, etc list with this!
 
+        <br /><br />
+
         <Container>
             <h1>Profile</h1>
-            Make your own profile, post or group chat member list with this!
-    
+
+            Username
+            <br />
+            <input placeholder="Username" type="text" bind:value={Profile_Username} class="modal-input white"/>
+            <br /><br />
+
+            Status
+
+            <br />
+            <input placeholder="Username" type="text" bind:value={Profile_Username} class="modal-input white"/>
+            <br /><br />
+
+            User Level
+
+            <br />
+            <input placeholder="Username" type="text" bind:value={Profile_Username} class="modal-input white"/>
+            <br /><br />
+
+            PFP
+
+            <br />
+            <input placeholder="Username" type="text" bind:value={Profile_Username} class="modal-input white"/>
+            <br /><br />
+
+            <button
+                on:click={() => {
+
+                }}
+            >Update</button>
             
+
         </Container>
     </Container>
     <Container>
