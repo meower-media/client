@@ -202,7 +202,7 @@
 
         <Container>
             <h1>Post</h1>
-            For now this is only restricted to post content
+            Coming Later on
         </Container>
     </Container>
     <Container>
