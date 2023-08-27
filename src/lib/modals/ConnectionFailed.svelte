@@ -12,7 +12,7 @@
 		if (!resp.ok) return;
 
 		const json = await resp.json();
-		if (!json.repairMode) repairMode = true;
+		if (json.repairMode) repairMode = true;
 	});
 </script>
 
