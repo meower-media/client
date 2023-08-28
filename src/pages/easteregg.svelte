@@ -216,12 +216,12 @@
             OOBERunning.set(true)
         }}>Click me</button>
     </Container>
-    <Container>
+    <!--<Container>
         <h1>Internal/Debug Info</h1>
         Want a look inside Svelte? Here you go!
 
 
-    </Container>
+    </Container>-->
     Meower Svelte V{version}
 </div>
 
