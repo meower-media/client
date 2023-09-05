@@ -13,7 +13,7 @@
 		eager: true,
 	});
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
+	let selections = ["dark-orange", "dark-blue"];
 
 	let error = false;
 
@@ -21,7 +21,7 @@
 	let theme = $user.theme;
 
 	if (!selections.includes(theme) && !theme.startsWith("custom:")) {
-		theme = "orange";
+		theme = "dark-orange";
 		error = true;
 	}
 
