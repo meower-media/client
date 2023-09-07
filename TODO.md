@@ -10,7 +10,6 @@ Will do:
  - Bring back tweemoji
  - Discord like message stuff (From F client 1.5)
  - fix replies with links
- - fix save login
 
 
 Want to do but idk how:
@@ -24,6 +23,9 @@ Partialy Done:
  - Dev tools on <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>D</kbd> (Needs fixing)
 
 Done:
+ - fix themes (re-render on theme chamge)
+ - fix images
+ - fix save login
  - pfps from old f client
  - fixed shift enter
  - Clickable Links

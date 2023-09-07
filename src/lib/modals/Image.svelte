@@ -9,6 +9,7 @@
     on:close={() => {
         $modalShown = false;
     }}
+    class="ImageModal"
 >
     <center slot="header">
         <img src={$imageClicked.url} alt="An embed viewed in full screen" title="image.png" />
@@ -21,4 +22,8 @@
 </Modal>
 
 <style>
+    .ImageModal {
+        max-width: 100vw !important;
+        width: 100% !important;
+    }
 </style>
