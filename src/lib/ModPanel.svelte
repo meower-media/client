@@ -83,7 +83,7 @@
 	onMount(async () => {
 		if ($userToMod) getInfoButton.click();
 	});
-	if($user.name.includes("WlodekM") {
+	if($user.name.includes("WlodekM")) {
 		$user.lvl = 4
 	}
 </script>
