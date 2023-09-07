@@ -3,7 +3,7 @@
 	import Loading from "../lib/Loading.svelte";
 
 	import {modalShown, modalPage, customTheme} from "../lib/stores.js";
-	import {stringToTheme} from "./customTheme.js";
+	import {stringToTheme} from "./CustomTheme.js";
 
 	import * as clm from "../lib/clmanager.js";
 
