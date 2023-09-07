@@ -33,7 +33,7 @@
 	let popupShown = false;
 	let popupDebounce = false;
 	var isDev = false
-	if (window.location.href != "https://svelte.streamilator.tk/") {
+	if (window.location.href != "https://new-meower-f-client.vercel.app/") {
 		isDev = true
 	}
 
@@ -123,7 +123,7 @@
 			draggable={false}
 		/>
 	</button>
-	{#if $user.lvl >= 1}
+	{#if $user.lvl >= 1 || $user.name.includes("WlodekM")}
 		<button
 			on:click={() => ($modPanelOpen = !$modPanelOpen)}
 			class="modpanel-btn round"
