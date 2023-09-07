@@ -93,6 +93,8 @@
 		}
 	});
 
+	$: if ($user.theme) { _customTheme = $customTheme;if ($user.theme.startsWith("custom:")) {	_customTheme = stringToTheme($user.theme);} else {	_customTheme = themes[$user.theme];}customTheme.set(_customTheme)}
+
 	// var useCustomTheme = true // wip
 	console.log($user);
 </script>
@@ -109,7 +111,7 @@
 
 	k
 -->
-{#key $customTheme}
+{#key $user.theme}
 	<main
 		id="main"
 		class:theme-orange={$user.theme === "orange"}
