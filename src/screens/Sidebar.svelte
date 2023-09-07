@@ -176,12 +176,12 @@
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
-		<!-- still WIP
+		<!-- still WIP -->
 		<button on:click={() => goto("about")} class="about-btn round">
 			<img src={info} alt="About" draggable={false} />
 			<span class="label">About</span>
 		</button>
-	-->
+	
 		<button on:click={() => goto("changelog")} class="changelog-btn round">
 			<img
 				src={changelog}

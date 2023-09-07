@@ -18,11 +18,16 @@
 		"ArrowAced",
 		"theotherhades",
 	];
+	const FCLIENTCONTRIBUTORS = [
+		"WlodekM"
+	];
 	const MEOWER_USERNAMES = {
 		tnix100: "tnix",
+		WlodekM: "Wlodek3"
 	};
 	const CONTRIBUTOR_ROLES = {
-		CST1229: "creator of this client",
+		CST1229: "creator of the meower svelte client",
+		WlodekM: "creator of this client",
 	};
 
 	function gotoProfile(username) {
@@ -35,9 +40,9 @@
 	<h1>
 		<img src={logo} alt="Meower" height="80" />
 	</h1>
-	Svelte Client, v{version}
+	F Client, v{version}
 	<br />
-	All of Meower is free and open-source!
+	All of F Client is free and open-source!
 	<a href="https://github.com/Meower-Media-Co">See the source code here.</a>
 </Container>
 <Container>
@@ -69,7 +74,40 @@
 		</li>
 	</ul>
 
-	<h3>Client Contributors</h3>
+	<h3>F Client Owner</h3>
+	<ul>
+		<li>
+			<a
+				href="/"
+				on:click|preventDefault={() => {
+					gotoProfile("WlodekM3");
+				}}>@WlodekM3</a
+			>
+			(<a href="https://github.com/WlodekM">GitHub</a>) - current owner of
+			F Client.
+		</li>
+	</ul>
+
+	<h3>F Client Contributors</h3>
+	<ul>
+		{#each FCLIENTCONTRIBUTORS as username}
+			<li>
+				{#if MEOWER_USERNAMES[username] !== null}<a
+						href="/"
+						on:click|preventDefault={() => {
+							gotoProfile(MEOWER_USERNAMES[username] || username);
+						}}>@{MEOWER_USERNAMES[username] || username}</a
+					>{:else}
+					{username}{/if} (<a href="https://github.com/{username}"
+					>GitHub</a
+				>) {#if CONTRIBUTOR_ROLES[username]}
+					- {CONTRIBUTOR_ROLES[username]}
+				{/if}
+			</li>
+		{/each}
+	</ul>
+
+	<h3>Meower Svlete Contributors</h3>
 	<ul>
 		{#each CONTRIBUTORS as username}
 			<li>
