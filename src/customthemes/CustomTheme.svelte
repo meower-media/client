@@ -27,7 +27,7 @@
 						return false;
 					}
 					newTheme = e.target[0].value;
-					customTheme.set(`theme:${JSON.stringify(e.target[0].value)})
+					customTheme.set(`theme:${JSON.stringify(e.target[0].value)}`)
 					return false;
 				}}
 			>
