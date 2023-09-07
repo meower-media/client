@@ -42,6 +42,8 @@
 
 	let images = [];
 
+	post.unformatedcontent =post.content
+
 	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
 	// WARNING: Put a / at the end of each URL so it can't be bypassed
 	// (like https://http.meower.org@evilsite.bad)!
@@ -114,10 +116,10 @@
 
 		// Match image syntax
 		// ([title: https://url])
-		const iterator = post.content.matchAll(
+		const iterator = post.unformatedcontent.matchAll(
 			/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs
 		);
-		console.log(post.content)
+		console.log(post.unformatedcontent)
 		images = [];
 		while (true) {
 			const result = iterator.next();
