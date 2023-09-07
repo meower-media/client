@@ -28,6 +28,7 @@ export function themeToString(theme) {
 }
 
 export function stringToTheme(string) {
+	if (!string) return {};
 	if (!string.startsWith("custom:")) return fallback;
 	try {
 		const json = JSON.parse(string.substring(7));
