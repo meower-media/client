@@ -2,12 +2,12 @@
 	import Modal from "../lib/Modal.svelte";
 	import Loading from "../lib/Loading.svelte";
 
-	import {modalShown, modalPage} from "../lib/stores.js";
+	import {modalShown, modalPage, customTheme} from "../lib/stores.js";
 
 	import * as clm from "../lib/clmanager.js";
 
 	let loading = false;
-    let newTheme, theme
+    let newTheme, theme, error
 
 	function doLogin() {
 	}
@@ -20,17 +20,14 @@
 >
 	<h2 slot="header">Use custom theme</h2>
 	<div slot="default">
-		{#if loading}
-			<div class="fullcenter">
-				<Loading />
-			</div>
-		{:else}
 			<form
 				on:submit|preventDefault={e => {
-					if (!(e.target[0].value && e.target[1].value)) {
+					if (!(e.target[0].value && JSON.stringify(e.target[0].value))) {
+						error = "input a theme"
 						return false;
 					}
 					newTheme = e.target[0].value;
+					customTheme.set(`theme:${JSON.stringify(e.target[0].value)})
 					return false;
 				}}
 			>
@@ -44,16 +41,12 @@
 				/><br />
 				<br />
 				<div class="modal-buttons">
-					<a
-						href="/"
-						on:click|preventDefault={() => {
-							modalPage.set("signup");
-						}}>Join Meower</a
-					>
-					<button type="submit">Login</button>
+					<button type="submit">Submit</button>
+					<div class="error">
+						{error}
+					</div>
 				</div>
 			</form>
-		{/if}
 	</div>
 </Modal>
 
