@@ -3,6 +3,7 @@
 	import Loading from "../lib/Loading.svelte";
 
 	import {modalShown, modalPage, customTheme} from "../lib/stores.js";
+	import {stringToTheme} from "./customTheme.js";
 
 	import * as clm from "../lib/clmanager.js";
 
@@ -27,6 +28,7 @@
 						return false;
 					}
 					newTheme = e.target[0].value;
+					console.log(`theme:${JSON.stringify(e.target[0].value)}`)
 					customTheme.set(`theme:${JSON.stringify(e.target[0].value)}`)
 					return false;
 				}}
@@ -35,7 +37,7 @@
 					type="text"
 					class="modal-input white"
 					placeholder="Theme JSON"
-					value={theme}
+					value={JSON.stringify(stringToTheme(customTheme))}
 					autofocus
 				/><br />
 				<br />
