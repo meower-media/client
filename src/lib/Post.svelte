@@ -119,11 +119,9 @@
 		const iterator = post.unformatedcontent.matchAll(
 			/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs
 		);
-		console.log(post.unformatedcontent)
 		images = [];
 		while (true) {
 			const result = iterator.next();
-			console.log(result)
 			if (result.done) break;
 
 			try {
