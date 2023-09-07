@@ -121,6 +121,7 @@
 		images = [];
 		while (true) {
 			const result = iterator.next();
+			console.log(result)
 			if (result.done) break;
 
 			try {
@@ -133,7 +134,7 @@
 				!IMAGE_HOST_WHITELIST.some((o) =>
 					result.value[2].toLowerCase().startsWith(o.toLowerCase())
 				)
-			) console.log(`image host not whitelisted ${result.value[2].toLowerCase()}`);return;
+			) {console.log(`image host not whitelisted ${result.value[2].toLowerCase()}`);return}
 
 			images.push({
 				title: result.value[1],
