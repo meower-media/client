@@ -30,6 +30,13 @@
 			level: 1,
 		},
 		{
+			cmd: "force_kick",
+			name: "Force kick",
+			description:
+				"Forcibly destroy this user's connections; use this to remove a softlocked account from the ulist.",
+			level: 1,
+		},
+		{
 			cmd: "clear_user_posts",
 			name: "Delete all posts",
 			description: "Delete all of the user's home posts.",
@@ -386,6 +393,21 @@
 		</div>
 		<div slot="empty">Yay, the report queue is empty!</div>
 	</PostList>
+	<h2>Manage Server</h2>
+	{#if $user.lvl < 4}
+		<p>Level 4+ ({levels[4]} and above) only.</p>
+	{:else}
+		<button
+			on:click={() => {
+				modals.showModal("kickAllUsers");
+			}}>Kick all users</button
+		>
+		<button
+			on:click={() => {
+				modals.showModal("enableRepairMode");
+			}}>Enable repair mode</button
+		>
+	{/if}
 </div>
 
 <style>
