@@ -79,10 +79,14 @@
 	};
 
 	_customTheme = $customTheme;
-	if ($user.theme.startsWith("custom:")) {
-		_customTheme = stringToTheme($user.theme);
-	} else {
+	if ($user.theme) {
 		_customTheme = themes[$user.theme];
+	} else {
+		if ($user.theme.startsWith("custom:")) {
+			_customTheme = stringToTheme($user.theme);
+		} else {
+			_customTheme = themes[$user.theme];
+		}
 	}
 	customTheme.set(_customTheme);
 
