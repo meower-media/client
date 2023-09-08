@@ -79,7 +79,7 @@
 	};
 
 	_customTheme = $customTheme;
-	if ($user.theme) {
+	if (!$user.theme) {
 		_customTheme = themes[$user.theme];
 	} else {
 		if ($user.theme.startsWith("custom:")) {
