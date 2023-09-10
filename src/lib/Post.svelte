@@ -29,6 +29,7 @@
 	} from "../lib/loadProfile.js";
 
 	import { onMount, tick } from "svelte";
+	import {apiUrl, encodeApiURLParams} from "../lib/urls.js";
 
 	export let post = {};
 	export let buttons = true;
