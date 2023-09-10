@@ -233,6 +233,9 @@
 				throw new Error("Response code is not OK; code is " + resp.status);
 			}
 			const json = await resp.json();
+			if(json.unfiltered_p) {
+				post.content = json.unfiltered_p
+			}
 			console.log(json);
 		}
 	}
