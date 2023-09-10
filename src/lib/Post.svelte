@@ -45,6 +45,28 @@
 	let images = [];
 
 	post.unformatedcontent = post.content
+	onMount(uncensor)
+	async function uncensor() {
+		if(post.content.includes("****")) {
+			//send request to api
+			console.log("censored detected")
+			console.log(post.post_id)
+			let path = `posts?`;
+			if (encodeApiURLParams) path = encodeURIComponent(path);
+			const resp = await fetch(`${apiUrl}${path}` + new URLSearchParams({
+				id: post.post_id
+			}));
+			if (!resp.ok) {
+				console.log(resp)
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
+			const json = await resp.json();
+			if(json.unfiltered_p) {
+				post.content = json.unfiltered_p
+			}
+			console.log(json);
+		}
+	}
 
 	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
 	// WARNING: Put a / at the end of each URL so it can't be bypassed
@@ -217,28 +239,6 @@
 		post.user === "Server" ||
 		webhook;
 	console.log(JSON.stringify(post));
-	onMount(uncensor)
-	async function uncensor() {
-		if(post.content.includes("****")) {
-			//send request to api
-			console.log("censored detected")
-			console.log(post.post_id)
-			let path = `posts?`;
-			if (encodeApiURLParams) path = encodeURIComponent(path);
-			const resp = await fetch(`${apiUrl}${path}` + new URLSearchParams({
-				id: post.post_id
-			}));
-			if (!resp.ok) {
-				console.log(resp)
-				throw new Error("Response code is not OK; code is " + resp.status);
-			}
-			const json = await resp.json();
-			if(json.unfiltered_p) {
-				post.content = json.unfiltered_p
-			}
-			console.log(json);
-		}
-	}
 	function openImage(url) {
 		$modalShown = true;
 		$modalPage = "image";
