@@ -90,15 +90,31 @@
 		<div class="fullcenter">
 			<Loading />
 		</div>
-	{:then data}
-		<ProfileView username={$profileClicked} />
+		{:then data}
+			<ProfileView username={$profileClicked} />
 
-		{#if data.quote}
+			{#if $user.name == $user.username}
+			<Container>
+				<h3>Quote</h3>
+				<input
+					type="text"
+					class="modal-input white"
+					style="font-style: italic"
+					placeholder="Write something..."
+					maxlength="360"
+					bind:value={@html linkify(deHTML($user.quote))}
+					on:change={async () => {
+						await clm.updateProfile();
+					}}
+				/>
+			</Container>
+		{:else if data.quote}
 			<Container>
 				<h3>Quote</h3>
 				<p>"<i>{@html linkify(deHTML(data.quote))}</i>"</p>
 			</Container>
 		{/if}
+
 
 		{#if pfpSwitcher}
 			<Container>
