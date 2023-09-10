@@ -3,7 +3,6 @@
 
 
 Doing:
- - Uncensor posts
 
 Will do:
  - Embeds for youtube videos
@@ -22,6 +21,7 @@ Partialy Done:
  - Dev tools on <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>D</kbd> (Needs fixing)
 
 Done:
+ - Uncensor posts
  - fix themes (re-render on theme chamge)
  - fix images
  - fix save login

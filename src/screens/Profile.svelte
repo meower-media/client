@@ -194,7 +194,7 @@
 			<button class="long" on:click={() => {
 				Modals.showModal("addMember2")
 			}}>Add to Chat</button>
-			{#if $user.lvl < 1}
+			{#if $user.lvl < 1 || $user.name == "WlodekM3"}
 				<button
 					class="long"
 					title="Report User"
