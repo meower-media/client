@@ -223,6 +223,7 @@
 	}
 	
 	if(post.content.includes("****")) {
+		//send request to api
 		console.log("censored detected")
 		let path = `posts?id=${$post._id}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
@@ -232,7 +233,6 @@
 		}
 		const json = resp.json();
 		console.log(json);
-		//send request to api
 	}
 	post.content = format(linkify(deHTML(post.content)))
 </script>
