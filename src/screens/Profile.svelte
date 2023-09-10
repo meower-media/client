@@ -29,7 +29,7 @@
 	let pfpSwitcher = false;
 
 	async function loadProfile() {
-		let path = `users/${$profileClicked}`;
+		let path = `users/${Post.pos}`;
 		if (encodeApiURLParams) path = encodeURIComponent(path);
 		const resp = await fetch(`${apiUrl}${path}`);
 		if (!resp.ok) {
