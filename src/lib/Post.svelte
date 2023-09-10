@@ -229,7 +229,7 @@
 				id: post.post_id
 			}));
 			if (!resp.ok) {
-				console.log(path)
+				console.log(resp)
 				throw new Error("Response code is not OK; code is " + resp.status);
 			}
 			const json = resp.json();
