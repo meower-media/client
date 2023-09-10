@@ -35,7 +35,7 @@
 	export let buttons = true;
 	export let input = null;
 	export let canDoActions = true;
-	var postid = post._id
+	var postid = post.post_id
 
 	let bridged = false;
 	let webhook = false;
