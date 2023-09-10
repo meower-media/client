@@ -232,7 +232,7 @@
 				console.log(resp)
 				throw new Error("Response code is not OK; code is " + resp.status);
 			}
-			const await json = resp.json();
+			const json = await resp.json();
 			console.log(json);
 		}
 	}
