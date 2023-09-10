@@ -35,6 +35,7 @@
 	export let buttons = true;
 	export let input = null;
 	export let canDoActions = true;
+	var postid = post._id
 
 	let bridged = false;
 	let webhook = false;
@@ -221,7 +222,7 @@
 		if(post.content.includes("****")) {
 			//send request to api
 			console.log("censored detected")
-			let path = `posts?id=${post._id}`;
+			let path = `posts?id=${postid}`;
 			if (encodeApiURLParams) path = encodeURIComponent(path);
 			const resp = fetch(`${apiUrl}${path}`);
 			if (!resp.ok) {
