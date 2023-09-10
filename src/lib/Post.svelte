@@ -216,24 +216,27 @@
 		post.user === "Server" ||
 		webhook;
 	console.log(JSON.stringify(post));
+	onMount(uncensor)
+	function uncensor() {
+		if(post.content.includes("****")) {
+			//send request to api
+			console.log("censored detected")
+			let path = `posts?id=${post._id}`;
+			if (encodeApiURLParams) path = encodeURIComponent(path);
+			const resp = fetch(`${apiUrl}${path}`);
+			if (!resp.ok) {
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
+			const json = resp.json();
+			console.log(json);
+		}
+	}
 	function openImage(url) {
 		$modalShown = true;
 		$modalPage = "image";
 		$imageClicked = url;
 	}
 	
-	if(post.content.includes("****")) {
-		//send request to api
-		console.log("censored detected")
-		let path = `posts?id=${$post._id}`;
-		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = fetch(`${apiUrl}${path}`);
-		if (!resp.ok) {
-			throw new Error("Response code is not OK; code is " + resp.status);
-		}
-		const json = resp.json();
-		console.log(json);
-	}
 	post.content = format(linkify(deHTML(post.content)))
 </script>
 
