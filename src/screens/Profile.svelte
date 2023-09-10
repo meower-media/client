@@ -102,7 +102,7 @@
 					style="font-style: italic"
 					placeholder="Write something..."
 					maxlength="360"
-					bind:value={@html linkify(deHTML($user.quote))}
+					bind:value={$user.quote}
 					on:change={async () => {
 						await clm.updateProfile();
 					}}
