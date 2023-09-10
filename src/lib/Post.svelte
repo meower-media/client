@@ -44,18 +44,6 @@
 	let images = [];
 
 	post.unformatedcontent = post.content
-	if(post.content.includes("****")) {
-		console.log("censored detected")
-		let path = `posts?id=${post._id}`;
-		if (encodeApiURLParams) path = encodeURIComponent(path);
-		const resp = fetch(`${apiUrl}${path}`);
-		if (!resp.ok) {
-			throw new Error("Response code is not OK; code is " + resp.status);
-		}
-		const json = resp.json();
-		console.log(json);
-		//send request to api
-	}
 
 	// IP grabber sites exist, and I don't know if hosting a proxy is feasible
 	// WARNING: Put a / at the end of each URL so it can't be bypassed
@@ -232,6 +220,19 @@
 		$modalShown = true;
 		$modalPage = "image";
 		$imageClicked = url;
+	}
+	
+	if(post.content.includes("****")) {
+		console.log("censored detected")
+		let path = `posts?id=${$post._id}`;
+		if (encodeApiURLParams) path = encodeURIComponent(path);
+		const resp = fetch(`${apiUrl}${path}`);
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
+		}
+		const json = resp.json();
+		console.log(json);
+		//send request to api
 	}
 	post.content = format(linkify(deHTML(post.content)))
 </script>
