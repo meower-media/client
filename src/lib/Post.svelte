@@ -227,6 +227,7 @@
 			if (encodeApiURLParams) path = encodeURIComponent(path);
 			const resp = fetch(`${apiUrl}${path}`);
 			if (!resp.ok) {
+				console.log(path)
 				throw new Error("Response code is not OK; code is " + resp.status);
 			}
 			const json = resp.json();
