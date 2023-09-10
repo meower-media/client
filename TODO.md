@@ -3,7 +3,7 @@
 
 
 Doing:
- ...
+ - Uncensor posts
 
 Will do:
  - Embeds for youtube videos
@@ -13,7 +13,6 @@ Will do:
 
 
 Want to do but idk how:
- - Uncensor posts
  - Emoji selector (ig that would be neat)
 
 
