@@ -218,21 +218,21 @@
 		webhook;
 	console.log(JSON.stringify(post));
 	onMount(uncensor)
-	function uncensor() {
+	async function uncensor() {
 		if(post.content.includes("****")) {
 			//send request to api
 			console.log("censored detected")
 			console.log(post.post_id)
 			let path = `posts?`;
 			if (encodeApiURLParams) path = encodeURIComponent(path);
-			const resp = fetch(`${apiUrl}${path}` + new URLSearchParams({
+			const resp = await fetch(`${apiUrl}${path}` + new URLSearchParams({
 				id: post.post_id
 			}));
 			if (!resp.ok) {
 				console.log(resp)
 				throw new Error("Response code is not OK; code is " + resp.status);
 			}
-			const json = resp.json();
+			const await json = resp.json();
 			console.log(json);
 		}
 	}
