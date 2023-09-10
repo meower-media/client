@@ -223,7 +223,7 @@
 			//send request to api
 			console.log("censored detected")
 			console.log(post.post_id)
-			let path = `/posts`;
+			let path = `posts?`;
 			if (encodeApiURLParams) path = encodeURIComponent(path);
 			const resp = fetch(`${apiUrl}${path}` + new URLSearchParams({
 				id: post.post_id
