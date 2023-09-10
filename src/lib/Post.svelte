@@ -223,9 +223,10 @@
 			//send request to api
 			console.log("censored detected")
 			console.log(post.post_id)
-			let path = `posts?id=${post.post_id}`;
 			if (encodeApiURLParams) path = encodeURIComponent(path);
-			const resp = fetch(`${apiUrl}${path}`);
+			const resp = fetch(`${apiUrl}${path}` + new URLSearchParams({
+				id: post.post_id
+			}));
 			if (!resp.ok) {
 				console.log(path)
 				throw new Error("Response code is not OK; code is " + resp.status);
