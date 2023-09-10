@@ -13,9 +13,6 @@ let fallback = {
 	orangeButton: "#f9a636",
 	orangeLight: "#ffce8c",
 	orangeDark: "#b46d34",
-	background: "#ffffff",
-	foreground: "#000000",
-	foregroundOrange: "#ffffff"
 };
 
 let _user = null;
@@ -28,6 +25,7 @@ export function themeToString(theme) {
 }
 
 export function stringToTheme(string) {
+	if (string == undefined) return fallback;
 	if (!string) return {};
 	if (!string.startsWith("custom:")) return fallback;
 	try {
