@@ -222,7 +222,8 @@
 		if(post.content.includes("****")) {
 			//send request to api
 			console.log("censored detected")
-			let path = `posts?id=${postid}`;
+			console.log(post.post_id)
+			let path = `posts?id=${post.post_id}`;
 			if (encodeApiURLParams) path = encodeURIComponent(path);
 			const resp = fetch(`${apiUrl}${path}`);
 			if (!resp.ok) {
