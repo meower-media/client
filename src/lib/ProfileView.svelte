@@ -4,9 +4,9 @@
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
-	import {levels} from "./formatting.js";
 	import LiText from "./LiText.svelte";
 	import {goto} from "@roxi/routify";
+	import FormattedDate from "./FormattedDate.svelte";
 
 	export let username = "";
 	export let profile = null;
@@ -72,8 +72,15 @@
 							Banned
 						{/if}
 					</div>
-					<div class="profile-role">
-						{levels[data.lvl] || "Unknown"}
+					<div class="profile-active-last">
+						Last seen
+						{#if $ulist.includes(data._id)}
+							now
+						{:else if data.last_seen}
+							<FormattedDate date={data.last_seen} />
+						{:else}
+							never
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -101,11 +108,8 @@
 		height: 4.75em;
 	}
 
-	.profile-active {
+	.profile-active-last {
 		font-style: italic;
-	}
-
-	.profile-role {
 		position: absolute;
 		font-size: 90%;
 	}

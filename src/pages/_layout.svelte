@@ -21,6 +21,13 @@
 	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
 	import ErrorModal from "../lib/modals/Error.svelte";
 	import LogoutModal from "../lib/modals/Logout.svelte";
+	import ModerateUserModal from "../lib/modals/ModerateUser.svelte";
+	import ModerateIPModal from "../lib/modals/ModerateIP.svelte";
+	import ModerateChatModal from "../lib/modals/ModerateChat.svelte";
+	import ClearQuoteModal from "../lib/modals/ClearQuote.svelte";
+	import ClearPostsModal from "../lib/modals/ClearPosts.svelte";
+	import ImpersonateUserModal from "../lib/modals/ImpersonateUser.svelte";
+	import SetAdminPermissionsModal from "../lib/modals/SetAdminPermissions.svelte";
 	import AnnounceModal from "../lib/modals/Announce.svelte";
 	import KickAllUsers from "../lib/modals/KickAllUsers.svelte";
 	import EnableRepairMode from "../lib/modals/EnableRepairMode.svelte";
@@ -39,25 +46,33 @@
 	import ModPanel from "../lib/ModPanel.svelte";
 
 	import Spinner from "../lib/Spinner.svelte";
-	import {link} from "../lib/clmanager.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 
 	import {
 		screen,
-		setupPage,
 		modalShown,
 		modalPage,
 		reconnecting,
-		disconnected,
-		disconnectReason,
 		userToMod,
 		OOBERunning,
 		user,
+		userRestricted,
+		userSuspended,
 		spinner,
 		modPanelOpen,
 	} from "../lib/stores.js";
-	import {tick} from "svelte";
+
+	$: {
+		$userRestricted =
+			$user.ban.state === "PermRestriction" ||
+			($user.ban.state === "TempRestriction" &&
+				$user.ban.expires > Math.floor(Date.now() / 1000));
+		$userSuspended =
+			$user.ban.state === "PermSuspension" ||
+			($user.ban.state === "TempSuspension" &&
+				$user.ban.expires > Math.floor(Date.now() / 1000));
+	}
 </script>
 
 <!-- routify:options bundle=true -->
@@ -86,22 +101,6 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-	{#if $modPanelOpen && $user.lvl >= 1}
-		<div class="mod-panel">
-			<Modal
-				on:close={() => {
-					$modPanelOpen = false;
-					$userToMod = "";
-				}}
-			>
-				<div slot="header">
-					<h1>Moderation Panel</h1>
-				</div>
-				<ModPanel />
-			</Modal>
-		</div>
-	{/if}
-
 	{#if $reconnecting}
 		<Modal>
 			<h2 slot="header">Reconnecting...</h2>
@@ -141,6 +140,21 @@
 			<DeleteAccountModal />
 		{:else if $modalPage === "logout"}
 			<LogoutModal />
+			<!-- Moderation -->
+		{:else if $modalPage === "moderateUser"}
+			<ModerateUserModal />
+		{:else if $modalPage === "moderateIP"}
+			<ModerateIPModal />
+		{:else if $modalPage === "moderateChat"}
+			<ModerateChatModal />
+		{:else if $modalPage === "clearQuote"}
+			<ClearQuoteModal />
+		{:else if $modalPage === "clearPosts"}
+			<ClearPostsModal />
+		{:else if $modalPage === "impersonateUser"}
+			<ImpersonateUserModal />
+		{:else if $modalPage === "setAdminPermissions"}
+			<SetAdminPermissionsModal />
 		{:else if $modalPage === "announce"}
 			<AnnounceModal />
 		{:else if $modalPage === "kickAllUsers"}
@@ -181,6 +195,20 @@
 		{:else}
 			<ErrorModal />
 		{/if}
+	{:else if $modPanelOpen}
+		<div class="mod-panel">
+			<Modal
+				on:close={() => {
+					$modPanelOpen = false;
+					$userToMod = "";
+				}}
+			>
+				<div slot="header">
+					<h1>Moderation Panel</h1>
+				</div>
+				<ModPanel />
+			</Modal>
+		</div>
 	{/if}
 
 	{#if $screen === "blank"}

@@ -5,13 +5,7 @@
 	// @ts-ignore
 	import {shiftHeld} from "../keyDetect.js";
 
-	import {
-		profileClicked_GC,
-		user,
-		chatid,
-		chatOwner,
-		chatMembers,
-	} from "../stores.js";
+	import {profileClicked_GC, user, chat} from "../stores.js";
 
 	import * as modals from "../modals.js";
 
@@ -39,7 +33,7 @@
 				$goto(`/users/${$profileClicked_GC}`);
 			}}>View full profile</button
 		>
-		{#if $chatOwner == $user.name && $profileClicked_GC != $user.name}
+		{#if $chat.owner == $user.name && $profileClicked_GC != $user.name}
 			<button
 				class="long"
 				on:click={() => {
@@ -49,12 +43,12 @@
 							val: {
 								cmd: "remove_from_chat",
 								val: {
-									chatid: $chatid,
+									chatid: $chat._id,
 									username: $profileClicked_GC,
 								},
 							},
 						});
-						chatMembers.set($chatMembers.filter(filter1));
+						$chat.members = $chat.members.filter(filter1);
 						modals.closeModal();
 					} else {
 						modals.showModal("removeMember");

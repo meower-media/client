@@ -1,6 +1,6 @@
 <!-- The profile page, now with viewing others' profiles. -->
 <script>
-	import {userToMod, modPanelOpen, user} from "../../../lib/stores.js";
+	import {userToMod, user, userSuspended} from "../../../lib/stores.js";
 	import * as modals from "../../../lib/modals.js";
 
 	import {profileCache} from "../../../lib/loadProfile.js";
@@ -77,6 +77,7 @@
 						style="font-style: italic"
 						placeholder="Write something..."
 						maxlength="360"
+						disabled={$userSuspended}
 						bind:value={$user.quote}
 						on:change={async () => {
 							await clm.updateProfile();
@@ -162,13 +163,13 @@
 						modals.showModal("addMember2");
 					}}>Add to Chat</button
 				>
-				{#if $user.lvl >= 1}
+				{#if $user.permissions}
 					<button
 						class="long"
 						title="Moderate User"
 						on:click={() => {
 							$userToMod = $params.username;
-							$modPanelOpen = true;
+							modals.showModal("moderateUser");
 						}}>Moderate User</button
 					>
 				{:else}

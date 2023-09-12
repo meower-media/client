@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {chatid, chatMembers} from "../stores.js";
+	import {chat} from "../stores.js";
 
 	import * as modals from "../modals.js";
 
@@ -23,11 +23,10 @@
 					cmd: "direct",
 					val: {
 						cmd: "add_to_chat",
-						val: {chatid: $chatid, username: e.target[0].value},
+						val: {chatid: $chat._id, username: e.target[0].value},
 					},
 				});
-				$chatMembers.push(username);
-				chatMembers.set($chatMembers);
+				$chat.members.push(username);
 				modals.closeModal();
 			}}
 		>

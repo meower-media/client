@@ -141,6 +141,8 @@
 							Object.assign(v, {
 								...profileVal.payload,
 								name: val.payload.username,
+								unread_inbox: true,
+								layout: "new",
 							})
 						);
 					} catch (e) {
@@ -170,8 +172,7 @@
 								: "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							modals.showModal("banned");
-							loginStatus = "";
+							loginStatus = "Your account is currently banned.";
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =

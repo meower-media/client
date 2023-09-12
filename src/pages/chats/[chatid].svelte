@@ -3,118 +3,134 @@
 -->
 <script>
 	import {
-		chatid,
-		chatName,
-		chatMembers,
-		chatOwner,
+		authHeader,
+		user,
+		userRestricted,
+		userSuspended,
+		chat,
 		profileClicked_GC,
 	} from "../../lib/stores.js";
+	import {permissions, hasPermission} from "../../lib/adminPermissions.js";
 	import * as modals from "../../lib/modals.js";
 	import {mobile} from "../../lib/responsiveness.js";
 	import Member from "../../lib/Member.svelte";
 	import Container from "../../lib/Container.svelte";
 	import * as clm from "../../lib/clmanager.js";
 	import PostList from "../../lib/PostList.svelte";
+	import {apiUrl} from "../../lib/urls.js";
 
-	import {goto, params} from "@roxi/routify";
-	import {onDestroy, onMount} from "svelte/internal";
+	import {params, goto} from "@roxi/routify";
+	import {onMount, onDestroy} from "svelte/internal";
 
 	let showMembers = !$mobile;
 
-	$: $chatid = $params.chatid;
+	$: {
+		if ($chat.deleted && !hasPermission(permissions.VIEW_CHATS))
+			$goto("/chats");
+	}
 
-	let chatDataEvId;
-	let chatDeleteEvId;
-	let chatData = {};
 	onMount(async () => {
-		if ($chatid === "livechat") {
+		if ($params.chatid === "livechat") {
 			clm.link.send({
 				cmd: "direct",
 				val: {
 					cmd: "set_chat_state",
 					val: {
 						state: 1,
-						chatid: $chatid,
+						chatid: "livechat",
 					},
 				},
 			});
 		}
 
-		if (!$chatName || !$chatMembers || !$chatOwner) {
-			if ($chatid === "livechat") {
-				$chatName = "Livechat";
-				$chatMembers = [];
-				$chatOwner = "Server";
+		if (!$chat._id) {
+			if ($params.chatid === "livechat") {
+				chat.set({
+					_id: "livechat",
+					nickname: "Livechat",
+					owner: "",
+					members: [],
+					created: 0,
+					last_active: 0,
+					deleted: false,
+				});
 			} else {
 				try {
-					chatDataEvId = clm.link.on("direct", cmd => {
-						if (cmd.val.mode === "chat_data") {
-							chatData = cmd.val.payload;
-
-							if (chatData.chatid !== $chatid) return;
-
-							$chatName = chatData.nickname;
-							$chatMembers = chatData.members;
-							$chatOwner = chatData.owner;
+					const resp = await fetch(
+						`${apiUrl}chats/${$params.chatid}`,
+						{
+							headers: $authHeader,
 						}
-					});
-
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "get_chat_data",
-							val: $chatid,
-						},
-					});
-				} catch (e) {
-					if (e === "E:103 | ID not found") {
-						modals.showModal(
-							"basic",
-							"Chat not found",
-							`The chat you requested (${$chatid}) doesn't exist or you don't have access to it.`
-						);
+					);
+					if (resp.ok) {
+						$chat = await resp.json();
 					} else {
-						modals.showModal(
-							"basic",
-							"Failed Getting Chat",
-							`Unexpected ${e} error getting chat data!`
-						);
+						if (resp.status === 404) {
+							modals.showModal(
+								"basic",
+								"Chat not found",
+								`The chat you requested (${$params.chatid}) doesn't exist or you don't have access to it.`
+							);
+							$goto("/chats");
+						} else {
+							throw new Error(
+								"Response code is not OK; code is " +
+									resp.status
+							);
+						}
 					}
+				} catch (e) {
+					modals.showModal(
+						"basic",
+						"Failed Getting Chat",
+						`Unexpected ${e} error getting chat data!`
+					);
 					$goto("/chats");
 				}
 			}
 		}
 
-		chatDeleteEvId = clm.link.on("direct", cmd => {
-			if (cmd.val.mode === "delete" && cmd.val.id === $chatid)
-				$goto("/chats");
+		clm.link.on("direct", cmd => {
+			if (cmd.val.mode === "delete" && cmd.val.id === $chat._id) {
+				if ($chat.members.includes($user.name)) {
+					$goto("/chats");
+				}
+			}
+		});
+
+		clm.link.on("direct", cmd => {
+			if (
+				cmd.val.mode === "update_chat" &&
+				cmd.val.payload._id === $chat._id
+			) {
+				chat.set(cmd.val.payload);
+			}
 		});
 	});
 
 	onDestroy(() => {
-		if (chatDataEvId)
-			onDestroy(() => {
-				clm.link.off(chatDataEvId);
-				clm.link.off(chatDeleteEvId);
-			});
-
-		if ($chatid === "livechat") {
+		if ($chat._id === "livechat") {
 			clm.link.send({
 				cmd: "direct",
 				val: {
 					cmd: "set_chat_state",
 					val: {
 						state: 0,
-						chatid: $chatid,
+						chatid: "livechat",
 					},
 				},
 			});
 		}
 
-		$chatid = "";
-		$chatName = "";
-		$chatMembers = [];
-		$chatOwner = "";
+		chat.set({
+			_id: "",
+			nickname: "",
+			owner: "",
+			members: [],
+			created: 0,
+			last_active: 0,
+			deleted: false,
+		});
 	});
 </script>
 
@@ -127,16 +143,25 @@
 	<div id="chat" class:active={!showMembers}>
 		<Container>
 			<h1 class="chat-name">
-				{$chatName}
+				{$chat.nickname}
 				<span class="chat-id">(<code>{$params.chatid}</code>)</span>
+				{#if $chat.deleted}
+					<br /><span class="chat-id" style="color: crimson;"
+						><b>This chat is currently deleted!</b></span
+					>
+				{/if}
 			</h1>
 			{#if $params.chatid !== "livechat"}
 				<div class="settings-controls">
+					{#if $user.permissions && $chat._id !== "livechat"}
+						<button
+							class="circle admin"
+							on:click={() => modals.showModal("moderateChat")}
+						/>
+					{/if}
 					<button
 						class="circle members"
-						on:click={() => {
-							showMembers = !showMembers;
-						}}
+						on:click={() => (showMembers = !showMembers)}
 					/>
 				</div>
 			{/if}
@@ -146,14 +171,15 @@
 				? null
 				: `posts/${$params.chatid}`}
 			postOrigin={$params.chatid}
-			chatName={$chatName}
-			canPost={true}
+			chatName={$chat.nickname}
+			canPost={$chat._id === "livechat" ||
+				$chat.members.includes($user.name)}
 		/>
 	</div>
-	{#if showMembers && $params.chatid !== "livechat"}
+	{#if showMembers && $chat._id !== "livechat"}
 		<div id="members">
 			<div id="members-inner">
-				{#each $chatMembers as chatmember}
+				{#each $chat.members as chatmember}
 					<button
 						class="member-button"
 						on:click={() => {
@@ -163,23 +189,29 @@
 					>
 						<Member
 							member={chatmember}
-							owner={chatmember === $chatOwner}
+							owner={chatmember === $chat.owner}
 						/>
 					</button>
 				{/each}
 			</div>
 			<div class="top">
 				<h2 class="members-title">
-					Members <span class="small">({$chatMembers.length})</span>
+					Members <span class="small">({$chat.members.length})</span>
 				</h2>
 				<div class="settings-controls">
-					<button
-						class="circle plus"
-						on:click={() => {
-							modals.showModal("addMemberMode");
-						}}
-					/>
-					{#if $mobile && $params.chatid !== "livechat"}
+					{#if $chat.members.includes($user.name)}
+						<button
+							class="circle plus"
+							on:click={() => {
+								if ($userRestricted || $userSuspended) {
+									modals.showModal("banned");
+								} else {
+									modals.showModal("addMemberMode");
+								}
+							}}
+						/>
+					{/if}
+					{#if $mobile && $chat._id !== "livechat"}
 						<button
 							class="circle join"
 							on:click={() => {

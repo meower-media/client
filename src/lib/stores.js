@@ -26,17 +26,23 @@ export const disconnectReason = writable("");
 // Last typed timestamp
 export const lastTyped = writable(0);
 
-// Current chat stuff
-export const chatid = writable("");
-export const chatName = writable("");
-export const chatMembers = writable([]);
-export const chatOwner = writable("");
+// Current chat
+export const chat = writable({
+	_id: "",
+	nickname: "",
+	owner: "",
+	members: [],
+	created: 0,
+	last_active: 0,
+	deleted: false,
+});
 
 // User list
 export const ulist = writable([]);
 
 // Mod panel
 export const userToMod = writable("");
+export const ipToMod = writable("");
 export const modPanelOpen = writable(false);
 
 // Last (blank) clicked
@@ -55,12 +61,15 @@ export const OOBEPage = writable(0);
 export const postInput = writable();
 
 // Current auth header
-export const authHeader = writable({});
+export const authHeader = writable({
+	username: null,
+	token: null,
+});
 
 // The current user profile
 export const user = writable({
 	name: null,
-	lvl: 0,
+	permissions: 0,
 	unread_inbox: false,
 	theme: "orange",
 	mode: !systemDarkMode(),
@@ -70,7 +79,14 @@ export const user = writable({
 	layout: "new",
 	pfp_data: 1,
 	quote: "",
+	ban: {
+		state: "None",
+		expires: 0,
+		reason: "",
+	},
 });
+export const userRestricted = writable(false);
+export const userSuspended = writable(false);
 
 // Spinner thing
 export const spinner = writable(false);

@@ -31,6 +31,7 @@
 					user.update(v =>
 						Object.assign(v, {
 							name: val.payload.username,
+							unread_inbox: true,
 							layout: "new",
 						})
 					);

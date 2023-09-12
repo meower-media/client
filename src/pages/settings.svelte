@@ -6,6 +6,7 @@
 	import * as clm from "../lib/clmanager.js";
 	import * as modals from "../lib/modals.js";
 	import * as BGM from "../lib/BGM.js";
+	import {permissions, hasPermission} from "../lib/adminPermissions.js";
 </script>
 
 <Container>
@@ -126,6 +127,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
+				disabled={hasPermission(permissions.DELETE_USERS)}
 				on:click={() => {
 					modals.showModal("deleteAccount");
 				}}

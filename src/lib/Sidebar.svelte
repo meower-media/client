@@ -98,7 +98,7 @@
 			draggable={false}
 		/>
 	</button>
-	{#if $user.lvl >= 1}
+	{#if $user.permissions}
 		<button
 			on:click={() => ($modPanelOpen = !$modPanelOpen)}
 			class="modpanel-btn round"

@@ -9,6 +9,8 @@ import {systemDarkMode} from "./responsiveness.js";
 export default function unloadedProfile() {
 	return {
 		name: null,
+		permissions: 0,
+		unread_inbox: false,
 		theme: "orange",
 		mode: !systemDarkMode(),
 		sfx: true,
@@ -17,5 +19,10 @@ export default function unloadedProfile() {
 		layout: "new",
 		pfp_data: 1,
 		quote: "",
+		ban: {
+			state: "None",
+			expires: 0,
+			reason: "",
+		},
 	};
 }

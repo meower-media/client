@@ -9,7 +9,8 @@
 
 	import LiText from "./LiText.svelte";
 
-	import {postClicked, user, chatid, ulist} from "../lib/stores.js";
+	import {postClicked, user, chat, ulist} from "../lib/stores.js";
+	import {permissions, hasPermission} from "../lib/adminPermissions.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as modals from "./modals.js";
@@ -99,7 +100,7 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
-			{#if buttons && $user.name && $chatid !== "livechat" && post.user !== "Server"}
+			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server"}
 				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
 					<button
 						class="circle join"
@@ -122,7 +123,7 @@
 					/>
 				{/if}
 				{#if canDoActions}
-					{#if $user.lvl >= 1 || post.user === $user.name}
+					{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(permissions.DELETE_POSTS)}
 						<button
 							class="circle trash"
 							on:click={() => {

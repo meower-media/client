@@ -39,18 +39,33 @@ user.subscribe(v => {
 		);
 });
 
+let _authHeader = null;
+authHeader.subscribe(v => {
+	_authHeader = v;
+	if (_authHeader.username && _authHeader.token) {
+		localStorage.setItem("meower_savedusername", _authHeader.username);
+		localStorage.setItem("meower_savedpassword", _authHeader.token);
+	}
+});
+
 /**
  * Listens to username and token updates that could happen by other tabs.
  */
 addEventListener("storage", event => {
+	console.log(event.key);
+	console.log(event.newValue);
 	if (event.key === "meower_savedusername") {
 		if (event.newValue !== _user.name) {
-			modals.showModal("loggedOut");
+			authHeader.set({
+				username: event.newValue,
+				..._authHeader,
+			});
+			link.disconnect(1000, "Intentional disconnect");
 		}
 	} else if (event.key === "meower_savedpassword") {
 		authHeader.set({
-			username: _user.name,
 			token: event.newValue,
+			..._authHeader,
 		});
 	}
 });
@@ -95,6 +110,11 @@ let ulistEvent = null;
  */
 let authEvent = null;
 /**
+ * A variable used to keep track of banned events.
+ * @type any
+ */
+let bannedEvent = null;
+/**
  * A variable used to keep track of new inbox messages.
  * @type any
  */
@@ -136,6 +156,10 @@ export async function connect() {
 	if (authEvent) {
 		link.off(authEvent);
 		authEvent = null;
+	}
+	if (bannedEvent) {
+		link.off(bannedEvent);
+		bannedEvent = null;
 	}
 	if (inboxMessageEvent) {
 		link.off(inboxMessageEvent);
@@ -281,6 +305,23 @@ export async function connect() {
 					"meower_savedpassword",
 					cmd.val.payload.token
 				);
+			}
+		});
+		bannedEvent = link.on("direct", async cmd => {
+			if (cmd.val.mode === "banned") {
+				_user.ban = cmd.val.payload;
+				user.set(_user);
+				if (
+					["PermRestriction", "PermSuspension", "PermBan"].includes(
+						_user.ban.state
+					) ||
+					(["TempRestriction", "TempSuspension", "TempBan"].includes(
+						_user.ban.state
+					) &&
+						_user.ban.expires > Math.floor(Date.now() / 1000))
+				) {
+					modals.showModal("banned");
+				}
 			}
 		});
 		inboxMessageEvent = link.on("direct", cmd => {

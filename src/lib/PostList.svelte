@@ -23,10 +23,10 @@
 	import {
 		authHeader,
 		user,
+		userSuspended,
 		spinner,
 		lastTyped,
-		chatid,
-		chatMembers,
+		chat,
 		postInput as postInput_2,
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
@@ -294,11 +294,14 @@
 			<textarea
 				type="text"
 				class="white"
-				placeholder="Write something..."
+				placeholder={$userSuspended
+					? "Your account is currently suspended."
+					: "Write something..."}
 				name="input"
 				autocomplete="false"
 				maxlength="500"
 				rows="1"
+				disabled={$userSuspended}
 				use:autoresize
 				on:input={() => {
 					if ($lastTyped + 1500 < +new Date()) {
@@ -327,18 +330,28 @@
 				}}
 				bind:this={postInput}
 			/>
-			<button
-				class="upload-image"
-				name="addImage"
-				title="Add an image"
-				on:click|preventDefault={() => {
-					postInput_2.set(postInput);
-					modals.showModal("addImg");
-				}}>+</button
-			>
-			<button bind:this={submitBtn} name="submit" disabled={!postInput}
-				>Post</button
-			>
+			{#if $userSuspended}
+				<button
+					on:click|preventDefault={() => {
+						modals.showModal("banned");
+					}}>View details</button
+				>
+			{:else}
+				<button
+					class="upload-image"
+					name="addImage"
+					title="Add an image"
+					on:click|preventDefault={() => {
+						postInput_2.set(postInput);
+						modals.showModal("addImg");
+					}}>+</button
+				>
+				<button
+					bind:this={submitBtn}
+					name="submit"
+					disabled={!postInput}>Post</button
+				>
+			{/if}
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
@@ -422,7 +435,7 @@
 							/>
 						</div>
 					{/if}
-					{#if addToChat && !$chatMembers.includes(post._id)}
+					{#if addToChat && !$chat.members.includes(post._id)}
 						<div class="settings-controls">
 							<button
 								class="circle add"
@@ -433,13 +446,12 @@
 										val: {
 											cmd: "add_to_chat",
 											val: {
-												chatid: $chatid,
+												chatid: $chat._id,
 												username: post._id,
 											},
 										},
 									});
-									$chatMembers.push(post._id);
-									chatMembers.set($chatMembers);
+									$chat.members.push(post._id);
 								}}
 							/>
 						</div>

@@ -8,24 +8,26 @@
 -->
 <script>
 	import {
-		chatName,
-		chatid,
-		chatMembers,
-		chatOwner,
+		authHeader,
+		userRestricted,
+		userSuspended,
+		chat as currentChat,
 	} from "../../lib/stores.js";
+	import {permissions, hasPermission} from "../../lib/adminPermissions.js";
 	import * as modals from "../../lib/modals.js";
+	import Modal from "../../lib/Modal.svelte";
 	import PagedList from "../../lib/PagedList.svelte";
 	import Container from "../../lib/Container.svelte";
 	import * as clm from "../../lib/clmanager.js";
+	import {apiUrl, encodeApiURLParams} from "../../lib/urls.js";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
 
-	import {goto} from "@roxi/routify";
-	import Modal from "../../lib/Modal.svelte";
+	import {params, goto} from "@roxi/routify";
+	import {onMount} from "svelte";
 
-	let items;
-	let toLeaveChat = false;
+	let items, toLeaveChat;
 
 	/**
 	 * Loads a page.
@@ -37,69 +39,80 @@
 	 */
 	async function loadPage(page) {
 		if (page !== undefined) {
-			let ev, result, numPages;
+			let result, numPages;
 
-			try {
-				ev = clm.link.on("direct", cmd => {
-					if (cmd.val.mode === "chats") {
-						result = cmd.val.payload.all_chats;
-						numPages = cmd.val.payload.pages;
-					}
-				});
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: "get_chat_list",
-						val: {
-							page: page,
-						},
-					},
-				});
-				if (!result || numPages === undefined)
-					throw "This message should not appear";
-				return {result, numPages};
-			} finally {
-				if (ev) clm.link.off(ev);
-			}
+			let path = `chats?page=${page}${
+				$params.user ? `&user=${$params.user}&include_deleted` : ""
+			}`;
+			if (encodeApiURLParams) path = encodeURIComponent(path);
+			const resp = await fetch(`${apiUrl}${path}`, {
+				headers: $authHeader,
+			});
+			const json = await resp.json();
+			result = json.all_chats;
+			numPages = json.pages;
+			return {result, numPages};
 		}
 		return {
 			numPages: 1,
 			result: [],
 		};
 	}
+
+	onMount(() => {
+		if ($params.user && !hasPermission(permissions.VIEW_CHATS)) {
+			$goto("/chats");
+		}
+	});
 </script>
 
 <div class="chats">
 	<Container>
-		<h1>Chats</h1>
-		Here are your chats. Press the chat button to enter a chat, and the plus
-		to create one.
-		<div class="settings-controls">
-			<button
-				class="circle plus"
-				on:click={() => {
-					modals.showModal("createChat");
-				}}
-			/>
-		</div>
+		{#if $params.user}
+			<h1>{$params.user}'s Chats</h1>
+			Here are {$params.user}'s chats.
+		{:else}
+			<h1>Chats</h1>
+			Here are your chats. Press the chat button to enter a chat, and the plus
+			to create one.
+			<div class="settings-controls">
+				<button
+					class="circle plus"
+					on:click={() => {
+						if ($userRestricted || $userSuspended) {
+							modals.showModal("banned");
+						} else {
+							modals.showModal("createChat");
+						}
+					}}
+				/>
+			</div>
+		{/if}
 	</Container>
-	<Container>
-		<div class="settings-controls">
-			<button
-				class="circle join"
-				on:click={() => {
-					chatName.set("Livechat");
-					chatid.set("livechat");
-					chatMembers.set([]);
-					chatOwner.set("");
-					$goto("/chats/livechat");
-				}}
-			/>
-		</div>
+	{#if !$params.user}
+		<Container>
+			<div class="settings-controls">
+				<button
+					class="circle join"
+					on:click={() => {
+						currentChat.set({
+							_id: "livechat",
+							nickname: "Livechat",
+							owner: "",
+							members: [],
+							created: 0,
+							last_active: 0,
+							deleted: false,
+						});
+						$goto("/chats/livechat");
+					}}
+				/>
+			</div>
 
-		<h1>Livechat</h1>
-		Post history isn't saved here.
-	</Container>
+			<h1>Livechat</h1>
+			Post history isn't saved here.
+		</Container>
+	{/if}
 	<PagedList bind:items {loadPage}>
 		<svelte:fragment slot="loaded" let:items>
 			{#each items as chat (chat._id)}
@@ -109,21 +122,16 @@
 				>
 					<Container>
 						<div class="settings-controls">
-							<button
-								class="circle close"
-								on:click={() => {
-									chatName.set(chat.nickname);
-									chatid.set(chat._id);
-									toLeaveChat = true;
-								}}
-							/>
+							{#if !$params.user}
+								<button
+									class="circle close"
+									on:click={() => (toLeaveChat = chat)}
+								/>
+							{/if}
 							<button
 								class="circle join"
 								on:click={() => {
-									chatName.set(chat.nickname);
-									chatid.set(chat._id);
-									chatMembers.set(chat.members);
-									chatOwner.set(chat.owner);
+									currentChat.set(chat);
 									$goto(`/chats/${chat._id}`);
 								}}
 							/>
@@ -133,6 +141,13 @@
 						Members: {chat.members.length > 100
 							? chat.members.slice(0, 99).join(", ") + "..."
 							: chat.members.join(", ")}
+
+						{#if chat.deleted}
+							<br /><br />
+							<span style="color: crimson;"
+								><b>This chat is currently deleted.</b></span
+							>
+						{/if}
 					</Container>
 				</div>
 			{/each}
@@ -143,32 +158,28 @@
 		</Container>
 	</PagedList>
 	{#if toLeaveChat}
-		<Modal
-			on:close={() => {
-				toLeaveChat = false;
-			}}
-		>
+		<Modal on:close={() => (toLeaveChat = null)}>
 			<h2 slot="header">Leave Chat</h2>
 			<div slot="default">
-				<span>Are you sure you want to leave {$chatName}?</span>
+				<span
+					>Are you sure you want to leave {toLeaveChat.nickname}?</span
+				>
 				<br /><br />
 				<div class="modal-buttons">
-					<button
-						on:click={() => {
-							toLeaveChat = false;
-						}}>No</button
-					>
+					<button on:click={() => (toLeaveChat = null)}>No</button>
 					<button
 						on:click={() => {
 							clm.meowerRequest({
 								cmd: "direct",
 								val: {
 									cmd: "leave_chat",
-									val: $chatid,
+									val: toLeaveChat._id,
 								},
 							}).then(() => {
-								items = items.filter(v => v._id !== $chatid);
-								toLeaveChat = false;
+								items = items.filter(
+									v => v._id !== toLeaveChat._id
+								);
+								toLeaveChat = null;
 							});
 						}}>Yes</button
 					>

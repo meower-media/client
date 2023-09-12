@@ -45,7 +45,6 @@
  * 	banned: boolean,
  * 	created: number,
  * 	lower_username: string,
- * 	lvl: number,
  * 	pfp_data: number,
  * 	quote: string,
  * 	type: number,

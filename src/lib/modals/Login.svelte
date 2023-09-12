@@ -65,7 +65,7 @@
 							loginStatus = "Invalid password!";
 							break;
 						case "E:018 | Account Banned":
-							modals.showModal("banned");
+							loginStatus = "Your account is currently banned.";
 							break;
 						case "E:019 | Illegal characters detected":
 							loginStatus =

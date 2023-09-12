@@ -1,27 +1,33 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {screen, setupPage} from "../stores.js";
-
+	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 
-	import * as modals from "../modals.js";
+	import {user, userToMod} from "../stores.js";
 
-	import {tick} from "svelte";
 	import {goto} from "@roxi/routify";
 
-	let deleteStatus, password, submitButton;
+	let deleteStatus, username, password, submitButton;
 
-	function deleteAccount() {
+	async function deleteAccount() {
+		if (
+			($userToMod && username !== $userToMod) ||
+			(!$userToMod && username !== $user.name)
+		) {
+			deleteStatus = "Invalid username!";
+			return;
+		}
+
 		submitButton.disabled = true;
 
 		clm.meowerRequest({
 			cmd: "direct",
-			val: {cmd: "del_account", val: password},
+			val: {cmd: "del_account", val: $userToMod ? username : password},
 		})
-			.then(async () => {
+			.then(() => {
 				modals.closeModal();
-				$goto("/logout");
+				if (!$userToMod) $goto("/logout");
 			})
 			.catch(code => {
 				submitButton.disabled = false;
@@ -42,39 +48,71 @@
 
 <Modal
 	on:close={() => {
-		modals.closeModal();
+		if ($userToMod) {
+			modals.showModal("moderateUser");
+		} else {
+			modals.closeModal();
+		}
 	}}
 >
-	<h2 slot="header">Delete Account</h2>
+	<h2 slot="header">Delete{$userToMod ? ` ${$userToMod}'s ` : " "}Account</h2>
 	<div slot="default">
-		<span style="color: red;"
-			>Deleting your account will erase all data from our database, this
-			action is irreversible! Are you absolutely sure you would like to
-			permanently delete your account?</span
-		><br /><br />
+		{#if $userToMod}
+			<span style="color: red;">
+				Deleting {$userToMod}'s account will erase all of their data
+				from the database, this action is irreversible! Are you
+				absolutely sure you would like to permanently delete their
+				account?
+				<br /><br />
+				Type their username to confirm this action.
+			</span>
+		{:else}
+			<span style="color: red;"
+				>Deleting your account will erase all of your data from our
+				database, this action is irreversible! Are you absolutely sure
+				you would like to permanently delete your account?
+				<br /><br />
+				Type your username and password to confirm this action.
+			</span>
+		{/if}
+		<br /><br />
 		{#if deleteStatus}
 			<label for="password-input" style="color: red;"
 				>{deleteStatus}</label
 			>
 		{/if}
 		<input
-			id="password-input"
-			type="password"
+			id="username-input"
+			type="text"
 			class="modal-input white"
-			placeholder="Password"
+			placeholder="Username"
 			maxlength="255"
-			bind:value={password}
+			bind:value={username}
 		/><br /><br />
+		{#if !$userToMod}
+			<input
+				id="password-input"
+				type="password"
+				class="modal-input white"
+				placeholder="Password"
+				maxlength="255"
+				bind:value={password}
+			/><br /><br />
+		{/if}
 		<div class="modal-buttons">
 			<button
 				type="button"
 				on:click={() => {
-					modals.closeModal();
+					if ($userToMod) {
+						modals.showModal("moderateUser");
+					} else {
+						modals.closeModal();
+					}
 				}}>Cancel</button
 			>
 			<button
 				type="submit"
-				disabled={!password}
+				disabled={!username || (!$userToMod && !password)}
 				bind:this={submitButton}
 				on:click={() => {
 					deleteAccount();

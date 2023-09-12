@@ -1,12 +1,7 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {
-		profileClicked_GC,
-		chatName,
-		chatid,
-		chatMembers,
-	} from "../stores.js";
+	import {profileClicked_GC, chat} from "../stores.js";
 
 	import * as modals from "../modals.js";
 
@@ -25,7 +20,7 @@
 	<h2 slot="header">Remove Member</h2>
 	<div slot="default">
 		<span
-			>Are you sure you want to remove {$profileClicked_GC} from {$chatName}?</span
+			>Are you sure you want to remove {$profileClicked_GC} from {$chat.nickname}?</span
 		>
 		<br /><br />
 		<div class="modal-buttons">
@@ -41,12 +36,12 @@
 						val: {
 							cmd: "remove_from_chat",
 							val: {
-								chatid: $chatid,
+								chatid: $chat._id,
 								username: $profileClicked_GC,
 							},
 						},
 					});
-					chatMembers.set($chatMembers.filter(filter1));
+					$chat.members = $chat.members.filter(filter1);
 					modals.closeModal();
 				}}>Remove</button
 			>

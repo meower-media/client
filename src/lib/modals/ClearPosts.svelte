@@ -1,24 +1,25 @@
 <script>
 	import Modal from "../Modal.svelte";
+	import {userToMod} from "../stores.js";
 	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 	import sleep from "../sleep";
 
-	let status;
+	let status = "";
 </script>
 
 <Modal on:close={() => modals.showModal("moderateUser")}>
-	<h2 slot="header">Enable Repair Mode</h2>
+	<h2 slot="header">Delete {$userToMod}'s Posts</h2>
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async () => {
-				status = "Enabling repair mode...";
+				status = "Deleting posts...";
 				try {
 					await clm.meowerRequest({
 						cmd: "direct",
 						val: {
-							cmd: "repair_mode",
-							val: "",
+							cmd: "clear_user_posts",
+							val: $userToMod,
 						},
 					});
 					modals.closeModal();
@@ -28,10 +29,7 @@
 				}
 			}}
 		>
-			<p>
-				Are you sure? This will disconnect everyone and prevent anyone
-				from being able to reconnect!
-			</p>
+			<p>Are you sure? This action is irreversible!</p>
 			{#if status}<b>{status}</b><br /><br />{/if}
 			<div class="modal-buttons">
 				<button
@@ -40,9 +38,9 @@
 					>Cancel</button
 				>
 				{#await sleep(1500)}
-					<button disabled type="submit">Confirm</button>
+					<button disabled type="submit">Delete Posts</button>
 				{:then}
-					<button type="submit">Confirm</button>
+					<button type="submit">Delete Posts</button>
 				{/await}
 			</div>
 		</form>

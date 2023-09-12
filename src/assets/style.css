@@ -77,6 +77,7 @@ button,
 input[type="text"],
 input[type="search"],
 input[type="password"],
+input[type="datetime-local"],
 textarea,
 select {
 	border: solid 2px var(--foreground-orange);
@@ -277,6 +278,11 @@ button.report {
 
 button.join {
 	background-image: url("./chat_join.svg");
+	background-size: 50%;
+}
+
+button.admin {
+	background-image: url("./shield.svg");
 	background-size: 50%;
 }
 
