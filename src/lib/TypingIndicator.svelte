@@ -3,7 +3,7 @@
 -->
 <script>
 	import Container from "../lib/Container.svelte";
-	import {user} from "../lib/stores.js";
+	import {relationships, user} from "../lib/stores.js";
 	import {typing} from "../lib/typingIndicator.js";
 
 	export let forPage = "home";
@@ -13,6 +13,9 @@
 		_typing = val[forPage];
 		if (_typing === undefined) _typing = [];
 		_typing = _typing.filter(selectedUser => selectedUser !== $user.name);
+		if ($user.hide_blocked_users) {
+			_typing = _typing.filter(selectedUser => $relationships[selectedUser] !== 2);
+		}
 	});
 </script>
 

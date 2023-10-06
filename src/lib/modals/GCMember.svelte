@@ -1,65 +1,50 @@
 <script>
 	import Modal from "../Modal.svelte";
+	import ProfileView from "../ProfileView.svelte";
 
-	import * as clm from "../clmanager.js";
-	// @ts-ignore
-	import {shiftHeld} from "../keyDetect.js";
+	import RemoveMemberModal from "./RemoveMember.svelte";
+	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
 
 	import {profileClicked_GC, user, chat} from "../stores.js";
-
+	import {permissions, hasPermission} from "../adminPermissions.js";
 	import * as modals from "../modals.js";
-
-	import ProfileView from "../ProfileView.svelte";
 
 	import {goto} from "@roxi/routify";
 
-	function filter1(v) {
-		return v !== $profileClicked_GC;
+	$: {
+		if (!$chat.members.includes($profileClicked_GC)) modals.closeLastModal();
 	}
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">{$profileClicked_GC}'s Profile</h2>
 	<div slot="default">
-		<ProfileView username={$profileClicked_GC} />
+		<ProfileView username={$profileClicked_GC} canClick={true} canDoActions={true} />
 		<button
 			class="long"
 			on:click={() => {
-				modals.closeModal();
+				modals.closeLastModal();
 				$goto(`/users/${$profileClicked_GC}`);
 			}}>View full profile</button
 		>
-		{#if $chat.owner == $user.name && $profileClicked_GC != $user.name}
+		{#if ($chat.owner == $user.name && $profileClicked_GC != $user.name) || hasPermission(permissions.EDIT_CHATS)}
 			<button
 				class="long"
-				on:click={() => {
-					if (shiftHeld) {
-						clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "remove_from_chat",
-								val: {
-									chatid: $chat._id,
-									username: $profileClicked_GC,
-								},
-							},
-						});
-						$chat.members = $chat.members.filter(filter1);
-						modals.closeModal();
-					} else {
-						modals.showModal("removeMember");
-					}
-				}}>Remove from chat</button
+				on:click={() => modals.showModal(RemoveMemberModal)}
 			>
+				Remove from chat
+			</button>
+			<button
+				class="long"
+				on:click={() => modals.showModal(TransferChatOwnershipModal)}
+			>
+				Make owner of chat
+			</button>
 		{/if}
 		<button
 			class="long"
 			on:click={() => {
-				modals.closeModal();
+				modals.closeLastModal();
 			}}>Close</button
 		>
 	</div>

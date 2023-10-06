@@ -1,13 +1,15 @@
 <script>
-	import Modal from "../Modal.svelte";
-	import * as modals from "../modals.js";
-	import * as clm from "../clmanager.js";
-	import sleep from "../sleep";
+	import Modal from "../../Modal.svelte";
+
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
+	
+	import sleep from "../../sleep";
 
 	let status;
 </script>
 
-<Modal on:close={() => modals.showModal("moderateUser")}>
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Enable Repair Mode</h2>
 	<div slot="default">
 		<form
@@ -21,7 +23,7 @@
 							val: "",
 						},
 					});
-					modals.closeModal();
+					modals.closeLastModal();
 				} catch (e) {
 					console.error(e);
 					status = "Error: " + e;
@@ -36,7 +38,7 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click={() => modals.showModal("moderateUser")}
+					on:click={modals.closeLastModal}
 					>Cancel</button
 				>
 				{#await sleep(1500)}

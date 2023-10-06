@@ -8,11 +8,7 @@
 	import Container from "../Container.svelte";
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Results</h2>
 	<div slot="default">
 		<div class="search-results">

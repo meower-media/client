@@ -58,11 +58,7 @@
 	}
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<PagedList bind:items {loadPage}>
@@ -87,7 +83,7 @@
 												},
 											},
 										});
-										modals.closeModal();
+										modals.closeLastModal();
 									}}
 								/>
 							</div>

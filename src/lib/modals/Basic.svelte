@@ -2,26 +2,22 @@
 	import Modal from "../Modal.svelte";
 
 	import * as modals from "../modals.js";
-	import {basicModalTitle, basicModalDesc} from "../stores.js";
+
+	export let modalData;
+
+	let { title, desc } = modalData;
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
-	<h2 slot="header">{$basicModalTitle}</h2>
+<Modal on:close={modals.closeLastModal}>
+	<h2 slot="header">{title}</h2>
 	<div slot="default">
-		<p>{$basicModalDesc}</p>
+		<p>{desc}</p>
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Close</button
 			>
 		</div>
 	</div>
 </Modal>
-
-<style>
-</style>

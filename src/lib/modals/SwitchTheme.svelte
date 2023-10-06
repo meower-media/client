@@ -61,11 +61,7 @@
 	}
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Select a Theme</h2>
 	<div slot="default">
 		<div class="theme-select">
@@ -101,7 +97,7 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Close</button
 			>
 			<button
@@ -112,7 +108,7 @@
 					user.set(_user);
 
 					clm.updateProfile();
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>OK</button
 			>
 		</div>

@@ -11,9 +11,7 @@
 		<br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					$goto("/logout");
-				}}>Logout</button
+				on:click={$goto("/logout")}>Logout</button
 			>
 		</div>
 	</div>

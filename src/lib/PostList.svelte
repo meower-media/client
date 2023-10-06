@@ -20,7 +20,12 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
+	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
+	import BlockUserModal from "./modals/BlockUser.svelte";
+	import AddImageModal from "./modals/AddImage.svelte";
+
 	import {
+		relationships,
 		authHeader,
 		user,
 		userSuspended,
@@ -28,6 +33,7 @@
 		lastTyped,
 		chat,
 		postInput as postInput_2,
+		profileClicked,
 	} from "./stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
@@ -49,18 +55,27 @@
 	export let canPost = true;
 	export let queryParams = {};
 	export let addToChat = false;
+	export let instantDelete = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
-	import {onDestroy, onMount} from "svelte";
+	import {onMount, onDestroy} from "svelte";
 
 	let id = 0;
 	let postErrors = "";
 
-	let postInput, submitBtn;
+	let postInput, submitBtn, dmWith;
+
+	$: {
+		if ($chat.type === 1) {
+			dmWith = $chat.members.filter(username => username !== $user.name)[0];
+		} else {
+			dmWith = null;
+		}
+	}
 
 	// PagedList stuff
 	let list;
@@ -141,13 +156,15 @@
 			}
 			return {
 				id: id++,
-				_id: post._id,
-				post_id: post.post_id,
+				post_id: post._id,
+				post_origin: post.post_origin,
 				user: post.u,
 				content: post.p,
 				date: post.t.e,
-				post_origin: post.post_origin,
+				edited_at: post.edited_at,
 				isDeleted: post.isDeleted,
+				mod_deleted: post.mod_deleted,
+				deleted_at: post.deleted_at,
 			};
 		});
 		const numPages = json["pages"];
@@ -158,16 +175,6 @@
 			numPages,
 			result,
 		};
-	}
-
-	function post(url = "", data = {}) {
-		fetch(url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
 	}
 
 	let destroy = () => {};
@@ -181,19 +188,40 @@
 			if (!cmd.val) return;
 
 			const isGC = postOrigin !== "home";
-			if (cmd.val.mode == "delete") {
+			if (cmd.val.mode === "delete") {
 				items = items.filter(post => post.post_id !== cmd.val.id);
 			} // This needs to be here to even function - Bloctans
+			if (cmd.val.mode === "update_post") {
+				let itemIndex = items.findIndex(post => post.post_id === cmd.val.payload._id);
+				if (itemIndex !== -1) {
+					let post = cmd.val.payload;
+					items[itemIndex] = {
+						id: items[itemIndex].id,
+						post_id: post._id,
+						post_origin: post.post_origin,
+						user: post.u,
+						content: post.p,
+						date: post.t.e,
+						edited_at: post.edited_at,
+						isDeleted: post.isDeleted,
+						mod_deleted: post.mod_deleted,
+						deleted_at: post.deleted_at,
+					}
+				}
+			}
 			if (!isGC || cmd.val.state === 2) {
 				if (cmd.val.post_origin !== postOrigin) return;
 				list.addItem({
 					id: id++,
 					post_id: cmd.val._id,
+					post_origin: cmd.val.post_origin,
 					user: cmd.val.u,
 					content: cmd.val.p,
 					date: cmd.val.t.e,
-					post_origin: cmd.val.post_origin,
+					edited_at: cmd.val.edited_at,
 					isDeleted: cmd.val.isDeleted,
+					mod_deleted: cmd.val.mod_deleted,
+					deleted_at: cmd.val.deleted_at,
 				});
 				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
 			}
@@ -201,10 +229,10 @@
 				list.addItem({
 					id: id++,
 					post_id: "",
+					post_origin: postOrigin || fetchUrl,
 					user: "Server",
 					content: `${cmd.val.u} left ${chatName}.`,
 					date: Date.now() / 1000,
-					post_origin: postOrigin || fetchUrl,
 					isDeleted: false,
 				});
 				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
@@ -213,10 +241,10 @@
 				list.addItem({
 					id: id++,
 					post_id: "",
-					user: "Server",
-					content: `${cmd.val.u} joined ${chatName}!`,
-					date: Date.now() / 1000,
 					post_origin: postOrigin || fetchUrl,
+					user: "Server",
+					content: `${cmd.val.u} joined ${chatName}.`,
+					date: Date.now() / 1000,
 					isDeleted: false,
 				});
 				if ($user.sfx) playNotification();
@@ -256,6 +284,63 @@
 					return false;
 				}
 
+				// substitute command
+				if (content.match(/s\/.+\//gs)) {
+					let toReplace = content.split("/")[1];
+					let replaceWith = content.replace(`s/${toReplace}/`, "");
+
+					let post = items.find(_post => _post.user === $user.name);
+					if (post) {
+						setTimeout(async () => {
+							let newContent = post.content.replace(toReplace, replaceWith);
+							if (newContent.trim() === "") {
+								try {
+									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
+										method: "DELETE",
+										headers: $authHeader,
+									});
+									if (!resp.ok) {
+										if (resp.status === 429) {
+											throw new Error("Too many requests! Try again later.");
+										}
+										throw new Error(
+											"Response code is not OK; code is " + resp.status
+										);
+									}
+								} catch (e) {
+									postErrors = `Error while deleting post: ${e}`;
+								}
+							} else if (newContent !== post.content) {
+								try {
+									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
+										method: "PATCH",
+										headers: {
+											"Content-Type": "application/json",
+											...$authHeader,
+										},
+										body: JSON.stringify({content: newContent}),
+									});
+									if (!resp.ok) {
+										if (resp.status === 429) {
+											throw new Error("Too many requests! Try again later.");
+										}
+										throw new Error(
+											"Response code is not OK; code is " + resp.status
+										);
+									}
+								} catch (e) {
+									postErrors = `Error while editing post: ${e}`;
+								}
+							}
+						}, 0);
+					}
+
+					input.value = "";
+					input.rows = "1";
+					input.style.height = "45px";
+					return;
+				}
+
 				spinner.set(true);
 
 				submitBtn.disabled = true;
@@ -272,7 +357,7 @@
 								  },
 					},
 				})
-					.then(data => {
+					.then(() => {
 						input.value = "";
 						input.rows = "1";
 						input.style.height = "45px";
@@ -283,6 +368,9 @@
 						switch (code) {
 							case "E:106 | Too many requests":
 								postErrors = "You're posting too fast!";
+								break;
+							case "I:017 | Missing permissions":
+								postErrors = "Someone’s privacy settings are preventing you from sending messages here.";
 								break;
 							default:
 								postErrors = "Unexpected " + code + " error!";
@@ -296,14 +384,17 @@
 				class="white"
 				placeholder={$userSuspended
 					? "Your account is currently suspended."
+					: $relationships[dmWith] === 2
+					? `You have blocked ${dmWith}.`
 					: "Write something..."}
 				name="input"
 				autocomplete="false"
 				maxlength="500"
 				rows="1"
-				disabled={$userSuspended}
+				disabled={$userSuspended || $relationships[dmWith] === 2}
 				use:autoresize
 				on:input={() => {
+					postErrors = "";
 					if ($lastTyped + 1500 < +new Date()) {
 						lastTyped.set(+new Date());
 						clm.link.send({
@@ -333,8 +424,15 @@
 			{#if $userSuspended}
 				<button
 					on:click|preventDefault={() => {
-						modals.showModal("banned");
+						modals.showModal(AccountBannedModal);
 					}}>View details</button
+				>
+			{:else if $relationships[dmWith] === 2}
+				<button
+					on:click|preventDefault={() => {
+						$profileClicked = dmWith;
+						modals.showModal(BlockUserModal);
+					}}>Unblock</button
 				>
 			{:else}
 				<button
@@ -343,7 +441,7 @@
 					title="Add an image"
 					on:click|preventDefault={() => {
 						postInput_2.set(postInput);
-						modals.showModal("addImg");
+						modals.showModal(AddImageModal);
 					}}>+</button
 				>
 				<button
@@ -367,80 +465,28 @@
 					animate:flip={{duration: 250}}
 				>
 					{#if "lower_username" in post}
-						<ProfileView
-							canClick={true}
-							small={true}
-							profile={post}
-						/>
-					{:else}
-						<Post
-							canDoActions={fetchUrl !== "reports"}
-							{post}
-							input={postInput}
-						/>
-					{/if}
-					{#if fetchUrl === "reports"}
-						<div class="settings-controls">
-							{#if !post.lower_username}
-								<button
-									disabled={post.deleted}
-									class="circle trash"
-									title="Delete post"
-									on:click={async () => {
-										try {
-											await clm.meowerRequest({
-												cmd: "direct",
-												val: {
-													cmd: "delete_post",
-													val: post.post_id,
-												},
-											});
-											if (post.post_origin === "inbox") {
-												await clm.meowerRequest({
-													cmd: "direct",
-													val: {
-														cmd: "close_report",
-														val: post._id,
-													},
-												});
-											}
-											items = items.filter(
-												p => p._id !== post._id
-											);
-										} catch (e) {
-											console.error(e);
-										}
-									}}
-								/>
-							{/if}
-							<button
-								class="circle close"
-								title="Close report"
-								on:click={async () => {
-									try {
-										await clm.meowerRequest({
-											cmd: "direct",
-											val: {
-												cmd: "close_report",
-												val: post._id,
-											},
-										});
-										items = items.filter(
-											p => p._id !== post._id
-										);
-									} catch (e) {
-										console.error(e);
-									}
-								}}
+						{#if !$user.hide_blocked_users || $relationships[post._id] !== 2}
+							<ProfileView
+								canClick={true}
+								small={true}
+								profile={post}
 							/>
-						</div>
+						{/if}
+					{:else}
+						{#if !$user.hide_blocked_users || $relationships[post.user] !== 2}
+							<Post
+								{post}
+								{instantDelete}
+								input={postInput}
+							/>
+						{/if}
 					{/if}
 					{#if addToChat && !$chat.members.includes(post._id)}
 						<div class="settings-controls">
 							<button
 								class="circle add"
 								title="Add to chat"
-								on:click={async () => {
+								on:click={() => {
 									clm.meowerRequest({
 										cmd: "direct",
 										val: {
@@ -470,7 +516,7 @@
 				{""}
 			{:else}
 				<Container>
-					{#if $user.name}
+					{#if $user.name && canPost}
 						No posts here. Check back later or be the first to post!
 					{:else}
 						No posts here. Check back later!
@@ -483,6 +529,8 @@
 
 <style>
 	.createpost {
+		position: sticky;
+		top: 0;
 		display: flex;
 		margin-bottom: 0.5em;
 		gap: 0.25em;

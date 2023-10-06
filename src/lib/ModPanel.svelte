@@ -1,123 +1,330 @@
 <script>
-	import PostList from "./PostList.svelte";
+	import Modal from "./Modal.svelte";
+	import Loading from "./Loading.svelte";
+	import Container from "./Container.svelte";
+	import PagedList from "./PagedList.svelte";
+	import Report from "./Report.svelte";
+
+	import ModerateUserModal from "./modals/moderation/ModerateUser.svelte";
+	import ModerateIPModal from "./modals/moderation/ModerateIP.svelte";
+	import KickAllUsersModal from "./modals/moderation/KickAllUsers.svelte";
+	import RestartServerModal from "./modals/moderation/RestartServer.svelte";
+	import EnableRepairModeModal from "./modals/moderation/EnableRepairMode.svelte";
+
 	import {
+		authHeader,
 		userToMod,
 		ipToMod,
-		modPanelOpen,
 		announcementToSend,
 	} from "./stores.js";
 	import * as modals from "./modals.js";
 	import {
 		permissions,
 		hasPermission,
-		hasAnyPermission,
 	} from "./adminPermissions.js";
+	import {apiUrl} from "./urls.js";
+	import sleep from "./sleep";
+
+	import {createEventDispatcher, tick} from "svelte";
+	
+	const dispatch = createEventDispatcher();
 
 	let announceMsg = "";
 
-	let items = [];
+	let serverStatus = {}
+	let registrationToggleStatus = "";
+
+	let confirmAnnouncement = false;
+	let sendingAnnouncement = false;
+	let announcementError = "";
+
+	let confirmKickAll = false;
+	let kickAllError = "";
+
+	let confirmRepairMode = false;
+	let repairModeError = "";
+
+	let reportAdminNotes = "";
+
+	let reportFilterStatus = "pending";
+	let reportFilterType = null;
+	let reloadingReports = false;
+
+	let reports = [];
+
+	let firstLoad = true;
+
+	async function getServerStatus() {
+		const resp = await fetch(`${apiUrl}status`);
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
+		}
+		serverStatus = await resp.json();
+	}
+
+	async function toggleRegistration() {
+		if (serverStatus.registrationEnabled) {
+			registrationToggleStatus = "Disabling registration...";
+		} else {
+			registrationToggleStatus = "Enabling registration...";
+		}
+
+		try {
+			const resp = await fetch(`${apiUrl}admin/server/registration/${serverStatus.registrationEnabled ? "disable" : "enable"}`, {
+				method: "POST",
+				headers: $authHeader,
+			});
+			if (!resp.ok) {
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
+			registrationToggleStatus = `Successfully ${serverStatus.registrationEnabled ? "disabled" : "enabled"} registration!`;
+			serverStatus.registrationEnabled = !serverStatus.registrationEnabled;
+		} catch (e) {
+			console.error(e);
+			registrationToggleStatus = `Failed ${serverStatus.registrationEnabled ? "disabling" : "enabling"} registration: ${e}`;
+		}
+	}
+
+	async function reloadReports() {
+		reloadingReports = true;
+		reports = [];
+		await tick();
+		reloadingReports = false;
+	}
+
+	async function loadReportsPage(page = 1) {
+		const resp = await fetch(`${apiUrl}admin/reports?autoget=1&page=${page}${reportFilterStatus ? `&status=${reportFilterStatus}` : ''}${reportFilterType ? `&type=${reportFilterType}` : ''}`, {
+			headers: $authHeader,
+		});
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
+		}
+		const json = await resp.json();
+		const numPages = json["pages"];
+		const result = json["autoget"];
+
+		if (firstLoad) dispatch("loaded");
+		firstLoad = true;
+
+		return {
+			numPages,
+			result,
+		};
+	}
 </script>
 
-<div class="ModPanel">
-	<p>
-		NOTE: Performing an action on a user/post closes that user/post's
-		report, if there's one.
-	</p>
-	<h2>Moderate User</h2>
-	<form
-		on:submit|preventDefault={async e => {
-			/** @type {HTMLFormElement} */
-			// @ts-ignore
-			const f = e.target;
-			// @ts-ignore
-			$userToMod = f.elements[0].value;
-			modals.showModal("moderateUser");
-		}}
-	>
-		<div class="input-row">
-			<input class="grow white" type="text" placeholder="Username..." />
-			<button class="static">Submit</button>
-		</div>
-	</form>
-	{#if hasPermission(permissions.VIEW_IPS)}
-		<h2>Moderate IP</h2>
+<Modal on:close={modals.closeLastModal}>
+	<div slot="header">
+		<h1>Moderation Panel</h1>
+	</div>
+	<div slot="default">
+		<h2>Moderate User</h2>
 		<form
 			on:submit|preventDefault={async e => {
 				/** @type {HTMLFormElement} */
 				// @ts-ignore
 				const f = e.target;
 				// @ts-ignore
-				$ipToMod = f.elements[0].value;
-				modals.showModal("moderateIP");
+				$userToMod = f.elements[0].value;
+				modals.showModal(ModerateUserModal);
 			}}
 		>
 			<div class="input-row">
-				<input
-					class="grow white"
-					type="text"
-					placeholder="IP address..."
-				/>
+				<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
 				<button class="static">Submit</button>
 			</div>
 		</form>
-	{/if}
-	{#if hasPermission(permissions.SEND_ANNOUNCEMENTS)}
-		<h2>Send Announcement</h2>
-		<form
-			on:submit|preventDefault={async e => {
-				/** @type {HTMLFormElement} */
-				// @ts-ignore
-				const f = e.target;
-				// @ts-ignore
-				const text = f.elements[0].value;
-
-				if (!text) {
-					announceMsg = "You need to enter some text!";
-					return;
-				}
-				announceMsg = "";
-				$announcementToSend = text;
-				modals.showModal("announce");
-			}}
-		>
-			<textarea
-				class="announce-textarea white"
-				placeholder="Announcement text here..."
-			/>
-			<div class="announce-buttons">
-				<button class="align-right">Send</button>
-				{#if announceMsg}
-					<div class="msg">{announceMsg}</div>
+		{#if hasPermission(permissions.VIEW_IPS)}
+			<h2>Moderate IP</h2>
+			<form
+				on:submit|preventDefault={async e => {
+					/** @type {HTMLFormElement} */
+					// @ts-ignore
+					const f = e.target;
+					// @ts-ignore
+					$ipToMod = f.elements[0].value;
+					modals.showModal(ModerateIPModal);
+				}}
+			>
+				<div class="input-row">
+					<input
+						class="grow white"
+						type="text"
+						placeholder="IP address..."
+						value={$ipToMod}
+					/>
+					<button class="static">Submit</button>
+				</div>
+			</form>
+		{/if}
+		{#if hasPermission(permissions.CREATE_ANNOUNCEMENTS)}
+			<h2>Send Announcement</h2>
+			<form
+				on:submit|preventDefault={() => confirmAnnouncement = true}
+			>
+				<textarea
+					class="announce-textarea white"
+					placeholder="Announcement text here..."
+					bind:value={announceMsg}
+				/>
+				<div class="announce-buttons">
+					<button class="align-right" disabled={!announceMsg}>Send</button>
+				</div>
+			</form>
+		{/if}
+		{#if hasPermission(permissions.SYSADMIN)}
+			<h2>Manage Server</h2>
+			{#await getServerStatus()}
+				<Loading />
+			{:then}
+				{#if !serverStatus.registrationEnabled}
+					<Container warning={true}>
+						Registration is currently disabled! New users will be blocked from joining Meower until registration is re-enabled.
+					</Container>
 				{/if}
-			</div>
-		</form>
-	{/if}
-	{#if hasPermission(permissions.SYSADMIN)}
-		<h2>Manage Server</h2>
-		<button
-			style="margin-right: 0.25em; margin-bottom: 0.25em;"
-			on:click={() => modals.showModal("kickAllUsers")}
-			>Kick all users</button
-		>
-		<button on:click={() => modals.showModal("enableRepairMode")}
-			>Enable repair mode</button
-		>
-	{/if}
-	{#if hasAnyPermission( [permissions.DELETE_POSTS, permissions.CLEAR_USER_QUOTES, permissions.SEND_ALERTS, permissions.EDIT_BAN_STATE] )}
-		<h2>Reports</h2>
-		<PostList bind:items fetchUrl="reports" postOrigin="" canPost={false}>
-			<div slot="error" let:error>
-				Error loading the report queue. Please close and reopen it.
-				<pre><code>{error}</code></pre>
-			</div>
-			<div slot="empty">Yay, the report queue is empty!</div>
-		</PostList>
-	{/if}
+				<button
+					style="margin-right: 0.25em; margin-bottom: 0.25em;"
+					on:click={() => modals.showModal(KickAllUsersModal)}
+					>Kick all users</button
+				>
+				<button
+					style="margin-right: 0.25em; margin-bottom: 0.25em;"
+					on:click={() => modals.showModal(RestartServerModal)}
+					>Restart server</button
+				>
+				<button style="margin-right: 0.25em; margin-bottom: 0.25em;" on:click={() => modals.showModal(EnableRepairModeModal)}
+					>Enable repair mode</button
+				>
+				{#if serverStatus.registrationEnabled}
+					<button on:click={toggleRegistration}
+						>Disable registration</button
+					>
+				{:else}
+					<button on:click={toggleRegistration}
+						>Enable registration</button
+					>
+				{/if}
+				{#if registrationToggleStatus}
+					<br />
+					<b>{registrationToggleStatus}</b>
+				{/if}
+			{/await}
+		{/if}
+		{#if hasPermission(permissions.VIEW_REPORTS)}
+			<h2>Reports</h2>
+			<label for="report-status"><b>Status</b></label><br />
+			<select
+				id="state"
+				class="grow"
+				style="width: 100%; margin-bottom: 0.25em;"
+				bind:value={reportFilterStatus}
+				on:change={reloadReports}
+			>
+				<option value={null} selected={!reportFilterStatus}>
+					All
+				</option>
+				<option value="pending" selected={reportFilterStatus === "pending"}>
+					Pending
+				</option>
+				<option value="escalated" selected={reportFilterStatus === "escalated"}>
+					Escalated
+				</option>
+				<option value="no_action_taken" selected={reportFilterStatus === "no_action_taken"}>
+					Completed with no action taken
+				</option>
+				<option value="action_taken" selected={reportFilterStatus === "action_taken"}>
+					Completed with action taken
+				</option>
+			</select><br />
+			<label for="report-type"><b>Type</b></label><br />
+			<select
+				id="state"
+				class="grow"
+				style="width: 100%; margin-bottom: 0.25em;"
+				bind:value={reportFilterType}
+				on:change={reloadReports}
+			>
+				<option value={null} selected={!reportFilterType}>
+					All
+				</option>
+				<option value="post" selected={reportFilterType === "post"}>
+					Post
+				</option>
+				<option value="user" selected={reportFilterType === "user"}>
+					User
+				</option>
+			</select><br />
+			{#if !reloadingReports}
+				<PagedList maxItems={50} bind:items={reports} loadPage={loadReportsPage}>
+					<svelte:fragment slot="loaded" let:items={_reports}>
+						{#each _reports as report}
+							<Report report={report} />
+						{/each}
+					</svelte:fragment>
+					<slot nam="error" slot="error" let:error {error}>
+						Error loading reports. Please try again.
+						<pre><code>{error}</code></pre>
+					</slot>
+					<slot name="empty" slot="empty">
+						Yay, there are no pending reports!
+					</slot>
+				</PagedList>
+			{/if}
+		{/if}
 
-	<br />
+		<br />
 
-	<button on:click={() => modPanelOpen.set(false)}>Close</button>
-</div>
+		<button on:click={modals.closeLastModal}>Close</button>
+	</div>
+</Modal>
+
+
+<!-- modals -->
+{#if confirmAnnouncement}
+	<Modal on:close={() => confirmAnnouncement = false}>
+		<h2 slot="header" style="margin-top: 0;">Send Announcement</h2>
+		<div slot="default">
+			<p>Are you sure? This will send a message to EVERYONE's inbox!</p>
+			{#if announcementError}
+				<p style="color: crimson;">{announcementError}</p>
+			{:else}
+				<br />
+			{/if}
+			<div class="modal-buttons">
+				<button disabled={sendingAnnouncement} on:click={() => confirmAnnouncement = false}>Cancel</button>
+				{#await sleep(1500)}
+					<button disabled>Confirm</button>
+				{:then}
+					<button disabled={sendingAnnouncement} on:click={async () => {
+						sendingAnnouncement = true;
+						try {
+							const resp = await fetch(`${apiUrl}admin/announcements`, {
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+									...$authHeader,
+								},
+								body: JSON.stringify({content: announceMsg}),
+							});
+							if (!resp.ok) {
+								throw new Error(
+									"Response code is not OK; code is " + resp.status
+								);
+							}
+							announceMsg = "";
+							sendingAnnouncement = false;
+							confirmAnnouncement = false;
+						} catch (e) {
+							announcementError = e;
+							sendingAnnouncement = false;
+						}
+					}}>Confirm</button>
+				{/await}
+			</div>
+		</div>
+	</Modal>
+{/if}
+
 
 <style>
 	h2 {

@@ -9,28 +9,39 @@
 
 	import LiText from "./LiText.svelte";
 
-	import {postClicked, user, chat, ulist} from "../lib/stores.js";
+	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
+	import DeletePostModal from "./modals/DeletePost.svelte";
+	import ReportPostModal from "./modals/moderation/ReportPost.svelte";
+
+	import {authHeader, postClicked, user, userSuspended, chat, ulist} from "../lib/stores.js";
 	import {permissions, hasPermission} from "../lib/adminPermissions.js";
+	import {apiUrl} from "./urls.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
-	import * as clm from "../lib/clmanager.js";
 	import * as modals from "./modals.js";
 
 	import {IMAGE_HOST_WHITELIST} from "./hostWhitelist.js";
 
 	import {default as loadProfile} from "../lib/loadProfile.js";
 
+	// @ts-ignore
+	import {autoresize} from "svelte-textarea-autoresize";
+
 	import {goto} from "@roxi/routify";
-	import {onMount} from "svelte";
+	import {onMount, tick} from "svelte";
 
 	export let post = {};
 	export let buttons = true;
 	export let input = null;
-	export let canDoActions = true;
+	export let instantDelete = false;
 
 	let bridged = false;
 	let webhook = false;
 
 	let images = [];
+
+	let editing = false;
+	let editError = "";
+	let editContentInput, editSaveButton;
 
 	// TODO: make bridged tag a setting
 
@@ -53,6 +64,10 @@
 			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
 
+		if (!webhook) loadProfile(post.user);
+	}
+
+	$: {
 		// Match image syntax
 		// ([title: https://url])
 		const iterator = post.content.matchAll(
@@ -69,24 +84,18 @@
 				continue;
 			}
 
-			if (
-				!IMAGE_HOST_WHITELIST.some(o =>
-					result.value[2].toLowerCase().startsWith(o.toLowerCase())
-				)
-			)
-				return;
-
-			images.push({
-				title: result.value[1],
-				url: result.value[2],
-			});
-			// Prevent flooding
-			if (images.length >= 3) break;
+			if (IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) {
+				images.push({
+					title: result.value[1],
+					url: result.value[2],
+				});
+				// Prevent flooding
+				if (images.length >= 3) break;
+			}
 		}
 		images = images;
-
-		if (!webhook) loadProfile(post.user);
 	}
+
 	onMount(initPostUser);
 
 	$: noPFP =
@@ -100,11 +109,34 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
-			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server"}
-				{#if input && post.user !== "Notification" && post.user !== "Announcement"}
+			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server" && !editing}
+				{#if input && !input.disabled && post.user === $user.name}
 					<button
-						class="circle join"
+						class="circle pen"
+						on:click={async () => {
+							if ($userSuspended) {
+								modals.showModal(AccountBannedModal);
+								return;
+							}
+
+							editError = "";
+							editing = true;
+							await tick();
+							editContentInput.value = post.content;
+							editContentInput.focus();
+							autoresize(editContentInput);
+						}}
+					/>
+				{/if}
+				{#if input && !input.disabled && post.user !== "Notification" && post.user !== "Announcement"}
+					<button
+						class="circle reply"
 						on:click={() => {
+							if ($userSuspended) {
+								modals.showModal(AccountBannedModal);
+								return;
+							}
+
 							let existingText = input.value;
 
 							const mentionRegex = /^@\w+\s*/i;
@@ -122,34 +154,41 @@
 						}}
 					/>
 				{/if}
-				{#if canDoActions}
-					{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(permissions.DELETE_POSTS)}
-						<button
-							class="circle trash"
-							on:click={() => {
-								if (shiftHeld) {
-									clm.meowerRequest({
-										cmd: "direct",
-										val: {
-											cmd: "delete_post",
-											val: post.post_id,
-										},
+				{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(permissions.DELETE_POSTS)}
+					<button
+						class="circle trash"
+						on:click={async () => {
+							if (instantDelete || shiftHeld) {
+								try {
+									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
+										method: "DELETE",
+										headers: $authHeader,
 									});
-									return;
+									if (!resp.ok) {
+										if (resp.status === 429) {
+											throw new Error("Too many requests! Try again later.");
+										}
+										throw new Error(
+											"Response code is not OK; code is " + resp.status
+										);
+									}
+								} catch (e) {
+									editError = e;
 								}
+							} else {
 								postClicked.set(post);
-								modals.showModal("deletePost");
-							}}
-						/>
-					{:else}
-						<button
-							class="circle report"
-							on:click={() => {
-								postClicked.set(post);
-								modals.showModal("reportPost");
-							}}
-						/>
-					{/if}
+								modals.showModal(DeletePostModal);
+							}
+						}}
+					/>
+				{:else}
+					<button
+						class="circle report"
+						on:click={() => {
+							postClicked.set(post);
+							modals.showModal(ReportPostModal);
+						}}
+					/>
 				{/if}
 			{/if}
 		</div>
@@ -225,17 +264,78 @@
 			</div>
 
 			<FormattedDate date={post.date} />
-			{#if post.isDeleted}
-				<i>(deleted)</i>
+			{#if post.edited_at}
+				<i>(<FormattedDate date={post.edited_at} customText="edited" />)</i>
+			{/if}
+			{#if post.isDeleted && post.mod_deleted}
+				<i>(<FormattedDate date={post.deleted_at} customText="deleted by moderator" />)</i>
+			{:else if post.isDeleted}
+				<i>(<FormattedDate date={post.deleted_at} customText="self-deleted" />)</i>
 			{/if}
 		</div>
 	</div>
-	<p class="post-content">
-		{@html twemoji.parse(toHTMLElement(post.content).innerText, {
-			folder: "svg",
-			ext: ".svg",
-		})}
-	</p>
+	{#if editing}
+		<textarea
+			type="text"
+			class="white"
+			name="input"
+			autocomplete="false"
+			maxlength="500"
+			rows="1"
+			bind:this={editContentInput}
+			use:autoresize
+			on:keydown={event => {
+				if (event.key == "Enter" && !shiftHeld) {
+					event.preventDefault();
+					if (!editSaveButton.disabled) editSaveButton.click();
+				} else if (event.key == "Escape") {
+					editing = false;
+				}
+			}}
+		/>
+		<div style="display: flex; justify-content: space-between;">
+			<button on:click={() => editing = false}>Cancel</button>
+			<button bind:this={editSaveButton} on:click={async () => {
+				if (editContentInput.value.trim() === "") {
+					postClicked.set(post);
+					modals.showModal(DeletePostModal);
+					return;
+				}
+
+				editing = false;
+				try {
+					const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+							...$authHeader,
+						},
+						body: JSON.stringify({content: editContentInput.value}),
+					});
+					if (!resp.ok) {
+						if (resp.status === 429) {
+							throw new Error("Too many requests! Try again later.");
+						}
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
+					}
+				} catch (e) {
+					editError = e;
+				}
+			}}>Save</button>
+		</div>
+	{:else}
+		<p class="post-content">
+			{@html twemoji.parse(toHTMLElement(post.content).innerText, {
+				folder: "svg",
+				ext: ".svg",
+			})}
+		</p>
+	{/if}
+	{#if editError}
+		<p style="color: crimson;">Error while editing/deleting: {editError}</p>
+	{/if}
 	<div class="post-images">
 		{#each images as { title, url }}
 			<a href={url} target="_blank" rel="noreferrer"
@@ -302,5 +402,11 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.25em;
+	}
+
+	textarea {
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+		width: 100%;
 	}
 </style>

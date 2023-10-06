@@ -73,6 +73,14 @@ img.emoji {
 	vertical-align: bottom;
 }
 
+button:not(:disabled),
+select:not(:disabled),
+select > option:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="datetime-local"]:not(:disabled) {
+	cursor: pointer;
+}
+
 button,
 input[type="text"],
 input[type="search"],
@@ -254,6 +262,7 @@ input[type="checkbox"] {
 
 button.settings {
 	background-image: url("./settings.svg");
+	background-size: 65%;
 }
 
 button.plus {
@@ -261,14 +270,33 @@ button.plus {
 	background-size: 50%;
 }
 
+button.reply {
+	background-image: url("./reply.svg");
+	background-size: 70%;
+}
+
+button.pen {
+	background-image: url("./pen.svg");
+	background-size: 60%;
+}
+
+button.check {
+	background-image: url("./check.svg");
+}
+
 button.close {
 	background-image: url("./close.svg");
 	background-size: 50%;
 }
 
+button.siren {
+	background-image: url("./siren.svg");
+	background-size: 65%;
+}
+
 button.trash {
 	background-image: url("./trash.svg");
-	background-size: 56%;
+	background-size: 55%;
 }
 
 button.report {
@@ -279,6 +307,16 @@ button.report {
 button.join {
 	background-image: url("./chat_join.svg");
 	background-size: 50%;
+}
+
+button.star {
+	background-image: url("./star.svg");
+	background-size: 62%;
+}
+
+button.star.filled {
+	background-image: url("./star_filled.svg");
+	background-size: 62%;
 }
 
 button.admin {
@@ -293,7 +331,7 @@ button.profile {
 
 button.members {
 	background-image: url("./members.svg");
-	background-size: 50%;
+	background-size: 55%;
 }
 
 button.search {

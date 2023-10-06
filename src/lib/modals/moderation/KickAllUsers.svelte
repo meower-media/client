@@ -1,16 +1,12 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import * as modals from "../modals.js";
-	import * as clm from "../clmanager.js";
-	import sleep from "../sleep";
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
+	import sleep from "../../sleep";
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Kick All Users</h2>
 	<div slot="default">
 		<form
@@ -23,7 +19,7 @@
 							val: "",
 						},
 					});
-					modals.closeModal();
+					modals.closeLastModal();
 				} catch (e) {
 					console.error(e);
 				}
@@ -34,7 +30,7 @@
 				<button
 					type="button"
 					on:click={() => {
-						modals.closeModal();
+						modals.closeLastModal();
 					}}>Cancel</button
 				>
 				{#await sleep(1500)}

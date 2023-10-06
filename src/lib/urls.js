@@ -9,9 +9,9 @@ export const debug = false;
 
 export const linkUrl =
 	localStorage.getItem("meower_linkurl") ||
-	(debug ? "wss://server.meower.eu.org/" : "ws://localhost:3000");
+	(debug ? "wss://server.meower.eu.org/" : "wss://api.meower.org/v0/cloudlink");
 export const apiUrl =
 	localStorage.getItem("meower_apiurl") ||
-	(debug ? "https://api.meower.eu.org/" : "http://localhost:3001/");
+	(debug ? "https://api.meower.eu.org/" : "https://api.meower.org/");
 export const encodeApiURLParams =
 	localStorage.getItem("meower_encodeapi") || false;

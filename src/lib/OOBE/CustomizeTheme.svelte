@@ -1,11 +1,14 @@
 <script>
+	import SwitchThemeModal from "../modals/SwitchTheme.svelte";
+
 	import * as modals from "../modals.js";
-	modals.showModal("switchTheme");
+
+	modals.showModal(SwitchThemeModal);
 </script>
 
 <div class="content">
 	<h1>Set your theme</h1>
-	<button on:click={() => modals.showModal("switchTheme")}
+	<button on:click={() => modals.showModal(SwitchThemeModal)}
 		>Change Theme</button
 	>
 	<br /><br />

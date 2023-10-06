@@ -1,32 +1,33 @@
 <script>
 	import Modal from "../Modal.svelte";
-	import Loading from "../Loading.svelte";
+
+	import LoginModal from "./Login.svelte";
+	import AccountCreationBlockedModal from "./moderation/AccountCreationBlocked.svelte";
 
 	import {OOBERunning, user} from "../stores.js";
-
+	import * as clm from "../clmanager.js";
 	import * as modals from "../modals.js";
 
-	import * as clm from "../clmanager.js";
+	let username, password, loading, error;
+</script>
 
-	let loading = false;
-	let loginStatus = "";
-	let username = "";
-	let password = "";
-	let acceptTerms = false;
-
-	function doLogin() {
-		try {
-			loading = true;
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "gen_account",
+<Modal on:close={modals.closeLastModal}>
+	<h2 slot="header">Join Meower</h2>
+	<div slot="default">
+		<form
+			on:change={() => error = ""}
+			on:submit|preventDefault={async () => {
+				loading = true;
+				clm.meowerRequest({
+					cmd: "direct",
 					val: {
-						username: username,
-						pswd: password,
+						cmd: "gen_account",
+						val: {
+							username: username,
+							pswd: password,
+						},
 					},
-				},
-			})
+				})
 				.then(async val => {
 					user.update(v =>
 						Object.assign(v, {
@@ -35,137 +36,71 @@
 							layout: "new",
 						})
 					);
-					loginStatus = "";
 					OOBERunning.set(true);
-					modals.closeModal();
+					modals.closeLastModal();
 				})
 				.catch(code => {
 					loading = false;
 					switch (code) {
 						case "I:015 | Account exists":
-							loginStatus = "That username already exists!";
+							error = `${username} is taken!`;
 							break;
 						case "E:119 | IP Blocked":
-							modals.showModal("accountCreationBlocked");
+							modals.showModal(AccountCreationBlockedModal);
 							break;
 						case "E:019 | Illegal characters detected":
-							loginStatus =
+							error =
 								"Usernames must not have spaces or other special characters!";
 							break;
 						case "E:106 | Too many requests":
-							loginStatus =
+							error =
 								"Too many requests! Please try again later.";
 							break;
 						default:
-							loginStatus = `Unexpected ${code} error!`;
+							error = `Unexpected ${code} error!`;
 					}
+					return;
 				});
-		} catch (e) {
-			console.log(e);
-			loading = false;
-			loginStatus = "Error logging in: " + e;
-		}
-	}
-</script>
-
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
-	<h2 slot="header">Join Meower</h2>
-	<div slot="default">
-		{#if loading}
-			<div class="fullcenter">
-				<Loading />
+			}}
+		>
+			<label for="username" style={error ? "color: crimson;" : ""}>
+				<b>Username</b>{#if error}<i> - {error}</i>{/if}
+			</label>
+			<input
+				id="username"
+				type="text"
+				class="modal-input white"
+				placeholder="Username..."
+				minlength="1"
+				maxlength="20"
+				disabled={loading}
+				autofocus
+				bind:value={username}
+			/>
+			<br /><br />
+			<label for="password" style={error ? "color: crimson;" : ""}>
+				<b>Password</b>{#if error}<i> - {error}</i>{/if}
+			</label>
+			<input
+				id="password"
+				type="password"
+				class="modal-input white"
+				placeholder="Password..."
+				minlength="8"
+				maxlength="255"
+				disabled={loading}
+				bind:value={password}
+			/>
+			<br /><br /><br />
+			<div class="modal-buttons">
+				<a
+					href="/"
+					on:click|preventDefault={() => {
+						if (!loading) modals.replaceLastModal(LoginModal);
+					}}>Login to Meower</a
+				>
+				<button type="submit" disabled={loading}>Join</button>
 			</div>
-		{:else}
-			<form
-				on:submit|preventDefault={e => {
-					if (!(e.target[0].value && e.target[1].value)) {
-						loginStatus =
-							"You must specify a username and a password to create an account!";
-						return false;
-					}
-					username = e.target[0].value;
-					password = e.target[1].value;
-					doLogin();
-					return false;
-				}}
-			>
-				{#if loginStatus}
-					<span class="login-status">{loginStatus}</span><br />
-				{/if}
-				<input
-					type="text"
-					class="modal-input white"
-					placeholder="Username"
-					maxlength="20"
-					value={username}
-					autofocus
-				/><br /><br />
-				<input
-					type="password"
-					class="modal-input white"
-					placeholder="Password"
-					minlength="8"
-					maxlength="255"
-					value={password}
-				/><br />
-				<p class="checkboxes">
-					<input
-						id="accept-terms"
-						type="checkbox"
-						bind:checked={acceptTerms}
-					/>
-					<label for="accept-terms">
-						I agree to <a
-							href="https://meower.org/legal"
-							target="_blank"
-							rel="noreferrer"
-							>Meower's Terms of Service and Privacy Policy</a
-						>
-					</label>
-				</p>
-				<br />
-				<div class="modal-buttons">
-					<a
-						href="/"
-						on:click|preventDefault={() => {
-							modals.showModal("login");
-						}}>Login to Meower</a
-					>
-					<button type="submit" disabled={!acceptTerms}
-						>Create Account</button
-					>
-				</div>
-			</form>
-		{/if}
+		</form>
 	</div>
 </Modal>
-
-<style>
-	.fullcenter {
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		top: 0;
-		left: 0;
-	}
-	.login-status {
-		color: red;
-		font-size: 105%;
-		display: inline-block;
-		height: 0;
-		overflow: visible;
-	}
-	label,
-	.checkboxes input {
-		vertical-align: middle;
-	}
-	.checkboxes {
-		text-align: left;
-		font-size: 95%;
-	}
-</style>

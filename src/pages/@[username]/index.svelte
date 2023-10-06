@@ -1,5 +1,5 @@
 <script>
-	import {params, goto} from "@roxi/routify";
+	import {params, redirect} from "@roxi/routify";
 
-	$goto(`/users/${$params.username.replace("@", "")}`);
+	$redirect(`/users/${$params.username.replace("@", "")}`);
 </script>

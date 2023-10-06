@@ -2,11 +2,17 @@
 <script>
 	import Container from "../lib/Container.svelte";
 
+	import BasicModal from "../lib/modals/Basic.svelte";
+	import SwitchThemeModal from "../lib/modals/SwitchTheme.svelte";
+	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
+	import ChangePasswordModal from "../lib/modals/ChangePassword.svelte";
+	import LogoutEverywhereModal from "../lib/modals/LogoutEverywhere.svelte";
+	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
+
 	import {user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as modals from "../lib/modals.js";
 	import * as BGM from "../lib/BGM.js";
-	import {permissions, hasPermission} from "../lib/adminPermissions.js";
 </script>
 
 <Container>
@@ -35,9 +41,7 @@
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={() => {
-				modals.showModal("switchTheme");
-			}}
+			on:click={() => modals.showModal(SwitchThemeModal)}
 		/>
 	</div>
 
@@ -71,9 +75,7 @@
 		{#if $user.bgm}
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("switchBGM");
-				}}
+				on:click={() => modals.showModal(SwitchBGMSFXModal)}
 			/>
 		{/if}
 		<input
@@ -99,11 +101,34 @@
 {#if $user.name}
 	<Container>
 		<div class="settings-controls">
+			<input
+				type="checkbox"
+				checked={$user.hide_blocked_users}
+				on:change={() => {
+					if (!$user.hide_blocked_users) {
+						modals.showModal(BasicModal, {
+							title: "Hide Blocked Users",
+							desc: "This setting can have undesirable consequences! We usually try to show 25 posts per page, but pages that include posts made by people you have blocked will have fewer posts. It may also make it harder to keep up with conversations without the context of posts made by people you have blocked."
+						});
+					}
+
+					const _user = $user;
+					_user.hide_blocked_users = !_user.hide_blocked_users;
+					user.set(_user);
+
+					clm.updateProfile();
+				}}
+			/>
+		</div>
+
+		<h2>Hide Blocked Users</h2>
+		You {$user.hide_blocked_users ? "are" : "are not"} currently hiding posts from people you have blocked.
+	</Container>
+	<Container>
+		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("changePassword");
-				}}
+				on:click={() => modals.showModal(ChangePasswordModal)}
 			/>
 		</div>
 
@@ -114,9 +139,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("logoutEverywhere");
-				}}
+				on:click={() => modals.showModal(LogoutEverywhereModal)}
 			/>
 		</div>
 
@@ -127,10 +150,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				disabled={hasPermission(permissions.DELETE_USERS)}
-				on:click={() => {
-					modals.showModal("deleteAccount");
-				}}
+				on:click={() => modals.showModal(DeleteAccountModal)}
 			/>
 		</div>
 

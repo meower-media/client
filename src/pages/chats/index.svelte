@@ -7,182 +7,165 @@
 	Home but it's a list of group chats.
 -->
 <script>
+	import Container from "../../lib/Container.svelte";
+	import Modal from "../../lib/Modal.svelte";
+	import ProfileView from "../..//lib/ProfileView.svelte";
+
+	import BasicModal from "../../lib/modals/Basic.svelte";
+	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
+	import CreateChatModal from "../../lib/modals/CreateChat.svelte";
+
 	import {
 		authHeader,
+		chats,
+		user,
 		userRestricted,
 		userSuspended,
-		chat as currentChat,
 	} from "../../lib/stores.js";
-	import {permissions, hasPermission} from "../../lib/adminPermissions.js";
+	import {apiUrl} from "../../lib/urls.js";
 	import * as modals from "../../lib/modals.js";
-	import Modal from "../../lib/Modal.svelte";
-	import PagedList from "../../lib/PagedList.svelte";
-	import Container from "../../lib/Container.svelte";
 	import * as clm from "../../lib/clmanager.js";
-	import {apiUrl, encodeApiURLParams} from "../../lib/urls.js";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
 
-	import {params, goto} from "@roxi/routify";
-	import {onMount} from "svelte";
+	import {goto} from "@roxi/routify";
 
-	let items, toLeaveChat;
+	let favoritedChats, nonFavoritedChats, sortedChats, toLeaveChat, leaveError;
 
-	/**
-	 * Loads a page.
-	 * @param {number} page
-	 * @returns {Promise<{
-	 * 	numPages: number,
-	 * 	result: *
-	 * }>}
-	 */
-	async function loadPage(page) {
-		if (page !== undefined) {
-			let result, numPages;
+	$: {
+		favoritedChats = $chats.filter(_chat => $user.favorited_chats.includes(_chat._id)).sort((a, b) => {
+			//return $user.favorited_chats.indexOf(a._id) - $user.favorited_chats.indexOf(b._id);
+			return b.last_active - a.last_active;
+		});
 
-			let path = `chats?page=${page}${
-				$params.user ? `&user=${$params.user}&include_deleted` : ""
-			}`;
-			if (encodeApiURLParams) path = encodeURIComponent(path);
-			const resp = await fetch(`${apiUrl}${path}`, {
-				headers: $authHeader,
-			});
-			const json = await resp.json();
-			result = json.all_chats;
-			numPages = json.pages;
-			return {result, numPages};
-		}
-		return {
-			numPages: 1,
-			result: [],
-		};
+		nonFavoritedChats = $chats.filter(_chat => !$user.favorited_chats.includes(_chat._id)).sort((a, b) => {
+			return b.last_active - a.last_active;
+		});
+
+		sortedChats = favoritedChats.concat(nonFavoritedChats);
 	}
-
-	onMount(() => {
-		if ($params.user && !hasPermission(permissions.VIEW_CHATS)) {
-			$goto("/chats");
-		}
-	});
 </script>
 
 <div class="chats">
 	<Container>
-		{#if $params.user}
-			<h1>{$params.user}'s Chats</h1>
-			Here are {$params.user}'s chats.
-		{:else}
-			<h1>Chats</h1>
-			Here are your chats. Press the chat button to enter a chat, and the plus
-			to create one.
-			<div class="settings-controls">
-				<button
-					class="circle plus"
-					on:click={() => {
-						if ($userRestricted || $userSuspended) {
-							modals.showModal("banned");
-						} else {
-							modals.showModal("createChat");
-						}
-					}}
-				/>
-			</div>
-		{/if}
+		<h1>Chats</h1>
+		Here are your chats. Press the chat button to enter a chat, and the plus
+		to create one.
+		<div class="settings-controls">
+			<button
+				class="circle plus"
+				on:click={() => {
+					if ($userRestricted || $userSuspended) {
+						modals.showModal(AccountBannedModal);
+					} else {
+						modals.showModal(CreateChatModal);
+					}
+				}}
+			/>
+		</div>
 	</Container>
-	{#if !$params.user}
-		<Container>
-			<div class="settings-controls">
-				<button
-					class="circle join"
-					on:click={() => {
-						currentChat.set({
-							_id: "livechat",
-							nickname: "Livechat",
-							owner: "",
-							members: [],
-							created: 0,
-							last_active: 0,
-							deleted: false,
-						});
-						$goto("/chats/livechat");
-					}}
-				/>
-			</div>
+	<Container>
+		<div class="settings-controls">
+			<button
+				class="circle join"
+				on:click={$goto("/chats/livechat")}
+			/>
+		</div>
 
-			<h1>Livechat</h1>
-			Post history isn't saved here.
-		</Container>
-	{/if}
-	<PagedList bind:items {loadPage}>
-		<svelte:fragment slot="loaded" let:items>
-			{#each items as chat (chat._id)}
-				<div
-					transition:fly|local={{y: -50, duration: 250}}
-					animate:flip={{duration: 250}}
-				>
-					<Container>
-						<div class="settings-controls">
-							{#if !$params.user}
-								<button
-									class="circle close"
-									on:click={() => (toLeaveChat = chat)}
-								/>
-							{/if}
+		<h1>Livechat</h1>
+		Post history isn't saved here.
+	</Container>
+	{#each sortedChats as chat (chat._id)}
+		<div
+			transition:fly|local={{y: -50, duration: 250}}
+			animate:flip={{duration: 250}}
+		>
+			{#if chat.type === 0}
+				<Container>
+					<div class="settings-controls">
+						<button
+							class="circle star {$user.favorited_chats.includes(chat._id) ? 'filled' : ''}"
+							on:click={() => {
+								if ($user.favorited_chats.includes(chat._id)) {
+									$user.favorited_chats.splice($user.favorited_chats.indexOf(chat._id), 1);
+									clm.updateProfile();
+								} else {
+									$user.favorited_chats = $user.favorited_chats.filter(chatId => {
+										return $chats.some(_chat => _chat._id === chatId);
+									});
+									if ($user.favorited_chats.length >= 50) {
+										modals.showModal(BasicModal, {
+											title: "Too many chats!",
+											desc: "Sorry, you can only have up to 50 favorited chats!"
+										});
+									} else {
+										$user.favorited_chats.push(chat._id);
+										clm.updateProfile();
+									}
+								}
+							}}
+						/>
+						{#if !$user.favorited_chats.includes(chat._id)}
 							<button
-								class="circle join"
-								on:click={() => {
-									currentChat.set(chat);
-									$goto(`/chats/${chat._id}`);
-								}}
+								class="circle close"
+								on:click={() => toLeaveChat = chat}
 							/>
-						</div>
-
-						<h1>{chat.nickname}</h1>
-						Members: {chat.members.length > 100
-							? chat.members.slice(0, 99).join(", ") + "..."
-							: chat.members.join(", ")}
-
-						{#if chat.deleted}
-							<br /><br />
-							<span style="color: crimson;"
-								><b>This chat is currently deleted.</b></span
-							>
 						{/if}
-					</Container>
-				</div>
-			{/each}
-		</svelte:fragment>
-		<Container slot="error" let:error>
-			Error loading posts. Please try again.
-			<pre><code>{error}</code></pre>
-		</Container>
-	</PagedList>
+						<button
+							class="circle join"
+							on:click={$goto(`/chats/${chat._id}`)}
+						/>
+					</div>
+
+					<h1>{chat.nickname}</h1>
+					Members: {chat.members.length > 100
+						? chat.members.slice(0, 99).join(", ") + "..."
+						: chat.members.join(", ")}
+				</Container>
+			{:else if chat.type === 1}
+				<ProfileView
+					username={chat.members.filter(username => username !== $user.name)[0]}
+					small={true}
+					canClick={true}
+					canDoActions={true}
+					dmChat={chat}
+				/>
+			{/if}
+		</div>
+	{/each}
 	{#if toLeaveChat}
-		<Modal on:close={() => (toLeaveChat = null)}>
+		<Modal on:close={() => toLeaveChat = null}>
 			<h2 slot="header">Leave Chat</h2>
 			<div slot="default">
-				<span
-					>Are you sure you want to leave {toLeaveChat.nickname}?</span
-				>
-				<br /><br />
+				Are you sure you want to leave {toLeaveChat.nickname}?
+				{#if leaveError}
+					<p style="color: crimson;">{leaveError}</p>
+				{:else}
+					<br /><br />
+				{/if}
 				<div class="modal-buttons">
-					<button on:click={() => (toLeaveChat = null)}>No</button>
+					<button on:click={() => toLeaveChat = null}>Cancel</button>
 					<button
-						on:click={() => {
-							clm.meowerRequest({
-								cmd: "direct",
-								val: {
-									cmd: "leave_chat",
-									val: toLeaveChat._id,
-								},
-							}).then(() => {
-								items = items.filter(
-									v => v._id !== toLeaveChat._id
-								);
+						on:click={async () => {
+							try {
+								const resp = await fetch(`${apiUrl}chats/${toLeaveChat._id}`, {
+									method: "DELETE",
+									headers: $authHeader,
+								});
+								if (!resp.ok) {
+									if (resp.status === 429) {
+										throw new Error("Too many requests! Try again later.");
+									}
+									throw new Error(
+										"Response code is not OK; code is " + resp.status
+									);
+								}
 								toLeaveChat = null;
-							});
-						}}>Yes</button
-					>
+							} catch (e) {
+								leaveError = e;
+							}
+						}}>Leave</button>
 				</div>
 			</div>
 		</Modal>

@@ -2,67 +2,49 @@
 <script>
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
-	import ConnectionFailed from "../lib/modals/ConnectionFailed.svelte";
-	import LoginModal from "../lib/modals/Login.svelte";
-	import SignupModal from "../lib/modals/Signup.svelte";
-	import BannedModal from "../lib/modals/Banned.svelte";
-	import IPBlockedModal from "../lib/modals/IPBlocked.svelte";
-	import AccountCreationBlocked from "../lib/modals/AccountCreationBlocked.svelte";
-	import DeletePostModal from "../lib/modals/DeletePost.svelte";
-	import ReportPostModal from "../lib/modals/ReportPost.svelte";
-	import ReportUserModal from "../lib/modals/ReportUser.svelte";
-	import GCMemberModal from "../lib/modals/GCMember.svelte";
-	import AddMemberModal from "../lib/modals/AddMember.svelte";
-	import RemoveMemberModal from "../lib/modals/RemoveMember.svelte";
-	import CreateChatModal from "../lib/modals/CreateChat.svelte";
-	import AddImgModal from "../lib/modals/AddImage.svelte";
-	import ChangePasswordModal from "../lib/modals/ChangePassword.svelte";
-	import LogoutEverywhereModal from "../lib/modals/LogoutEverywhere.svelte";
-	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
-	import ErrorModal from "../lib/modals/Error.svelte";
-	import LogoutModal from "../lib/modals/Logout.svelte";
-	import ModerateUserModal from "../lib/modals/ModerateUser.svelte";
-	import ModerateIPModal from "../lib/modals/ModerateIP.svelte";
-	import ModerateChatModal from "../lib/modals/ModerateChat.svelte";
-	import ClearQuoteModal from "../lib/modals/ClearQuote.svelte";
-	import ClearPostsModal from "../lib/modals/ClearPosts.svelte";
-	import ImpersonateUserModal from "../lib/modals/ImpersonateUser.svelte";
-	import SetAdminPermissionsModal from "../lib/modals/SetAdminPermissions.svelte";
-	import AnnounceModal from "../lib/modals/Announce.svelte";
-	import KickAllUsers from "../lib/modals/KickAllUsers.svelte";
-	import EnableRepairMode from "../lib/modals/EnableRepairMode.svelte";
-	import AddMember2Modal from "../lib/modals/AddMember_2.svelte";
-	import AddMemberSearchModal from "../lib/modals/AddMember_Search.svelte";
-	import AddMemberModeModal from "../lib/modals/AddMember_Mode.svelte";
-	import SearchResultsModal from "../lib/modals/SearchResults.svelte";
-	import SwitchThemeModal from "../lib/modals/SwitchTheme.svelte";
-	import LoggedOut from "../lib/modals/LoggedOut.svelte";
-	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
-	import BasicModal from "../lib/modals/Basic.svelte";
 
 	import OOBE from "../lib/OOBE/Main.svelte";
 
 	import Sidebar from "../lib/Sidebar.svelte";
-	import ModPanel from "../lib/ModPanel.svelte";
 
 	import Spinner from "../lib/Spinner.svelte";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 
+	import {afterPageLoad, params} from "@roxi/routify";
+	import {tick} from "svelte";
+
+	let currentPage = "";
+	let currentParams = JSON.stringify($params);
+	let remounting = false;
+	$afterPageLoad(async (page) => {
+		if (remounting) return;
+
+		if (page.title === currentPage) {
+			if (currentParams !== JSON.stringify($params)) {
+				currentPage = page.title;
+				currentParams = JSON.stringify($params);
+				remounting = true;
+				await tick();
+				remounting = false;
+			}
+		} else {
+			currentPage = page.title;
+			currentParams = JSON.stringify($params);
+		}
+	});
+
 	import {
 		screen,
-		modalShown,
-		modalPage,
+		modalStack,
 		reconnecting,
-		userToMod,
 		OOBERunning,
 		user,
 		userRestricted,
 		userSuspended,
 		spinner,
-		modPanelOpen,
 	} from "../lib/stores.js";
-
+	
 	$: {
 		$userRestricted =
 			$user.ban.state === "PermRestriction" ||
@@ -112,103 +94,8 @@
 				</p>
 			</div>
 		</Modal>
-	{:else if $modalShown}
-		<!-- Login, signup -->
-		{#if $modalPage === "login"}
-			<LoginModal />
-		{:else if $modalPage === "signup"}
-			<SignupModal />
-			<!-- Bans -->
-		{:else if $modalPage === "banned"}
-			<BannedModal />
-		{:else if $modalPage === "ipBlocked"}
-			<IPBlockedModal />
-		{:else if $modalPage === "accountCreationBlocked"}
-			<AccountCreationBlocked />
-			<!-- Confirmations -->
-		{:else if $modalPage === "deletePost"}
-			<DeletePostModal />
-		{:else if $modalPage === "reportPost"}
-			<ReportPostModal />
-		{:else if $modalPage === "reportUser"}
-			<ReportUserModal />
-		{:else if $modalPage === "searchResults"}
-			<SearchResultsModal />
-		{:else if $modalPage === "logoutEverywhere"}
-			<LogoutEverywhereModal />
-		{:else if $modalPage === "deleteAccount"}
-			<DeleteAccountModal />
-		{:else if $modalPage === "logout"}
-			<LogoutModal />
-			<!-- Moderation -->
-		{:else if $modalPage === "moderateUser"}
-			<ModerateUserModal />
-		{:else if $modalPage === "moderateIP"}
-			<ModerateIPModal />
-		{:else if $modalPage === "moderateChat"}
-			<ModerateChatModal />
-		{:else if $modalPage === "clearQuote"}
-			<ClearQuoteModal />
-		{:else if $modalPage === "clearPosts"}
-			<ClearPostsModal />
-		{:else if $modalPage === "impersonateUser"}
-			<ImpersonateUserModal />
-		{:else if $modalPage === "setAdminPermissions"}
-			<SetAdminPermissionsModal />
-		{:else if $modalPage === "announce"}
-			<AnnounceModal />
-		{:else if $modalPage === "kickAllUsers"}
-			<KickAllUsers />
-		{:else if $modalPage === "enableRepairMode"}
-			<EnableRepairMode />
-			<!-- Text inputs -->
-		{:else if $modalPage === "createChat"}
-			<CreateChatModal />
-		{:else if $modalPage === "addImg"}
-			<AddImgModal />
-		{:else if $modalPage === "changePassword"}
-			<ChangePasswordModal />
-			<!-- Group chats -->
-		{:else if $modalPage === "gcMember"}
-			<GCMemberModal />
-		{:else if $modalPage === "addMember"}
-			<AddMemberModal />
-		{:else if $modalPage === "addMember2"}
-			<AddMember2Modal />
-		{:else if $modalPage === "addMemberSearch"}
-			<AddMemberSearchModal />
-		{:else if $modalPage === "addMemberMode"}
-			<AddMemberModeModal />
-		{:else if $modalPage === "removeMember"}
-			<RemoveMemberModal />
-			<!-- Misc -->
-		{:else if $modalPage === "connectionFailed"}
-			<ConnectionFailed />
-		{:else if $modalPage === "switchTheme"}
-			<SwitchThemeModal />
-		{:else if $modalPage === "switchBGM"}
-			<SwitchBGMSFXModal />
-		{:else if $modalPage === "loggedOut"}
-			<LoggedOut />
-		{:else if $modalPage === "basic"}
-			<BasicModal />
-		{:else}
-			<ErrorModal />
-		{/if}
-	{:else if $modPanelOpen}
-		<div class="mod-panel">
-			<Modal
-				on:close={() => {
-					$modPanelOpen = false;
-					$userToMod = "";
-				}}
-			>
-				<div slot="header">
-					<h1>Moderation Panel</h1>
-				</div>
-				<ModPanel />
-			</Modal>
-		</div>
+	{:else if $modalStack.length > 0}
+		<svelte:component this={$modalStack[0].modal} modalData={$modalStack[0].data} />
 	{/if}
 
 	{#if $screen === "blank"}
@@ -222,10 +109,17 @@
 				<Sidebar />
 			</div>
 			<div class="view">
+				<!-- banner (maybe for future use)
+				<div class="banner">
+					<span>This is a banner!</span>
+				</div>
+				-->
 				{#if $OOBERunning}
 					<OOBE />
 				{:else}
-					<slot />
+					{#if !remounting}
+						<slot />
+					{/if}
 				{/if}
 			</div>
 		</div>
@@ -372,6 +266,13 @@
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
+	}
+
+	.banner {
+		background-color: crimson;
+		margin: 0;
+		padding: 0.5em;
+		text-align: center;
 	}
 
 	:global(main.layout-old) .main-screen {

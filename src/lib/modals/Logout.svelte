@@ -6,25 +6,17 @@
 	import {goto} from "@roxi/routify";
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Logout</h2>
 	<div slot="default">
 		<span>Are you sure you would like to logout?</span>
 		<br /><br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					modals.closeModal();
-				}}>Cancel</button
+				on:click={modals.closeLastModal}>Cancel</button
 			>
 			<button
-				on:click={() => {
-					$goto("/logout");
-				}}>Logout</button
+				on:click={() => $goto("/logout")}>Logout</button
 			>
 		</div>
 	</div>

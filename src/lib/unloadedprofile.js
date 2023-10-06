@@ -17,6 +17,9 @@ export default function unloadedProfile() {
 		bgm: false,
 		bgm_song: 2,
 		layout: "new",
+		debug: false,
+		hide_blocked_users: false,
+		favorited_chats: [],
 		pfp_data: 1,
 		quote: "",
 		ban: {

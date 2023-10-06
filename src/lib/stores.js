@@ -10,8 +10,7 @@ export const screen = writable("setup");
 export const setupPage = writable("logo");
 
 // Used for modal overlay
-export const modalShown = writable(false);
-export const modalPage = writable("");
+export const modalStack = writable([]);
 
 // Used for basic modal
 export const basicModalTitle = writable("");
@@ -26,9 +25,14 @@ export const disconnectReason = writable("");
 // Last typed timestamp
 export const lastTyped = writable(0);
 
-// Current chat
+// Relationships
+export const relationships = writable({});
+
+// Chats
+export const chats = writable([]);
 export const chat = writable({
 	_id: "",
+	type: 0,
 	nickname: "",
 	owner: "",
 	members: [],
@@ -43,10 +47,20 @@ export const ulist = writable([]);
 // Mod panel
 export const userToMod = writable("");
 export const ipToMod = writable("");
-export const modPanelOpen = writable(false);
 
 // Last (blank) clicked
-export const postClicked = writable({});
+export const postClicked = writable({
+	id: 0,
+	post_id: "",
+	post_origin: "",
+	user: "",
+	content: "",
+	date: 0,
+	edited_at: 0,
+	isDeleted: false,
+	mod_deleted: false,
+	deleted_at: 0,
+});
 export const profileClicked = writable("");
 export const profileClicked_GC = writable("");
 export const announcementToSend = writable("");
@@ -77,6 +91,9 @@ export const user = writable({
 	bgm: false,
 	bgm_song: 2,
 	layout: "new",
+	debug: false,
+	hide_blocked_users: false,
+	favorited_chats: [],
 	pfp_data: 1,
 	quote: "",
 	ban: {

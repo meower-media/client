@@ -1,71 +1,74 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown} from "../stores.js";
-
-	import * as clm from "../clmanager.js";
+	import {authHeader, chats} from "../stores.js";
+	import {apiUrl} from "../urls.js";
+	import * as modals from "../modals.js";
 
 	import {goto} from "@roxi/routify";
 
-	let createStatus,
-		chatNickname = "";
-
-	function doCreate() {
-		try {
-			createStatus = "Creating chat...";
-			clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "create_chat",
-					val: chatNickname,
-				},
-			})
-				.then(() => {
-					modalShown.set(false);
-					$goto("/chats");
-				})
-				.catch(code => {
-					createStatus = `Unexpected ${code} error!`;
-				});
-		} catch (e) {
-			console.error(e);
-			createStatus = "Error logging in: " + e;
-		}
-	}
+	let nickname, loading, error;
 </script>
 
-<Modal
-	on:close={() => {
-		$modalShown = false;
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Create Chat</h2>
 	<div slot="default">
-		{#if createStatus}
-			<span class="login-status">{createStatus}</span><br />
-		{/if}
-		<input
-			type="text"
-			class="modal-input white"
-			placeholder="Nickname"
-			maxlength="20"
-			autofocus
-			bind:value={chatNickname}
-		/><br /><br />
-		<div class="modal-buttons">
-			<button
-				type="button"
-				on:click={() => {
-					$modalShown = false;
-				}}>Cancel</button
-			>
-			<button
-				type="submit"
-				disabled={!chatNickname}
-				on:click={() => {
-					doCreate();
-				}}>Create</button
-			>
-		</div>
+		<form
+			on:submit|preventDefault={async () => {
+				loading = true;
+				try {
+					const resp = await fetch(`${apiUrl}chats`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							...$authHeader,
+						},
+						body: JSON.stringify({nickname}),
+					});
+					if (!resp.ok) {
+						if (resp.status === 429) {
+							throw new Error("Too many requests! Try again later.");
+						}
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
+					}
+					const chat = await resp.json();
+					if ($chats.findIndex(_chat => _chat._id === chat._id) === -1) {
+						$chats.push(chat);
+					}
+					$goto(`/chats/${chat._id}`);
+					modals.closeLastModal();
+				} catch (e) {
+					loading = false;
+					error = e;
+				}
+			}}
+		>
+			<label for="nickname" style={error ? "color: crimson;" : ""}><b>Chat Nickname</b> {#if error}<i>- {error}</i>{/if}</label>
+			<input
+				id="nickname"
+				type="text"
+				class="modal-input white"
+				placeholder="Chat Nickname..."
+				maxlength="32"
+				disabled={loading}
+				bind:value={nickname}
+				on:change={() => error = ""}
+			/><br />
+			<br />
+			<div class="modal-buttons">
+				<button
+					type="button"
+					disabled={loading}
+					on:click={modals.closeLastModal}>Cancel</button
+				>
+				<button
+					type="submit"
+					disabled={!nickname || loading}
+					>Create Chat</button
+				>
+			</div>
+		</form>
 	</div>
 </Modal>

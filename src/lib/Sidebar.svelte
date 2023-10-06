@@ -1,9 +1,13 @@
 <!-- RIP -->
 <script>
+	import SignupModal from "../lib/modals/Signup.svelte";
+	import DebugModal from "../lib/modals/Debug.svelte";
+	import ModPanelModal from "./ModPanel.svelte";
+	import LogoutModal from "../lib/modals/Logout.svelte";
+
 	import {
 		user,
 		profileClicked,
-		modPanelOpen,
 		OOBERunning,
 	} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
@@ -11,20 +15,20 @@
 
 	import PFP from "../lib/PFP.svelte";
 
-	import {fade} from "svelte/transition";
-
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";
 
 	import mail from "../assets/mail.svg";
 	import gc from "../assets/chat.svg";
 	import search from "../assets/search.svg";
+	import terminal from "../assets/terminal.svg";
 	import shield from "../assets/shield.svg";
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import changelog from "../assets/changelog.svg";
 
+	import {fade} from "svelte/transition";
 	import {goto} from "@roxi/routify";
 
 	let popupShown = false;
@@ -57,7 +61,7 @@
 	<button
 		on:click={() => {
 			if (!$user.name) {
-				modals.showModal("signup");
+				modals.showModal(SignupModal);
 				return;
 			}
 			$goto("/inbox");
@@ -74,7 +78,7 @@
 				$goto("/groupcat");
 			} else {
 				if (!$user.name) {
-					modals.showModal("signup");
+					modals.showModal(SignupModal);
 					return;
 				}
 				$goto("/chats");
@@ -98,15 +102,29 @@
 			draggable={false}
 		/>
 	</button>
+	{#if $user.debug}
+		<button
+			on:click={() => modals.showModal(DebugModal)}
+			class="debugpanel-btn round"
+			title="Debug Panel"
+		>
+			<img
+				src={terminal}
+				alt="Open debug panel"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+	{/if}
 	{#if $user.permissions}
 		<button
-			on:click={() => ($modPanelOpen = !$modPanelOpen)}
+			on:click={() => modals.showModal(ModPanelModal)}
 			class="modpanel-btn round"
 			title="Moderator Panel"
 		>
 			<img
 				src={shield}
-				alt="Open/close moderator panel"
+				alt="Open moderator panel"
 				height="auto"
 				draggable={false}
 			/>
@@ -136,7 +154,7 @@
 		<button
 			on:click={() => {
 				if (!$user.name) {
-					modals.showModal("signup");
+					modals.showModal(SignupModal);
 					return;
 				}
 				$profileClicked = $user.name;
@@ -178,7 +196,7 @@
 		<button
 			on:click={() => {
 				popupShown = true;
-				modals.showModal("logout");
+				modals.showModal(LogoutModal);
 			}}
 			class="logout-btn round"
 		>

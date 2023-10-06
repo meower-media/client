@@ -1,10 +1,15 @@
 /**
  * @typedef {{
- * 	id: any,
- * 	post_id: any,
+ * 	id: number,
+ * 	post_id: string,
+ *  post_origin: string,
  * 	user: string,
  * 	content: string,
  * 	date: number,
+ *  edited_at?: number,
+ *  isDeleted: boolean,
+ *  mod_deleted?: boolean,
+ *  deleted_at?: number,
  * }} ListPost
  */
 

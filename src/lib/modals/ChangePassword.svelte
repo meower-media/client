@@ -4,117 +4,109 @@
 	import * as modals from "../modals.js";
 	import * as clm from "../clmanager.js";
 
-	import {goto} from "@roxi/routify";
+	let oldPassword, newPassword, newPasswordConfirmation, loading, error;
+</script>
 
-	let changeStatus,
-		oldPassword,
-		newPassword,
-		newPasswordConfirmation,
-		submitButton;
-
-	function changePassword() {
-		if (newPassword !== newPasswordConfirmation) {
-			changeStatus = "New passwords do not match!";
-		}
-
-		submitButton.disabled = true;
-
-		clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "change_pswd",
-				val: {
-					old: oldPassword,
-					new: newPassword,
-				},
-			},
-		})
-			.then(async () => {
-				modals.closeModal();
-
+<Modal on:close={modals.closeLastModal}>
+	<h2 slot="header">Change Password</h2>
+	<div slot="default">
+		<form
+			on:submit|preventDefault={async () => {
+				loading = true;
+				if (newPassword !== newPasswordConfirmation) {
+					error = "New passwords do not match!";
+					loading = false;
+					return;
+				}
 				try {
 					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "change_pswd",
+							val: {
+								old: oldPassword,
+								new: newPassword,
+							},
+						},
+					});
+
+					clm.meowerRequest({
 						cmd: "direct",
 						val: {
 							cmd: "del_tokens",
 							val: "",
 						},
 					});
-				} catch (e) {
-					changeStatus = `Unexpected ${e} error!`;
+				} catch (code) {
+					loading = false;
+					switch (code) {
+						case "I:011 | Invalid Password":
+							error = "Current password is invalid!";
+							break;
+						case "E:106 | Too many requests":
+							error = "Too many requests! Please try again later.";
+							break;
+						default:
+							error = "Unexpected " + code + " error!";
+					}
+					return;
 				}
-
-				$goto("/logout");
-			})
-			.catch(code => {
-				submitButton.disabled = false;
-				switch (code) {
-					case "I:011 | Invalid Password":
-						changeStatus = "Current password is invalid!";
-						break;
-					case "E:106 | Too many requests":
-						changeStatus =
-							"Too many requests! Please try again later.";
-						break;
-					default:
-						changeStatus = `Unexpected ${code} error!`;
-				}
-			});
-	}
-</script>
-
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
-	<h2 slot="header">Change Password</h2>
-	<div slot="default">
-		{#if changeStatus}
-			<label for="old-password-input" style="color: red;"
-				>{changeStatus}</label
-			>
-		{/if}
-		<input
-			id="old-password-input"
-			type="password"
-			class="modal-input white"
-			placeholder="Current Password"
-			maxlength="255"
-			bind:value={oldPassword}
-		/><br /><br />
-		<input
-			id="new-password-input"
-			type="password"
-			class="modal-input white"
-			placeholder="New Password"
-			maxlength="255"
-			bind:value={newPassword}
-		/><br /><br />
-		<input
-			type="password"
-			class="modal-input white"
-			placeholder="Confirm New Password"
-			maxlength="255"
-			bind:value={newPasswordConfirmation}
-		/><br /><br />
-		<div class="modal-buttons">
-			<button
-				type="button"
-				on:click={() => {
-					modals.closeModal();
-				}}>Cancel</button
-			>
-			<button
-				type="submit"
-				disabled={!oldPassword ||
-					!newPassword ||
-					!newPasswordConfirmation}
-				bind:this={submitButton}
-				on:click={() => {
-					changePassword();
-				}}>Change Password</button
-			>
-		</div>
+				modals.closeLastModal();
+			}}
+		>
+			<label for="old-password" style={error ? "color: crimson;" : ""}><b>Current Password</b> {#if error}<i>- {error}</i>{/if}</label>
+			<input
+				id="old-password"
+				type="password"
+				class="modal-input white"
+				placeholder="Current Password..."
+				disabled={loading}
+				bind:value={oldPassword}
+				on:change={() => error = ""}
+			/><br />
+			<label for="new-password" style={error ? "color: crimson;" : ""}><b>New Password</b> {#if error}<i>- {error}</i>{/if}</label>
+			<input
+				id="new-password"
+				type="password"
+				class="modal-input white"
+				placeholder="New Password..."
+				minlength="8"
+				maxlength="255"
+				disabled={loading}
+				bind:value={newPassword}
+				on:change={() => error = ""}
+			/><br />
+			<label for="new-password-confirmation" style={error ? "color: crimson;" : ""}><b>New Password Confirmation</b> {#if error}<i>- {error}</i>{/if}</label>
+			<input
+				id="new-password-confirmation"
+				type="password"
+				class="modal-input white"
+				placeholder="New Password Confirmation..."
+				minlength="8"
+				maxlength="255"
+				disabled={loading}
+				bind:value={newPasswordConfirmation}
+				on:change={() => error = ""}
+			/><br />
+			<br />
+			<div class="modal-buttons">
+				<button
+					type="button"
+					disabled={loading}
+					on:click={modals.closeLastModal}>Cancel</button
+				>
+				<button
+					type="submit"
+					disabled={!oldPassword || !newPassword || !newPasswordConfirmation || loading}
+					>Change Password</button
+				>
+			</div>
+		</form>
 	</div>
 </Modal>
+
+<style>
+	input[type="password"] {
+		margin-bottom: 0.5em;
+	}
+</style>

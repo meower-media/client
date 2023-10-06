@@ -2,9 +2,15 @@
  * @file The "main" CloudLink instance provider, also providing some handy utility functions.
  */
 
+import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
+import LoggedOutModal from "./modals/LoggedOut.svelte";
+import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
+
 import Cloudlink from "./cloudlink.js";
 import {
 	screen,
+	relationships,
+	chats,
 	ulist,
 	user,
 	authHeader,
@@ -14,7 +20,7 @@ import {
 	disconnected,
 	disconnectReason,
 } from "./stores.js";
-import {linkUrl} from "./urls.js";
+import {linkUrl, apiUrl} from "./urls.js";
 import * as modals from "./modals.js";
 
 import {tick} from "svelte";
@@ -48,14 +54,18 @@ authHeader.subscribe(v => {
 	}
 });
 
+let _relationships = null;
+relationships.subscribe(v => _relationships = v);
+
+let _chats = null;
+chats.subscribe(v => _chats = v);
+
 /**
  * Listens to username and token updates that could happen by other tabs.
  */
 addEventListener("storage", event => {
-	console.log(event.key);
-	console.log(event.newValue);
 	if (event.key === "meower_savedusername") {
-		if (event.newValue !== _user.name) {
+		if (event.newValue !== _authHeader.username) {
 			authHeader.set({
 				username: event.newValue,
 				..._authHeader,
@@ -63,10 +73,12 @@ addEventListener("storage", event => {
 			link.disconnect(1000, "Intentional disconnect");
 		}
 	} else if (event.key === "meower_savedpassword") {
-		authHeader.set({
-			token: event.newValue,
-			..._authHeader,
-		});
+		if (event.newValue !== _authHeader.token) {
+			authHeader.set({
+				token: event.newValue,
+				..._authHeader,
+			});
+		}
 	}
 });
 
@@ -120,10 +132,34 @@ let bannedEvent = null;
  */
 let inboxMessageEvent = null;
 /**
+ * A variable used to keep track of relationship state updates.
+ */
+let relationshipUpdateEvent = null;
+/**
  * A variable used to keep track of user config updates.
  * @type any
  */
 let configUpdateEvent = null;
+/**
+ * A variable used to keep track of chat creations.
+ * @type any
+ */
+let chatCreateEvent = null;
+/**
+ * A variable used to keep track of chat updates.
+ * @type any
+ */
+let chatUpdateEvent = null;
+/**
+ * A variable used to keep track of chat deletes.
+ * @type any
+ */
+let chatDeleteEvent = null;
+/**
+ * A variable used to keep track of chat messages to open DMs if it's not already open.
+ * @type any
+ */
+let chatMsgEvent = null;
 /**
  * A variable used to keep track of any disconnection requests.
  * @type any
@@ -165,9 +201,29 @@ export async function connect() {
 		link.off(inboxMessageEvent);
 		inboxMessageEvent = null;
 	}
+	if (relationshipUpdateEvent) {
+		link.off(relationshipUpdateEvent);
+		relationshipUpdateEvent = null;
+	}
 	if (configUpdateEvent) {
 		link.off(configUpdateEvent);
 		configUpdateEvent = null;
+	}
+	if (chatCreateEvent) {
+		link.off(chatCreateEvent);
+		chatCreateEvent = null;
+	}
+	if (chatUpdateEvent) {
+		link.off(chatUpdateEvent);
+		chatUpdateEvent = null;
+	}
+	if (chatDeleteEvent) {
+		link.off(chatDeleteEvent);
+		chatDeleteEvent = null;
+	}
+	if (chatMsgEvent) {
+		link.off(chatMsgEvent);
+		chatMsgEvent = null;
 	}
 	if (disconnectRequest) {
 		link.off(disconnectRequest);
@@ -197,7 +253,6 @@ export async function connect() {
 			pingInterval = null;
 
 			// show disconnected modal if disconnect reason is set
-			let _disconnectedReason;
 			disconnectReason.subscribe(v => {
 				if (v) {
 					disconnected.set(true);
@@ -219,11 +274,7 @@ export async function connect() {
 				} catch (e) {
 					link.error("manager", "connection error:", e);
 					link.off(onErrorEv);
-					if (e === "E:119 | IP Blocked") {
-						modals.showModal("ipBlocked");
-					} else {
-						modals.showModal("connectionFailed");
-					}
+					modals.showModal(ConnectionFailedModal);
 				}
 			});
 			link.once("connected", async () => {
@@ -231,11 +282,9 @@ export async function connect() {
 				link.off(onErrorEv);
 
 				// re-authenticate
-				let _authHeader = {};
-				authHeader.subscribe(v => (_authHeader = v));
 				if (_authHeader.username && _authHeader.token) {
 					try {
-						const authVal = await meowerRequest({
+						await meowerRequest({
 							cmd: "direct",
 							val: {
 								cmd: "authpswd",
@@ -245,21 +294,9 @@ export async function connect() {
 								},
 							},
 						});
-						const profileVal = await meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: authVal.payload.username,
-							},
-						});
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: authVal.payload.username,
-							})
-						);
 					} catch (e) {
-						modals.showModal("loggedOut");
+						console.error(e);
+						modals.showModal(LoggedOutModal);
 					}
 				}
 
@@ -277,11 +314,7 @@ export async function connect() {
 			} catch (e) {
 				link.error("manager", "connection error:", e);
 				link.off(onErrorEv);
-				if (e === "E:119 | IP Blocked") {
-					modals.showModal("ipBlocked");
-				} else {
-					modals.showModal("connectionFailed");
-				}
+				modals.showModal(ConnectionFailedModal);
 			}
 		});
 		ulistEvent = link.on("ulist", cmd => {
@@ -293,18 +326,18 @@ export async function connect() {
 		});
 		authEvent = link.on("direct", async cmd => {
 			if (cmd.val.mode === "auth") {
+				user.update(v =>
+					Object.assign(v, {
+						...cmd.val.payload.account,
+						name: cmd.val.payload.username,
+					})
+				);
 				authHeader.set({
 					username: cmd.val.payload.username,
 					token: cmd.val.payload.token,
 				});
-				localStorage.setItem(
-					"meower_savedusername",
-					cmd.val.payload.username
-				);
-				localStorage.setItem(
-					"meower_savedpassword",
-					cmd.val.payload.token
-				);
+				relationships.set(cmd.val.payload.relationships);
+				chats.set(cmd.val.payload.chats);
 			}
 		});
 		bannedEvent = link.on("direct", async cmd => {
@@ -320,7 +353,7 @@ export async function connect() {
 					) &&
 						_user.ban.expires > Math.floor(Date.now() / 1000))
 				) {
-					modals.showModal("banned");
+					modals.showModal(AccountBannedModal);
 				}
 			}
 		});
@@ -328,6 +361,12 @@ export async function connect() {
 			if (cmd.val.mode === "inbox_message") {
 				_user.unread_inbox = true;
 				user.set(_user);
+			}
+		});
+		relationshipUpdateEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "update_relationship") {
+				_relationships[cmd.val.payload.username] = cmd.val.payload.state;
+				relationships.set(_relationships);
 			}
 		});
 		configUpdateEvent = link.on("direct", cmd => {
@@ -339,10 +378,61 @@ export async function connect() {
 				user.set(_user);
 			}
 		});
+		chatCreateEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "create_chat") {
+				let itemIndex = _chats.findIndex(chat => chat._id === cmd.val.payload._id);
+				if (itemIndex !== -1) return;
+				_chats.push(cmd.val.payload);
+				chats.set(_chats);
+			}
+		});
+		chatUpdateEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "update_chat") {
+				let itemIndex = _chats.findIndex(chat => chat._id === cmd.val.payload._id);
+				if (itemIndex === -1) return;
+				_chats[itemIndex] = Object.assign(
+					_chats[itemIndex],
+					cmd.val.payload,
+				);
+				chats.set(_chats);
+			}
+		});
+		chatDeleteEvent = link.on("direct", cmd => {
+			if (cmd.val.mode === "delete") {
+				_chats = _chats.filter(chat => chat._id !== cmd.val.id);
+				chats.set(_chats);
+			}
+		});
+		chatMsgEvent = link.on("direct", async cmd => {
+			if (cmd.val.state === 2) {
+				let chatIndex = _chats.findIndex(chat => chat._id === cmd.val.post_origin);
+				if (chatIndex === -1) {
+					try {
+						const resp = await fetch(`${apiUrl}chats/${cmd.val.post_origin}`, {
+							method: "GET",
+							headers: _authHeader,
+						});
+						if (!resp.ok) {
+							throw new Error(
+								"Response code is not OK; code is " + resp.status
+							);
+						}
+						const chat = await resp.json();
+						_chats.push(chat);
+						chats.set(_chats);
+					} catch (e) {
+						console.error(`Failed getting chat ${cmd.val.post_origin}: ${e}`)
+					}
+				} else {
+					_chats[chatIndex].last_active = cmd.val.t.e;
+					chats.set(_chats);
+				}
+			}
+		});
 		disconnectRequest = link.on("direct", async cmd => {
 			if (disconnectCodes.includes(cmd.val)) {
 				link.log("manager", "Requested disconnect:", cmd.val);
-				modals.showModal("loggedOut");
+				modals.showModal(LoggedOutModal);
 				await disconnect();
 			}
 		});
@@ -353,11 +443,7 @@ export async function connect() {
 		return await link.connect(linkUrl);
 	} catch (e) {
 		link.error("manager", "conenction error:", e);
-		if (e === "E:119 | IP Blocked") {
-			modals.showModal("ipBlocked");
-		} else {
-			modals.showModal("connectionFailed");
-		}
+		modals.showModal(ConnectionFailedModal);
 		return e;
 	}
 }
@@ -448,6 +534,8 @@ export async function updateProfile() {
 				bgm: profile.bgm,
 				bgm_song: profile.bgm_song,
 				layout: profile.layout,
+				hide_blocked_users: profile.hide_blocked_users,
+				favorited_chats: profile.favorited_chats,
 				pfp_data: profile.pfp_data,
 				quote: profile.quote,
 			},

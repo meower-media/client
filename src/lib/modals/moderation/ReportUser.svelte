@@ -1,18 +1,14 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import {profileClicked} from "../stores.js";
+	import {profileClicked} from "../../stores.js";
 
-	import * as modals from "../modals.js";
+	import * as modals from "../../modals.js";
 
-	import * as clm from "../clmanager.js";
+	import * as clm from "../../clmanager.js";
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Report User</h2>
 	<div slot="default">
 		<span>Are you sure you want to report {$profileClicked}?</span>
@@ -20,7 +16,7 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Cancel</button
 			>
 			<button
@@ -35,7 +31,7 @@
 							},
 						},
 					});
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Report</button
 			>
 		</div>

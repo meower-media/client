@@ -9,11 +9,7 @@
 	let errorStatus;
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Logout Everywhere</h2>
 	<div slot="default">
 		<span>Are you sure you want to logout everywhere?</span>
@@ -24,7 +20,7 @@
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Cancel</button
 			>
 			<button

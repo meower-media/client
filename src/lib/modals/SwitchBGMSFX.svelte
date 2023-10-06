@@ -27,11 +27,7 @@
 	}
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Select Song</h2>
 	<div slot="default">
 		<div class="bgm-select">
@@ -63,7 +59,7 @@
 			<button
 				on:click={() => {
 					BGM.playBGM($user.bgm_song); // why
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>Cancel</button
 			>
 			<button
@@ -74,7 +70,7 @@
 
 					clm.updateProfile();
 					BGM.playBGM(bgmTrack + 1);
-					modals.closeModal();
+					modals.closeLastModal();
 				}}>OK</button
 			>
 		</div>
