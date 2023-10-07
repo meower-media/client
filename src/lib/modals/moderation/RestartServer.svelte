@@ -23,9 +23,13 @@
 					});
 					if (!resp.ok) {
 						if (resp.status === 404) {
-							throw new Error("Server doesn't have a restart command set!");
+							throw new Error(
+								"Server doesn't have a restart command set!"
+							);
 						}
-						throw new Error("Response code is not OK; code is " + resp.status);
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
 					modals.closeLastModal();
 				} catch (e) {
@@ -34,9 +38,7 @@
 				}
 			}}
 		>
-			<p>
-				Are you sure you would like to restart the server?
-			</p>
+			<p>Are you sure you would like to restart the server?</p>
 			{#if error}
 				<p style="color: crimson;">{error}</p>
 			{:else}

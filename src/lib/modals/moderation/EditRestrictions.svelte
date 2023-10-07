@@ -32,30 +32,29 @@
 		{user._id}'s Restrictions
 	</h2>
 	<div slot="default">
-        {#each permissions as permission}
-            <label>
-                <input
-                    type="checkbox"
-                    value={permission.value}
-                    disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES)}
-                    bind:group={selectedRestrictions}
-                />
-                {permission.name}
-            </label><br />
-            {@html permission.description}<br /><br />
-        {/each}
+		{#each permissions as permission}
+			<label>
+				<input
+					type="checkbox"
+					value={permission.value}
+					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES)}
+					bind:group={selectedRestrictions}
+				/>
+				{permission.name}
+			</label><br />
+			{@html permission.description}<br /><br />
+		{/each}
 		<div class="modal-buttons">
 			<button
 				type="button"
 				on:click={() => {
-                    selectedRestrictions
-                    modals.closeLastModal;
-                }}>Close</button
+					selectedRestrictions;
+					modals.closeLastModal;
+				}}>Close</button
 			>
 			{#if hasPermission(adminPermissions.SYSADMIN)}
-				<button
-					type="submit"
-					on:click={modals.closeLastModal}>Save</button
+				<button type="submit" on:click={modals.closeLastModal}
+					>Save</button
 				>
 			{/if}
 		</div>

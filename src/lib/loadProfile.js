@@ -24,7 +24,9 @@ function getCache(username, ignoreSpecialUsers) {
 }
 
 export default async function loadProfile(username, ignoreSpecialUsers) {
-	if (["Server", "Deleted", "Notification", "Announcement"].includes(username)) {
+	if (
+		["Server", "Deleted", "Notification", "Announcement"].includes(username)
+	) {
 		return {
 			error: false,
 			pfp_data: -2,

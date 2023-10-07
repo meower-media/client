@@ -5,7 +5,7 @@
 	import OOBE from "../lib/OOBE/Main.svelte";
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
-	
+
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 

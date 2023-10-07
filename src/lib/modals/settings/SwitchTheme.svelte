@@ -6,12 +6,14 @@
 	import {user} from "../../stores.js";
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
-	
 
-	const themePreviews = import.meta.glob("../../../assets/themePreviews/*.png", {
-		import: "default",
-		eager: true,
-	});
+	const themePreviews = import.meta.glob(
+		"../../../assets/themePreviews/*.png",
+		{
+			import: "default",
+			eager: true,
+		}
+	);
 
 	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
 
@@ -55,8 +57,9 @@
 
 		// @ts-ignore
 		currentPreviewImage =
-			themePreviews["../../../assets/themePreviews/" + themeName + ".png"] ||
-			defaultPreview;
+			themePreviews[
+				"../../../assets/themePreviews/" + themeName + ".png"
+			] || defaultPreview;
 	}
 </script>
 

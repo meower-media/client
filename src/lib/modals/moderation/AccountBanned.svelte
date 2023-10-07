@@ -7,7 +7,7 @@
 
 	export let modalData;
 
-	let { ban, feature } = modalData;
+	let {ban, feature} = modalData;
 	let banType;
 
 	$: {
@@ -58,11 +58,18 @@
 
 		{#if ban.state.includes("temp")}
 			<p>
-				This {banType} will expire after <FormattedDate date={ban.expires} />.
+				This {banType} will expire after <FormattedDate
+					date={ban.expires}
+				/>.
 			</p>
 		{:else}
 			<p>
-				If you would like to appeal this {banType}, please email <a href="mailto:support@meower.org" target="_blank" rel="noreferrer">support@meower.org</a>.
+				If you would like to appeal this {banType}, please email
+				<a
+					href="mailto:support@meower.org"
+					target="_blank"
+					rel="noreferrer">support@meower.org</a
+				>.
 			</p>
 		{/if}
 

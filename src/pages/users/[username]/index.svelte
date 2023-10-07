@@ -133,7 +133,10 @@
 			{#if $relationships[data._id] !== 2}
 				<button
 					class="long"
-					on:click={() => modals.showModal(AddMemberProfileModal, { username: data._id })}>Add to Chat</button
+					on:click={() =>
+						modals.showModal(AddMemberProfileModal, {
+							username: data._id,
+						})}>Add to Chat</button
 				>
 			{/if}
 			<button

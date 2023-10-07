@@ -122,7 +122,9 @@
 				// @ts-ignore
 				const f = e.target;
 				// @ts-ignore
-				modals.showModal(ModerateUserModal, { username: f.elements[0].value });
+				modals.showModal(ModerateUserModal, {
+					username: f.elements[0].value,
+				});
 			}}
 		>
 			<div class="input-row">
@@ -159,7 +161,12 @@
 		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
-			<form on:submit|preventDefault={() => modals.showModal(SendAnnouncementModal, { announcement: announceMsg })}>
+			<form
+				on:submit|preventDefault={() =>
+					modals.showModal(SendAnnouncementModal, {
+						announcement: announceMsg,
+					})}
+			>
 				<textarea
 					class="announce-textarea white"
 					placeholder="Announcement text here..."

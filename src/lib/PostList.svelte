@@ -452,7 +452,10 @@
 				<button
 					on:click|preventDefault={() => {
 						modals.showModal(AccountBannedModal, {
-							ban: $user.ban, feature: `creating ${postOrigin === "home" ? "home" : "group chat"} posts`,
+							ban: $user.ban,
+							feature: `creating ${
+								postOrigin === "home" ? "home" : "group chat"
+							} posts`,
 						});
 					}}>View details</button
 				>

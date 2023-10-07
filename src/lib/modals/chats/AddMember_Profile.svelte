@@ -8,9 +8,10 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
-	let loading = {}, errors = {};
+	let loading = {},
+		errors = {};
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -63,7 +64,7 @@
 				Members: {chat.members.length > 5
 					? chat.members.slice(0, 4).join(", ") + "..."
 					: chat.members.join(", ")}
-				
+
 				{#if errors[chat._id]}
 					<p style="color: crimson;">{errors[chat._id]}</p>
 				{/if}
@@ -71,9 +72,7 @@
 		{/each}
 
 		<div class="modal-buttons">
-			<button
-				type="button"
-				on:click={modals.closeLastModal}>Close</button
+			<button type="button" on:click={modals.closeLastModal}>Close</button
 			>
 		</div>
 	</div>

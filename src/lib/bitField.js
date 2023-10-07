@@ -40,9 +40,9 @@ export const adminPermissions = {
 	BLOCK_IPS: 32768,
 
 	VIEW_CHATS: 65536,
-    EDIT_CHATS: 131072,
+	EDIT_CHATS: 131072,
 
-    SEND_ANNOUNCEMENTS: 262144
+	SEND_ANNOUNCEMENTS: 262144,
 };
 
 export const restrictions = {

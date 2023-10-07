@@ -342,7 +342,7 @@ export async function connect() {
 		});
 		bannedEvent = link.on("direct", async cmd => {
 			if (cmd.val.mode === "banned") {
-				modals.showModal(AccountBannedModal, { ban: cmd.val.payload });
+				modals.showModal(AccountBannedModal, {ban: cmd.val.payload});
 			}
 		});
 		inboxMessageEvent = link.on("direct", cmd => {

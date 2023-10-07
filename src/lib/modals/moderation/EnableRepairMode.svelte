@@ -17,12 +17,17 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}admin/server/enable-repair-mode`, {
-						method: "POST",
-						headers: $authHeader,
-					});
+					const resp = await fetch(
+						`${apiUrl}admin/server/enable-repair-mode`,
+						{
+							method: "POST",
+							headers: $authHeader,
+						}
+					);
 					if (!resp.ok) {
-						throw new Error("Response code is not OK; code is " + resp.status);
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
 					modals.closeLastModal();
 				} catch (e) {
@@ -41,8 +46,10 @@
 				<br />
 			{/if}
 			<div class="modal-buttons">
-				<button type="button" disabled={loading} on:click={modals.closeLastModal}
-					>Cancel</button
+				<button
+					type="button"
+					disabled={loading}
+					on:click={modals.closeLastModal}>Cancel</button
 				>
 				{#await sleep(1500)}
 					<button type="submit" disabled>Confirm</button>

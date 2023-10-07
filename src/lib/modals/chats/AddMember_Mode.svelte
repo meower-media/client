@@ -10,10 +10,7 @@
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
-		<button
-			class="long"
-			on:click={() => modals.showModal(AddMemberModal)}
-		>
+		<button class="long" on:click={() => modals.showModal(AddMemberModal)}>
 			Enter Username
 		</button><br />
 		<button
@@ -22,10 +19,7 @@
 		>
 			Search for Users
 		</button><br />
-		<button
-			class="long"
-			on:click={() => modals.closeLastModal()}
-		>
+		<button class="long" on:click={() => modals.closeLastModal()}>
 			Cancel
 		</button>
 	</div>

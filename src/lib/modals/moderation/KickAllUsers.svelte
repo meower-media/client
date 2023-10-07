@@ -22,7 +22,9 @@
 						headers: $authHeader,
 					});
 					if (!resp.ok) {
-						throw new Error("Response code is not OK; code is " + resp.status);
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
 					modals.closeLastModal();
 				} catch (e) {
@@ -31,9 +33,7 @@
 				}
 			}}
 		>
-			<p>
-				Are you sure? This will disconnect everyone!
-			</p>
+			<p>Are you sure? This will disconnect everyone!</p>
 			{#if error}
 				<p style="color: crimson;">{error}</p>
 			{:else}

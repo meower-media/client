@@ -15,7 +15,11 @@
 	import userx from "../../../assets/user-x.svg";
 
 	import {authHeader} from "../../stores.js";
-	import {userFlags, adminPermissions, hasPermission} from "../../bitField.js";
+	import {
+		userFlags,
+		adminPermissions,
+		hasPermission,
+	} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
@@ -23,7 +27,7 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
 	let user;
 	let system, deleted, userProtected;
@@ -59,7 +63,8 @@
 		user = await resp.json();
 		system = (user.flags & userFlags.SYSTEM) === userFlags.SYSTEM;
 		deleted = (user.flags & userFlags.DELETED) === userFlags.DELETED;
-		userProtected = (user.flags & userFlags.PROTECTED) === userFlags.PROTECTED;
+		userProtected =
+			(user.flags & userFlags.PROTECTED) === userFlags.PROTECTED;
 		if (user.ban) banState = Object.assign({}, user.ban);
 	}
 
@@ -129,7 +134,8 @@
 		{:then}
 			{#if userProtected}
 				<Container warning={true}>
-					This account is protected. If you are not a sysadmin, some options will be unavailable.
+					This account is protected. If you are not a sysadmin, some
+					options will be unavailable.
 				</Container>
 			{/if}
 			{#if deleted}
@@ -312,7 +318,11 @@
 					id="state"
 					class="grow"
 					style="width: 100%; margin-bottom: 0.25em;"
-					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
+					disabled={!hasPermission(
+						adminPermissions.EDIT_BAN_STATES
+					) ||
+						(userProtected &&
+							!hasPermission(adminPermissions.SYSADMIN))}
 					bind:value={banState.state}
 				>
 					<option value="none" selected={banState.state === "none"}>
@@ -370,7 +380,9 @@
 						type="datetime-local"
 						disabled={!hasPermission(
 							adminPermissions.EDIT_BAN_STATES
-						) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
+						) ||
+							(userProtected &&
+								!hasPermission(adminPermissions.SYSADMIN))}
 						bind:value={formattedBanExpires}
 						on:change={() => {
 							banState.expires = Math.floor(
@@ -391,7 +403,9 @@
 						placeholder="Reason text here..."
 						disabled={!hasPermission(
 							adminPermissions.EDIT_BAN_STATES
-						) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
+						) ||
+							(userProtected &&
+								!hasPermission(adminPermissions.SYSADMIN))}
 						bind:value={banState.reason}
 					/>
 				{/if}
@@ -424,7 +438,11 @@
 				{#if !system && !deleted && hasPermission(adminPermissions.VIEW_POSTS)}
 					<button
 						class="action-button"
-						on:click={() => modals.showModal(ViewPostsModal, { username, userProtected })}
+						on:click={() =>
+							modals.showModal(ViewPostsModal, {
+								username,
+								userProtected,
+							})}
 					>
 						View posts
 					</button>
@@ -440,8 +458,10 @@
 				{#if !system && !deleted && hasPermission(adminPermissions.CLEAR_USER_QUOTES)}
 					<button
 						class="action-button"
-						disabled={userProtected && !hasPermission(adminPermissions.SYSADMIN)}
-						on:click={() => modals.showModal(ClearQuoteModal, { username })}
+						disabled={userProtected &&
+							!hasPermission(adminPermissions.SYSADMIN)}
+						on:click={() =>
+							modals.showModal(ClearQuoteModal, {username})}
 					>
 						Clear quote
 					</button>
@@ -462,7 +482,8 @@
 				{#if hasPermission(adminPermissions.DELETE_USERS)}
 					<button
 						class="action-button"
-						disabled={userProtected && !hasPermission(adminPermissions.SYSADMIN)}
+						disabled={userProtected &&
+							!hasPermission(adminPermissions.SYSADMIN)}
 						on:click={() =>
 							modals.showModal(DeleteAccountModal, {user})}
 					>
