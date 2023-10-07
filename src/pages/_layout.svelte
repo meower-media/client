@@ -17,7 +17,7 @@
 	let currentPage = "";
 	let currentParams = JSON.stringify($params);
 	let remounting = false;
-	$afterPageLoad(async (page) => {
+	$afterPageLoad(async page => {
 		if (remounting) return;
 
 		if (page.title === currentPage) {
@@ -40,21 +40,8 @@
 		reconnecting,
 		OOBERunning,
 		user,
-		userRestricted,
-		userSuspended,
 		spinner,
 	} from "../lib/stores.js";
-	
-	$: {
-		$userRestricted =
-			$user.ban.state === "PermRestriction" ||
-			($user.ban.state === "TempRestriction" &&
-				$user.ban.expires > Math.floor(Date.now() / 1000));
-		$userSuspended =
-			$user.ban.state === "PermSuspension" ||
-			($user.ban.state === "TempSuspension" &&
-				$user.ban.expires > Math.floor(Date.now() / 1000));
-	}
 </script>
 
 <!-- routify:options bundle=true -->
@@ -95,7 +82,10 @@
 			</div>
 		</Modal>
 	{:else if $modalStack.length > 0}
-		<svelte:component this={$modalStack[0].modal} modalData={$modalStack[0].data} />
+		<svelte:component
+			this={$modalStack[0].modal}
+			modalData={$modalStack[0].data}
+		/>
 	{/if}
 
 	{#if $screen === "blank"}
@@ -116,10 +106,8 @@
 				-->
 				{#if $OOBERunning}
 					<OOBE />
-				{:else}
-					{#if !remounting}
-						<slot />
-					{/if}
+				{:else if !remounting}
+					<slot />
 				{/if}
 			</div>
 		</div>

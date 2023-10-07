@@ -9,22 +9,25 @@
 	let loading, report, error;
 </script>
 
-<Modal
-	on:close={modals.closeLastModal}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Delete Post</h2>
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}posts?id=${$postClicked.post_id}`, {
-						method: "DELETE",
-						headers: $authHeader,
-					});
+					const resp = await fetch(
+						`${apiUrl}posts?id=${$postClicked.post_id}`,
+						{
+							method: "DELETE",
+							headers: $authHeader,
+						}
+					);
 					if (!resp.ok) {
 						if (resp.status === 429) {
-							throw new Error("Too many requests! Try again later.");
+							throw new Error(
+								"Too many requests! Try again later."
+							);
 						}
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
@@ -54,9 +57,12 @@
 				<button
 					type="button"
 					disabled={loading}
-					on:click|preventDefault={modals.closeLastModal}>Cancel</button
+					on:click|preventDefault={modals.closeLastModal}
+					>Cancel</button
 				>
-                <button type="submit" disabled={loading} autofocus>Delete</button>
+				<button type="submit" disabled={loading} autofocus
+					>Delete</button
+				>
 			</div>
 		</form>
 	</div>

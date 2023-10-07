@@ -8,7 +8,8 @@
 	import AddMember2Modal from "../../../lib/modals/AddMember_2.svelte";
 	import BlockUserModal from "../../../lib/modals/BlockUser.svelte";
 
-	import {relationships, profileClicked, user, userSuspended} from "../../../lib/stores.js";
+	import {relationships, profileClicked, user} from "../../../lib/stores.js";
+	import {restrictions, isRestricted} from "../../../lib/bitField.js";
 	import {profileCache} from "../../../lib/loadProfile.js";
 	import * as modals from "../../../lib/modals.js";
 	import * as clm from "../../../lib/clmanager.js";
@@ -30,19 +31,6 @@
 		}
 		const json = await resp.json();
 		return json;
-	}
-
-	/**
-	 * Saves the user profile, and also clears its cache entry.
-	 */
-	function save() {
-		if ($profileCache[$user.name]) {
-			const _profileCache = $profileCache;
-			delete _profileCache[$user.name];
-			profileCache.set(_profileCache);
-		}
-
-		clm.updateProfile();
 	}
 
 	let pfpOverflow = false;
@@ -69,9 +57,9 @@
 					style="font-style: italic"
 					placeholder="Write something..."
 					maxlength="360"
-					disabled={$userSuspended}
+					disabled={isRestricted(restrictions.EDITING_QUOTE)}
 					bind:value={$user.quote}
-					on:change={async () => await clm.updateProfile()}
+					on:change={() => clm.updateProfile({quote: $user.quote})}
 				/>
 			</Container>
 		{:else if data.quote}
@@ -87,9 +75,7 @@
 				<div id="pfp-list">
 					{#if pfpOverflow && $user.pfp_data < 0}
 						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
+							on:click={() => (pfpSwitcher = false)}
 							class="pfp selected"
 							><PFP
 								online={false}
@@ -101,9 +87,10 @@
 					{#each pfps as pfp}
 						<button
 							on:click={() => {
+								if ($profileCache[$user.name])
+									delete $profileCache[$user.name];
+								clm.updateProfile({pfp_data: pfp});
 								pfpSwitcher = false;
-								$user.pfp_data = pfp;
-								save();
 							}}
 							class="pfp"
 							class:selected={$user.pfp_data === pfp}
@@ -116,9 +103,7 @@
 					{/each}
 					{#if pfpOverflow && $user.pfp_data > 0}
 						<button
-							on:click={() => {
-								pfpSwitcher = false;
-							}}
+							on:click={() => (pfpSwitcher = false)}
 							class="pfp selected"
 							><PFP
 								online={false}
@@ -156,11 +141,12 @@
 			{/if}
 			<button
 				class="long"
-				title="{$relationships[data._id] === 2 ? "Unb" : "B"}lock User"
+				title="{$relationships[data._id] === 2 ? 'Unb' : 'B'}lock User"
 				on:click={() => {
 					$profileClicked = data._id;
 					modals.showModal(BlockUserModal);
-				}}>{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
+				}}
+				>{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
 			>
 		{/if}
 	{:catch}

@@ -4,16 +4,19 @@
 	import GCMemberModal from "./GCMember.svelte";
 
 	import {authHeader, profileClicked_GC, chat, user} from "../stores.js";
-	import {permissions, hasPermission} from "../adminPermissions.js";
+	import {adminPermissions, hasPermission} from "../bitField.js";
 	import {apiUrl} from "../urls.js";
 	import * as modals from "../modals.js";
 
-    import sleep from "../sleep";
+	import sleep from "../sleep";
 
 	let loading, error;
 
 	$: {
-		if ($chat.owner !== $user.name && !hasPermission(permissions.EDIT_CHATS)) {
+		if (
+			$chat.owner !== $user.name &&
+			!hasPermission(adminPermissions.EDIT_CHATS)
+		) {
 			if ($chat.members.includes($profileClicked_GC)) {
 				modals.showModal(GCMemberModal);
 			} else {
@@ -23,22 +26,25 @@
 	}
 </script>
 
-<Modal
-	on:close={modals.closeLastModal}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Transfer Ownership to {$profileClicked_GC}</h2>
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}chats/${$chat._id}/members/${$profileClicked_GC}/transfer`, {
-						method: "POST",
-						headers: $authHeader,
-					});
+					const resp = await fetch(
+						`${apiUrl}chats/${$chat._id}/members/${$profileClicked_GC}/transfer`,
+						{
+							method: "POST",
+							headers: $authHeader,
+						}
+					);
 					if (!resp.ok) {
 						if (resp.status === 429) {
-							throw new Error("Too many requests! Try again later.");
+							throw new Error(
+								"Too many requests! Try again later."
+							);
 						}
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
@@ -63,10 +69,12 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-                {#await sleep(1500)}
-                    <button type="submit" disabled>Transfer Ownership</button>
+				{#await sleep(1500)}
+					<button type="submit" disabled>Transfer Ownership</button>
 				{:then}
-                    <button type="submit" disabled={loading}>Transfer Ownership</button>
+					<button type="submit" disabled={loading}
+						>Transfer Ownership</button
+					>
 				{/await}
 			</div>
 		</form>

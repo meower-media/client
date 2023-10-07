@@ -3,7 +3,7 @@
 
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
-	
+
 	import sleep from "../../sleep";
 
 	let status;
@@ -36,9 +36,7 @@
 			</p>
 			{#if status}<b>{status}</b><br /><br />{/if}
 			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={modals.closeLastModal}
+				<button type="button" on:click={modals.closeLastModal}
 					>Cancel</button
 				>
 				{#await sleep(1500)}

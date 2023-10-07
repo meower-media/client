@@ -5,7 +5,7 @@
 
 	export let modalData;
 
-	let { title, desc } = modalData;
+	let {title, desc} = modalData;
 </script>
 
 <Modal on:close={modals.closeLastModal}>

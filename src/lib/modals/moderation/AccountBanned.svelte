@@ -16,15 +16,15 @@
 		banTypeIon = "suspension";
 	} else if (["TempBan", "PermBan"].includes($user.ban.state)) {
 		banType = "banned";
-		banTypeIon = "ban";  // doesn't really end with "ion", but oh well
+		banTypeIon = "ban"; // doesn't really end with "ion", but oh well
 	}
 
-	$: { if ($user.ban.state === "None") modals.closeLastModal(); }
+	$: {
+		if ($user.ban.state === "None") modals.closeLastModal();
+	}
 </script>
 
-<Modal
-	on:close={modals.closeLastModal}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Account {banType}</h2>
 
 	<div slot="default">
@@ -50,11 +50,14 @@
 
 		{#if banType === "restricted"}
 			<p>
-				While your account is restricted, you will not be able to start DMs, create group chats, or add members to group chats.
+				While your account is restricted, you will not be able to start
+				DMs, create group chats, or add members to group chats.
 			</p>
 		{:else if banType === "suspended"}
 			<p>
-				While your account is suspended, you will not be able to create posts, start DMs, create group chats, or add members to group chats.
+				While your account is suspended, you will not be able to create
+				posts, start DMs, create group chats, or add members to group
+				chats.
 			</p>
 		{/if}
 
@@ -88,9 +91,7 @@
 			<a href="https://meower.org/legal" target="_blank" rel="noreferrer"
 				>Terms of Service</a
 			>
-			<button
-				on:click={modals.closeLastModal}>Close</button
-			>
+			<button on:click={modals.closeLastModal}>Close</button>
 		</div>
 	</div>
 </Modal>

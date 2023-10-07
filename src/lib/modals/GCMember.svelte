@@ -6,20 +6,25 @@
 	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
 
 	import {profileClicked_GC, user, chat} from "../stores.js";
-	import {permissions, hasPermission} from "../adminPermissions.js";
+	import {adminPermissions, hasPermission} from "../bitField.js";
 	import * as modals from "../modals.js";
 
 	import {goto} from "@roxi/routify";
 
 	$: {
-		if (!$chat.members.includes($profileClicked_GC)) modals.closeLastModal();
+		if (!$chat.members.includes($profileClicked_GC))
+			modals.closeLastModal();
 	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">{$profileClicked_GC}'s Profile</h2>
 	<div slot="default">
-		<ProfileView username={$profileClicked_GC} canClick={true} canDoActions={true} />
+		<ProfileView
+			username={$profileClicked_GC}
+			canClick={true}
+			canDoActions={true}
+		/>
 		<button
 			class="long"
 			on:click={() => {
@@ -27,7 +32,7 @@
 				$goto(`/users/${$profileClicked_GC}`);
 			}}>View full profile</button
 		>
-		{#if ($chat.owner == $user.name && $profileClicked_GC != $user.name) || hasPermission(permissions.EDIT_CHATS)}
+		{#if ($chat.owner == $user.name && $profileClicked_GC != $user.name) || hasPermission(adminPermissions.EDIT_CHATS)}
 			<button
 				class="long"
 				on:click={() => modals.showModal(RemoveMemberModal)}

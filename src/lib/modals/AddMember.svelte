@@ -17,23 +17,33 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}chats/${$chat._id}/members/${username}`, {
-						method: "PUT",
-						headers: $authHeader,
-					});
+					const resp = await fetch(
+						`${apiUrl}chats/${$chat._id}/members/${username}`,
+						{
+							method: "PUT",
+							headers: $authHeader,
+						}
+					);
 					if (!resp.ok) {
 						switch (resp.status) {
 							case 403:
-								throw new Error(`Someone's privacy settings are preventing you from adding ${username} to ${$chat.nickname}.`);
+								throw new Error(
+									`Someone's privacy settings are preventing you from adding ${username} to ${$chat.nickname}.`
+								);
 							case 404:
 								throw new Error(`${username} not found.`);
 							case 409:
-								throw new Error(`${username} is already a member of ${$chat.nickname}.`);
+								throw new Error(
+									`${username} is already a member of ${$chat.nickname}.`
+								);
 							case 429:
-								throw new Error("Too many requests! Try again later.");
+								throw new Error(
+									"Too many requests! Try again later."
+								);
 							default:
 								throw new Error(
-									"Response code is not OK; code is " + resp.status
+									"Response code is not OK; code is " +
+										resp.status
 								);
 						}
 					}
@@ -66,9 +76,12 @@
 				<button
 					type="button"
 					disabled={loading}
-					on:click|preventDefault={() => modals.closeLastModal()}>Cancel</button
+					on:click|preventDefault={() => modals.closeLastModal()}
+					>Cancel</button
 				>
-				<button type="submit" disabled={!username || loading}>Add member</button>
+				<button type="submit" disabled={!username || loading}
+					>Add member</button
+				>
 			</div>
 		</form>
 	</div>

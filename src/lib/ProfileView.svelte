@@ -9,7 +9,7 @@
 
 	import {authHeader, chats, ulist, user} from "./stores.js";
 	import {apiUrl} from "./urls.js";
-	import {userFlags} from "./userFlags.js";
+	import {userFlags} from "./bitField.js";
 	import loadProfile from "./loadProfile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -43,23 +43,42 @@
 				<div class="settings-controls">
 					{#if dmChat}
 						<button
-							class="circle star {$user.favorited_chats.includes(dmChat._id) ? 'filled' : ''}"
+							class="circle star {$user.favorited_chats.includes(
+								dmChat._id
+							)
+								? 'filled'
+								: ''}"
 							on:click={() => {
-								if ($user.favorited_chats.includes(dmChat._id)) {
-									$user.favorited_chats.splice($user.favorited_chats.indexOf(dmChat._id), 1);
-									clm.updateProfile();
-								} else {
-									$user.favorited_chats = $user.favorited_chats.filter(chatId => {
-										return $chats.some(_chat => _chat._id === chatId);
+								if (
+									$user.favorited_chats.includes(dmChat._id)
+								) {
+									$user.favorited_chats.splice(
+										$user.favorited_chats.indexOf(
+											dmChat._id
+										),
+										1
+									);
+									clm.updateProfile({
+										favorited_chats: $user.favorited_chats,
 									});
+								} else {
+									$user.favorited_chats =
+										$user.favorited_chats.filter(chatId => {
+											return $chats.some(
+												_chat => _chat._id === chatId
+											);
+										});
 									if ($user.favorited_chats.length >= 50) {
 										modals.showModal(BasicModal, {
 											title: "Too many chats!",
-											desc: "Sorry, you can only have up to 50 favorited chats!"
+											desc: "Sorry, you can only have up to 50 favorited chats!",
 										});
 									} else {
 										$user.favorited_chats.push(dmChat._id);
-										clm.updateProfile();
+										clm.updateProfile({
+											favorited_chats:
+												$user.favorited_chats,
+										});
 									}
 								}
 							}}
@@ -72,7 +91,9 @@
 										method: "DELETE",
 										headers: $authHeader,
 									});
-									$chats.filter(_chat => _chat._id !== dmChat._id);
+									$chats.filter(
+										_chat => _chat._id !== dmChat._id
+									);
 								}}
 							/>
 						{/if}
@@ -85,37 +106,57 @@
 							title="Open DM with {data._id}"
 							class="circle join"
 							on:click={async () => {
-								let chat = $chats.find(_chat => _chat.type === 1 && _chat.members.includes(data._id));
+								let chat = $chats.find(
+									_chat =>
+										_chat.type === 1 &&
+										_chat.members.includes(data._id)
+								);
 								if (chat) {
 									$goto(`/chats/${chat._id}`);
 								} else {
 									try {
-										const resp = await fetch(`${apiUrl}users/${data._id}/dm`, {
-											method: "GET",
-											headers: $authHeader,
-										});
+										const resp = await fetch(
+											`${apiUrl}users/${data._id}/dm`,
+											{
+												method: "GET",
+												headers: $authHeader,
+											}
+										);
 										if (!resp.ok) {
 											switch (resp.status) {
 												case 403:
-													modals.showModal(AccountBannedModal);
+													modals.showModal(
+														AccountBannedModal,
+														{
+															feature:
+																"starting direct message chats",
+														}
+													);
 													return;
 												case 429:
-													throw new Error("Too many requests! Try again later.");
+													throw new Error(
+														"Too many requests! Try again later."
+													);
 												default:
 													throw new Error(
-														"Response code is not OK; code is " + resp.status
+														"Response code is not OK; code is " +
+															resp.status
 													);
 											}
 										}
 										const chat = await resp.json();
-										if ($chats.findIndex(_chat => _chat._id === chat._id) === -1) {
+										if (
+											$chats.findIndex(
+												_chat => _chat._id === chat._id
+											) === -1
+										) {
 											$chats.push(chat);
 										}
 										$goto(`/chats/${chat._id}`);
 									} catch (e) {
 										modals.showModal(BasicModal, {
 											title: "Failed to open DM",
-											desc: `Failed to open DM with ${data._id}. Error: ${e}`
+											desc: `Failed to open DM with ${data._id}. Error: ${e}`,
 										});
 									}
 								}
@@ -175,7 +216,9 @@
 						{#if $ulist.includes(data._id)}
 							Online right now
 						{:else if data.last_seen}
-							Offline since <FormattedDate date={data.last_seen} />
+							Offline since <FormattedDate
+								date={data.last_seen}
+							/>
 						{:else}
 							Never seen online
 						{/if}

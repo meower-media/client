@@ -15,7 +15,7 @@
 	<h2 slot="header">Join Meower</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				loading = true;
 				clm.meowerRequest({
@@ -28,39 +28,39 @@
 						},
 					},
 				})
-				.then(async val => {
-					user.update(v =>
-						Object.assign(v, {
-							name: val.payload.username,
-							unread_inbox: true,
-							layout: "new",
-						})
-					);
-					OOBERunning.set(true);
-					modals.closeLastModal();
-				})
-				.catch(code => {
-					loading = false;
-					switch (code) {
-						case "I:015 | Account exists":
-							error = `${username} is taken!`;
-							break;
-						case "E:119 | IP Blocked":
-							modals.showModal(AccountCreationBlockedModal);
-							break;
-						case "E:019 | Illegal characters detected":
-							error =
-								"Usernames must not have spaces or other special characters!";
-							break;
-						case "E:106 | Too many requests":
-							error =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							error = `Unexpected ${code} error!`;
-					}
-					return;
-				});
+					.then(async val => {
+						user.update(v =>
+							Object.assign(v, {
+								name: val.payload.username,
+								unread_inbox: true,
+								layout: "new",
+							})
+						);
+						OOBERunning.set(true);
+						modals.closeLastModal();
+					})
+					.catch(code => {
+						loading = false;
+						switch (code) {
+							case "I:015 | Account exists":
+								error = `${username} is taken!`;
+								break;
+							case "E:119 | IP Blocked":
+								modals.showModal(AccountCreationBlockedModal);
+								break;
+							case "E:019 | Illegal characters detected":
+								error =
+									"Usernames must not have spaces or other special characters!";
+								break;
+							case "E:106 | Too many requests":
+								error =
+									"Too many requests! Please try again later.";
+								break;
+							default:
+								error = `Unexpected ${code} error!`;
+						}
+						return;
+					});
 			}}
 		>
 			<label for="username" style={error ? "color: crimson;" : ""}>

@@ -3,7 +3,7 @@
  */
 
 import {writable} from "svelte/store";
-import {systemDarkMode} from "./responsiveness.js";
+import unloadedprofile from "./unloadedprofile.js";
 
 // Used for setup screen
 export const screen = writable("setup");
@@ -11,10 +11,6 @@ export const setupPage = writable("logo");
 
 // Used for modal overlay
 export const modalStack = writable([]);
-
-// Used for basic modal
-export const basicModalTitle = writable("");
-export const basicModalDesc = writable("");
 
 // Used for the disconnected screen
 export const intentionalDisconnect = writable(false);
@@ -81,29 +77,7 @@ export const authHeader = writable({
 });
 
 // The current user profile
-export const user = writable({
-	name: null,
-	permissions: 0,
-	unread_inbox: false,
-	theme: "orange",
-	mode: !systemDarkMode(),
-	sfx: true,
-	bgm: false,
-	bgm_song: 2,
-	layout: "new",
-	debug: false,
-	hide_blocked_users: false,
-	favorited_chats: [],
-	pfp_data: 1,
-	quote: "",
-	ban: {
-		state: "None",
-		expires: 0,
-		reason: "",
-	},
-});
-export const userRestricted = writable(false);
-export const userSuspended = writable(false);
+export const user = writable(unloadedprofile());
 
 // Spinner thing
 export const spinner = writable(false);

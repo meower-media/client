@@ -5,11 +5,7 @@
 	import ModPanelModal from "./ModPanel.svelte";
 	import LogoutModal from "../lib/modals/Logout.svelte";
 
-	import {
-		user,
-		profileClicked,
-		OOBERunning,
-	} from "../lib/stores.js";
+	import {user, profileClicked, OOBERunning} from "../lib/stores.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as modals from "../lib/modals.js";
 

@@ -15,13 +15,8 @@
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
 	import CreateChatModal from "../../lib/modals/CreateChat.svelte";
 
-	import {
-		authHeader,
-		chats,
-		user,
-		userRestricted,
-		userSuspended,
-	} from "../../lib/stores.js";
+	import {authHeader, chats, user} from "../../lib/stores.js";
+	import {restrictions, isRestricted} from "../../lib/bitField.js";
 	import {apiUrl} from "../../lib/urls.js";
 	import * as modals from "../../lib/modals.js";
 	import * as clm from "../../lib/clmanager.js";
@@ -34,14 +29,18 @@
 	let favoritedChats, nonFavoritedChats, sortedChats, toLeaveChat, leaveError;
 
 	$: {
-		favoritedChats = $chats.filter(_chat => $user.favorited_chats.includes(_chat._id)).sort((a, b) => {
-			//return $user.favorited_chats.indexOf(a._id) - $user.favorited_chats.indexOf(b._id);
-			return b.last_active - a.last_active;
-		});
+		favoritedChats = $chats
+			.filter(_chat => $user.favorited_chats.includes(_chat._id))
+			.sort((a, b) => {
+				//return $user.favorited_chats.indexOf(a._id) - $user.favorited_chats.indexOf(b._id);
+				return b.last_active - a.last_active;
+			});
 
-		nonFavoritedChats = $chats.filter(_chat => !$user.favorited_chats.includes(_chat._id)).sort((a, b) => {
-			return b.last_active - a.last_active;
-		});
+		nonFavoritedChats = $chats
+			.filter(_chat => !$user.favorited_chats.includes(_chat._id))
+			.sort((a, b) => {
+				return b.last_active - a.last_active;
+			});
 
 		sortedChats = favoritedChats.concat(nonFavoritedChats);
 	}
@@ -56,8 +55,10 @@
 			<button
 				class="circle plus"
 				on:click={() => {
-					if ($userRestricted || $userSuspended) {
-						modals.showModal(AccountBannedModal);
+					if (isRestricted(restrictions.NEW_CHATS)) {
+						modals.showModal(AccountBannedModal, {
+							feature: "creating group chats",
+						});
 					} else {
 						modals.showModal(CreateChatModal);
 					}
@@ -67,10 +68,7 @@
 	</Container>
 	<Container>
 		<div class="settings-controls">
-			<button
-				class="circle join"
-				on:click={$goto("/chats/livechat")}
-			/>
+			<button class="circle join" on:click={$goto("/chats/livechat")} />
 		</div>
 
 		<h1>Livechat</h1>
@@ -85,23 +83,38 @@
 				<Container>
 					<div class="settings-controls">
 						<button
-							class="circle star {$user.favorited_chats.includes(chat._id) ? 'filled' : ''}"
+							class="circle star {$user.favorited_chats.includes(
+								chat._id
+							)
+								? 'filled'
+								: ''}"
 							on:click={() => {
 								if ($user.favorited_chats.includes(chat._id)) {
-									$user.favorited_chats.splice($user.favorited_chats.indexOf(chat._id), 1);
-									clm.updateProfile();
-								} else {
-									$user.favorited_chats = $user.favorited_chats.filter(chatId => {
-										return $chats.some(_chat => _chat._id === chatId);
+									$user.favorited_chats.splice(
+										$user.favorited_chats.indexOf(chat._id),
+										1
+									);
+									clm.updateProfile({
+										favorited_chats: $user.favorited_chats,
 									});
+								} else {
+									$user.favorited_chats =
+										$user.favorited_chats.filter(chatId => {
+											return $chats.some(
+												_chat => _chat._id === chatId
+											);
+										});
 									if ($user.favorited_chats.length >= 50) {
 										modals.showModal(BasicModal, {
 											title: "Too many chats!",
-											desc: "Sorry, you can only have up to 50 favorited chats!"
+											desc: "Sorry, you can only have up to 50 favorited chats!",
 										});
 									} else {
 										$user.favorited_chats.push(chat._id);
-										clm.updateProfile();
+										clm.updateProfile({
+											favorited_chats:
+												$user.favorited_chats,
+										});
 									}
 								}
 							}}
@@ -109,7 +122,7 @@
 						{#if !$user.favorited_chats.includes(chat._id)}
 							<button
 								class="circle close"
-								on:click={() => toLeaveChat = chat}
+								on:click={() => (toLeaveChat = chat)}
 							/>
 						{/if}
 						<button
@@ -125,7 +138,9 @@
 				</Container>
 			{:else if chat.type === 1}
 				<ProfileView
-					username={chat.members.filter(username => username !== $user.name)[0]}
+					username={chat.members.filter(
+						username => username !== $user.name
+					)[0]}
 					small={true}
 					canClick={true}
 					canDoActions={true}
@@ -135,7 +150,7 @@
 		</div>
 	{/each}
 	{#if toLeaveChat}
-		<Modal on:close={() => toLeaveChat = null}>
+		<Modal on:close={() => (toLeaveChat = null)}>
 			<h2 slot="header">Leave Chat</h2>
 			<div slot="default">
 				Are you sure you want to leave {toLeaveChat.nickname}?
@@ -145,27 +160,35 @@
 					<br /><br />
 				{/if}
 				<div class="modal-buttons">
-					<button on:click={() => toLeaveChat = null}>Cancel</button>
+					<button on:click={() => (toLeaveChat = null)}>Cancel</button
+					>
 					<button
 						on:click={async () => {
 							try {
-								const resp = await fetch(`${apiUrl}chats/${toLeaveChat._id}`, {
-									method: "DELETE",
-									headers: $authHeader,
-								});
+								const resp = await fetch(
+									`${apiUrl}chats/${toLeaveChat._id}`,
+									{
+										method: "DELETE",
+										headers: $authHeader,
+									}
+								);
 								if (!resp.ok) {
 									if (resp.status === 429) {
-										throw new Error("Too many requests! Try again later.");
+										throw new Error(
+											"Too many requests! Try again later."
+										);
 									}
 									throw new Error(
-										"Response code is not OK; code is " + resp.status
+										"Response code is not OK; code is " +
+											resp.status
 									);
 								}
 								toLeaveChat = null;
 							} catch (e) {
 								leaveError = e;
 							}
-						}}>Leave</button>
+						}}>Leave</button
+					>
 				</div>
 			</div>
 		</Modal>

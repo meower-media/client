@@ -44,7 +44,8 @@
 							error = "Current password is invalid!";
 							break;
 						case "E:106 | Too many requests":
-							error = "Too many requests! Please try again later.";
+							error =
+								"Too many requests! Please try again later.";
 							break;
 						default:
 							error = "Unexpected " + code + " error!";
@@ -54,7 +55,10 @@
 				modals.closeLastModal();
 			}}
 		>
-			<label for="old-password" style={error ? "color: crimson;" : ""}><b>Current Password</b> {#if error}<i>- {error}</i>{/if}</label>
+			<label for="old-password" style={error ? "color: crimson;" : ""}
+				><b>Current Password</b>
+				{#if error}<i>- {error}</i>{/if}</label
+			>
 			<input
 				id="old-password"
 				type="password"
@@ -62,9 +66,12 @@
 				placeholder="Current Password..."
 				disabled={loading}
 				bind:value={oldPassword}
-				on:change={() => error = ""}
+				on:change={() => (error = "")}
 			/><br />
-			<label for="new-password" style={error ? "color: crimson;" : ""}><b>New Password</b> {#if error}<i>- {error}</i>{/if}</label>
+			<label for="new-password" style={error ? "color: crimson;" : ""}
+				><b>New Password</b>
+				{#if error}<i>- {error}</i>{/if}</label
+			>
 			<input
 				id="new-password"
 				type="password"
@@ -74,9 +81,14 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={newPassword}
-				on:change={() => error = ""}
+				on:change={() => (error = "")}
 			/><br />
-			<label for="new-password-confirmation" style={error ? "color: crimson;" : ""}><b>New Password Confirmation</b> {#if error}<i>- {error}</i>{/if}</label>
+			<label
+				for="new-password-confirmation"
+				style={error ? "color: crimson;" : ""}
+				><b>New Password Confirmation</b>
+				{#if error}<i>- {error}</i>{/if}</label
+			>
 			<input
 				id="new-password-confirmation"
 				type="password"
@@ -86,7 +98,7 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={newPasswordConfirmation}
-				on:change={() => error = ""}
+				on:change={() => (error = "")}
 			/><br />
 			<br />
 			<div class="modal-buttons">
@@ -97,8 +109,10 @@
 				>
 				<button
 					type="submit"
-					disabled={!oldPassword || !newPassword || !newPasswordConfirmation || loading}
-					>Change Password</button
+					disabled={!oldPassword ||
+						!newPassword ||
+						!newPasswordConfirmation ||
+						loading}>Change Password</button
 				>
 			</div>
 		</form>

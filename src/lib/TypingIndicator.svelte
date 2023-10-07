@@ -14,7 +14,9 @@
 		if (_typing === undefined) _typing = [];
 		_typing = _typing.filter(selectedUser => selectedUser !== $user.name);
 		if ($user.hide_blocked_users) {
-			_typing = _typing.filter(selectedUser => $relationships[selectedUser] !== 2);
+			_typing = _typing.filter(
+				selectedUser => $relationships[selectedUser] !== 2
+			);
 		}
 	});
 </script>

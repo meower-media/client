@@ -32,17 +32,20 @@
 			</p>
 		{:else if ipBlocked}
 			<p>
-				Your IP address has been blocked because
-				it was used to violate Meower's Terms of Service or is likely to cause spam.
+				Your IP address has been blocked because it was used to violate
+				Meower's Terms of Service or is likely to cause spam.
 				<br /><br />
 				If you think this is a mistake, please email
-				<a href="mailto:support@meower.org" target="_blank" rel="noreferrer"
-					>support@meower.org</a
+				<a
+					href="mailto:support@meower.org"
+					target="_blank"
+					rel="noreferrer">support@meower.org</a
 				>.
 			</p>
 		{:else}
 			<p>
-				Failed connecting to server. View console for more information or try again later.
+				Failed connecting to server. View console for more information
+				or try again later.
 			</p>
 		{/if}
 		<br />

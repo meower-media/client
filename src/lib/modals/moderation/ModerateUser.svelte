@@ -6,22 +6,16 @@
 	import FormattedDate from "../../FormattedDate.svelte";
 	import AdminNotes from "../../AdminNotes.svelte";
 
+	import SetAdminPermissionsModal from "./SetAdminPermissions.svelte";
 	import DeleteAccountModal from "./DeleteAccount.svelte";
 
 	import network from "../../../assets/network.svg";
 	import shieldx from "../../../assets/shield-x.svg";
 	import userx from "../../../assets/user-x.svg";
 
-	import {
-		authHeader,
-		userToMod,
-	} from "../../stores.js";
-	import {userFlags} from "../../userFlags.js";
-	import {
-		permissions,
-		permissionsList,
-		hasPermission,
-	} from "../../adminPermissions.js";
+	import {authHeader, userToMod} from "../../stores.js";
+	import {userFlags} from "../../bitField.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
@@ -33,16 +27,20 @@
 	let alertText, alertStatus;
 	let banState, banExpired, formattedBanExpires, banSaving, banSaveError;
 	let kickStatus;
-	let viewPosts, postOrigin = "all", chatId, reloadingPosts;
+	let viewPosts,
+		postOrigin = "all",
+		chatId,
+		reloadingPosts;
 	let confirmDeletePosts, deletingPosts, deletePostsError;
 	let confirmClearQuote, clearingQuote, clearQuoteError;
-	let bitFieldPermissions = [], setPermissions, canSetPermissions, permissionsSaving, permissionsSaveError;
 
 	$: {
 		if (!$userToMod) modals.closeLastModal();
 
 		if (banState && banState.expires) {
-			banExpired = (banState.state.includes("Temp") && banState.expires < (Date.now() / 1000));
+			banExpired =
+				banState.state.includes("Temp") &&
+				banState.expires < Date.now() / 1000;
 
 			const date = new Date(banState.expires * 1000); // Convert to milliseconds
 			const year = date.getFullYear();
@@ -52,26 +50,6 @@
 			const minutes = String(date.getMinutes()).padStart(2, "0");
 			formattedBanExpires = `${year}-${month}-${day}T${hours}:${minutes}`;
 		}
-
-		for (let permission of permissionsList) {
-			if (
-				permission.dependsOn &&
-				bitFieldPermissions.includes(permission.value) &&
-				!bitFieldPermissions.includes(permission.dependsOn)
-			) {
-				bitFieldPermissions.splice(
-					bitFieldPermissions.indexOf(permission.value),
-					1
-				);
-			}
-		}
-
-		canSetPermissions =
-			user && hasPermission(permissions.SYSADMIN) &&
-			!(
-				(user.permissions & permissions.SYSADMIN) ===
-				permissions.SYSADMIN
-			);
 	}
 
 	async function getUserdata() {
@@ -79,7 +57,8 @@
 			headers: $authHeader,
 		});
 		if (!resp.ok) {
-			if (resp.status === 404) throw new Error(`${$userToMod} does not exist!`);
+			if (resp.status === 404)
+				throw new Error(`${$userToMod} does not exist!`);
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
 		user = await resp.json();
@@ -122,10 +101,13 @@
 		deletePostsError = "";
 		deletingPosts = true;
 		try {
-			const resp = await fetch(`${apiUrl}admin/users/${user._id}/posts/${postOrigin}`, {
-				method: "DELETE",
-				headers: $authHeader,
-			});
+			const resp = await fetch(
+				`${apiUrl}admin/users/${user._id}/posts/${postOrigin}`,
+				{
+					method: "DELETE",
+					headers: $authHeader,
+				}
+			);
 			if (!resp.ok) {
 				throw new Error(
 					"Response code is not OK; code is " + resp.status
@@ -142,10 +124,15 @@
 	async function kick(force = false) {
 		kickStatus = "Kicking...";
 		try {
-			const resp = await fetch(`${apiUrl}admin/users/${user._id}/kick${force ? "?force=1" : ""}`, {
-				method: "POST",
-				headers: $authHeader,
-			});
+			const resp = await fetch(
+				`${apiUrl}admin/users/${user._id}/kick${
+					force ? "?force=1" : ""
+				}`,
+				{
+					method: "POST",
+					headers: $authHeader,
+				}
+			);
 			if (!resp.ok) {
 				throw new Error(
 					"Response code is not OK; code is " + resp.status
@@ -177,57 +164,6 @@
 			clearingQuote = false;
 		}
 	}
-
-	async function savePermissions() {
-		permissionsSaveError = "";
-		permissionsSaving = true;
-		try {
-			let permissionsBitField = 0;
-			for (let permission of bitFieldPermissions) {
-				permissionsBitField |= permission;
-			}
-			const resp = await fetch(`${apiUrl}admin/users/${$userToMod}`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					...$authHeader,
-				},
-				body: JSON.stringify({
-					permissions: permissionsBitField,
-				}),
-			});
-			if (!resp.ok) {
-				throw new Error(
-					"Response code is not OK; code is " + resp.status
-				);
-			}
-			permissionsSaving = false;
-			setPermissions = false;
-		} catch (e) {
-			permissionsSaveError = e;
-			permissionsSaving = false;
-		}
-	}
-
-	async function deleteAccount(mode) {
-		let attemptedUsername = prompt(`Please confirm the user's username (${user._id}):`);
-		if (attemptedUsername !== user._id) {
-			throw new Error("Invalid username!");
-		}
-		if (!confirm("This action can be very destructive! By confirming this, you acknowledge and take responsibility for the consequences of this action. Are you absolutely sure you wish to continue?")) {
-			modals.closeLastModal();
-			return;
-		}
-		const resp = await fetch(`${apiUrl}admin/users/${user._id}?mode=${mode}`, {
-			method: "DELETE",
-			headers: $authHeader,
-		});
-		if (!resp.ok) {
-			throw new Error(
-				"Response code is not OK; code is " + resp.status
-			);
-		}
-	}
 </script>
 
 <Modal
@@ -243,11 +179,15 @@
 		{:then}
 			{#if deleted}
 				<Container warning={true}>
-					This account has been deleted. Deleted accounts cannot be recovered. {#if hasPermission(permissions.DELETE_ACCOUNTS)}You may release the username by purging the account.{/if}
+					This account has been deleted. Deleted accounts cannot be
+					recovered. {#if hasPermission(adminPermissions.DELETE_ACCOUNTS)}You
+						may release the username by purging the account.{/if}
 				</Container>
 			{:else if user.delete_after}
 				<Container warning={true}>
-					This account is scheduled to be deleted after <FormattedDate date={user.delete_after} />.
+					This account is scheduled to be deleted after <FormattedDate
+						date={user.delete_after}
+					/>.
 				</Container>
 			{/if}
 			<h2>User Info</h2>
@@ -278,7 +218,8 @@
 
 			{#if user.alts}
 				<h2>Alts</h2>
-				This list is based on users from their recent IPs. This list may not be accurate.
+				This list is based on users from their recent IPs. This list may
+				not be accurate.
 				<ul>
 					{#each user.alts as username}
 						<li>
@@ -305,7 +246,12 @@
 					{#each user.recent_ips as ip}
 						<tr>
 							<td>{ip.netinfo.ip}</td>
-							<td><FormattedDate date={ip.last_used} relative={true} /></td>
+							<td
+								><FormattedDate
+									date={ip.last_used}
+									relative={true}
+								/></td
+							>
 							<td>
 								<div class="flags">
 									{#if ip.netinfo.vpn}
@@ -338,19 +284,19 @@
 				<br /><br />
 			{/if}
 
-			{#if hasPermission(permissions.VIEW_NOTES)}
+			{#if hasPermission(adminPermissions.VIEW_NOTES)}
 				<h2>Notes</h2>
 				<AdminNotes identifier={user.uuid} />
 				<br /><br />
 			{/if}
 
-			{#if !system && !deleted && hasPermission(permissions.SEND_ALERTS)}
+			{#if !system && !deleted && hasPermission(adminPermissions.SEND_ALERTS)}
 				<h2>Send Alert</h2>
 				<textarea
 					class="white"
 					placeholder="Write something..."
 					bind:value={alertText}
-					on:change={() => alertStatus = ""}
+					on:change={() => (alertStatus = "")}
 				/>
 				{#if alertStatus}
 					<b>{alertStatus}</b>
@@ -361,17 +307,21 @@
 					on:click={async () => {
 						alertStatus = "Sending alert...";
 						try {
-							const resp = await fetch(`${apiUrl}admin/users/${user._id}/inbox`, {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-									...$authHeader,
-								},
-								body: JSON.stringify({content: alertText}),
-							});
+							const resp = await fetch(
+								`${apiUrl}admin/users/${user._id}/inbox`,
+								{
+									method: "POST",
+									headers: {
+										"Content-Type": "application/json",
+										...$authHeader,
+									},
+									body: JSON.stringify({content: alertText}),
+								}
+							);
 							if (!resp.ok) {
 								throw new Error(
-									"Response code is not OK; code is " + resp.status
+									"Response code is not OK; code is " +
+										resp.status
 								);
 							}
 							alertStatus = "Alert sent!";
@@ -386,7 +336,7 @@
 
 			{#if banState}
 				<h2>Ban State</h2>
-				{#if !banExpired && !["None", "Protected"].includes(user.ban.state) && JSON.stringify(banState) === JSON.stringify(user.ban)}
+				{#if !banExpired && user.ban.state !== "None" && JSON.stringify(banState) === JSON.stringify(user.ban)}
 					<Container warning={true}>
 						{user._id} is
 						{#if user.ban.state.includes("Perm")}
@@ -394,8 +344,6 @@
 						{/if}
 						{#if user.ban.state.includes("Restriction")}
 							restricted
-						{:else if user.ban.state.includes("Suspension")}
-							suspended
 						{:else if user.ban.state.includes("Ban")}
 							banned
 						{/if}
@@ -409,7 +357,7 @@
 					id="state"
 					class="grow"
 					style="width: 100%; margin-bottom: 0.25em;"
-					disabled={!hasPermission(permissions.EDIT_BAN_STATES) || (banState.state === "Protected" && !hasPermission(permissions.SYSADMIN))}
+					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES)}
 					bind:value={banState.state}
 				>
 					<option value="None" selected={banState.state === "None"}>
@@ -430,19 +378,6 @@
 					</option>
 
 					<option
-						value="TempSuspension"
-						selected={banState.state === "TempSuspension"}
-					>
-						Temporarily suspended
-					</option>
-					<option
-						value="PermSuspension"
-						selected={banState.state === "PermSuspension"}
-					>
-						Permanently suspended
-					</option>
-
-					<option
 						value="TempBan"
 						selected={banState.state === "TempBan"}
 					>
@@ -454,32 +389,22 @@
 					>
 						Permanently banned
 					</option>
-					{#if banState.state === "Protected" || hasPermission(permissions.SYSADMIN)}
-						<option
-							value="Protected"
-							selected={banState.state === "Protected"}
-						>
-							Protected
-						</option>
-					{/if}
 				</select><br />
 				{#if banState.state === "None"}
 					This applies no restrictions to the user.
 				{:else if banState.state.includes("Restriction")}
-					This prevents the user from starting DMs, creating group chats, and adding
-					members to group chats.
-				{:else if banState.state.includes("Suspension")}
-					This prevents the user from creating posts, starting DMs, creating group chats, and adding
-					members to group chats.
+					<button class="long"> Edit Restrictions </button>
+					<b>Restrictions:</b> test, 123, abc
 				{:else if banState.state.includes("Ban")}
 					This prevents the user from logging in.
-				{:else if banState.state === "Protected"}
-					This prevents the user's ban state from being changed unless requested by a sysadmin.
 				{/if}
 
 				{#if banState.state.includes("Temp")}
 					<br /><br />
-					<label for="expires" style={banExpired ? "color: crimson;" : ""}>
+					<label
+						for="expires"
+						style={banExpired ? "color: crimson;" : ""}
+					>
 						<b>Expires (in your local timezone)</b>
 						{#if banExpired}<i> - this time has passed</i>{/if}
 					</label><br />
@@ -488,7 +413,9 @@
 						class="grow"
 						style="width: 100%;"
 						type="datetime-local"
-						disabled={!hasPermission(permissions.EDIT_BAN_STATES)}
+						disabled={!hasPermission(
+							adminPermissions.EDIT_BAN_STATES
+						)}
 						bind:value={formattedBanExpires}
 						on:change={() => {
 							banState.expires = Math.floor(
@@ -500,12 +427,16 @@
 
 				{#if banState.state !== "None"}
 					<br /><br />
-					<label for="reason"><b>Reason{#if banState.state !== "Protected"}(will be shown to user){/if}</b></label><br />
+					<label for="reason"
+						><b>Reason (will be shown to user)</b></label
+					><br />
 					<textarea
 						id="reason"
 						class="white"
 						placeholder="Reason text here..."
-						disabled={!hasPermission(permissions.EDIT_BAN_STATES)}
+						disabled={!hasPermission(
+							adminPermissions.EDIT_BAN_STATES
+						)}
 						bind:value={banState.reason}
 					/>
 				{/if}
@@ -514,9 +445,14 @@
 					<br /><br />
 					<Container warning={true}>
 						<b>WARNING!</b><br />
-						The ban state has changed. You must save the new ban state before it's applied.
+						The ban state has changed. You must save the new ban state
+						before it's applied.
 						<br /><br />
-						<button disabled={banSaving} on:click={saveBanState}>
+						<button
+							class="long"
+							disabled={banSaving}
+							on:click={saveBanState}
+						>
 							Save ban state
 						</button>
 						{#if banSaveError}
@@ -527,35 +463,29 @@
 
 				<br /><br />
 			{/if}
-			
-			{#if !system && (!deleted || hasPermission(permissions.DELETE_ACCOUNTS))}
+
+			{#if !system && (!deleted || hasPermission(adminPermissions.DELETE_ACCOUNTS))}
 				<h2>Other Actions</h2>
-				{#if !system && !deleted && hasPermission(permissions.VIEW_POSTS)}
+				{#if !system && !deleted && hasPermission(adminPermissions.VIEW_POSTS)}
 					<button
 						class="action-button"
-						on:click={() => viewPosts = true}
+						on:click={() => (viewPosts = true)}
 					>
 						View posts
 					</button>
 				{/if}
-				{#if !system && !deleted && hasPermission(permissions.KICK_USERS)}
-					<button
-						class="action-button"
-						on:click={() => kick(false)}
-					>
+				{#if !system && !deleted && hasPermission(adminPermissions.KICK_USERS)}
+					<button class="action-button" on:click={() => kick(false)}>
 						Kick
 					</button>
-					<button
-						class="action-button"
-						on:click={() => kick(true)}
-					>
+					<button class="action-button" on:click={() => kick(true)}>
 						Force kick
 					</button>
 				{/if}
-				{#if !system && !deleted && hasPermission(permissions.CLEAR_USER_QUOTES)}
+				{#if !system && !deleted && hasPermission(adminPermissions.CLEAR_USER_QUOTES)}
 					<button
 						class="action-button"
-						on:click={() => confirmClearQuote = true}
+						on:click={() => (confirmClearQuote = true)}
 					>
 						Clear quote
 					</button>
@@ -563,23 +493,21 @@
 				{#if !system && !deleted}
 					<button
 						class="action-button"
-						on:click={() => setPermissions = true}
+						on:click={() =>
+							modals.showModal(SetAdminPermissionsModal, {user})}
 					>
-						{#if hasPermission(permissions.SYSADMIN)}
+						{#if hasPermission(adminPermissions.SYSADMIN)}
 							Set permissions
 						{:else}
 							View permissions
 						{/if}
 					</button>
 				{/if}
-				{#if hasPermission(permissions.DELETE_ACCOUNTS)}
+				{#if hasPermission(adminPermissions.DELETE_ACCOUNTS)}
 					<button
 						class="action-button"
-						on:click={() => modals.showModal(DeleteAccountModal, {
-							deleted,
-							deleteAfter: user.delete_after,
-							deleteAccountCallback: deleteAccount
-						})}
+						on:click={() =>
+							modals.showModal(DeleteAccountModal, {user})}
 					>
 						Delete account
 					</button>
@@ -621,7 +549,7 @@
 
 <!-- modals -->
 {#if confirmDeletePosts}
-	<Modal on:close={() => confirmDeletePosts = false}>
+	<Modal on:close={() => (confirmDeletePosts = false)}>
 		<h2 slot="header">
 			Delete {$userToMod}'s Posts
 		</h2>
@@ -635,19 +563,14 @@
 			<div class="modal-buttons">
 				<button
 					type="button"
-					on:click={() => confirmDeletePosts = false}
-					>Cancel</button
+					on:click={() => (confirmDeletePosts = false)}>Cancel</button
 				>
-				<button
-					type="button"
-					on:click={deleteAllPosts}
-					>Delete</button
-				>
+				<button type="button" on:click={deleteAllPosts}>Delete</button>
 			</div>
 		</div>
 	</Modal>
 {:else if viewPosts}
-	<Modal on:close={() => viewPosts = false}>
+	<Modal on:close={() => (viewPosts = false)}>
 		<h2 slot="header">
 			{$userToMod}'s Posts
 		</h2>
@@ -665,9 +588,15 @@
 				}}
 			>
 				<option value="all" selected={postOrigin === "all"}>Any</option>
-				<option value="home" selected={postOrigin === "home"}>Home</option>
-				<option value="inbox" selected={postOrigin === "inbox"}>Inbox</option>
-				<option value="chat" selected={postOrigin === "chat"}>Chat</option>
+				<option value="home" selected={postOrigin === "home"}
+					>Home</option
+				>
+				<option value="inbox" selected={postOrigin === "inbox"}
+					>Inbox</option
+				>
+				<option value="chat" selected={postOrigin === "chat"}
+					>Chat</option
+				>
 			</select><br />
 			{#if postOrigin === "chat"}
 				<label for="chat-id"><b>Chat ID</b></label><br />
@@ -689,26 +618,27 @@
 				<button
 					class="long"
 					title="Delete All Posts"
-					on:click={() => confirmDeletePosts = true}>Delete All Posts</button
+					on:click={() => (confirmDeletePosts = true)}
+					>Delete All Posts</button
 				><br />
 				<PostList
-					fetchUrl={`admin/users/${$userToMod}/posts/${postOrigin === "chat" ? chatId : postOrigin}`}
+					fetchUrl={`admin/users/${$userToMod}/posts/${
+						postOrigin === "chat" ? chatId : postOrigin
+					}`}
 					postOrigin={null}
 					canPost={false}
 					instantDelete={true}
 				/>
 			{/if}
 			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => viewPosts = false}
+				<button type="button" on:click={() => (viewPosts = false)}
 					>Close</button
 				>
 			</div>
 		</div>
 	</Modal>
 {:else if confirmClearQuote}
-	<Modal on:close={() => confirmClearQuote = false}>
+	<Modal on:close={() => (confirmClearQuote = false)}>
 		<h2 slot="header">
 			Clear {$userToMod}'s Quote
 		</h2>
@@ -723,69 +653,13 @@
 				<button
 					type="button"
 					disabled={clearingQuote}
-					on:click={() => confirmClearQuote = false}
-					>Cancel</button
+					on:click={() => (confirmClearQuote = false)}>Cancel</button
 				>
 				<button
 					type="submit"
 					disabled={clearingQuote}
-					on:click={clearQuote}
-					>Clear Quote</button
+					on:click={clearQuote}>Clear Quote</button
 				>
-			</div>
-		</div>
-	</Modal>
-{:else if setPermissions}
-	<Modal on:close={() => setPermissions = false}>
-		<h2 slot="header">
-			{$userToMod}'s Admin Permissions
-		</h2>
-		<div slot="default">
-			{#if bitFieldPermissions.includes(permissions.SYSADMIN)}
-				<label class="permission-label">
-					<input type="checkbox" class="permission" disabled checked />
-					Sysadmin
-				</label><br />
-				Allows access to every permission possible.<br /><br />
-			{:else}
-				{#each permissionsList as permission}
-					<label class="permission-label">
-						<input
-							type="checkbox"
-							class="permission"
-							value={permission.value}
-							disabled={!canSetPermissions ||
-								(permission.dependsOn &&
-									!bitFieldPermissions.includes(
-										permission.dependsOn
-									))}
-							bind:group={bitFieldPermissions}
-						/>
-						{permission.name}
-					</label><br />
-					{@html permission.description}<br /><br />
-				{/each}
-			{/if}
-			{#if permissionsSaveError}
-				<p style="color: crimson;">{permissionsSaveError}</p>
-			{:else}
-				<br />
-			{/if}
-			<div class="modal-buttons">
-				<button
-					type="button"
-					disabled={permissionsSaving}
-					on:click={() => setPermissions = false}
-					>Close</button
-				>
-				{#if canSetPermissions}
-					<button
-						type="submit"
-						disabled={permissionsSaving}
-						on:click={savePermissions}
-						>Save Permissions</button
-					>
-				{/if}
 			</div>
 		</div>
 	</Modal>
@@ -810,7 +684,8 @@
 		overflow: hidden;
 	}
 
-	th, td {
+	th,
+	td {
 		border: solid 2px var(--orange);
 		padding: 0.35em;
 		outline: none;
@@ -827,10 +702,5 @@
 		width: 100%;
 		margin: 0;
 		margin-bottom: 0.2em;
-	}
-
-	.permission,
-	.permission-label {
-		vertical-align: middle;
 	}
 </style>

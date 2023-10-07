@@ -3,16 +3,16 @@
 import {modalStack} from "./stores.js";
 
 let _modalStack = [];
-modalStack.subscribe(v => _modalStack = v);
+modalStack.subscribe(v => (_modalStack = v));
 
 export function showModal(modal, data) {
-	_modalStack.unshift({ modal, data });
+	_modalStack.unshift({modal, data});
 	modalStack.set(_modalStack);
 }
 
 export function replaceLastModal(modal, data) {
 	_modalStack.splice(0, 1);
-	_modalStack.unshift({ modal, data });
+	_modalStack.unshift({modal, data});
 	modalStack.set(_modalStack);
 }
 

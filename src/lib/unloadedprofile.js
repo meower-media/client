@@ -9,6 +9,7 @@ import {systemDarkMode} from "./responsiveness.js";
 export default function unloadedProfile() {
 	return {
 		name: null,
+		flags: 0,
 		permissions: 0,
 		unread_inbox: false,
 		theme: "orange",

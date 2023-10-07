@@ -15,10 +15,10 @@
 	<h2 slot="header">Login to Meower</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				loading = true;
-				
+
 				try {
 					await clm.meowerRequest({
 						cmd: "direct",

@@ -12,12 +12,8 @@
 		<span>Are you sure you would like to logout?</span>
 		<br /><br />
 		<div class="modal-buttons">
-			<button
-				on:click={modals.closeLastModal}>Cancel</button
-			>
-			<button
-				on:click={() => $goto("/logout")}>Logout</button
-			>
+			<button on:click={modals.closeLastModal}>Cancel</button>
+			<button on:click={() => $goto("/logout")}>Logout</button>
 		</div>
 	</div>
 </Modal>

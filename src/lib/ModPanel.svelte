@@ -11,40 +11,24 @@
 	import RestartServerModal from "./modals/moderation/RestartServer.svelte";
 	import EnableRepairModeModal from "./modals/moderation/EnableRepairMode.svelte";
 
-	import {
-		authHeader,
-		userToMod,
-		ipToMod,
-		announcementToSend,
-	} from "./stores.js";
+	import {authHeader, userToMod, ipToMod} from "./stores.js";
+	import {adminPermissions, hasPermission} from "./bitField.js";
 	import * as modals from "./modals.js";
-	import {
-		permissions,
-		hasPermission,
-	} from "./adminPermissions.js";
 	import {apiUrl} from "./urls.js";
 	import sleep from "./sleep";
 
 	import {createEventDispatcher, tick} from "svelte";
-	
+
 	const dispatch = createEventDispatcher();
 
 	let announceMsg = "";
 
-	let serverStatus = {}
+	let serverStatus = {};
 	let registrationToggleStatus = "";
 
 	let confirmAnnouncement = false;
 	let sendingAnnouncement = false;
 	let announcementError = "";
-
-	let confirmKickAll = false;
-	let kickAllError = "";
-
-	let confirmRepairMode = false;
-	let repairModeError = "";
-
-	let reportAdminNotes = "";
 
 	let reportFilterStatus = "pending";
 	let reportFilterType = null;
@@ -70,18 +54,30 @@
 		}
 
 		try {
-			const resp = await fetch(`${apiUrl}admin/server/registration/${serverStatus.registrationEnabled ? "disable" : "enable"}`, {
-				method: "POST",
-				headers: $authHeader,
-			});
+			const resp = await fetch(
+				`${apiUrl}admin/server/registration/${
+					serverStatus.registrationEnabled ? "disable" : "enable"
+				}`,
+				{
+					method: "POST",
+					headers: $authHeader,
+				}
+			);
 			if (!resp.ok) {
-				throw new Error("Response code is not OK; code is " + resp.status);
+				throw new Error(
+					"Response code is not OK; code is " + resp.status
+				);
 			}
-			registrationToggleStatus = `Successfully ${serverStatus.registrationEnabled ? "disabled" : "enabled"} registration!`;
-			serverStatus.registrationEnabled = !serverStatus.registrationEnabled;
+			registrationToggleStatus = `Successfully ${
+				serverStatus.registrationEnabled ? "disabled" : "enabled"
+			} registration!`;
+			serverStatus.registrationEnabled =
+				!serverStatus.registrationEnabled;
 		} catch (e) {
 			console.error(e);
-			registrationToggleStatus = `Failed ${serverStatus.registrationEnabled ? "disabling" : "enabling"} registration: ${e}`;
+			registrationToggleStatus = `Failed ${
+				serverStatus.registrationEnabled ? "disabling" : "enabling"
+			} registration: ${e}`;
 		}
 	}
 
@@ -93,9 +89,14 @@
 	}
 
 	async function loadReportsPage(page = 1) {
-		const resp = await fetch(`${apiUrl}admin/reports?autoget=1&page=${page}${reportFilterStatus ? `&status=${reportFilterStatus}` : ''}${reportFilterType ? `&type=${reportFilterType}` : ''}`, {
-			headers: $authHeader,
-		});
+		const resp = await fetch(
+			`${apiUrl}admin/reports?autoget=1&page=${page}${
+				reportFilterStatus ? `&status=${reportFilterStatus}` : ""
+			}${reportFilterType ? `&type=${reportFilterType}` : ""}`,
+			{
+				headers: $authHeader,
+			}
+		);
 		if (!resp.ok) {
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
@@ -130,11 +131,16 @@
 			}}
 		>
 			<div class="input-row">
-				<input class="grow white" type="text" placeholder="Username..." value={$userToMod} />
+				<input
+					class="grow white"
+					type="text"
+					placeholder="Username..."
+					value={$userToMod}
+				/>
 				<button class="static">Submit</button>
 			</div>
 		</form>
-		{#if hasPermission(permissions.VIEW_IPS)}
+		{#if hasPermission(adminPermissions.VIEW_IPS)}
 			<h2>Moderate IP</h2>
 			<form
 				on:submit|preventDefault={async e => {
@@ -157,29 +163,31 @@
 				</div>
 			</form>
 		{/if}
-		{#if hasPermission(permissions.CREATE_ANNOUNCEMENTS)}
+		{#if hasPermission(adminPermissions.CREATE_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
-			<form
-				on:submit|preventDefault={() => confirmAnnouncement = true}
-			>
+			<form on:submit|preventDefault={() => (confirmAnnouncement = true)}>
 				<textarea
 					class="announce-textarea white"
 					placeholder="Announcement text here..."
 					bind:value={announceMsg}
 				/>
 				<div class="announce-buttons">
-					<button class="align-right" disabled={!announceMsg}>Send</button>
+					<button class="align-right" disabled={!announceMsg}
+						>Send</button
+					>
 				</div>
 			</form>
 		{/if}
-		{#if hasPermission(permissions.SYSADMIN)}
+		{#if hasPermission(adminPermissions.SYSADMIN)}
 			<h2>Manage Server</h2>
 			{#await getServerStatus()}
 				<Loading />
 			{:then}
 				{#if !serverStatus.registrationEnabled}
 					<Container warning={true}>
-						Registration is currently disabled! New users will be blocked from joining Meower until registration is re-enabled.
+						Registration is currently disabled! New users will be
+						blocked from joining Meower until registration is
+						re-enabled.
 					</Container>
 				{/if}
 				<button
@@ -192,7 +200,9 @@
 					on:click={() => modals.showModal(RestartServerModal)}
 					>Restart server</button
 				>
-				<button style="margin-right: 0.25em; margin-bottom: 0.25em;" on:click={() => modals.showModal(EnableRepairModeModal)}
+				<button
+					style="margin-right: 0.25em; margin-bottom: 0.25em;"
+					on:click={() => modals.showModal(EnableRepairModeModal)}
 					>Enable repair mode</button
 				>
 				{#if serverStatus.registrationEnabled}
@@ -210,7 +220,7 @@
 				{/if}
 			{/await}
 		{/if}
-		{#if hasPermission(permissions.VIEW_REPORTS)}
+		{#if hasPermission(adminPermissions.VIEW_REPORTS)}
 			<h2>Reports</h2>
 			<label for="report-status"><b>Status</b></label><br />
 			<select
@@ -223,16 +233,28 @@
 				<option value={null} selected={!reportFilterStatus}>
 					All
 				</option>
-				<option value="pending" selected={reportFilterStatus === "pending"}>
+				<option
+					value="pending"
+					selected={reportFilterStatus === "pending"}
+				>
 					Pending
 				</option>
-				<option value="escalated" selected={reportFilterStatus === "escalated"}>
+				<option
+					value="escalated"
+					selected={reportFilterStatus === "escalated"}
+				>
 					Escalated
 				</option>
-				<option value="no_action_taken" selected={reportFilterStatus === "no_action_taken"}>
+				<option
+					value="no_action_taken"
+					selected={reportFilterStatus === "no_action_taken"}
+				>
 					Completed with no action taken
 				</option>
-				<option value="action_taken" selected={reportFilterStatus === "action_taken"}>
+				<option
+					value="action_taken"
+					selected={reportFilterStatus === "action_taken"}
+				>
 					Completed with action taken
 				</option>
 			</select><br />
@@ -244,9 +266,7 @@
 				bind:value={reportFilterType}
 				on:change={reloadReports}
 			>
-				<option value={null} selected={!reportFilterType}>
-					All
-				</option>
+				<option value={null} selected={!reportFilterType}> All </option>
 				<option value="post" selected={reportFilterType === "post"}>
 					Post
 				</option>
@@ -255,10 +275,14 @@
 				</option>
 			</select><br />
 			{#if !reloadingReports}
-				<PagedList maxItems={50} bind:items={reports} loadPage={loadReportsPage}>
+				<PagedList
+					maxItems={50}
+					bind:items={reports}
+					loadPage={loadReportsPage}
+				>
 					<svelte:fragment slot="loaded" let:items={_reports}>
 						{#each _reports as report}
-							<Report report={report} />
+							<Report {report} />
 						{/each}
 					</svelte:fragment>
 					<slot nam="error" slot="error" let:error {error}>
@@ -278,10 +302,9 @@
 	</div>
 </Modal>
 
-
 <!-- modals -->
 {#if confirmAnnouncement}
-	<Modal on:close={() => confirmAnnouncement = false}>
+	<Modal on:close={() => (confirmAnnouncement = false)}>
 		<h2 slot="header" style="margin-top: 0;">Send Announcement</h2>
 		<div slot="default">
 			<p>Are you sure? This will send a message to EVERYONE's inbox!</p>
@@ -291,40 +314,52 @@
 				<br />
 			{/if}
 			<div class="modal-buttons">
-				<button disabled={sendingAnnouncement} on:click={() => confirmAnnouncement = false}>Cancel</button>
+				<button
+					disabled={sendingAnnouncement}
+					on:click={() => (confirmAnnouncement = false)}
+					>Cancel</button
+				>
 				{#await sleep(1500)}
 					<button disabled>Confirm</button>
 				{:then}
-					<button disabled={sendingAnnouncement} on:click={async () => {
-						sendingAnnouncement = true;
-						try {
-							const resp = await fetch(`${apiUrl}admin/announcements`, {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-									...$authHeader,
-								},
-								body: JSON.stringify({content: announceMsg}),
-							});
-							if (!resp.ok) {
-								throw new Error(
-									"Response code is not OK; code is " + resp.status
+					<button
+						disabled={sendingAnnouncement}
+						on:click={async () => {
+							sendingAnnouncement = true;
+							try {
+								const resp = await fetch(
+									`${apiUrl}admin/announcements`,
+									{
+										method: "POST",
+										headers: {
+											"Content-Type": "application/json",
+											...$authHeader,
+										},
+										body: JSON.stringify({
+											content: announceMsg,
+										}),
+									}
 								);
+								if (!resp.ok) {
+									throw new Error(
+										"Response code is not OK; code is " +
+											resp.status
+									);
+								}
+								announceMsg = "";
+								sendingAnnouncement = false;
+								confirmAnnouncement = false;
+							} catch (e) {
+								announcementError = e;
+								sendingAnnouncement = false;
 							}
-							announceMsg = "";
-							sendingAnnouncement = false;
-							confirmAnnouncement = false;
-						} catch (e) {
-							announcementError = e;
-							sendingAnnouncement = false;
-						}
-					}}>Confirm</button>
+						}}>Confirm</button
+					>
 				{/await}
 			</div>
 		</div>
 	</Modal>
 {/if}
-
 
 <style>
 	h2 {

@@ -1,12 +1,11 @@
 <!--
 	The typical Meower container, used literally everywhere.
 -->
-
 <script>
 	export let warning = false;
 </script>
 
-<div class="{warning ? 'warning' : ''}"><slot /></div>
+<div class={warning ? "warning" : ""}><slot /></div>
 
 <style>
 	div {

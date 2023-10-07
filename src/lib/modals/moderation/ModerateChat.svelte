@@ -7,7 +7,7 @@
 	import * as clm from "../../clmanager.js";
 
 	import {chat} from "../../stores.js";
-	import {permissions, hasPermission} from "../../adminPermissions.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 
 	let deleteStatus;
 
@@ -51,7 +51,9 @@
 		}
 	}
 
-	$: { if (!$chat._id) modals.closeLastModal() }
+	$: {
+		if (!$chat._id) modals.closeLastModal();
+	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -75,13 +77,13 @@
 
 		<br /><br />
 
-		{#if hasPermission(permissions.VIEW_NOTES)}
+		{#if hasPermission(adminPermissions.VIEW_NOTES)}
 			<h2>Notes</h2>
 			<AdminNotes identifier={$chat._id} />
 			<br /><br />
 		{/if}
 
-		{#if hasPermission(permissions.EDIT_CHATS)}
+		{#if hasPermission(adminPermissions.EDIT_CHATS)}
 			<h2>Danger Zone</h2>
 			{#if deleteStatus}
 				<b>{deleteStatus}</b>

@@ -1,10 +1,5 @@
 <script>
-	import {
-		screen,
-		setupPage,
-		user,
-		authHeader,
-	} from "../lib/stores.js";
+	import {screen, setupPage, user, authHeader} from "../lib/stores.js";
 	import * as modals from "../lib/modals.js";
 	import unloadedProfile from "../lib/unloadedprofile.js";
 

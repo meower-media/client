@@ -3,14 +3,12 @@
 
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
-    import sleep from "../../sleep";
+	import sleep from "../../sleep";
 
 	let loading, error;
 </script>
 
-<Modal
-	on:close={modals.closeLastModal}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Restart Server</h2>
 	<div slot="default">
 		<form
@@ -26,13 +24,14 @@
 					});
 				} catch (code) {
 					loading = false;
-                    switch (code) {
-                        case "E:122 | Command disabled by sysadmin":
-                            error = "This server doesn't support the restart command!";
-                            break;
-                        default:
-                            error = "Unexpected " + code + " error!";
-                    }
+					switch (code) {
+						case "E:122 | Command disabled by sysadmin":
+							error =
+								"This server doesn't support the restart command!";
+							break;
+						default:
+							error = "Unexpected " + code + " error!";
+					}
 					return;
 				}
 			}}
@@ -47,14 +46,14 @@
 				<button
 					type="button"
 					disabled={loading}
-					on:click|preventDefault={modals.closeLastModal}>Cancel</button
+					on:click|preventDefault={modals.closeLastModal}
+					>Cancel</button
 				>
-                {#await sleep(1500)}
-                    <button type="submit" disabled>Restart</button>
-                {:then}
-                    <button type="submit" disabled={loading}>Restart</button>
-                {/await}
-                
+				{#await sleep(1500)}
+					<button type="submit" disabled>Restart</button>
+				{:then}
+					<button type="submit" disabled={loading}>Restart</button>
+				{/await}
 			</div>
 		</form>
 	</div>

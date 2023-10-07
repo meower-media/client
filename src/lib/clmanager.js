@@ -4,7 +4,6 @@
 
 import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
 import LoggedOutModal from "./modals/LoggedOut.svelte";
-import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
 
 import Cloudlink from "./cloudlink.js";
 import {
@@ -55,10 +54,10 @@ authHeader.subscribe(v => {
 });
 
 let _relationships = null;
-relationships.subscribe(v => _relationships = v);
+relationships.subscribe(v => (_relationships = v));
 
 let _chats = null;
-chats.subscribe(v => _chats = v);
+chats.subscribe(v => (_chats = v));
 
 /**
  * Listens to username and token updates that could happen by other tabs.
@@ -340,6 +339,7 @@ export async function connect() {
 				chats.set(cmd.val.payload.chats);
 			}
 		});
+		/*
 		bannedEvent = link.on("direct", async cmd => {
 			if (cmd.val.mode === "banned") {
 				_user.ban = cmd.val.payload;
@@ -357,6 +357,7 @@ export async function connect() {
 				}
 			}
 		});
+		*/
 		inboxMessageEvent = link.on("direct", cmd => {
 			if (cmd.val.mode === "inbox_message") {
 				_user.unread_inbox = true;
@@ -365,7 +366,8 @@ export async function connect() {
 		});
 		relationshipUpdateEvent = link.on("direct", cmd => {
 			if (cmd.val.mode === "update_relationship") {
-				_relationships[cmd.val.payload.username] = cmd.val.payload.state;
+				_relationships[cmd.val.payload.username] =
+					cmd.val.payload.state;
 				relationships.set(_relationships);
 			}
 		});
@@ -380,7 +382,9 @@ export async function connect() {
 		});
 		chatCreateEvent = link.on("direct", cmd => {
 			if (cmd.val.mode === "create_chat") {
-				let itemIndex = _chats.findIndex(chat => chat._id === cmd.val.payload._id);
+				let itemIndex = _chats.findIndex(
+					chat => chat._id === cmd.val.payload._id
+				);
 				if (itemIndex !== -1) return;
 				_chats.push(cmd.val.payload);
 				chats.set(_chats);
@@ -388,11 +392,13 @@ export async function connect() {
 		});
 		chatUpdateEvent = link.on("direct", cmd => {
 			if (cmd.val.mode === "update_chat") {
-				let itemIndex = _chats.findIndex(chat => chat._id === cmd.val.payload._id);
+				let itemIndex = _chats.findIndex(
+					chat => chat._id === cmd.val.payload._id
+				);
 				if (itemIndex === -1) return;
 				_chats[itemIndex] = Object.assign(
 					_chats[itemIndex],
-					cmd.val.payload,
+					cmd.val.payload
 				);
 				chats.set(_chats);
 			}
@@ -405,23 +411,31 @@ export async function connect() {
 		});
 		chatMsgEvent = link.on("direct", async cmd => {
 			if (cmd.val.state === 2) {
-				let chatIndex = _chats.findIndex(chat => chat._id === cmd.val.post_origin);
+				let chatIndex = _chats.findIndex(
+					chat => chat._id === cmd.val.post_origin
+				);
 				if (chatIndex === -1) {
 					try {
-						const resp = await fetch(`${apiUrl}chats/${cmd.val.post_origin}`, {
-							method: "GET",
-							headers: _authHeader,
-						});
+						const resp = await fetch(
+							`${apiUrl}chats/${cmd.val.post_origin}`,
+							{
+								method: "GET",
+								headers: _authHeader,
+							}
+						);
 						if (!resp.ok) {
 							throw new Error(
-								"Response code is not OK; code is " + resp.status
+								"Response code is not OK; code is " +
+									resp.status
 							);
 						}
 						const chat = await resp.json();
 						_chats.push(chat);
 						chats.set(_chats);
 					} catch (e) {
-						console.error(`Failed getting chat ${cmd.val.post_origin}: ${e}`)
+						console.error(
+							`Failed getting chat ${cmd.val.post_origin}: ${e}`
+						);
 					}
 				} else {
 					_chats[chatIndex].last_active = cmd.val.t.e;
@@ -519,14 +533,16 @@ export async function meowerRequest(data) {
  *
  * @returns {Promise<object | string>} Either an object or an error code; see meowerRequest.
  */
-export async function updateProfile() {
-	const profile = _user;
-	if (!profile.name) return;
+export async function updateProfile(updatedValues) {
+	if (!_user.name) return;
+	Object.assign(_user, updatedValues);
+	user.set(_user);
 	return meowerRequest({
 		cmd: "direct",
 		val: {
 			cmd: "update_config",
-			val: {
+			val: updatedValues,
+			/*{
 				unread_inbox: profile.unread_inbox,
 				theme: profile.theme,
 				mode: profile.mode,
@@ -538,7 +554,7 @@ export async function updateProfile() {
 				favorited_chats: profile.favorited_chats,
 				pfp_data: profile.pfp_data,
 				quote: profile.quote,
-			},
+			},*/
 		},
 	});
 }

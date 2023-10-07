@@ -13,8 +13,13 @@
 	import DeletePostModal from "./modals/DeletePost.svelte";
 	import ReportPostModal from "./modals/moderation/ReportPost.svelte";
 
-	import {authHeader, postClicked, user, userSuspended, chat, ulist} from "../lib/stores.js";
-	import {permissions, hasPermission} from "../lib/adminPermissions.js";
+	import {authHeader, postClicked, user, chat, ulist} from "../lib/stores.js";
+	import {
+		adminPermissions,
+		hasPermission,
+		restrictions,
+		isRestricted,
+	} from "../lib/bitField.js";
 	import {apiUrl} from "./urls.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as modals from "./modals.js";
@@ -84,7 +89,11 @@
 				continue;
 			}
 
-			if (IMAGE_HOST_WHITELIST.some(o => result.value[2].toLowerCase().startsWith(o.toLowerCase()))) {
+			if (
+				IMAGE_HOST_WHITELIST.some(o =>
+					result.value[2].toLowerCase().startsWith(o.toLowerCase())
+				)
+			) {
 				images.push({
 					title: result.value[1],
 					url: result.value[2],
@@ -114,8 +123,15 @@
 					<button
 						class="circle pen"
 						on:click={async () => {
-							if ($userSuspended) {
-								modals.showModal(AccountBannedModal);
+							if (
+								(post.post_origin === "home" &&
+									isRestricted(restrictions.HOME_POSTS)) ||
+								(post.post_origin !== "home" &&
+									isRestricted(restrictions.CHAT_POSTS))
+							) {
+								modals.showModal(AccountBannedModal, {
+									feature: "editing posts",
+								});
 								return;
 							}
 
@@ -132,8 +148,15 @@
 					<button
 						class="circle reply"
 						on:click={() => {
-							if ($userSuspended) {
-								modals.showModal(AccountBannedModal);
+							if (
+								(post.post_origin === "home" &&
+									isRestricted(restrictions.HOME_POSTS)) ||
+								(post.post_origin !== "home" &&
+									isRestricted(restrictions.CHAT_POSTS))
+							) {
+								modals.showModal(AccountBannedModal, {
+									feature: "creating posts",
+								});
 								return;
 							}
 
@@ -154,22 +177,28 @@
 						}}
 					/>
 				{/if}
-				{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(permissions.DELETE_POSTS)}
+				{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(adminPermissions.DELETE_POSTS)}
 					<button
 						class="circle trash"
 						on:click={async () => {
 							if (instantDelete || shiftHeld) {
 								try {
-									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
-										method: "DELETE",
-										headers: $authHeader,
-									});
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "DELETE",
+											headers: $authHeader,
+										}
+									);
 									if (!resp.ok) {
 										if (resp.status === 429) {
-											throw new Error("Too many requests! Try again later.");
+											throw new Error(
+												"Too many requests! Try again later."
+											);
 										}
 										throw new Error(
-											"Response code is not OK; code is " + resp.status
+											"Response code is not OK; code is " +
+												resp.status
 										);
 									}
 								} catch (e) {
@@ -265,12 +294,27 @@
 
 			<FormattedDate date={post.date} />
 			{#if post.edited_at}
-				<i>(<FormattedDate date={post.edited_at} customText="edited" />)</i>
+				<i
+					>(<FormattedDate
+						date={post.edited_at}
+						customText="edited"
+					/>)</i
+				>
 			{/if}
 			{#if post.isDeleted && post.mod_deleted}
-				<i>(<FormattedDate date={post.deleted_at} customText="deleted by moderator" />)</i>
+				<i
+					>(<FormattedDate
+						date={post.deleted_at}
+						customText="deleted by moderator"
+					/>)</i
+				>
 			{:else if post.isDeleted}
-				<i>(<FormattedDate date={post.deleted_at} customText="self-deleted" />)</i>
+				<i
+					>(<FormattedDate
+						date={post.deleted_at}
+						customText="self-deleted"
+					/>)</i
+				>
 			{/if}
 		</div>
 	</div>
@@ -294,36 +338,47 @@
 			}}
 		/>
 		<div style="display: flex; justify-content: space-between;">
-			<button on:click={() => editing = false}>Cancel</button>
-			<button bind:this={editSaveButton} on:click={async () => {
-				if (editContentInput.value.trim() === "") {
-					postClicked.set(post);
-					modals.showModal(DeletePostModal);
-					return;
-				}
-
-				editing = false;
-				try {
-					const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-							...$authHeader,
-						},
-						body: JSON.stringify({content: editContentInput.value}),
-					});
-					if (!resp.ok) {
-						if (resp.status === 429) {
-							throw new Error("Too many requests! Try again later.");
-						}
-						throw new Error(
-							"Response code is not OK; code is " + resp.status
-						);
+			<button on:click={() => (editing = false)}>Cancel</button>
+			<button
+				bind:this={editSaveButton}
+				on:click={async () => {
+					if (editContentInput.value.trim() === "") {
+						postClicked.set(post);
+						modals.showModal(DeletePostModal);
+						return;
 					}
-				} catch (e) {
-					editError = e;
-				}
-			}}>Save</button>
+
+					editing = false;
+					try {
+						const resp = await fetch(
+							`${apiUrl}posts?id=${post.post_id}`,
+							{
+								method: "PATCH",
+								headers: {
+									"Content-Type": "application/json",
+									...$authHeader,
+								},
+								body: JSON.stringify({
+									content: editContentInput.value,
+								}),
+							}
+						);
+						if (!resp.ok) {
+							if (resp.status === 429) {
+								throw new Error(
+									"Too many requests! Try again later."
+								);
+							}
+							throw new Error(
+								"Response code is not OK; code is " +
+									resp.status
+							);
+						}
+					} catch (e) {
+						editError = e;
+					}
+				}}>Save</button
+			>
 		</div>
 	{:else}
 		<p class="post-content">

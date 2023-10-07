@@ -64,12 +64,7 @@
 			>
 			<button
 				on:click={() => {
-					const _user = $user;
-					_user.bgm_song = bgmTrack + 1;
-					user.set(_user);
-
-					clm.updateProfile();
-					BGM.playBGM(bgmTrack + 1);
+					clm.updateProfile({bgm_song: bgmTrack + 1});
 					modals.closeLastModal();
 				}}>OK</button
 			>

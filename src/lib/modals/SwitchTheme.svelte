@@ -102,12 +102,7 @@
 			>
 			<button
 				on:click={() => {
-					const _user = $user;
-					_user.theme = theme;
-					_user.mode = !darkMode;
-					user.set(_user);
-
-					clm.updateProfile();
+					clm.updateProfile({theme: $user.theme, mode: !darkMode});
 					modals.closeLastModal();
 				}}>OK</button
 			>

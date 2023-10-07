@@ -109,7 +109,7 @@
 			<form
 				class="search"
 				autocomplete="off"
-				on:change={() => errors = ""}
+				on:change={() => (errors = "")}
 				on:submit|preventDefault={async e => {
 					// @ts-ignore
 					const input = e.target.elements.user;

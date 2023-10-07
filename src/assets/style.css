@@ -262,12 +262,12 @@ input[type="checkbox"] {
 
 button.settings {
 	background-image: url("./settings.svg");
-	background-size: 65%;
+	background-size: 70%;
 }
 
 button.plus {
 	background-image: url("./plus.svg");
-	background-size: 50%;
+	background-size: 60%;
 }
 
 button.reply {

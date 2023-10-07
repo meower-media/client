@@ -3,16 +3,16 @@
 	import FormattedDate from "./FormattedDate.svelte";
 
 	import {authHeader} from "./stores.js";
-    import {permissions, hasPermission} from "./adminPermissions.js";
+	import {adminPermissions, hasPermission} from "./bitField.js";
 	import {apiUrl} from "./urls.js";
 
-    export let identifier;
+	export let identifier;
 
 	let notes, savingStatus;
 
 	async function getNotes() {
-        // hash identifier to more securely store sensitive identifiers that may have retention policies
-        const msgUint8 = new TextEncoder().encode(identifier);
+		// hash identifier to more securely store sensitive identifiers that may have retention policies
+		const msgUint8 = new TextEncoder().encode(identifier);
 		const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
 		const hashHex = hashArray
@@ -53,32 +53,35 @@
 </script>
 
 <div>
-    {#await getNotes()}
-        <Loading />
-    {:then} 
-        <textarea
-            class="white"
-            placeholder="Write something..."
-            disabled={!hasPermission(permissions.EDIT_NOTES)}
-            bind:value={notes.notes}
-            on:change={saveNotes}
-        />
-        {#if notes.last_modified_at && notes.last_modified_by}
-			Last modified <FormattedDate date={notes.last_modified_at} relative={true} /> by <a href="#">{notes.last_modified_by}</a>
-        {/if}
+	{#await getNotes()}
+		<Loading />
+	{:then}
+		<textarea
+			class="white"
+			placeholder="Write something..."
+			disabled={!hasPermission(adminPermissions.EDIT_NOTES)}
+			bind:value={notes.notes}
+			on:change={saveNotes}
+		/>
+		{#if notes.last_modified_at && notes.last_modified_by}
+			Last modified <FormattedDate
+				date={notes.last_modified_at}
+				relative={true}
+			/> by <a href="#">{notes.last_modified_by}</a>
+		{/if}
 		{#if savingStatus}
-            <br /><b>{savingStatus}</b>
-        {/if}
-    {:catch e}
-        Error loading notes: {e}
-    {/await}
+			<br /><b>{savingStatus}</b>
+		{/if}
+	{:catch e}
+		Error loading notes: {e}
+	{/await}
 </div>
 
 <style>
-    textarea {
-        display: block;
+	textarea {
+		display: block;
 		margin-bottom: 0.25em;
-        resize: vertical;
-        width: 100%;
-    }
+		resize: vertical;
+		width: 100%;
+	}
 </style>

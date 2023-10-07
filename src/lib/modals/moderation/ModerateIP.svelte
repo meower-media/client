@@ -9,11 +9,8 @@
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
-	import {
-		userToMod,
-		ipToMod,
-	} from "../../stores.js";
-	import {permissions, hasPermission} from "../../adminPermissions.js";
+	import {userToMod, ipToMod} from "../../stores.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 
 	let ip, blockStatus;
 
@@ -62,7 +59,9 @@
 		}
 	}
 
-	$: { if (!$ipToMod) modals.closeLastModal() }
+	$: {
+		if (!$ipToMod) modals.closeLastModal();
+	}
 </script>
 
 <Modal
@@ -102,13 +101,13 @@
 
 			<br /><br />
 
-			{#if hasPermission(permissions.VIEW_NOTES)}
+			{#if hasPermission(adminPermissions.VIEW_NOTES)}
 				<h2>Notes</h2>
 				<AdminNotes identifier={ip._id} />
 				<br /><br />
 			{/if}
 
-			{#if hasPermission(permissions.BLOCK_IPS)}
+			{#if hasPermission(adminPermissions.BLOCK_IPS)}
 				<h2>Danger Zone</h2>
 				{#if blockStatus}
 					<b>{blockStatus}</b>

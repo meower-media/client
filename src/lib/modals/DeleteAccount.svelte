@@ -12,13 +12,11 @@
 	let username, password, loading, error;
 </script>
 
-<Modal
-	on:close={modals.closeLastModal}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				// set loading state
 				loading = true;
@@ -46,7 +44,8 @@
 							error = "Invalid password!";
 							break;
 						case "E:106 | Too many requests":
-							error = "Too many requests! Please try again later.";
+							error =
+								"Too many requests! Please try again later.";
 							break;
 						default:
 							error = "Unexpected " + code + " error!";
@@ -58,17 +57,15 @@
 			}}
 		>
 			<Container warning={true}>
-				<b>WARNING!</b><br />
-				Deleting your account will erase all of your data from our
-				database, <b>this action is irreversible</b>! Are you absolutely sure
-				you would like to <b>permanently</b> delete your account?
+				Are you sure you would like to <b>permanently</b> delete your
+				account?
 				<br /><br />
-				Type your username and password to confirm this action.
+				Once you confirm this action, your account and all related data will
+				be deleted after 7 days. If you change your mind and wish to keep
+				your account, you may log back in within 7 days to cancel the deletion
+				of your account.
 			</Container>
-			<label
-				for="username"
-				style={error ? "color: crimson;" : ""}
-			>
+			<label for="username" style={error ? "color: crimson;" : ""}>
 				<b>Username</b>{#if error}<i> - {error}</i>{/if}
 			</label>
 			<input
@@ -80,7 +77,9 @@
 				bind:value={username}
 			/>
 			<br /><br />
-			<label for="password" style={error ? "color: crimson;" : ""}><b>Password</b>{#if error}<i> - {error}</i>{/if}</label>
+			<label for="password" style={error ? "color: crimson;" : ""}
+				><b>Password</b>{#if error}<i> - {error}</i>{/if}</label
+			>
 			<input
 				id="password"
 				type="password"
@@ -98,8 +97,7 @@
 				>
 				<button
 					type="submit"
-					disabled={!username || !password || loading}
-					>Delete Account</button
+					disabled={!username || !password || loading}>Confirm</button
 				>
 			</div>
 		</form>

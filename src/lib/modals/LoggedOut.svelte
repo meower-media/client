@@ -10,9 +10,7 @@
 		<p>You have been logged out. Please login again.</p>
 		<br />
 		<div class="modal-buttons">
-			<button
-				on:click={$goto("/logout")}>Logout</button
-			>
+			<button on:click={$goto("/logout")}>Logout</button>
 		</div>
 	</div>
 </Modal>

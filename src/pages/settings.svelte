@@ -24,13 +24,10 @@
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={() => {
-				const _user = $user;
-				_user.layout = _user.layout === "new" ? "old" : "new";
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
+			on:click={() =>
+				clm.updateProfile({
+					layout: $user.layout === "new" ? "old" : "new",
+				})}
 		/>
 	</div>
 
@@ -54,14 +51,8 @@
 	<div class="settings-controls">
 		<input
 			type="checkbox"
-			checked={$user.sfx}
-			on:change={() => {
-				const _user = $user;
-				_user.sfx = !_user.sfx;
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
+			bind:checked={$user.sfx}
+			on:change={() => clm.updateProfile({sfx: $user.sfx})}
 		/>
 	</div>
 
@@ -80,15 +71,8 @@
 		{/if}
 		<input
 			type="checkbox"
-			checked={$user.bgm}
-			on:change={() => {
-				const _user = $user;
-				_user.bgm = !_user.bgm;
-				user.set(_user);
-				BGM.playBGM(_user.bgm_song);
-
-				clm.updateProfile();
-			}}
+			bind:checked={$user.bgm}
+			on:change={() => clm.updateProfile({bgm: $user.bgm})}
 		/>
 	</div>
 
@@ -103,26 +87,24 @@
 		<div class="settings-controls">
 			<input
 				type="checkbox"
-				checked={$user.hide_blocked_users}
+				bind:checked={$user.hide_blocked_users}
 				on:change={() => {
-					if (!$user.hide_blocked_users) {
+					if ($user.hide_blocked_users) {
 						modals.showModal(BasicModal, {
 							title: "Hide Blocked Users",
-							desc: "This setting can have undesirable consequences! We usually try to show 25 posts per page, but pages that include posts made by people you have blocked will have fewer posts. It may also make it harder to keep up with conversations without the context of posts made by people you have blocked."
+							desc: "This setting can have undesirable consequences! We usually try to show 25 posts per page, but pages that include posts made by people you have blocked will have fewer posts. It may also make it harder to keep up with conversations without the context of posts made by people you have blocked.",
 						});
 					}
-
-					const _user = $user;
-					_user.hide_blocked_users = !_user.hide_blocked_users;
-					user.set(_user);
-
-					clm.updateProfile();
+					clm.updateProfile({
+						hide_blocked_users: $user.hide_blocked_users,
+					});
 				}}
 			/>
 		</div>
 
 		<h2>Hide Blocked Users</h2>
-		You {$user.hide_blocked_users ? "are" : "are not"} currently hiding posts from people you have blocked.
+		You {$user.hide_blocked_users ? "are" : "are not"} currently hiding posts
+		from people you have blocked.
 	</Container>
 	<Container>
 		<div class="settings-controls">

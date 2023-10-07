@@ -28,13 +28,13 @@
 		relationships,
 		authHeader,
 		user,
-		userSuspended,
 		spinner,
 		lastTyped,
 		chat,
 		postInput as postInput_2,
 		profileClicked,
 	} from "./stores.js";
+	import {restrictions, isRestricted} from "../lib/bitField.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
 	import * as modals from "./modals.js";
@@ -67,11 +67,17 @@
 	let id = 0;
 	let postErrors = "";
 
-	let postInput, submitBtn, dmWith;
+	let postInput, submitBtn, userSuspended, dmWith;
 
 	$: {
+		userSuspended =
+			(postOrigin === "home" && isRestricted(restrictions.HOME_POSTS)) ||
+			(postOrigin !== "home" && isRestricted(restrictions.CHAT_POSTS));
+
 		if ($chat.type === 1) {
-			dmWith = $chat.members.filter(username => username !== $user.name)[0];
+			dmWith = $chat.members.filter(
+				username => username !== $user.name
+			)[0];
 		} else {
 			dmWith = null;
 		}
@@ -192,7 +198,9 @@
 				items = items.filter(post => post.post_id !== cmd.val.id);
 			} // This needs to be here to even function - Bloctans
 			if (cmd.val.mode === "update_post") {
-				let itemIndex = items.findIndex(post => post.post_id === cmd.val.payload._id);
+				let itemIndex = items.findIndex(
+					post => post.post_id === cmd.val.payload._id
+				);
 				if (itemIndex !== -1) {
 					let post = cmd.val.payload;
 					items[itemIndex] = {
@@ -206,7 +214,7 @@
 						isDeleted: post.isDeleted,
 						mod_deleted: post.mod_deleted,
 						deleted_at: post.deleted_at,
-					}
+					};
 				}
 			}
 			if (!isGC || cmd.val.state === 2) {
@@ -292,19 +300,28 @@
 					let post = items.find(_post => _post.user === $user.name);
 					if (post) {
 						setTimeout(async () => {
-							let newContent = post.content.replace(toReplace, replaceWith);
+							let newContent = post.content.replace(
+								toReplace,
+								replaceWith
+							);
 							if (newContent.trim() === "") {
 								try {
-									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
-										method: "DELETE",
-										headers: $authHeader,
-									});
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "DELETE",
+											headers: $authHeader,
+										}
+									);
 									if (!resp.ok) {
 										if (resp.status === 429) {
-											throw new Error("Too many requests! Try again later.");
+											throw new Error(
+												"Too many requests! Try again later."
+											);
 										}
 										throw new Error(
-											"Response code is not OK; code is " + resp.status
+											"Response code is not OK; code is " +
+												resp.status
 										);
 									}
 								} catch (e) {
@@ -312,20 +329,29 @@
 								}
 							} else if (newContent !== post.content) {
 								try {
-									const resp = await fetch(`${apiUrl}posts?id=${post.post_id}`, {
-										method: "PATCH",
-										headers: {
-											"Content-Type": "application/json",
-											...$authHeader,
-										},
-										body: JSON.stringify({content: newContent}),
-									});
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "PATCH",
+											headers: {
+												"Content-Type":
+													"application/json",
+												...$authHeader,
+											},
+											body: JSON.stringify({
+												content: newContent,
+											}),
+										}
+									);
 									if (!resp.ok) {
 										if (resp.status === 429) {
-											throw new Error("Too many requests! Try again later.");
+											throw new Error(
+												"Too many requests! Try again later."
+											);
 										}
 										throw new Error(
-											"Response code is not OK; code is " + resp.status
+											"Response code is not OK; code is " +
+												resp.status
 										);
 									}
 								} catch (e) {
@@ -370,7 +396,8 @@
 								postErrors = "You're posting too fast!";
 								break;
 							case "I:017 | Missing permissions":
-								postErrors = "Someone’s privacy settings are preventing you from sending messages here.";
+								postErrors =
+									"Someone’s privacy settings are preventing you from sending messages here.";
 								break;
 							default:
 								postErrors = "Unexpected " + code + " error!";
@@ -382,7 +409,7 @@
 			<textarea
 				type="text"
 				class="white"
-				placeholder={$userSuspended
+				placeholder={userSuspended
 					? "Your account is currently suspended."
 					: $relationships[dmWith] === 2
 					? `You have blocked ${dmWith}.`
@@ -391,7 +418,7 @@
 				autocomplete="false"
 				maxlength="500"
 				rows="1"
-				disabled={$userSuspended || $relationships[dmWith] === 2}
+				disabled={userSuspended || $relationships[dmWith] === 2}
 				use:autoresize
 				on:input={() => {
 					postErrors = "";
@@ -421,10 +448,12 @@
 				}}
 				bind:this={postInput}
 			/>
-			{#if $userSuspended}
+			{#if userSuspended}
 				<button
 					on:click|preventDefault={() => {
-						modals.showModal(AccountBannedModal);
+						modals.showModal(AccountBannedModal, {
+							feature: "creating posts",
+						});
 					}}>View details</button
 				>
 			{:else if $relationships[dmWith] === 2}
@@ -472,14 +501,8 @@
 								profile={post}
 							/>
 						{/if}
-					{:else}
-						{#if !$user.hide_blocked_users || $relationships[post.user] !== 2}
-							<Post
-								{post}
-								{instantDelete}
-								input={postInput}
-							/>
-						{/if}
+					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}
+						<Post {post} {instantDelete} input={postInput} />
 					{/if}
 					{#if addToChat && !$chat.members.includes(post._id)}
 						<div class="settings-controls">

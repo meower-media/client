@@ -167,8 +167,7 @@
 						"Usernames must not have spaces or other special characters!";
 					break;
 				case "E:106 | Too many requests":
-					loginStatus =
-						"Too many requests! Please try again later.";
+					loginStatus = "Too many requests! Please try again later.";
 					break;
 				default:
 					loginStatus = `Unexpected ${e} error!`;
@@ -218,8 +217,8 @@
 						serverSelectorTimeout = setTimeout(() => {
 							modals.showModal(ServerSelectorModal);
 						}, 1000);
-					}}
-				>Log in</button>
+					}}>Log in</button
+				>
 				<br />
 				<button on:click={() => page.set("join")}
 					>Create an account</button
@@ -342,7 +341,9 @@
 										"That username already exists!";
 									break;
 								case "E:119 | IP Blocked":
-									modals.showModal(AccountCreationBlockedModal);
+									modals.showModal(
+										AccountCreationBlockedModal
+									);
 									loginStatus = "";
 									break;
 								case "E:019 | Illegal characters detected":

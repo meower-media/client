@@ -9,15 +9,13 @@
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
 	import ModerateChatModal from "../../lib/modals/moderation/ModerateChat.svelte";
 
+	import {chats, user, chat, profileClicked_GC} from "../../lib/stores.js";
 	import {
-		chats,
-		user,
-		userRestricted,
-		userSuspended,
-		chat,
-		profileClicked_GC,
-	} from "../../lib/stores.js";
-	import {permissions, hasPermission} from "../../lib/adminPermissions.js";
+		adminPermissions,
+		hasPermission,
+		restrictions,
+		isRestricted,
+	} from "../../lib/bitField.js";
 	import * as modals from "../../lib/modals.js";
 	import {mobile} from "../../lib/responsiveness.js";
 	import ProfileView from "../../lib/ProfileView.svelte";
@@ -54,23 +52,26 @@
 						cmd: "get_chat_data",
 						val: $params.chatid,
 					},
-				}).then(data => $chat = data.payload).catch(code => {
-					if ($chat._id) {
-						if (code === "E:103 | ID not found") {
-							modals.showModal(BasicModal, {
-								title: "Chat not found",
-								desc: `The chat you requested (${$params.chatid}) doesn't exist or you don't have access to it.`
-							});
-						} else {
-							modals.showModal(BasicModal, {
-								title: "Failed to get chat",
-								desc: `Unexpected ${code} error while getting requested chat (${$params.chatid})!`
-							});
+				})
+					.then(data => ($chat = data.payload))
+					.catch(code => {
+						if ($chat._id) {
+							if (code === "E:103 | ID not found") {
+								modals.showModal(BasicModal, {
+									title: "Chat not found",
+									desc: `The chat you requested (${$params.chatid}) doesn't exist or you don't have access to it.`,
+								});
+							} else {
+								modals.showModal(BasicModal, {
+									title: "Failed to get chat",
+									desc: `Unexpected ${code} error while getting requested chat (${$params.chatid})!`,
+								});
+							}
 						}
-					}
 
-					if (!hasPermission(permissions.VIEW_CHATS)) $goto("/chats");
-				});
+						if (!hasPermission(adminPermissions.VIEW_CHATS))
+							$goto("/chats");
+					});
 			}
 		}
 	}
@@ -130,12 +131,27 @@
 					{$chat.nickname}
 					<span class="chat-id">(<code>{$params.chatid}</code>)</span>
 				</h1>
-				{#if hasPermission(permissions.VIEW_CHATS)}
+				{#if hasPermission(adminPermissions.VIEW_CHATS)}
 					{#if !$chat.members.includes($user.name) && $chat._id !== "livechat"}
-						<p style="margin-bottom: 0; color: crimson;"><b>You are not a member of this chat! Please only view other people's chats for the purpose of moderation/administration. Viewing chats for any other reason will result in you losing admin permissions.</b></p>
+						<p style="margin-bottom: 0; color: crimson;">
+							<b
+								>You are not a member of this chat! Please only
+								view other people's chats for the purpose of
+								moderation/administration. Viewing chats for any
+								other reason will result in you losing admin
+								permissions.</b
+							>
+						</p>
 					{/if}
 					{#if $chat.deleted}
-						<p style="margin-bottom: 0; color: crimson;"><b>This chat is currently soft-deleted! No one can access it other than admins while it's soft-deleted. To reinstate it, open the chat mod panel and click 'Reinstate chat'.</b></p>
+						<p style="margin-bottom: 0; color: crimson;">
+							<b
+								>This chat is currently soft-deleted! No one can
+								access it other than admins while it's
+								soft-deleted. To reinstate it, open the chat mod
+								panel and click 'Reinstate chat'.</b
+							>
+						</p>
 					{/if}
 				{/if}
 				{#if $chat._id !== "livechat"}
@@ -143,17 +159,27 @@
 						{#if $user.permissions && $chat._id !== "livechat"}
 							<button
 								class="circle admin"
-								on:click={() => modals.showModal(ModerateChatModal)}
+								on:click={() =>
+									modals.showModal(ModerateChatModal)}
 							/>
 						{/if}
-						{#if $chat.owner === $user.name || hasPermission(permissions.EDIT_CHATS)}
+						{#if $chat.owner === $user.name || hasPermission(adminPermissions.EDIT_CHATS)}
 							<button
 								class="circle settings"
 								on:click={() => {
-									if ($userSuspended) {
-										modals.showModal(AccountBannedModal);
+									if (
+										isRestricted(
+											restrictions.EDITING_CHAT_NICKNAMES
+										)
+									) {
+										modals.showModal(AccountBannedModal, {
+											feature:
+												"editing group chat nicknames",
+										});
 									} else {
-										modals.showModal(ChangeChatNicknameModal);
+										modals.showModal(
+											ChangeChatNicknameModal
+										);
 									}
 								}}
 							/>
@@ -167,7 +193,10 @@
 			</Container>
 		{:else if $chat.type === 1}
 			<ProfileView
-				username={$chat.members.filter(username => username !== ($params.user ? $params.user : $user.name))[0]}
+				username={$chat.members.filter(
+					username =>
+						username !== ($params.user ? $params.user : $user.name)
+				)[0]}
 				small={true}
 				canClick={true}
 			/>
@@ -179,7 +208,7 @@
 			postOrigin={$params.chatid}
 			chatName={$chat.nickname}
 			canPost={$chat._id === "livechat" ||
-				$chat.members.includes($user.name) && !$chat.deleted}
+				($chat.members.includes($user.name) && !$chat.deleted)}
 		/>
 	</div>
 	{#if showMembers && $chat._id !== "livechat" && $chat.type === 0}
@@ -205,12 +234,15 @@
 					Members <span class="small">({$chat.members.length})</span>
 				</h2>
 				<div class="settings-controls">
-					{#if $chat.members.includes($user.name) || hasPermission(permissions.EDIT_CHATS)}
+					{#if $chat.members.includes($user.name) || hasPermission(adminPermissions.EDIT_CHATS)}
 						<button
 							class="circle plus"
 							on:click={() => {
-								if ($userRestricted || $userSuspended) {
-									modals.showModal(AccountBannedModal);
+								if (isRestricted(restrictions.NEW_CHATS)) {
+									modals.showModal(AccountBannedModal, {
+										feature:
+											"adding members to group chats",
+									});
 								} else {
 									modals.showModal(AddMemberModeModal);
 								}

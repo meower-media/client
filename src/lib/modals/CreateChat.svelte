@@ -27,14 +27,18 @@
 					});
 					if (!resp.ok) {
 						if (resp.status === 429) {
-							throw new Error("Too many requests! Try again later.");
+							throw new Error(
+								"Too many requests! Try again later."
+							);
 						}
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
 						);
 					}
 					const chat = await resp.json();
-					if ($chats.findIndex(_chat => _chat._id === chat._id) === -1) {
+					if (
+						$chats.findIndex(_chat => _chat._id === chat._id) === -1
+					) {
 						$chats.push(chat);
 					}
 					$goto(`/chats/${chat._id}`);
@@ -45,7 +49,10 @@
 				}
 			}}
 		>
-			<label for="nickname" style={error ? "color: crimson;" : ""}><b>Chat Nickname</b> {#if error}<i>- {error}</i>{/if}</label>
+			<label for="nickname" style={error ? "color: crimson;" : ""}
+				><b>Chat Nickname</b>
+				{#if error}<i>- {error}</i>{/if}</label
+			>
 			<input
 				id="nickname"
 				type="text"
@@ -54,7 +61,7 @@
 				maxlength="32"
 				disabled={loading}
 				bind:value={nickname}
-				on:change={() => error = ""}
+				on:change={() => (error = "")}
 			/><br />
 			<br />
 			<div class="modal-buttons">
@@ -63,9 +70,7 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button
-					type="submit"
-					disabled={!nickname || loading}
+				<button type="submit" disabled={!nickname || loading}
 					>Create Chat</button
 				>
 			</div>

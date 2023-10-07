@@ -25,7 +25,9 @@
 								type: 0,
 								// @ts-ignore
 								id: $postClicked.post_id,
-								reason: comment ? `${reason} (${comment})` : reason,
+								reason: comment
+									? `${reason} (${comment})`
+									: reason,
 							},
 						},
 					});
@@ -33,7 +35,8 @@
 					loading = false;
 					switch (code) {
 						case "E:106 | Too many requests":
-							error = "Too many requests! Please try again later.";
+							error =
+								"Too many requests! Please try again later.";
 							break;
 						default:
 							error = "Unexpected " + code + " error!";
@@ -45,11 +48,7 @@
 		>
 			<Post post={$postClicked} buttons={false} />
 			<label for="reason"><b>Reason</b></label><br />
-			<select
-				id="reason"
-				class="modal-input grow"
-				bind:value={reason}
-			>
+			<select id="reason" class="modal-input grow" bind:value={reason}>
 				<option> No reason specified/other</option>
 			</select><br />
 			<label for="comment"><b>Comment</b></label>
@@ -60,7 +59,7 @@
 				placeholder="Write something..."
 				disabled={loading}
 				bind:value={comment}
-				on:change={() => error = ""}
+				on:change={() => (error = "")}
 			/>
 			{#if error}
 				<p style="color: crimson;">{error}</p>
@@ -71,9 +70,10 @@
 				<button
 					type="button"
 					disabled={loading}
-					on:click|preventDefault={() => modals.closeLastModal()}>Cancel</button
+					on:click|preventDefault={() => modals.closeLastModal()}
+					>Cancel</button
 				>
-                <button type="submit" disabled={loading}>Report</button>
+				<button type="submit" disabled={loading}>Report</button>
 			</div>
 		</form>
 	</div>
