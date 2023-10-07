@@ -13,7 +13,7 @@
 
 	import BasicModal from "../../lib/modals/Basic.svelte";
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
-	import CreateChatModal from "../../lib/modals/CreateChat.svelte";
+	import CreateChatModal from "../../lib/modals/chats/CreateChat.svelte";
 
 	import {authHeader, chats, user} from "../../lib/stores.js";
 	import {restrictions, isRestricted} from "../../lib/bitField.js";
@@ -57,6 +57,7 @@
 				on:click={() => {
 					if (isRestricted(restrictions.NEW_CHATS)) {
 						modals.showModal(AccountBannedModal, {
+							ban: $user.ban,
 							feature: "creating group chats",
 						});
 					} else {
@@ -106,7 +107,7 @@
 										});
 									if ($user.favorited_chats.length >= 50) {
 										modals.showModal(BasicModal, {
-											title: "Too many chats!",
+											title: "Too many stars!",
 											desc: "Sorry, you can only have up to 50 favorited chats!",
 										});
 									} else {

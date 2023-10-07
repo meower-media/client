@@ -1,15 +1,14 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import {user} from "../stores.js";
+	import defaultPreview from "../../../assets/themePreviews/OrangeLight.png";
 
-	import * as modals from "../modals.js";
+	import {user} from "../../stores.js";
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
+	
 
-	import * as clm from "../clmanager.js";
-
-	import defaultPreview from "../../assets/themePreviews/OrangeLight.png";
-
-	const themePreviews = import.meta.glob("../../assets/themePreviews/*.png", {
+	const themePreviews = import.meta.glob("../../../assets/themePreviews/*.png", {
 		import: "default",
 		eager: true,
 	});
@@ -38,7 +37,7 @@
 	 */
 	// @ts-ignore
 	let currentPreviewImage =
-		themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+		themePreviews["../../../assets/themePreviews/" + themeName + ".png"] ||
 		defaultPreview;
 
 	function changeTheme() {
@@ -56,7 +55,7 @@
 
 		// @ts-ignore
 		currentPreviewImage =
-			themePreviews["../../assets/themePreviews/" + themeName + ".png"] ||
+			themePreviews["../../../assets/themePreviews/" + themeName + ".png"] ||
 			defaultPreview;
 	}
 </script>

@@ -3,11 +3,11 @@
 	import Container from "../lib/Container.svelte";
 
 	import BasicModal from "../lib/modals/Basic.svelte";
-	import SwitchThemeModal from "../lib/modals/SwitchTheme.svelte";
-	import SwitchBGMSFXModal from "../lib/modals/SwitchBGMSFX.svelte";
-	import ChangePasswordModal from "../lib/modals/ChangePassword.svelte";
-	import LogoutEverywhereModal from "../lib/modals/LogoutEverywhere.svelte";
-	import DeleteAccountModal from "../lib/modals/DeleteAccount.svelte";
+	import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
+	import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
+	import ChangePasswordModal from "../lib/modals/settings/ChangePassword.svelte";
+	import LogoutEverywhereModal from "../lib/modals/settings/LogoutEverywhere.svelte";
+	import DeleteAccountModal from "../lib/modals/settings/DeleteAccount.svelte";
 
 	import {user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";

@@ -1,12 +1,12 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
 	import GCMemberModal from "./GCMember.svelte";
 
-	import {authHeader, profileClicked_GC, chat, user} from "../stores.js";
-	import {adminPermissions, hasPermission} from "../bitField.js";
-	import {apiUrl} from "../urls.js";
-	import * as modals from "../modals.js";
+	import {authHeader, profileClicked_GC, chat, user} from "../../stores.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import {apiUrl} from "../../urls.js";
+	import * as modals from "../../modals.js";
 
 	let loading, error;
 
@@ -15,16 +15,12 @@
 			$chat.owner !== $user.name &&
 			!hasPermission(adminPermissions.EDIT_CHATS)
 		) {
-			if ($chat.members.includes($profileClicked_GC)) {
-				modals.showModal(GCMemberModal);
-			} else {
-				modals.closeLastModal();
-			}
+			modals.closeLastModal();
 		}
 	}
 </script>
 
-<Modal on:close={() => modals.showModal(GCMemberModal)}>
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Remove {$profileClicked_GC}</h2>
 	<div slot="default">
 		<form
@@ -65,8 +61,7 @@
 				<button
 					type="button"
 					disabled={loading}
-					on:click|preventDefault={() =>
-						modals.showModal(GCMemberModal)}>Cancel</button
+					on:click={modals.closeLastModal}>Cancel</button
 				>
 				<button type="submit" disabled={loading}>Remove member</button>
 			</div>

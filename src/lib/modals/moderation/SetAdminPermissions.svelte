@@ -19,7 +19,7 @@
 			dependsOn: adminPermissions.VIEW_REPORTS,
 			name: "Edit reports",
 			description:
-				"Allows changing the status of reports.<br />(requires 'View reports' permission",
+				"Allows changing the status of reports.<br />(requires 'View reports' permission)",
 		},
 
 		{
@@ -44,30 +44,15 @@
 		{
 			value: adminPermissions.DELETE_POSTS,
 			dependsOn: adminPermissions.VIEW_POSTS,
-			name: "Edit posts",
+			name: "Delete posts",
 			description:
-				"Allows editing, deleting, and reinstating soft-deleted posts.<br />(requires 'View posts' permission)",
+				"Allows deleting and reinstating posts.<br />(requires 'View posts' permission)",
 		},
 
 		{
 			value: adminPermissions.VIEW_ALTS,
 			name: "View alts",
 			description: "Allows viewing a user's potential alts.",
-		},
-		{
-			value: adminPermissions.VIEW_INBOXES,
-			name: "View inboxes",
-			description: "Allows viewing a user's inbox.",
-		},
-		{
-			value: adminPermissions.CLEAR_USER_QUOTES,
-			name: "Clear quotes",
-			description: "Allows clearing a user's quote.",
-		},
-		{
-			value: adminPermissions.CLEAR_USER_POSTS,
-			name: "Clear posts",
-			description: "Allows clearing all of a user's home posts.",
 		},
 		{
 			value: adminPermissions.SEND_ALERTS,
@@ -78,6 +63,11 @@
 			value: adminPermissions.KICK_USERS,
 			name: "Kick users",
 			description: "Allows kicking users.",
+		},
+		{
+			value: adminPermissions.CLEAR_USER_QUOTES,
+			name: "Clear quotes",
+			description: "Allows clearing a user's quote.",
 		},
 		{
 			value: adminPermissions.VIEW_BAN_STATES,
@@ -92,8 +82,8 @@
 				"Allows modifying a user's ban state.<br />(requires 'View ban states' permission)",
 		},
 		{
-			value: adminPermissions.DELETE_ACCOUNTS,
-			name: "Delete accounts",
+			value: adminPermissions.DELETE_USERS,
+			name: "Delete users",
 			description:
 				"Allows scheduling an account for deletion or immediately deleting an account.",
 		},
@@ -125,15 +115,9 @@
 		},
 
 		{
-			value: adminPermissions.CREATE_ANNOUNCEMENTS,
-			name: "Create announcements",
-			description: "Allows creating announcements.",
-		},
-
-		{
-			value: adminPermissions.VIEW_AUDIT_LOG,
-			name: "View audit log",
-			description: "Allows viewing the full moderator audit log.",
+			value: adminPermissions.SEND_ANNOUNCEMENTS,
+			name: "Send announcements",
+			description: "Allows sending announcements.",
 		},
 	];
 

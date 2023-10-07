@@ -1,10 +1,10 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import SearchResultsModal from "./SearchResults.svelte";
+	import SearchResultsModal from "../SearchResults.svelte";
 
-	import {searchQuery, searchType} from "../stores.js";
-	import * as modals from "../modals.js";
+	import {searchQuery, searchType} from "../../stores.js";
+	import * as modals from "../../modals.js";
 
 	let username;
 </script>

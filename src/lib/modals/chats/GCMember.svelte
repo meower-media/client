@@ -1,13 +1,13 @@
 <script>
-	import Modal from "../Modal.svelte";
-	import ProfileView from "../ProfileView.svelte";
+	import Modal from "../../Modal.svelte";
+	import ProfileView from "../../ProfileView.svelte";
 
 	import RemoveMemberModal from "./RemoveMember.svelte";
 	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
 
-	import {profileClicked_GC, user, chat} from "../stores.js";
-	import {adminPermissions, hasPermission} from "../bitField.js";
-	import * as modals from "../modals.js";
+	import {profileClicked_GC, user, chat} from "../../stores.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import * as modals from "../../modals.js";
 
 	import {goto} from "@roxi/routify";
 

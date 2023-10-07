@@ -1,14 +1,14 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
 	import GCMemberModal from "./GCMember.svelte";
 
-	import {authHeader, profileClicked_GC, chat, user} from "../stores.js";
-	import {adminPermissions, hasPermission} from "../bitField.js";
-	import {apiUrl} from "../urls.js";
-	import * as modals from "../modals.js";
+	import {authHeader, profileClicked_GC, chat, user} from "../../stores.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import {apiUrl} from "../../urls.js";
+	import * as modals from "../../modals.js";
 
-	import sleep from "../sleep";
+	import sleep from "../../sleep";
 
 	let loading, error;
 
@@ -17,11 +17,7 @@
 			$chat.owner !== $user.name &&
 			!hasPermission(adminPermissions.EDIT_CHATS)
 		) {
-			if ($chat.members.includes($profileClicked_GC)) {
-				modals.showModal(GCMemberModal);
-			} else {
-				modals.closeLastModal();
-			}
+			modals.closeLastModal();
 		}
 	}
 </script>

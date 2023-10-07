@@ -2,8 +2,8 @@
 	Home but it's a user's posts.
 -->
 <script>
-	import Container from "../../../../lib/Container.svelte";
-	import PostList from "../../../../lib/PostList.svelte";
+	import Container from "../../../lib/Container.svelte";
+	import PostList from "../../../lib/PostList.svelte";
 
 	import {params} from "@roxi/routify";
 </script>
@@ -15,7 +15,7 @@
 	</Container>
 	<PostList
 		fetchUrl="users/{$params.username}/posts"
-		postOrigin=""
+		postOrigin="home"
 		canPost={false}
 	>
 		<Container slot="empty">

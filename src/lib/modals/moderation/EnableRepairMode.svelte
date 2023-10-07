@@ -1,12 +1,13 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
+	import {authHeader} from "../../stores.js";
+	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
 
 	import sleep from "../../sleep";
 
-	let status;
+	let loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -14,19 +15,19 @@
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async () => {
-				status = "Enabling repair mode...";
+				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "repair_mode",
-							val: "",
-						},
+					const resp = await fetch(`${apiUrl}admin/server/enable-repair-mode`, {
+						method: "POST",
+						headers: $authHeader,
 					});
+					if (!resp.ok) {
+						throw new Error("Response code is not OK; code is " + resp.status);
+					}
 					modals.closeLastModal();
 				} catch (e) {
-					console.error(e);
-					status = "Error: " + e;
+					error = e;
+					loading = false;
 				}
 			}}
 		>
@@ -34,15 +35,19 @@
 				Are you sure? This will disconnect everyone and prevent anyone
 				from being able to reconnect!
 			</p>
-			{#if status}<b>{status}</b><br /><br />{/if}
+			{#if error}
+				<p style="color: crimson;">{error}</p>
+			{:else}
+				<br />
+			{/if}
 			<div class="modal-buttons">
-				<button type="button" on:click={modals.closeLastModal}
+				<button type="button" disabled={loading} on:click={modals.closeLastModal}
 					>Cancel</button
 				>
 				{#await sleep(1500)}
-					<button disabled type="submit">Confirm</button>
+					<button type="submit" disabled>Confirm</button>
 				{:then}
-					<button type="submit">Confirm</button>
+					<button type="submit" disabled={loading}>Confirm</button>
 				{/await}
 			</div>
 		</form>

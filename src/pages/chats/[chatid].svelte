@@ -3,9 +3,9 @@
 -->
 <script>
 	import BasicModal from "../../lib/modals/Basic.svelte";
-	import ChangeChatNicknameModal from "../../lib/modals/ChangeChatNickname.svelte";
-	import GCMemberModal from "../../lib/modals/GCMember.svelte";
-	import AddMemberModeModal from "../../lib/modals/AddMember_Mode.svelte";
+	import ChangeChatNicknameModal from "../../lib/modals/chats/ChangeChatNickname.svelte";
+	import GCMemberModal from "../../lib/modals/chats/GCMember.svelte";
+	import AddMemberModeModal from "../../lib/modals/chats/AddMember_Mode.svelte";
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
 	import ModerateChatModal from "../../lib/modals/moderation/ModerateChat.svelte";
 
@@ -173,6 +173,7 @@
 										)
 									) {
 										modals.showModal(AccountBannedModal, {
+											ban: $user.ban,
 											feature:
 												"editing group chat nicknames",
 										});
@@ -240,6 +241,7 @@
 							on:click={() => {
 								if (isRestricted(restrictions.NEW_CHATS)) {
 									modals.showModal(AccountBannedModal, {
+										ban: $user.ban,
 										feature:
 											"adding members to group chats",
 									});

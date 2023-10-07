@@ -1,8 +1,8 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import * as modals from "../modals.js";
-	import * as clm from "../clmanager.js";
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
 
 	import {goto} from "@roxi/routify";
 

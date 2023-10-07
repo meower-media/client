@@ -1,15 +1,15 @@
 <!-- RIP -->
 <script>
-	import SignupModal from "../lib/modals/Signup.svelte";
-	import DebugModal from "../lib/modals/Debug.svelte";
-	import ModPanelModal from "./ModPanel.svelte";
-	import LogoutModal from "../lib/modals/Logout.svelte";
+	import PFP from "./PFP.svelte";
+
+	import SignupModal from "./modals/Signup.svelte";
+	import DebugModal from "./modals/Debug.svelte";
+	import ModPanelModal from "./modals/moderation/ModPanel.svelte";
+	import LogoutModal from "./modals/Logout.svelte";
 
 	import {user, profileClicked, OOBERunning} from "../lib/stores.js";
-	import {shiftHeld} from "../lib/keyDetect.js";
-	import * as modals from "../lib/modals.js";
-
-	import PFP from "../lib/PFP.svelte";
+	import {shiftHeld} from "./keyDetect.js";
+	import * as modals from "./modals.js";
 
 	import logo from "../assets/logo.svg";
 	import home from "../assets/home.svg";

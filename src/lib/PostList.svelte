@@ -21,7 +21,7 @@
 -->
 <script>
 	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
-	import BlockUserModal from "./modals/BlockUser.svelte";
+	import BlockUserModal from "./modals/safety/BlockUser.svelte";
 	import AddImageModal from "./modals/AddImage.svelte";
 
 	import {
@@ -67,10 +67,10 @@
 	let id = 0;
 	let postErrors = "";
 
-	let postInput, submitBtn, userSuspended, dmWith;
+	let postInput, submitBtn, userRestricted, dmWith;
 
 	$: {
-		userSuspended =
+		userRestricted =
 			(postOrigin === "home" && isRestricted(restrictions.HOME_POSTS)) ||
 			(postOrigin !== "home" && isRestricted(restrictions.CHAT_POSTS));
 
@@ -409,8 +409,8 @@
 			<textarea
 				type="text"
 				class="white"
-				placeholder={userSuspended
-					? "Your account is currently suspended."
+				placeholder={userRestricted
+					? "Your account is currently restricted."
 					: $relationships[dmWith] === 2
 					? `You have blocked ${dmWith}.`
 					: "Write something..."}
@@ -418,7 +418,7 @@
 				autocomplete="false"
 				maxlength="500"
 				rows="1"
-				disabled={userSuspended || $relationships[dmWith] === 2}
+				disabled={userRestricted || $relationships[dmWith] === 2}
 				use:autoresize
 				on:input={() => {
 					postErrors = "";
@@ -448,11 +448,11 @@
 				}}
 				bind:this={postInput}
 			/>
-			{#if userSuspended}
+			{#if userRestricted}
 				<button
 					on:click|preventDefault={() => {
 						modals.showModal(AccountBannedModal, {
-							feature: "creating posts",
+							ban: $user.ban, feature: `creating ${postOrigin === "home" ? "home" : "group chat"} posts`,
 						});
 					}}>View details</button
 				>

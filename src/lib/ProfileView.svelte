@@ -39,7 +39,7 @@
 		</div>
 	{:then data}
 		<Container>
-			{#if canDoActions && !((data.flags & userFlags.DELETED) === userFlags.DELETED)}
+			{#if canDoActions && (data.flags & userFlags.DELETED) !== userFlags.DELETED}
 				<div class="settings-controls">
 					{#if dmChat}
 						<button
@@ -70,7 +70,7 @@
 										});
 									if ($user.favorited_chats.length >= 50) {
 										modals.showModal(BasicModal, {
-											title: "Too many chats!",
+											title: "Too many stars!",
 											desc: "Sorry, you can only have up to 50 favorited chats!",
 										});
 									} else {
@@ -128,6 +128,7 @@
 													modals.showModal(
 														AccountBannedModal,
 														{
+															ban: $user.ban,
 															feature:
 																"starting direct message chats",
 														}
@@ -156,7 +157,7 @@
 									} catch (e) {
 										modals.showModal(BasicModal, {
 											title: "Failed to open DM",
-											desc: `Failed to open DM with ${data._id}. Error: ${e}`,
+											desc: `Failed to open DM with ${data._id}. ${e}`,
 										});
 									}
 								}
@@ -204,7 +205,9 @@
 						</h1>
 					{/if}
 					<div class="profile-active">
-						{#if (data.flags & userFlags.DELETED) === userFlags.DELETED}
+						{#if (data.flags & userFlags.SYSTEM) === userFlags.SYSTEM}
+							System
+						{:else if (data.flags & userFlags.DELETED) === userFlags.DELETED}
 							Deleted
 						{:else if data.banned}
 							Banned

@@ -1,11 +1,11 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-	import {chat} from "../stores.js";
+	import {chat} from "../../stores.js";
 
-	import {authHeader} from "../stores.js";
-	import {apiUrl} from "../urls.js";
-	import * as modals from "../modals.js";
+	import {authHeader} from "../../stores.js";
+	import {apiUrl} from "../../urls.js";
+	import * as modals from "../../modals.js";
 
 	let nickname = $chat.nickname;
 	let loading, error;

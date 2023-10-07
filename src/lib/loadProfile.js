@@ -24,6 +24,14 @@ function getCache(username, ignoreSpecialUsers) {
 }
 
 export default async function loadProfile(username, ignoreSpecialUsers) {
+	if (["Server", "Deleted", "Notification", "Announcement"].includes(username)) {
+		return {
+			error: false,
+			pfp_data: -2,
+			temporary: false,
+		};
+	}
+
 	if (_profileCache[username] && !_profileCache[username].temporary) {
 		return getCache(username, ignoreSpecialUsers);
 	}

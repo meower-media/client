@@ -1,10 +1,10 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
 	import AddMemberModal from "./AddMember.svelte";
 	import AddMemberSearchModal from "./AddMember_Search.svelte";
 
-	import * as modals from "../modals.js";
+	import * as modals from "../../modals.js";
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -12,25 +12,19 @@
 	<div slot="default">
 		<button
 			class="long"
-			on:click={() => {
-				modals.showModal(AddMemberModal);
-			}}
+			on:click={() => modals.showModal(AddMemberModal)}
 		>
 			Enter Username
 		</button><br />
 		<button
 			class="long"
-			on:click={() => {
-				modals.showModal(AddMemberSearchModal);
-			}}
+			on:click={() => modals.showModal(AddMemberSearchModal)}
 		>
 			Search for Users
 		</button><br />
 		<button
 			class="long"
-			on:click={() => {
-				modals.closeLastModal();
-			}}
+			on:click={() => modals.closeLastModal()}
 		>
 			Cancel
 		</button>

@@ -1,11 +1,11 @@
 <script>
-	import Modal from "../Modal.svelte";
-	import Container from "../Container.svelte";
+	import Modal from "../../Modal.svelte";
+	import Container from "../../Container.svelte";
 
-	import * as modals from "../modals.js";
-	import * as clm from "../clmanager.js";
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
 
-	import {user} from "../stores.js";
+	import {user} from "../../stores.js";
 
 	import {goto} from "@roxi/routify";
 

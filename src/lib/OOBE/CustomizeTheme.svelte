@@ -1,5 +1,5 @@
 <script>
-	import SwitchThemeModal from "../modals/SwitchTheme.svelte";
+	import SwitchThemeModal from "../modals/settings/SwitchTheme.svelte";
 
 	import * as modals from "../modals.js";
 

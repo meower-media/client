@@ -4,23 +4,15 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
-	import twemoji from "twemoji";
-	import {toHTMLElement} from "./twemoji-utils.js";
-
 	import LiText from "./LiText.svelte";
 
-	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
-	import ReportPostModal from "./modals/moderation/ReportPost.svelte";
+	import ReportPostModal from "./modals/safety/ReportPost.svelte";
 
 	import {authHeader, postClicked, user, chat, ulist} from "../lib/stores.js";
-	import {
-		adminPermissions,
-		hasPermission,
-		restrictions,
-		isRestricted,
-	} from "../lib/bitField.js";
+	import {adminPermissions, hasPermission} from "../lib/bitField.js";
 	import {apiUrl} from "./urls.js";
+	import {toHTMLElement} from "./twemoji-utils.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as modals from "./modals.js";
 
@@ -30,7 +22,7 @@
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
-
+	import twemoji from "twemoji";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
@@ -123,18 +115,6 @@
 					<button
 						class="circle pen"
 						on:click={async () => {
-							if (
-								(post.post_origin === "home" &&
-									isRestricted(restrictions.HOME_POSTS)) ||
-								(post.post_origin !== "home" &&
-									isRestricted(restrictions.CHAT_POSTS))
-							) {
-								modals.showModal(AccountBannedModal, {
-									feature: "editing posts",
-								});
-								return;
-							}
-
 							editError = "";
 							editing = true;
 							await tick();
@@ -148,18 +128,6 @@
 					<button
 						class="circle reply"
 						on:click={() => {
-							if (
-								(post.post_origin === "home" &&
-									isRestricted(restrictions.HOME_POSTS)) ||
-								(post.post_origin !== "home" &&
-									isRestricted(restrictions.CHAT_POSTS))
-							) {
-								modals.showModal(AccountBannedModal, {
-									feature: "creating posts",
-								});
-								return;
-							}
-
 							let existingText = input.value;
 
 							const mentionRegex = /^@\w+\s*/i;

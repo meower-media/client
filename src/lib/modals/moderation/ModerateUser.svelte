@@ -1,11 +1,12 @@
 <script>
 	import Modal from "../../Modal.svelte";
 	import Container from "../../Container.svelte";
-	import PostList from "../../PostList.svelte";
 	import Loading from "../../Loading.svelte";
 	import FormattedDate from "../../FormattedDate.svelte";
 	import AdminNotes from "../../AdminNotes.svelte";
 
+	import ViewPostsModal from "./ViewPosts.svelte";
+	import ClearQuoteModal from "./ClearQuote.svelte";
 	import SetAdminPermissionsModal from "./SetAdminPermissions.svelte";
 	import DeleteAccountModal from "./DeleteAccount.svelte";
 
@@ -13,30 +14,24 @@
 	import shieldx from "../../../assets/shield-x.svg";
 	import userx from "../../../assets/user-x.svg";
 
-	import {authHeader, userToMod} from "../../stores.js";
-	import {userFlags} from "../../bitField.js";
-	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import {authHeader} from "../../stores.js";
+	import {userFlags, adminPermissions, hasPermission} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
 	import {goto} from "@roxi/routify";
-	import {tick} from "svelte";
+
+	export let modalData;
+
+	let { username } = modalData;
 
 	let user;
-	let system, deleted;
+	let system, deleted, userProtected;
 	let alertText, alertStatus;
 	let banState, banExpired, formattedBanExpires, banSaving, banSaveError;
 	let kickStatus;
-	let viewPosts,
-		postOrigin = "all",
-		chatId,
-		reloadingPosts;
-	let confirmDeletePosts, deletingPosts, deletePostsError;
-	let confirmClearQuote, clearingQuote, clearQuoteError;
 
 	$: {
-		if (!$userToMod) modals.closeLastModal();
-
 		if (banState && banState.expires) {
 			banExpired =
 				banState.state.includes("Temp") &&
@@ -53,35 +48,35 @@
 	}
 
 	async function getUserdata() {
-		const resp = await fetch(`${apiUrl}admin/users/${$userToMod}`, {
+		const resp = await fetch(`${apiUrl}admin/users/${username}`, {
 			headers: $authHeader,
 		});
 		if (!resp.ok) {
 			if (resp.status === 404)
-				throw new Error(`${$userToMod} does not exist!`);
+				throw new Error(`${username} does not exist!`);
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
 		user = await resp.json();
 		system = (user.flags & userFlags.SYSTEM) === userFlags.SYSTEM;
 		deleted = (user.flags & userFlags.DELETED) === userFlags.DELETED;
+		userProtected = (user.flags & userFlags.PROTECTED) === userFlags.PROTECTED;
 		if (user.ban) banState = Object.assign({}, user.ban);
 	}
 
 	async function saveBanState() {
 		banSaving = true;
 		try {
-			const resp = await fetch(`${apiUrl}admin/users/${user._id}`, {
-				method: "PATCH",
+			const resp = await fetch(`${apiUrl}admin/users/${user._id}/ban`, {
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					...$authHeader,
 				},
 				body: JSON.stringify({
-					ban: {
-						state: banState.state,
-						expires: banState.expires,
-						reason: banState.reason,
-					},
+					state: banState.state,
+					restrictions: 0,
+					expires: banState.expires,
+					reason: banState.reason,
 				}),
 			});
 			if (!resp.ok) {
@@ -94,30 +89,6 @@
 		} catch (e) {
 			banSaveError = e;
 			banSaving = false;
-		}
-	}
-
-	async function deleteAllPosts() {
-		deletePostsError = "";
-		deletingPosts = true;
-		try {
-			const resp = await fetch(
-				`${apiUrl}admin/users/${user._id}/posts/${postOrigin}`,
-				{
-					method: "DELETE",
-					headers: $authHeader,
-				}
-			);
-			if (!resp.ok) {
-				throw new Error(
-					"Response code is not OK; code is " + resp.status
-				);
-			}
-			deletingPosts = false;
-			confirmDeletePosts = false;
-		} catch (e) {
-			deletePostsError = e;
-			deletingPosts = false;
 		}
 	}
 
@@ -143,44 +114,28 @@
 			kickStatus = e;
 		}
 	}
-
-	async function clearQuote() {
-		clearQuoteError = "";
-		clearingQuote = true;
-		try {
-			const resp = await fetch(`${apiUrl}admin/users/${user._id}/quote`, {
-				method: "DELETE",
-				headers: $authHeader,
-			});
-			if (!resp.ok) {
-				throw new Error(
-					"Response code is not OK; code is " + resp.status
-				);
-			}
-			clearingQuote = false;
-			confirmClearQuote = false;
-		} catch (e) {
-			clearQuoteError = e;
-			clearingQuote = false;
-		}
-	}
 </script>
 
 <Modal
 	on:close={() => {
-		$userToMod = "";
+		username = "";
 		modals.closeLastModal();
 	}}
 >
-	<h2 slot="header">Moderate {$userToMod}</h2>
+	<h2 slot="header">Moderate {username}</h2>
 	<div slot="default">
 		{#await getUserdata()}
 			<Loading />
 		{:then}
+			{#if userProtected}
+				<Container warning={true}>
+					This account is protected. If you are not a sysadmin, some options will be unavailable.
+				</Container>
+			{/if}
 			{#if deleted}
 				<Container warning={true}>
 					This account has been deleted. Deleted accounts cannot be
-					recovered. {#if hasPermission(adminPermissions.DELETE_ACCOUNTS)}You
+					recovered. {#if hasPermission(adminPermissions.DELETE_USERS)}You
 						may release the username by purging the account.{/if}
 				</Container>
 			{:else if user.delete_after}
@@ -336,18 +291,18 @@
 
 			{#if banState}
 				<h2>Ban State</h2>
-				{#if !banExpired && user.ban.state !== "None" && JSON.stringify(banState) === JSON.stringify(user.ban)}
+				{#if !banExpired && user.ban.state !== "none" && JSON.stringify(banState) === JSON.stringify(user.ban)}
 					<Container warning={true}>
 						{user._id} is
-						{#if user.ban.state.includes("Perm")}
+						{#if user.ban.state.includes("perm")}
 							permanently
 						{/if}
-						{#if user.ban.state.includes("Restriction")}
+						{#if user.ban.state.includes("restriction")}
 							restricted
-						{:else if user.ban.state.includes("Ban")}
+						{:else if user.ban.state.includes("ban")}
 							banned
 						{/if}
-						{#if user.ban.state.includes("Temp")}
+						{#if user.ban.state.includes("temp")}
 							until <FormattedDate date={user.ban.expires} />
 						{/if}
 					</Container>
@@ -357,49 +312,49 @@
 					id="state"
 					class="grow"
 					style="width: 100%; margin-bottom: 0.25em;"
-					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES)}
+					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
 					bind:value={banState.state}
 				>
-					<option value="None" selected={banState.state === "None"}>
+					<option value="none" selected={banState.state === "none"}>
 						None
 					</option>
 
 					<option
-						value="TempRestriction"
-						selected={banState.state === "TempRestriction"}
+						value="temp_restriction"
+						selected={banState.state === "temp_restriction"}
 					>
 						Temporarily restricted
 					</option>
 					<option
-						value="PermRestriction"
-						selected={banState.state === "PermRestriction"}
+						value="perm_restriction"
+						selected={banState.state === "perm_restriction"}
 					>
 						Permanently restricted
 					</option>
 
 					<option
-						value="TempBan"
-						selected={banState.state === "TempBan"}
+						value="temp_ban"
+						selected={banState.state === "temp_ban"}
 					>
 						Temporarily banned
 					</option>
 					<option
-						value="PermBan"
-						selected={banState.state === "PermBan"}
+						value="perm_ban"
+						selected={banState.state === "perm_ban"}
 					>
 						Permanently banned
 					</option>
 				</select><br />
-				{#if banState.state === "None"}
+				{#if banState.state === "none"}
 					This applies no restrictions to the user.
-				{:else if banState.state.includes("Restriction")}
+				{:else if banState.state.includes("restriction")}
 					<button class="long"> Edit Restrictions </button>
 					<b>Restrictions:</b> test, 123, abc
-				{:else if banState.state.includes("Ban")}
+				{:else if banState.state.includes("ban")}
 					This prevents the user from logging in.
 				{/if}
 
-				{#if banState.state.includes("Temp")}
+				{#if banState.state.includes("temp")}
 					<br /><br />
 					<label
 						for="expires"
@@ -415,7 +370,7 @@
 						type="datetime-local"
 						disabled={!hasPermission(
 							adminPermissions.EDIT_BAN_STATES
-						)}
+						) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
 						bind:value={formattedBanExpires}
 						on:change={() => {
 							banState.expires = Math.floor(
@@ -425,7 +380,7 @@
 					/>
 				{/if}
 
-				{#if banState.state !== "None"}
+				{#if banState.state !== "none"}
 					<br /><br />
 					<label for="reason"
 						><b>Reason (will be shown to user)</b></label
@@ -436,7 +391,7 @@
 						placeholder="Reason text here..."
 						disabled={!hasPermission(
 							adminPermissions.EDIT_BAN_STATES
-						)}
+						) || (userProtected && !hasPermission(adminPermissions.SYSADMIN))}
 						bind:value={banState.reason}
 					/>
 				{/if}
@@ -464,12 +419,12 @@
 				<br /><br />
 			{/if}
 
-			{#if !system && (!deleted || hasPermission(adminPermissions.DELETE_ACCOUNTS))}
+			{#if !system && (!deleted || hasPermission(adminPermissions.DELETE_USERS))}
 				<h2>Other Actions</h2>
 				{#if !system && !deleted && hasPermission(adminPermissions.VIEW_POSTS)}
 					<button
 						class="action-button"
-						on:click={() => (viewPosts = true)}
+						on:click={() => modals.showModal(ViewPostsModal, { username, userProtected })}
 					>
 						View posts
 					</button>
@@ -485,7 +440,8 @@
 				{#if !system && !deleted && hasPermission(adminPermissions.CLEAR_USER_QUOTES)}
 					<button
 						class="action-button"
-						on:click={() => (confirmClearQuote = true)}
+						disabled={userProtected && !hasPermission(adminPermissions.SYSADMIN)}
+						on:click={() => modals.showModal(ClearQuoteModal, { username })}
 					>
 						Clear quote
 					</button>
@@ -503,9 +459,10 @@
 						{/if}
 					</button>
 				{/if}
-				{#if hasPermission(adminPermissions.DELETE_ACCOUNTS)}
+				{#if hasPermission(adminPermissions.DELETE_USERS)}
 					<button
 						class="action-button"
+						disabled={userProtected && !hasPermission(adminPermissions.SYSADMIN)}
 						on:click={() =>
 							modals.showModal(DeleteAccountModal, {user})}
 					>
@@ -525,7 +482,7 @@
 				<button
 					type="button"
 					on:click={() => {
-						$userToMod = "";
+						username = "";
 						modals.closeLastModal();
 					}}>Close</button
 				>
@@ -537,133 +494,15 @@
 				<button
 					type="button"
 					on:click={() => {
-						$userToMod = "";
+						username = "";
 						modals.closeLastModal();
 					}}>Close</button
 				>
 			</div>
 		{/await}
 		<div />
-	</div></Modal
->
-
-<!-- modals -->
-{#if confirmDeletePosts}
-	<Modal on:close={() => (confirmDeletePosts = false)}>
-		<h2 slot="header">
-			Delete {$userToMod}'s Posts
-		</h2>
-		<div slot="default">
-			<p>Are you sure? This action is irreversible!</p>
-			{#if deletePostsError}
-				<p style="color: crimson;">{deletePostsError}</p>
-			{:else}
-				<br />
-			{/if}
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => (confirmDeletePosts = false)}>Cancel</button
-				>
-				<button type="button" on:click={deleteAllPosts}>Delete</button>
-			</div>
-		</div>
-	</Modal>
-{:else if viewPosts}
-	<Modal on:close={() => (viewPosts = false)}>
-		<h2 slot="header">
-			{$userToMod}'s Posts
-		</h2>
-		<div slot="default">
-			<label for="post-origin"><b>Post Origin</b></label><br />
-			<select
-				id="post-origin"
-				class="modal-input grow"
-				style="width: 100%; margin-bottom: 0.25em;"
-				bind:value={postOrigin}
-				on:change={async () => {
-					reloadingPosts = true;
-					await tick();
-					reloadingPosts = false;
-				}}
-			>
-				<option value="all" selected={postOrigin === "all"}>Any</option>
-				<option value="home" selected={postOrigin === "home"}
-					>Home</option
-				>
-				<option value="inbox" selected={postOrigin === "inbox"}
-					>Inbox</option
-				>
-				<option value="chat" selected={postOrigin === "chat"}
-					>Chat</option
-				>
-			</select><br />
-			{#if postOrigin === "chat"}
-				<label for="chat-id"><b>Chat ID</b></label><br />
-				<input
-					id="chat-id"
-					type="text"
-					class="modal-input white"
-					style="margin-bottom: 0.25em;"
-					placeholder="Chat ID..."
-					bind:value={chatId}
-					on:change={async () => {
-						reloadingPosts = true;
-						await tick();
-						reloadingPosts = false;
-					}}
-				/><br />
-			{/if}
-			{#if !reloadingPosts && (postOrigin !== "chat" || chatId)}
-				<button
-					class="long"
-					title="Delete All Posts"
-					on:click={() => (confirmDeletePosts = true)}
-					>Delete All Posts</button
-				><br />
-				<PostList
-					fetchUrl={`admin/users/${$userToMod}/posts/${
-						postOrigin === "chat" ? chatId : postOrigin
-					}`}
-					postOrigin={null}
-					canPost={false}
-					instantDelete={true}
-				/>
-			{/if}
-			<div class="modal-buttons">
-				<button type="button" on:click={() => (viewPosts = false)}
-					>Close</button
-				>
-			</div>
-		</div>
-	</Modal>
-{:else if confirmClearQuote}
-	<Modal on:close={() => (confirmClearQuote = false)}>
-		<h2 slot="header">
-			Clear {$userToMod}'s Quote
-		</h2>
-		<div slot="default">
-			<p>Are you sure? This action is irreversible!</p>
-			{#if clearQuoteError}
-				<p style="color: crimson;">{clearQuoteError}</p>
-			{:else}
-				<br />
-			{/if}
-			<div class="modal-buttons">
-				<button
-					type="button"
-					disabled={clearingQuote}
-					on:click={() => (confirmClearQuote = false)}>Cancel</button
-				>
-				<button
-					type="submit"
-					disabled={clearingQuote}
-					on:click={clearQuote}>Clear Quote</button
-				>
-			</div>
-		</div>
-	</Modal>
-{/if}
+	</div>
+</Modal>
 
 <style>
 	textarea {

@@ -5,8 +5,8 @@
 	import Container from "../../../lib/Container.svelte";
 	import PFP from "../../../lib/PFP.svelte";
 
-	import AddMember2Modal from "../../../lib/modals/AddMember_2.svelte";
-	import BlockUserModal from "../../../lib/modals/BlockUser.svelte";
+	import AddMemberProfileModal from "../../../lib/modals/chats/AddMember_Profile.svelte";
+	import BlockUserModal from "../../../lib/modals/safety/BlockUser.svelte";
 
 	import {relationships, profileClicked, user} from "../../../lib/stores.js";
 	import {restrictions, isRestricted} from "../../../lib/bitField.js";
@@ -133,10 +133,7 @@
 			{#if $relationships[data._id] !== 2}
 				<button
 					class="long"
-					on:click={() => {
-						$profileClicked = data._id;
-						modals.showModal(AddMember2Modal);
-					}}>Add to Chat</button
+					on:click={() => modals.showModal(AddMemberProfileModal, { username: data._id })}>Add to Chat</button
 				>
 			{/if}
 			<button

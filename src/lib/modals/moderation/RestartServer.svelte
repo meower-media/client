@@ -1,8 +1,10 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
+	import {authHeader} from "../../stores.js";
+	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
+
 	import sleep from "../../sleep";
 
 	let loading, error;
@@ -15,44 +17,39 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "restart",
-							val: "",
-						},
+					const resp = await fetch(`${apiUrl}admin/server/restart`, {
+						method: "POST",
+						headers: $authHeader,
 					});
-				} catch (code) {
-					loading = false;
-					switch (code) {
-						case "E:122 | Command disabled by sysadmin":
-							error =
-								"This server doesn't support the restart command!";
-							break;
-						default:
-							error = "Unexpected " + code + " error!";
+					if (!resp.ok) {
+						if (resp.status === 404) {
+							throw new Error("Server doesn't have a restart command set!");
+						}
+						throw new Error("Response code is not OK; code is " + resp.status);
 					}
-					return;
+					modals.closeLastModal();
+				} catch (e) {
+					error = e;
+					loading = false;
 				}
 			}}
 		>
-			<p>Are you sure you would like to restart the server?</p>
+			<p>
+				Are you sure you would like to restart the server?
+			</p>
 			{#if error}
 				<p style="color: crimson;">{error}</p>
 			{:else}
 				<br />
 			{/if}
 			<div class="modal-buttons">
-				<button
-					type="button"
-					disabled={loading}
-					on:click|preventDefault={modals.closeLastModal}
+				<button type="button" on:click={modals.closeLastModal}
 					>Cancel</button
 				>
 				{#await sleep(1500)}
-					<button type="submit" disabled>Restart</button>
+					<button disabled type="submit">Confirm</button>
 				{:then}
-					<button type="submit" disabled={loading}>Restart</button>
+					<button type="submit">Confirm</button>
 				{/await}
 			</div>
 		</form>

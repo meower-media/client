@@ -3,44 +3,52 @@
 	import Container from "../../Container.svelte";
 	import FormattedDate from "../../FormattedDate.svelte";
 
-	import {user} from "../../stores.js";
 	import * as modals from "../../modals.js";
 
-	let banType = "";
-	let banTypeIon = "";
-	if (["TempRestriction", "PermRestriction"].includes($user.ban.state)) {
-		banType = "restricted";
-		banTypeIon = "restriction";
-	} else if (["TempSuspension", "PermSuspension"].includes($user.ban.state)) {
-		banType = "suspended";
-		banTypeIon = "suspension";
-	} else if (["TempBan", "PermBan"].includes($user.ban.state)) {
-		banType = "banned";
-		banTypeIon = "ban"; // doesn't really end with "ion", but oh well
-	}
+	export let modalData;
+
+	let { ban, feature } = modalData;
+	let banType;
 
 	$: {
-		if ($user.ban.state === "None") modals.closeLastModal();
+		if (["temp_restriction", "perm_restriction"].includes(ban.state)) {
+			banType = "restriction";
+		} else if (["temp_ban", "perm_ban"].includes(ban.state)) {
+			banType = "ban";
+		} else {
+			modals.closeLastModal();
+		}
 	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
-	<h2 slot="header">Account {banType}</h2>
+	<h2 slot="header">
+		Account
+		{#if ban.state.includes("restriction")}
+			Restricted
+		{:else if ban.state.includes("ban")}
+			Banned
+		{/if}
+	</h2>
 
 	<div slot="default">
 		<p>
 			Your account has been
-			{#if $user.ban.state.includes("Temp")}
+			{#if ban.state.includes("temp")}
 				temporarily
 			{:else}
 				permanently
 			{/if}
-			{banType}
-			{#if $user.ban.reason}
+			{#if ban.state.includes("restriction")}
+				restricted from {feature}
+			{:else if ban.state.includes("ban")}
+				banned
+			{/if}
+			{#if ban.reason}
 				for the following reason:
 				<Container>
 					<span style="white-space: pre-wrap;">
-						{$user.ban.reason}
+						{ban.reason}
 					</span>
 				</Container>
 			{:else}
@@ -48,39 +56,19 @@
 			{/if}
 		</p>
 
-		{#if banType === "restricted"}
+		{#if ban.state.includes("temp")}
 			<p>
-				While your account is restricted, you will not be able to start
-				DMs, create group chats, or add members to group chats.
-			</p>
-		{:else if banType === "suspended"}
-			<p>
-				While your account is suspended, you will not be able to create
-				posts, start DMs, create group chats, or add members to group
-				chats.
-			</p>
-		{/if}
-
-		{#if $user.ban.state.includes("Temp")}
-			<p>
-				This {banTypeIon} will expire after <FormattedDate
-					date={$user.ban.expires}
-				/>.
+				This {banType} will expire after <FormattedDate date={ban.expires} />.
 			</p>
 		{:else}
 			<p>
-				If you would like to appeal this {banTypeIon}, please email
-				<a
-					href="mailto:support@meower.org"
-					target="_blank"
-					rel="noreferrer">support@meower.org</a
-				>.
+				If you would like to appeal this {banType}, please email <a href="mailto:support@meower.org" target="_blank" rel="noreferrer">support@meower.org</a>.
 			</p>
 		{/if}
 
 		<p>
 			<i
-				>Please note that attempting to evade this {banTypeIon} is prohibited
+				>Please note that attempting to evade this {banType} is prohibited
 				and can lead to more severe punishments.</i
 			>
 		</p>

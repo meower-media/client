@@ -11,10 +11,11 @@
 
 	import {params, goto} from "@roxi/routify";
 
+	let showResults = ($params.type && $params.q);  // causes duplicate requests without this due to remounting when page params change
 	let errors = "";
 </script>
 
-{#if $params.type && $params.q}
+{#if showResults}
 	<div class="search-results">
 		<Container>
 			<h1>Search Results for "{$params.q}"</h1>

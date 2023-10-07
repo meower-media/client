@@ -4,6 +4,7 @@
 
 import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
 import LoggedOutModal from "./modals/LoggedOut.svelte";
+import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
 
 import Cloudlink from "./cloudlink.js";
 import {
@@ -339,25 +340,11 @@ export async function connect() {
 				chats.set(cmd.val.payload.chats);
 			}
 		});
-		/*
 		bannedEvent = link.on("direct", async cmd => {
 			if (cmd.val.mode === "banned") {
-				_user.ban = cmd.val.payload;
-				user.set(_user);
-				if (
-					["PermRestriction", "PermSuspension", "PermBan"].includes(
-						_user.ban.state
-					) ||
-					(["TempRestriction", "TempSuspension", "TempBan"].includes(
-						_user.ban.state
-					) &&
-						_user.ban.expires > Math.floor(Date.now() / 1000))
-				) {
-					modals.showModal(AccountBannedModal);
-				}
+				modals.showModal(AccountBannedModal, { ban: cmd.val.payload });
 			}
 		});
-		*/
 		inboxMessageEvent = link.on("direct", cmd => {
 			if (cmd.val.mode === "inbox_message") {
 				_user.unread_inbox = true;

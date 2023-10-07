@@ -1,21 +1,21 @@
 <script>
-	import Modal from "./Modal.svelte";
-	import Loading from "./Loading.svelte";
-	import Container from "./Container.svelte";
-	import PagedList from "./PagedList.svelte";
-	import Report from "./Report.svelte";
+	import Modal from "../../Modal.svelte";
+	import Loading from "../../Loading.svelte";
+	import Container from "../../Container.svelte";
+	import PagedList from "../../PagedList.svelte";
+	import Report from "../../Report.svelte";
 
-	import ModerateUserModal from "./modals/moderation/ModerateUser.svelte";
-	import ModerateIPModal from "./modals/moderation/ModerateIP.svelte";
-	import KickAllUsersModal from "./modals/moderation/KickAllUsers.svelte";
-	import RestartServerModal from "./modals/moderation/RestartServer.svelte";
-	import EnableRepairModeModal from "./modals/moderation/EnableRepairMode.svelte";
+	import ModerateUserModal from "./ModerateUser.svelte";
+	import ModerateIPModal from "./ModerateIP.svelte";
+	import SendAnnouncementModal from "./SendAnnouncement.svelte";
+	import KickAllUsersModal from "./KickAllUsers.svelte";
+	import RestartServerModal from "./RestartServer.svelte";
+	import EnableRepairModeModal from "./EnableRepairMode.svelte";
 
-	import {authHeader, userToMod, ipToMod} from "./stores.js";
-	import {adminPermissions, hasPermission} from "./bitField.js";
-	import * as modals from "./modals.js";
-	import {apiUrl} from "./urls.js";
-	import sleep from "./sleep";
+	import {authHeader, ipToMod} from "../../stores.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import {apiUrl} from "../../urls.js";
+	import * as modals from "../../modals.js";
 
 	import {createEventDispatcher, tick} from "svelte";
 
@@ -25,10 +25,6 @@
 
 	let serverStatus = {};
 	let registrationToggleStatus = "";
-
-	let confirmAnnouncement = false;
-	let sendingAnnouncement = false;
-	let announcementError = "";
 
 	let reportFilterStatus = "pending";
 	let reportFilterType = null;
@@ -126,8 +122,7 @@
 				// @ts-ignore
 				const f = e.target;
 				// @ts-ignore
-				$userToMod = f.elements[0].value;
-				modals.showModal(ModerateUserModal);
+				modals.showModal(ModerateUserModal, { username: f.elements[0].value });
 			}}
 		>
 			<div class="input-row">
@@ -135,7 +130,6 @@
 					class="grow white"
 					type="text"
 					placeholder="Username..."
-					value={$userToMod}
 				/>
 				<button class="static">Submit</button>
 			</div>
@@ -163,9 +157,9 @@
 				</div>
 			</form>
 		{/if}
-		{#if hasPermission(adminPermissions.CREATE_ANNOUNCEMENTS)}
+		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
-			<form on:submit|preventDefault={() => (confirmAnnouncement = true)}>
+			<form on:submit|preventDefault={() => modals.showModal(SendAnnouncementModal, { announcement: announceMsg })}>
 				<textarea
 					class="announce-textarea white"
 					placeholder="Announcement text here..."
@@ -231,7 +225,7 @@
 				on:change={reloadReports}
 			>
 				<option value={null} selected={!reportFilterStatus}>
-					All
+					Any
 				</option>
 				<option
 					value="pending"
@@ -266,7 +260,7 @@
 				bind:value={reportFilterType}
 				on:change={reloadReports}
 			>
-				<option value={null} selected={!reportFilterType}> All </option>
+				<option value={null} selected={!reportFilterType}> Any </option>
 				<option value="post" selected={reportFilterType === "post"}>
 					Post
 				</option>
@@ -302,65 +296,6 @@
 	</div>
 </Modal>
 
-<!-- modals -->
-{#if confirmAnnouncement}
-	<Modal on:close={() => (confirmAnnouncement = false)}>
-		<h2 slot="header" style="margin-top: 0;">Send Announcement</h2>
-		<div slot="default">
-			<p>Are you sure? This will send a message to EVERYONE's inbox!</p>
-			{#if announcementError}
-				<p style="color: crimson;">{announcementError}</p>
-			{:else}
-				<br />
-			{/if}
-			<div class="modal-buttons">
-				<button
-					disabled={sendingAnnouncement}
-					on:click={() => (confirmAnnouncement = false)}
-					>Cancel</button
-				>
-				{#await sleep(1500)}
-					<button disabled>Confirm</button>
-				{:then}
-					<button
-						disabled={sendingAnnouncement}
-						on:click={async () => {
-							sendingAnnouncement = true;
-							try {
-								const resp = await fetch(
-									`${apiUrl}admin/announcements`,
-									{
-										method: "POST",
-										headers: {
-											"Content-Type": "application/json",
-											...$authHeader,
-										},
-										body: JSON.stringify({
-											content: announceMsg,
-										}),
-									}
-								);
-								if (!resp.ok) {
-									throw new Error(
-										"Response code is not OK; code is " +
-											resp.status
-									);
-								}
-								announceMsg = "";
-								sendingAnnouncement = false;
-								confirmAnnouncement = false;
-							} catch (e) {
-								announcementError = e;
-								sendingAnnouncement = false;
-							}
-						}}>Confirm</button
-					>
-				{/await}
-			</div>
-		</div>
-	</Modal>
-{/if}
-
 <style>
 	h2 {
 		margin-top: 0.5em;
@@ -386,13 +321,6 @@
 	.static {
 		flex-grow: 0;
 		flex-shrink: 0;
-	}
-
-	.msg {
-		display: block;
-		font-size: 75%;
-		font-weight: bold;
-		margin: 0.25em 0;
 	}
 
 	.announce-buttons {
