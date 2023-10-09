@@ -8,16 +8,15 @@
 -->
 <script>
 	import Container from "../../lib/Container.svelte";
-	import Modal from "../../lib/Modal.svelte";
 	import ProfileView from "../..//lib/ProfileView.svelte";
 
 	import BasicModal from "../../lib/modals/Basic.svelte";
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
 	import CreateChatModal from "../../lib/modals/chats/CreateChat.svelte";
+	import LeaveChatModal from "../../lib/modals/chats/LeaveChat.svelte";
 
-	import {authHeader, chats, user} from "../../lib/stores.js";
+	import {chats, user} from "../../lib/stores.js";
 	import {restrictions, isRestricted} from "../../lib/bitField.js";
-	import {apiUrl} from "../../lib/urls.js";
 	import * as modals from "../../lib/modals.js";
 	import * as clm from "../../lib/clmanager.js";
 
@@ -123,7 +122,7 @@
 						{#if !$user.favorited_chats.includes(chat._id)}
 							<button
 								class="circle close"
-								on:click={() => (toLeaveChat = chat)}
+								on:click={() => modals.showModal(LeaveChatModal, { chat })}
 							/>
 						{/if}
 						<button
@@ -150,50 +149,6 @@
 			{/if}
 		</div>
 	{/each}
-	{#if toLeaveChat}
-		<Modal on:close={() => (toLeaveChat = null)}>
-			<h2 slot="header">Leave Chat</h2>
-			<div slot="default">
-				Are you sure you want to leave {toLeaveChat.nickname}?
-				{#if leaveError}
-					<p style="color: crimson;">{leaveError}</p>
-				{:else}
-					<br /><br />
-				{/if}
-				<div class="modal-buttons">
-					<button on:click={() => (toLeaveChat = null)}>Cancel</button
-					>
-					<button
-						on:click={async () => {
-							try {
-								const resp = await fetch(
-									`${apiUrl}chats/${toLeaveChat._id}`,
-									{
-										method: "DELETE",
-										headers: $authHeader,
-									}
-								);
-								if (!resp.ok) {
-									if (resp.status === 429) {
-										throw new Error(
-											"Too many requests! Try again later."
-										);
-									}
-									throw new Error(
-										"Response code is not OK; code is " +
-											resp.status
-									);
-								}
-								toLeaveChat = null;
-							} catch (e) {
-								leaveError = e;
-							}
-						}}>Leave</button
-					>
-				</div>
-			</div>
-		</Modal>
-	{/if}
 </div>
 
 <style>

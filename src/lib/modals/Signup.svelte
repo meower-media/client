@@ -2,11 +2,14 @@
 	import Modal from "../Modal.svelte";
 
 	import LoginModal from "./Login.svelte";
+	import BasicModal from "./Basic.svelte";
 	import AccountCreationBlockedModal from "./moderation/AccountCreationBlocked.svelte";
 
 	import {OOBERunning, user} from "../stores.js";
 	import * as clm from "../clmanager.js";
 	import * as modals from "../modals.js";
+
+	import {focus} from "@roxi/routify";
 
 	let username, password, loading, error;
 </script>
@@ -45,9 +48,6 @@
 							case "I:015 | Account exists":
 								error = `${username} is taken!`;
 								break;
-							case "E:119 | IP Blocked":
-								modals.showModal(AccountCreationBlockedModal);
-								break;
 							case "E:019 | Illegal characters detected":
 								error =
 									"Usernames must not have spaces or other special characters!";
@@ -55,6 +55,15 @@
 							case "E:106 | Too many requests":
 								error =
 									"Too many requests! Please try again later.";
+								break;
+							case "E:119 | IP Blocked":
+								modals.showModal(AccountCreationBlockedModal);
+								break;
+							case "E:122 | Command disabled by sysadmin":
+								modals.showModal(BasicModal, {
+									title: "Registration Disabled",
+									desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later."
+								});
 								break;
 							default:
 								error = `Unexpected ${code} error!`;
@@ -74,8 +83,8 @@
 				minlength="1"
 				maxlength="20"
 				disabled={loading}
-				autofocus
 				bind:value={username}
+				use:focus
 			/>
 			<br /><br />
 			<label for="password" style={error ? "color: crimson;" : ""}>

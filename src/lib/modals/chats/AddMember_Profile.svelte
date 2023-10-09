@@ -14,7 +14,7 @@
 		errors = {};
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		{#each $chats.filter(_chat => _chat.type === 0) as chat (chat._id)}
@@ -70,10 +70,5 @@
 				{/if}
 			</Container>
 		{/each}
-
-		<div class="modal-buttons">
-			<button type="button" on:click={modals.closeLastModal}>Close</button
-			>
-		</div>
 	</div>
 </Modal>

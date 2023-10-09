@@ -78,7 +78,14 @@ export function isRestricted(restriction) {
 			return false;
 		}
 	} else if (_user.ban.state.includes("ban")) {
-		return true;
+		if (
+			_user.ban.state.includes("perm") ||
+			_user.ban.expires > Date.now() / 1000
+		) {
+			return true;
+		} else {
+			return false;
+		}
 	} else {
 		return false;
 	}

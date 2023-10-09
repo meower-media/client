@@ -326,6 +326,7 @@ export async function connect() {
 		});
 		authEvent = link.on("direct", async cmd => {
 			if (cmd.val.mode === "auth") {
+				// set user, auth header, and relationships
 				user.update(v =>
 					Object.assign(v, {
 						...cmd.val.payload.account,
@@ -337,7 +338,14 @@ export async function connect() {
 					token: cmd.val.payload.token,
 				});
 				relationships.set(cmd.val.payload.relationships);
-				chats.set(cmd.val.payload.chats);
+
+				// get and set chats
+				await tick();
+				const resp = await fetch(`${apiUrl}chats?autoget=1`, {
+					headers: _authHeader,
+				});
+				const json = await resp.json();
+				chats.set(json.autoget);
 			}
 		});
 		bannedEvent = link.on("direct", async cmd => {

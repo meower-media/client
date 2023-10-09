@@ -7,7 +7,7 @@
 
 	import {user} from "../../stores.js";
 
-	import {goto} from "@roxi/routify";
+	import {goto, focus} from "@roxi/routify";
 
 	let username, password, loading, error;
 </script>
@@ -16,19 +16,16 @@
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
 		<form
-			on:change={() => (error = "")}
+			on:change={() => error = ""}
 			on:submit|preventDefault={async () => {
-				// set loading state
-				loading = true;
-
 				// check username
 				if (username !== $user.name) {
 					error = "Invalid username!";
-					loading = false;
 					return;
 				}
 
 				// request account deletion
+				loading = true;
 				try {
 					await clm.meowerRequest({
 						cmd: "direct",
@@ -37,6 +34,7 @@
 							val: password,
 						},
 					});
+					$goto("/logout");
 				} catch (code) {
 					loading = false;
 					switch (code) {
@@ -50,10 +48,7 @@
 						default:
 							error = "Unexpected " + code + " error!";
 					}
-					return;
 				}
-
-				$goto("/logout");
 			}}
 		>
 			<Container warning={true}>
@@ -75,6 +70,7 @@
 				placeholder="Username..."
 				disabled={loading}
 				bind:value={username}
+				use:focus
 			/>
 			<br /><br />
 			<label for="password" style={error ? "color: crimson;" : ""}

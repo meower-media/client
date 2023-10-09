@@ -8,6 +8,8 @@
 	import * as modals from "../modals.js";
 	import * as BGM from "../BGM.js";
 
+	import {focus} from "@roxi/routify";
+
 	let username, password, loading, error;
 </script>
 
@@ -72,8 +74,8 @@
 				placeholder="Username..."
 				maxlength="20"
 				disabled={loading}
-				autofocus
 				bind:value={username}
+				use:focus
 			/>
 			<br /><br />
 			<label for="password" style={error ? "color: crimson;" : ""}>

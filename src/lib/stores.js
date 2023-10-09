@@ -40,29 +40,6 @@ export const chat = writable({
 // User list
 export const ulist = writable([]);
 
-// Mod panel
-export const userToMod = writable("");
-export const ipToMod = writable("");
-
-// Last (blank) clicked
-export const postClicked = writable({
-	id: 0,
-	post_id: "",
-	post_origin: "",
-	user: "",
-	content: "",
-	date: 0,
-	edited_at: 0,
-	isDeleted: false,
-	mod_deleted: false,
-	deleted_at: 0,
-});
-export const profileClicked = writable("");
-export const profileClicked_GC = writable("");
-export const announcementToSend = writable("");
-export const searchQuery = writable("");
-export const searchType = writable("");
-
 // OOBE
 export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);

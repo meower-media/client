@@ -17,7 +17,7 @@
 	}
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Debug</h2>
 	<div slot="default">
 		<h2>Stores</h2>

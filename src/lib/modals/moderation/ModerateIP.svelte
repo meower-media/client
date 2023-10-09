@@ -1,165 +1,170 @@
 <script>
 	import Modal from "../../Modal.svelte";
 	import Loading from "../../Loading.svelte";
+	import Container from "../../Container.svelte";
 	import FormattedDate from "../../FormattedDate.svelte";
 	import AdminNotes from "../../AdminNotes.svelte";
 
 	import ModerateUserModal from "./ModerateUser.svelte";
+	import CreateNetblockModal from "./CreateNetblock.svelte";
+	import DeleteNetblockModal from "./DeleteNetblock.svelte";
 
+	import {authHeader} from "../../stores.js";
+	import {
+		adminPermissions,
+		hasPermission,
+	} from "../../bitField.js";
+	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
 
-	import {userToMod, ipToMod} from "../../stores.js";
-	import {adminPermissions, hasPermission} from "../../bitField.js";
+	export let modalData;
 
-	let ip, blockStatus;
+	let {ip} = modalData;
 
-	async function getIPData() {
-		const ipData = await clm.meowerRequest({
-			cmd: "direct",
-			val: {
-				cmd: "get_ip_data",
-				val: $ipToMod,
-			},
+	let netinfo, netlogs, netblocks;
+
+	async function getNetinfo() {
+		const resp = await fetch(`${apiUrl}admin/netinfo/${ip}`, {
+			headers: $authHeader,
 		});
-		ip = ipData.payload;
-	}
-
-	async function blockIP() {
-		blockStatus = "Blocking...";
-		try {
-			await clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "block",
-					val: ip._id,
-				},
-			});
-			ip.banned = true;
-			blockStatus = "Blocked!";
-		} catch (e) {
-			blockStatus = "Error: " + e;
+		if (!resp.ok) {
+			throw new Error("Response code is not OK; code is " + resp.status);
 		}
-	}
-
-	async function unblockIP() {
-		blockStatus = "Unblocking...";
-		try {
-			await clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "unblock",
-					val: ip._id,
-				},
-			});
-			ip.banned = false;
-			blockStatus = "Unblocked!";
-		} catch (e) {
-			blockStatus = "Error: " + e;
-		}
-	}
-
-	$: {
-		if (!$ipToMod) modals.closeLastModal();
+		const json = await resp.json();
+		netinfo = json.netinfo;
+		netlogs = json.netlogs;
+		netblocks = json.netblocks;
 	}
 </script>
 
-<Modal
-	on:close={() => {
-		$ipToMod = "";
-		modals.closeLastModal();
-	}}
+<Modal showClose={true}
+	on:close={modals.closeLastModal}
 >
-	<h2 slot="header">Moderate {$ipToMod}</h2>
+	<h2 slot="header">Moderate {ip}</h2>
 	<div slot="default">
-		{#await getIPData()}
+		{#await getNetinfo()}
 			<Loading />
 		{:then}
-			<h2>IP Info</h2>
-			<b>IP:</b>
-			{ip._id}<br />
-			<b>Last user:</b>
-			{ip.last_user}<br />
-			<b>Blocked?</b>
-			{ip.banned ? "yes" : "no"}<br />
-			<b>Last used:</b>
-			<FormattedDate date={ip.last_used} /><br />
-			<b>Users:</b>
-			<ul>
-				{#each ip.users as username}
-					<li>
-						<a
-							href="/"
-							on:click|preventDefault={async () => {
-								$userToMod = username;
-								modals.showModal(ModerateUserModal);
-							}}>{username}</a
+			<h2>Netinfo</h2>
+			<b>IP address:</b>
+			{netinfo.ip}<br />
+			<b>ASN:</b>
+			{netinfo.asn}<br />
+			<b>Country:</b>
+			{netinfo.country_code} ({netinfo.country_name})<br />
+			<b>ISP:</b>
+			{netinfo.isp}<br />
+			<b>VPN?</b>
+			{netlogs.vpn ? "yes" : "no"}
+
+			<br /><br />
+
+			<h2>Netlogs</h2>
+			<table>
+				<tr>
+					<th>User</th>
+					<th>Last Used</th>
+				</tr>
+				{#each netlogs as netlog}
+					<tr>
+						<td><a href="/" on:click|preventDefault={() => {
+							modals.showModal(ModerateUserModal, { username: netlog.user });
+						}}>{netlog.user}</a></td>
+						<td
+							><FormattedDate
+								date={netlog.last_used}
+								relative={true}
+							/></td
 						>
-					</li>
+					</tr>
 				{/each}
-			</ul>
+			</table>
+
+			<br /><br />
+
+			<h2>Netblocks</h2>
+			{#if netblocks.filter(_netblock => _netblock.type === 0).length > 0}
+				<Container warning={true}>
+					{netinfo.ip} is currently fully blocked from accessing Meower's CloudLink server and REST API.
+				</Container>
+			{/if}
+			{#if netblocks.filter(_netblock => _netblock.type === 1).length > 0}
+				<Container warning={true}>
+					{netinfo.ip} is currently blocked from creating new Meower accounts.
+				</Container>
+			{/if}
+			<button class="long" on:click={() => modals.showModal(CreateNetblockModal, { cidr: netinfo.ip + "/32" })}>Create Netblock</button>
+			<table>
+				<tr>
+					<th>CIDR</th>
+					<th>Type</th>
+					<th>Actions</th>
+				</tr>
+				{#each netblocks as netblock}
+					<tr>
+						<td>{netblock._id}</td>
+						<td>{["Full", "Registration"][netblock.type]}</td>
+						<td>
+							<div class="action-buttons">
+								<button
+									class="circle scroll"
+									title="View/edit notes"
+									on:click={() => modals.showModal("", { identifier: btoa(netblock._id) })}
+								/>
+								<button
+									class="circle close"
+									title="Delete netblock"
+									on:click={() => modals.showModal(DeleteNetblockModal, { cidr: netblock._id })}
+								/>
+							</div>
+						</td>
+					</tr>
+				{/each}
+			</table>
 
 			<br /><br />
 
 			{#if hasPermission(adminPermissions.VIEW_NOTES)}
 				<h2>Notes</h2>
-				<AdminNotes identifier={ip._id} />
+				<AdminNotes identifier={btoa(netinfo.ip)} />
 				<br /><br />
 			{/if}
-
-			{#if hasPermission(adminPermissions.BLOCK_IPS)}
-				<h2>Danger Zone</h2>
-				{#if blockStatus}
-					<b>{blockStatus}</b>
-					<br /><br />
-				{/if}
-				{#if ip.banned}
-					<button
-						class="action-button"
-						on:click={async () => await unblockIP()}
-					>
-						Unblock IP
-					</button>
-				{:else}
-					<button
-						class="action-button"
-						on:click={async () => await blockIP()}
-					>
-						Block IP
-					</button>
-				{/if}
-				<br /><br />
-			{/if}
-
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => {
-						$ipToMod = "";
-						modals.closeLastModal();
-					}}>Close</button
-				>
-			</div>
-		{:catch e}
-			Error getting IP data: {e}
-			<br /><br />
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => {
-						$ipToMod = "";
-						modals.closeLastModal();
-					}}>Close</button
-				>
-			</div>
+		{:catch error}
+			{error}
 		{/await}
 		<div />
-	</div></Modal
->
+	</div>
+</Modal>
 
 <style>
-	.action-button {
-		margin-right: 0.25em;
-		margin-bottom: 0.25em;
+	table {
+		width: 100%;
+		max-width: 100%;
+		text-align: center;
+		border-collapse: collapse;
+		overflow: hidden;
+	}
+
+	th,
+	td {
+		border: solid 2px var(--orange);
+		padding: 0.35em;
+		outline: none;
+		word-break: break-all;
+	}
+
+	.action-buttons {
+		max-width: 7.5em;
+		margin-left: auto;
+		margin-right: auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+
+	.long {
+		width: 100%;
+		margin: 0;
+		margin-bottom: 0.2em;
 	}
 </style>

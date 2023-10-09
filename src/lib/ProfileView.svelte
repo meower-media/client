@@ -3,8 +3,10 @@
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
 	import LiText from "./LiText.svelte";
+	import FormattedDate from "./FormattedDate.svelte";
 
 	import BasicModal from "./modals/Basic.svelte";
+	import ReportUserModal from "./modals/safety/ReportUser.svelte";
 	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
 
 	import {authHeader, chats, ulist, user} from "./stores.js";
@@ -15,7 +17,6 @@
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
-	import FormattedDate from "./FormattedDate.svelte";
 
 	export let username = "";
 	export let profile = null;
@@ -102,6 +103,11 @@
 							on:click={$goto(`/chats/${dmChat._id}`)}
 						/>
 					{:else if data._id !== $user.name && !((data.flags & userFlags.SYSTEM) === userFlags.SYSTEM)}
+					<button
+							title="Report {data._id}"
+							class="circle report"
+							on:click={async () => modals.showModal(ReportUserModal, { user: data })}
+						/>
 						<button
 							title="Open DM with {data._id}"
 							class="circle join"

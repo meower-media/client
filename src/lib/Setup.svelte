@@ -1,6 +1,7 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
 	import ServerSelectorModal from "./modals/ServerSelector.svelte";
+	import BasicModal from "./modals/Basic.svelte";
 	import AccountCreationBlockedModal from "./modals/moderation/AccountCreationBlocked.svelte";
 
 	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
@@ -337,14 +338,7 @@
 						.catch(code => {
 							switch (code) {
 								case "I:015 | Account exists":
-									loginStatus =
-										"That username already exists!";
-									break;
-								case "E:119 | IP Blocked":
-									modals.showModal(
-										AccountCreationBlockedModal
-									);
-									loginStatus = "";
+									loginStatus = `${username} is taken!`;
 									break;
 								case "E:019 | Illegal characters detected":
 									loginStatus =
@@ -353,6 +347,17 @@
 								case "E:106 | Too many requests":
 									loginStatus =
 										"Too many requests! Please try again later.";
+									break;
+								case "E:119 | IP Blocked":
+									modals.showModal(AccountCreationBlockedModal);
+									loginStatus = "";
+									break;
+								case "E:122 | Command disabled by sysadmin":
+									modals.showModal(BasicModal, {
+										title: "Registration Disabled",
+										desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later."
+									});
+									loginStatus = "";
 									break;
 								default:
 									loginStatus = `Unexpected ${code} error!`;

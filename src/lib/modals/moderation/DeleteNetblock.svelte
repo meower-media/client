@@ -1,49 +1,34 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import {authHeader, chat, user} from "../../stores.js";
-	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import {authHeader} from "../../stores.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-	import sleep from "../../sleep";
+	import {focus} from "@roxi/routify";
 
 	export let modalData;
 
-	let { username } = modalData;
+	let { cidr } = modalData;
 
 	let loading, error;
-
-	$: {
-		if (
-			$chat.owner !== $user.name &&
-			!hasPermission(adminPermissions.EDIT_CHATS)
-		) {
-			modals.closeLastModal();
-		}
-	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
-	<h2 slot="header">Transfer Ownership to {username}</h2>
+	<h2 slot="header">Delete {cidr} Netblock</h2>
 	<div slot="default">
 		<form
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}chats/${$chat._id}/members/${username}/transfer`,
+						`${apiUrl}admin/netblocks/${btoa(cidr)}`,
 						{
-							method: "POST",
+							method: "DELETE",
 							headers: $authHeader,
 						}
 					);
 					if (!resp.ok) {
-						if (resp.status === 429) {
-							throw new Error(
-								"Too many requests! Try again later."
-							);
-						}
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
 						);
@@ -55,7 +40,7 @@
 				}
 			}}
 		>
-			Are you sure you want to transfer ownership of {$chat.nickname} to {username}?
+			Are you sure you want to delete {cidr} netblock?
 			{#if error}
 				<p style="color: crimson;">{error}</p>
 			{:else}
@@ -67,13 +52,7 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				{#await sleep(1500)}
-					<button type="submit" disabled>Transfer Ownership</button>
-				{:then}
-					<button type="submit" disabled={loading}
-						>Transfer Ownership</button
-					>
-				{/await}
+				<button type="submit" disabled={loading} use:focus>Delete</button>
 			</div>
 		</form>
 	</div>

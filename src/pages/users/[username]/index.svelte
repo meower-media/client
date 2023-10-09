@@ -8,12 +8,12 @@
 	import AddMemberProfileModal from "../../../lib/modals/chats/AddMember_Profile.svelte";
 	import BlockUserModal from "../../../lib/modals/safety/BlockUser.svelte";
 
-	import {relationships, profileClicked, user} from "../../../lib/stores.js";
+	import {relationships, user} from "../../../lib/stores.js";
 	import {restrictions, isRestricted} from "../../../lib/bitField.js";
 	import {profileCache} from "../../../lib/loadProfile.js";
+	import {apiUrl, encodeApiURLParams} from "../../../lib/urls.js";
 	import * as modals from "../../../lib/modals.js";
 	import * as clm from "../../../lib/clmanager.js";
-	import {apiUrl, encodeApiURLParams} from "../../../lib/urls.js";
 
 	import {params, goto} from "@roxi/routify";
 
@@ -142,10 +142,7 @@
 			<button
 				class="long"
 				title="{$relationships[data._id] === 2 ? 'Unb' : 'B'}lock User"
-				on:click={() => {
-					$profileClicked = data._id;
-					modals.showModal(BlockUserModal);
-				}}
+				on:click={() => modals.showModal(BlockUserModal, { username: data._id })}
 				>{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
 			>
 		{/if}

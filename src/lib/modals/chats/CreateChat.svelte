@@ -5,7 +5,7 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-	import {goto} from "@roxi/routify";
+	import {goto, focus} from "@roxi/routify";
 
 	let nickname, loading, error;
 </script>
@@ -14,6 +14,7 @@
 	<h2 slot="header">Create Chat</h2>
 	<div slot="default">
 		<form
+		on:change={() => error = ""}
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
@@ -61,7 +62,7 @@
 				maxlength="32"
 				disabled={loading}
 				bind:value={nickname}
-				on:change={() => (error = "")}
+				use:focus
 			/><br />
 			<br />
 			<div class="modal-buttons">

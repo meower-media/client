@@ -8,8 +8,9 @@
 
 	import DeletePostModal from "./modals/DeletePost.svelte";
 	import ReportPostModal from "./modals/safety/ReportPost.svelte";
+	import ModeratePostModal from "./modals/moderation/ModeratePost.svelte";
 
-	import {authHeader, postClicked, user, chat, ulist} from "../lib/stores.js";
+	import {authHeader, user, chat, ulist} from "../lib/stores.js";
 	import {adminPermissions, hasPermission} from "../lib/bitField.js";
 	import {apiUrl} from "./urls.js";
 	import {toHTMLElement} from "./twemoji-utils.js";
@@ -29,7 +30,7 @@
 	export let post = {};
 	export let buttons = true;
 	export let input = null;
-	export let instantDelete = false;
+	export let adminView = false;
 
 	let bridged = false;
 	let webhook = false;
@@ -39,6 +40,10 @@
 	let editing = false;
 	let editError = "";
 	let editContentInput, editSaveButton;
+
+	let deleteButton;
+
+	let adminDeleteButton, adminRestoreButton;
 
 	// TODO: make bridged tag a setting
 
@@ -97,6 +102,44 @@
 		images = images;
 	}
 
+	async function adminDelete() {
+		adminDeleteButton.disabled = true;
+		try {
+			const resp = await fetch(`${apiUrl}admin/posts/${post.post_id}`, {
+				method: "DELETE",
+				headers: $authHeader,
+			});
+			if (!resp.ok) {
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
+			post.isDeleted = true;
+			post.mod_deleted = true;
+			post.deleted_at = Math.floor(Date.now() / 1000);
+		} catch (e) {
+			editError = e;
+		}
+		adminDeleteButton.disabled = false;
+	}
+
+	async function adminRestore() {
+		adminRestoreButton.disabled = true;
+		try {
+			const resp = await fetch(`${apiUrl}admin/posts/${post.post_id}/restore`, {
+				method: "POST",
+				headers: $authHeader,
+			});
+			if (!resp.ok) {
+				throw new Error("Response code is not OK; code is " + resp.status);
+			}
+			post.isDeleted = false;
+			post.mod_deleted = null;
+			post.deleted_at = null;
+		} catch (e) {
+			editError = e;
+		}
+		adminRestoreButton.disabled = false;
+	}
+
 	onMount(initPostUser);
 
 	$: noPFP =
@@ -145,47 +188,70 @@
 						}}
 					/>
 				{/if}
-				{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name) || hasPermission(adminPermissions.DELETE_POSTS)}
-					<button
-						class="circle trash"
-						on:click={async () => {
-							if (instantDelete || shiftHeld) {
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "DELETE",
-											headers: $authHeader,
-										}
-									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
+				{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
+					{#if post.isDeleted}
+						<button
+							class="circle restore"
+							title="Restore post"
+							bind:this={adminRestoreButton}
+							on:click={adminRestore}
+						/>
+					{:else}
+						<button
+							class="circle trash"
+							title="Delete post"
+							bind:this={adminDeleteButton}
+							on:click={adminDelete}
+						/>
+					{/if}
+				{:else}
+					{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
+						<button
+							class="circle trash"
+							bind:this={deleteButton}
+							on:click={async () => {
+								if (shiftHeld) {
+									deleteButton.disabled = true;
+									try {
+										const resp = await fetch(
+											`${apiUrl}posts?id=${post.post_id}`,
+											{
+												method: "DELETE",
+												headers: $authHeader,
+											}
+										);
+										if (!resp.ok) {
+											if (resp.status === 429) {
+												throw new Error(
+													"Too many requests! Try again later."
+												);
+											}
 											throw new Error(
-												"Too many requests! Try again later."
+												"Response code is not OK; code is " +
+													resp.status
 											);
 										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
+									} catch (e) {
+										editError = e;
 									}
-								} catch (e) {
-									editError = e;
+									deleteButton.disabled = false;
+								} else {
+									modals.showModal(DeletePostModal, { post });
 								}
-							} else {
-								postClicked.set(post);
-								modals.showModal(DeletePostModal);
-							}
-						}}
-					/>
-				{:else}
-					<button
-						class="circle report"
-						on:click={() => {
-							postClicked.set(post);
-							modals.showModal(ReportPostModal);
-						}}
-					/>
+							}}
+						/>
+					{:else}
+						<button
+							class="circle report"
+							on:click={() => modals.showModal(ReportPostModal, { post })}
+						/>
+					{/if}
+					{#if hasPermission(adminPermissions.VIEW_POSTS)}
+						<button
+							class="circle admin"
+							on:click={() => modals.showModal(ModeratePostModal, { postid: post.post_id })}
+						/>
+					{/if}
 				{/if}
 			{/if}
 		</div>
@@ -311,8 +377,7 @@
 				bind:this={editSaveButton}
 				on:click={async () => {
 					if (editContentInput.value.trim() === "") {
-						postClicked.set(post);
-						modals.showModal(DeletePostModal);
+						modals.showModal(DeletePostModal, { post });
 						return;
 					}
 

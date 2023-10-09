@@ -1,20 +1,22 @@
 <script>
 	import Modal from "../Modal.svelte";
-
-	import {searchQuery, searchType} from "../stores.js";
-	import * as modals from "../modals.js";
-
 	import PostList from "../PostList.svelte";
 	import Container from "../Container.svelte";
+
+	import * as modals from "../modals.js";
+
+	export let modalData;
+
+	let { type, query } = modalData;
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Results</h2>
 	<div slot="default">
 		<div class="search-results">
 			<PostList
-				fetchUrl="search/{$searchType}"
-				queryParams={{q: $searchQuery}}
+				fetchUrl="search/{type}"
+				queryParams={{q: query}}
 				postOrigin=""
 				canPost={false}
 				addToChat={true}

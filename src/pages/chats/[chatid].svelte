@@ -9,7 +9,7 @@
 	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
 	import ModerateChatModal from "../../lib/modals/moderation/ModerateChat.svelte";
 
-	import {chats, user, chat, profileClicked_GC} from "../../lib/stores.js";
+	import {chats, user, chat} from "../../lib/stores.js";
 	import {
 		adminPermissions,
 		hasPermission,
@@ -219,8 +219,7 @@
 					<button
 						class="member-button"
 						on:click={() => {
-							modals.showModal(GCMemberModal);
-							profileClicked_GC.set(chatmember);
+							modals.showModal(GCMemberModal, { username: chatmember });
 						}}
 					>
 						<Member

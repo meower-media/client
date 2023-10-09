@@ -2,12 +2,16 @@
 	import Modal from "../../Modal.svelte";
 	import Post from "../../Post.svelte";
 
-	import {postClicked} from "../../stores.js";
+	import BasicModal from "../Basic.svelte";
 
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
-	let loading, reason, comment, error;
+	export let modalData;
+
+	let { post } = modalData;
+
+	let reason, comment, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -24,12 +28,15 @@
 							val: {
 								type: 0,
 								// @ts-ignore
-								id: $postClicked.post_id,
-								reason: comment
-									? `${reason} (${comment})`
-									: reason,
+								id: post.post_id,
+								reason,
+								comment,
 							},
 						},
+					});
+					modals.replaceLastModal(BasicModal, {
+						title: "Report Post",
+						desc: "Successfully reported post! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!"
 					});
 				} catch (code) {
 					loading = false;
@@ -41,12 +48,10 @@
 						default:
 							error = "Unexpected " + code + " error!";
 					}
-					return;
 				}
-				modals.closeLastModal();
 			}}
 		>
-			<Post post={$postClicked} buttons={false} />
+			<Post post={post} buttons={false} />
 			<label for="reason"><b>Reason</b></label><br />
 			<select id="reason" class="modal-input grow" bind:value={reason}>
 				<option> No reason specified/other</option>

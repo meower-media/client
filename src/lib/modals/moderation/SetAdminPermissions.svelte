@@ -124,6 +124,7 @@
 	export let modalData;
 
 	let {user} = modalData;
+	
 	let selectedPermissions = [],
 		saving,
 		error;

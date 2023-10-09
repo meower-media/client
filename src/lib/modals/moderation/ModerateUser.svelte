@@ -68,6 +68,32 @@
 		if (user.ban) banState = Object.assign({}, user.ban);
 	}
 
+	async function sendAlert() {
+		alertStatus = "Sending alert...";
+		try {
+			const resp = await fetch(
+				`${apiUrl}admin/users/${user._id}/inbox`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						...$authHeader,
+					},
+					body: JSON.stringify({content: alertText}),
+				}
+			);
+			if (!resp.ok) {
+				throw new Error(
+					"Response code is not OK; code is " +
+						resp.status
+				);
+			}
+			alertStatus = "Alert sent!";
+		} catch (e) {
+			alertStatus = "Error sending alert: " + e;
+		}
+	}
+
 	async function saveBanState() {
 		banSaving = true;
 		try {
@@ -265,31 +291,7 @@
 				<button
 					style="float: right;"
 					disabled={!alertText || alertStatus === "Alert sent!"}
-					on:click={async () => {
-						alertStatus = "Sending alert...";
-						try {
-							const resp = await fetch(
-								`${apiUrl}admin/users/${user._id}/inbox`,
-								{
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-										...$authHeader,
-									},
-									body: JSON.stringify({content: alertText}),
-								}
-							);
-							if (!resp.ok) {
-								throw new Error(
-									"Response code is not OK; code is " +
-										resp.status
-								);
-							}
-							alertStatus = "Alert sent!";
-						} catch (e) {
-							alertStatus = "Error sending alert: " + e;
-						}
-					}}>Send</button
+					on:click={sendAlert}>Send</button
 				>
 
 				<br /><br />

@@ -2,11 +2,17 @@
 	import Modal from "../Modal.svelte";
 	import Post from "../Post.svelte";
 
-	import {authHeader, postClicked, user} from "../stores.js";
+	import {authHeader, user} from "../stores.js";
 	import {apiUrl} from "../urls.js";
 	import * as modals from "../modals.js";
 
-	let loading, report, error;
+	import {focus} from "@roxi/routify";
+
+	export let modalData;
+
+	let { post } = modalData;
+
+	let report, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -17,7 +23,7 @@
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}posts?id=${$postClicked.post_id}`,
+						`${apiUrl}posts?id=${post.post_id}`,
 						{
 							method: "DELETE",
 							headers: $authHeader,
@@ -41,8 +47,8 @@
 			}}
 		>
 			<p>Are you sure you would like to delete this post?</p>
-			<Post post={$postClicked} buttons={false} />
-			{#if $postClicked.user !== $user.name}
+			<Post post={post} buttons={false} />
+			{#if post.user !== $user.name}
 				<label>
 					<input type="checkbox" bind:checked={report} />
 					Report to Meower Moderators
@@ -60,7 +66,8 @@
 					on:click|preventDefault={modals.closeLastModal}
 					>Cancel</button
 				>
-				<button type="submit" disabled={loading} autofocus
+				<!-- svelte-ignore a11y-autofocus -->
+				<button type="submit" disabled={loading} use:focus
 					>Delete</button
 				>
 			</div>

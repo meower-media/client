@@ -32,7 +32,6 @@
 		lastTyped,
 		chat,
 		postInput as postInput_2,
-		profileClicked,
 	} from "./stores.js";
 	import {restrictions, isRestricted} from "../lib/bitField.js";
 	import {shiftHeld} from "./keyDetect.js";
@@ -55,7 +54,7 @@
 	export let canPost = true;
 	export let queryParams = {};
 	export let addToChat = false;
-	export let instantDelete = false;
+	export let adminView = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
@@ -461,10 +460,7 @@
 				>
 			{:else if $relationships[dmWith] === 2}
 				<button
-					on:click|preventDefault={() => {
-						$profileClicked = dmWith;
-						modals.showModal(BlockUserModal);
-					}}>Unblock</button
+					on:click|preventDefault={() => modals.showModal(BlockUserModal, { username: dmWith })}>Unblock</button
 				>
 			{:else}
 				<button
@@ -505,7 +501,7 @@
 							/>
 						{/if}
 					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}
-						<Post {post} {instantDelete} input={postInput} />
+						<Post {post} {adminView} input={postInput} />
 					{/if}
 					{#if addToChat && !$chat.members.includes(post._id)}
 						<div class="settings-controls">
@@ -568,7 +564,7 @@
 	}
 
 	.post-errors {
-		color: red;
+		color: crimson;
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;

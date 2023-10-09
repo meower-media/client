@@ -1,16 +1,15 @@
 <script>
 	import Modal from "../Modal.svelte";
-
-	import {postInput, user} from "../stores.js";
-
-	import * as modals from "../modals.js";
-
-	import LiText from "../LiText.svelte";
-
-	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
 	import Container from "../Container.svelte";
 	import FormattedDate from "../FormattedDate.svelte";
 	import PFP from "../PFP.svelte";
+	import LiText from "../LiText.svelte";
+
+	import {postInput, user} from "../stores.js";
+	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
+	import * as modals from "../modals.js";
+
+	import {focus} from "@roxi/routify";
 
 	let imgUrl;
 	let imgName;
@@ -138,6 +137,7 @@
 			autocomplete="false"
 			bind:this={imgName}
 			on:change={change}
+			use:focus
 		/>
 		<input
 			type="text"
@@ -202,9 +202,7 @@
 		<p>{postErrors}</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					modals.closeLastModal();
-				}}>Close</button
+				on:click={modals.closeLastModal}>Close</button
 			>
 			<button
 				disabled={postErrors !== ""}

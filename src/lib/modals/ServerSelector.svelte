@@ -4,7 +4,11 @@
 
 	import * as modals from "../modals.js";
 
-	let clUrl, apiUrl, loading, error;
+	import {focus} from "@roxi/routify";
+
+	let clUrl = localStorage.getItem("meower_linkurl");
+	let apiUrl = localStorage.getItem("meower_apiurl");
+	let loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -50,6 +54,7 @@
 				placeholder="ws://127.0.0.1:3000"
 				disabled={loading}
 				bind:value={clUrl}
+				use:focus
 			/>
 			<br /><br />
 			<label for="api-url" style={error ? "color: crimson;" : ""}
@@ -70,6 +75,14 @@
 					type="button"
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
+				>
+				<button
+					type="button"
+					disabled={loading}
+					on:click={() => {
+						clUrl = "";
+						apiUrl = "";
+					}}>Reset</button
 				>
 				<button type="submit" disabled={loading}>Save & Reload</button>
 			</div>

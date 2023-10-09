@@ -185,7 +185,7 @@
 			text-align: center;
 		}
 		.errors {
-			color: red;
+			color: crimson;
 			font-size: 75%;
 			font-weight: bold;
 			margin: 0.25em 0;

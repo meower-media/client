@@ -9,8 +9,6 @@
 
 	import {goto} from "@roxi/routify";
 
-	export let report;
-
 	const reportTypeNames = {
 		post: "Post",
 		user: "User",
@@ -18,10 +16,11 @@
 
 	const reportStatusNames = {
 		pending: "Pending",
-		escalated: "Escalated",
 		no_action_taken: "Completed with no action taken",
 		action_taken: "Completed with action taken",
 	};
+
+	export let report;
 
 	let loading, error;
 
@@ -45,6 +44,29 @@
 				);
 			}
 			report.status = newStatus;
+			report.escalated = false;
+			loading = false;
+		} catch (e) {
+			error = e;
+			loading = false;
+		}
+	}
+
+	async function escalate() {
+		error = null;
+		loading = true;
+		try {
+			const resp = await fetch(`${apiUrl}admin/reports/${report._id}/escalate`, {
+				method: "POST",
+				headers: $authHeader,
+			});
+			if (!resp.ok) {
+				throw new Error(
+					"Response code is not OK; code is " + resp.status
+				);
+			}
+			report.status = "pending";
+			report.escalated = true;
 			loading = false;
 		} catch (e) {
 			error = e;
@@ -59,7 +81,8 @@
 	<b>Report Type:</b>
 	{reportTypeNames[report.type] || "Unknown"}<br />
 	<b>Report Status:</b>
-	{reportStatusNames[report.status] || "Unknown"}<br />
+	{reportStatusNames[report.status] || "Unknown"}
+	{#if report.escalated}(escalated){/if}<br />
 	{#if report.type === "post" && report.content}
 		<b>Post Origin: </b>
 		{#if report.content.post_origin === "home"}
@@ -98,7 +121,11 @@
 				<b>Time:</b>
 				<FormattedDate date={_report.time} /><br />
 				<b>Reason:</b>
-				{_report.reason}
+				{_report.reason}<br />
+				{#if _report.comment}
+					<b>Comment:</b>
+					{_report.comment}
+				{/if}
 			</li>
 		{/each}
 	</ul>
@@ -130,14 +157,14 @@
 
 	<div class="settings-controls">
 		{#if report.status === "pending"}
-			<button
-				class="circle siren"
-				title="Escalate"
-				disabled={loading}
-				on:click={async () => await changeStatus("escalated")}
-			/>
-		{/if}
-		{#if ["pending", "escalated"].includes(report.status)}
+			{#if !report.escalated}
+				<button
+					class="circle siren"
+					title="Escalate"
+					disabled={loading}
+					on:click={escalate}
+				/>
+			{/if}
 			<button
 				class="circle close"
 				title="Mark as completed with no action taken"

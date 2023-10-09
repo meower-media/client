@@ -4,6 +4,8 @@
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
+	import {goto, focus} from "@roxi/routify";
+
 	let oldPassword, newPassword, newPasswordConfirmation, loading, error;
 </script>
 
@@ -11,13 +13,16 @@
 	<h2 slot="header">Change Password</h2>
 	<div slot="default">
 		<form
+			on:change={() => error = ""}
 			on:submit|preventDefault={async () => {
-				loading = true;
+				// check new password confirmation
 				if (newPassword !== newPasswordConfirmation) {
 					error = "New passwords do not match!";
-					loading = false;
 					return;
 				}
+
+				// request change password
+				loading = true;
 				try {
 					await clm.meowerRequest({
 						cmd: "direct",
@@ -29,7 +34,6 @@
 							},
 						},
 					});
-
 					clm.meowerRequest({
 						cmd: "direct",
 						val: {
@@ -37,6 +41,7 @@
 							val: "",
 						},
 					});
+					$goto("/logout");
 				} catch (code) {
 					loading = false;
 					switch (code) {
@@ -50,9 +55,7 @@
 						default:
 							error = "Unexpected " + code + " error!";
 					}
-					return;
 				}
-				modals.closeLastModal();
 			}}
 		>
 			<label for="old-password" style={error ? "color: crimson;" : ""}
@@ -66,7 +69,7 @@
 				placeholder="Current Password..."
 				disabled={loading}
 				bind:value={oldPassword}
-				on:change={() => (error = "")}
+				use:focus
 			/><br />
 			<label for="new-password" style={error ? "color: crimson;" : ""}
 				><b>New Password</b>
@@ -81,7 +84,6 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={newPassword}
-				on:change={() => (error = "")}
 			/><br />
 			<label
 				for="new-password-confirmation"
@@ -98,7 +100,6 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={newPasswordConfirmation}
-				on:change={() => (error = "")}
 			/><br />
 			<br />
 			<div class="modal-buttons">

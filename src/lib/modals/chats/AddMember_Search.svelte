@@ -3,8 +3,9 @@
 
 	import SearchResultsModal from "../SearchResults.svelte";
 
-	import {searchQuery, searchType} from "../../stores.js";
 	import * as modals from "../../modals.js";
+
+	import {focus} from "@roxi/routify";
 
 	let username;
 </script>
@@ -13,10 +14,8 @@
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<form
-			on:submit|preventDefault={e => {
-				searchQuery.set(username);
-				searchType.set("users");
-				modals.showModal(SearchResultsModal);
+			on:submit|preventDefault={() => {
+				modals.replaceLastModal(SearchResultsModal, { type: "users", query: username });
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>
@@ -29,6 +28,7 @@
 				autocomplete="false"
 				maxlength="20"
 				bind:value={username}
+				use:focus
 			/>
 			<br /><br />
 			<div class="modal-buttons">

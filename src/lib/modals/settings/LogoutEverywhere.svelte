@@ -4,42 +4,52 @@
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
-	import {goto} from "@roxi/routify";
+	import {goto, focus} from "@roxi/routify";
 
-	let errorStatus;
+	let loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Logout Everywhere</h2>
 	<div slot="default">
-		<span>Are you sure you want to logout everywhere?</span>
-		{#if errorStatus}
-			<span style="color: red;">{errorStatus}</span>
-		{/if}
-		<br /><br />
-		<div class="modal-buttons">
-			<button
-				on:click={() => {
-					modals.closeLastModal();
-				}}>Cancel</button
-			>
-			<button
-				on:click={async () => {
-					try {
-						await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "del_tokens",
-								val: "",
-							},
-						});
-					} catch (e) {
-						errorStatus = `Unexpected ${e} error!`;
-					}
-
+		<form
+			on:submit|preventDefault={async () => {
+				loading = true;
+				try {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "del_tokens",
+							val: "",
+						},
+					});
 					$goto("/logout");
-				}}>Confirm</button
-			>
-		</div>
+				} catch (code) {
+					loading = false;
+					switch (code) {
+						case "E:106 | Too many requests":
+							error =
+								"Too many requests! Please try again later.";
+							break;
+						default:
+							error = "Unexpected " + code + " error!";
+					}
+				}
+			}}
+		>
+			<p>Are you sure you want to logout everywhere?</p>
+			<div class="modal-buttons">
+				<button
+					type="button"
+					disabled={loading}
+					on:click={modals.closeLastModal}>Cancel</button
+				>
+				<button
+					type="submit"
+					disabled={loading}
+					use:focus>Confirm</button
+				>
+			</div>
+		</form>
 	</div>
 </Modal>

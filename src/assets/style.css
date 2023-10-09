@@ -304,6 +304,16 @@ button.report {
 	background-size: 50%;
 }
 
+button.restore {
+	background-image: url("./restore.svg");
+	background-size: 65%;
+}
+
+button.scroll {
+	background-image: url("./scroll.svg");
+	background-size: 65%;
+}
+
 button.join {
 	background-image: url("./chat_join.svg");
 	background-size: 50%;

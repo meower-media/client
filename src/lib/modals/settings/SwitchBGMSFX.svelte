@@ -2,10 +2,10 @@
 	import Modal from "../../Modal.svelte";
 
 	import {user} from "../../stores.js";
-	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
 	import {audioData} from "../../BGMdata.js";
 	import * as BGM from "../../BGM.js";
+	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
 
 	let selections = audioData;
 

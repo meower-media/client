@@ -11,15 +11,7 @@
 	let notes, savingStatus;
 
 	async function getNotes() {
-		// hash identifier to more securely store sensitive identifiers that may have retention policies
-		const msgUint8 = new TextEncoder().encode(identifier);
-		const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		const hashHex = hashArray
-			.map(b => b.toString(16).padStart(2, "0"))
-			.join("");
-
-		const resp = await fetch(`${apiUrl}admin/notes/${hashHex}`, {
+		const resp = await fetch(`${apiUrl}admin/notes/${identifier}`, {
 			headers: $authHeader,
 		});
 		if (!resp.ok) {

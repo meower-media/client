@@ -7,12 +7,13 @@
 
 	import ModerateUserModal from "./ModerateUser.svelte";
 	import ModerateIPModal from "./ModerateIP.svelte";
+	import ViewNetblocksModal from "./ViewNetblocks.svelte";
 	import SendAnnouncementModal from "./SendAnnouncement.svelte";
 	import KickAllUsersModal from "./KickAllUsers.svelte";
 	import RestartServerModal from "./RestartServer.svelte";
 	import EnableRepairModeModal from "./EnableRepairMode.svelte";
 
-	import {authHeader, ipToMod} from "../../stores.js";
+	import {authHeader} from "../../stores.js";
 	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
@@ -110,7 +111,7 @@
 	}
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<div slot="header">
 		<h1>Moderation Panel</h1>
 	</div>
@@ -121,8 +122,8 @@
 				/** @type {HTMLFormElement} */
 				// @ts-ignore
 				const f = e.target;
-				// @ts-ignore
 				modals.showModal(ModerateUserModal, {
+					// @ts-ignore
 					username: f.elements[0].value,
 				});
 			}}
@@ -143,9 +144,10 @@
 					/** @type {HTMLFormElement} */
 					// @ts-ignore
 					const f = e.target;
-					// @ts-ignore
-					$ipToMod = f.elements[0].value;
-					modals.showModal(ModerateIPModal);
+					modals.showModal(ModerateIPModal, {
+						// @ts-ignore
+						ip: f.elements[0].value
+					});
 				}}
 			>
 				<div class="input-row">
@@ -153,11 +155,14 @@
 						class="grow white"
 						type="text"
 						placeholder="IP address..."
-						value={$ipToMod}
 					/>
 					<button class="static">Submit</button>
 				</div>
-			</form>
+			</form><br />
+			<button
+				class="long"
+				on:click={() => modals.showModal(ViewNetblocksModal)}
+			>View Netblocks</button>
 		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
@@ -241,12 +246,6 @@
 					Pending
 				</option>
 				<option
-					value="escalated"
-					selected={reportFilterStatus === "escalated"}
-				>
-					Escalated
-				</option>
-				<option
 					value="no_action_taken"
 					selected={reportFilterStatus === "no_action_taken"}
 				>
@@ -291,15 +290,15 @@
 						<pre><code>{error}</code></pre>
 					</slot>
 					<slot name="empty" slot="empty">
-						Yay, there are no pending reports!
+						{#if reportFilterStatus === "pending"}
+							Yay, there are no pending reports!
+						{:else}
+							No reports found. Check back later!
+						{/if}
 					</slot>
 				</PagedList>
 			{/if}
 		{/if}
-
-		<br />
-
-		<button on:click={modals.closeLastModal}>Close</button>
 	</div>
 </Modal>
 
@@ -336,5 +335,11 @@
 
 	.align-right {
 		float: right;
+	}
+
+	.long {
+		width: 100%;
+		margin: 0;
+		margin-bottom: 0.2em;
 	}
 </style>

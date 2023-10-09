@@ -51,9 +51,7 @@
 		<br />
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					window.location.reload();
-				}}>Reconnect</button
+				on:click={() => window.location.reload()}>Reconnect</button
 			>
 		</div>
 	</div>

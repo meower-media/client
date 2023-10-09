@@ -16,7 +16,7 @@
 		reloadingPosts;
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">
 		{username}'s Posts
 	</h2>
@@ -70,13 +70,9 @@
 				}`}
 				postOrigin={null}
 				canPost={false}
-				instantDelete={true}
+				adminView={true}
 			/>
 		{/if}
-		<div class="modal-buttons">
-			<button type="button" on:click={modals.closeLastModal}>Close</button
-			>
-		</div>
 	</div>
 </Modal>
 

@@ -14,9 +14,7 @@
 		<p>{desc}</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					modals.closeLastModal();
-				}}>Close</button
+				on:click={modals.closeLastModal}>Close</button
 			>
 		</div>
 	</div>

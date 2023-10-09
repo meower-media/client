@@ -7,7 +7,7 @@
 	import ModPanelModal from "./modals/moderation/ModPanel.svelte";
 	import LogoutModal from "./modals/Logout.svelte";
 
-	import {user, profileClicked, OOBERunning} from "../lib/stores.js";
+	import {user, OOBERunning} from "../lib/stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import * as modals from "./modals.js";
 
@@ -153,7 +153,6 @@
 					modals.showModal(SignupModal);
 					return;
 				}
-				$profileClicked = $user.name;
 				$goto(`/users/${$user.name}`);
 				popupShown = false;
 			}}

@@ -1,11 +1,11 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import {chat} from "../../stores.js";
-
-	import {authHeader} from "../../stores.js";
+	import {authHeader, chat} from "../../stores.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
+
+	import {focus} from "@roxi/routify";
 
 	let nickname = $chat.nickname;
 	let loading, error;
@@ -15,6 +15,7 @@
 	<h2 slot="header">Change Nickname</h2>
 	<div slot="default">
 		<form
+			on:change={() => error = ""}
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
@@ -55,7 +56,7 @@
 				maxlength="32"
 				disabled={loading}
 				bind:value={nickname}
-				on:change={() => (error = "")}
+				use:focus
 			/><br />
 			<br />
 			<div class="modal-buttons">

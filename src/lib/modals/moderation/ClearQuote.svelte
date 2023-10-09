@@ -5,6 +5,8 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
+	import {focus} from "@roxi/routify";
+
 	export let modalData;
 
 	let {username} = modalData;
@@ -52,7 +54,7 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button type="submit" disabled={loading}>Clear Quote</button>
+				<button type="submit" disabled={loading} use:focus>Clear Quote</button>
 			</div>
 		</form>
 	</div>
