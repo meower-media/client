@@ -371,7 +371,7 @@ input[type="checkbox"]:checked {
 }
 
 a {
-	color: #0066ff;
+	color: var(--orange-dark);
 }
 
 :disabled {
@@ -410,4 +410,13 @@ hr {
 	font-family: simvoni, sans-serif;
 	color: white;
 	font-weight: bold;
+}
+
+.quote-container {
+	margin-left: 0.25em;
+	border-left: 4px solid var(--orange-dark);
+}
+
+.quote-container blockquote {
+	margin-left: 1em;
 }

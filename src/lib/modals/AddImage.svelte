@@ -184,7 +184,7 @@
 						<FormattedDate date={post.date} />
 					</div>
 				</div>
-				<p class="post-content">{post.content}</p>
+				<p class="post-content">{post.content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")}</p>
 				<div class="post-images">
 					{#each images as { title, url }}
 						<a href={url} target="_blank" rel="noreferrer"

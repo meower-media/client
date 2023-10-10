@@ -137,6 +137,11 @@
 				<button class="static">Submit</button>
 			</div>
 		</form>
+		<button
+			class="long"
+			style="margin-top: 0.25em;"
+			on:click={() => modals.showModal("", "")}
+		>View Recent Users</button>
 		{#if hasPermission(adminPermissions.VIEW_IPS)}
 			<h2>Moderate IP</h2>
 			<form
@@ -158,11 +163,12 @@
 					/>
 					<button class="static">Submit</button>
 				</div>
-			</form><br />
+			</form>
 			<button
 				class="long"
+				style="margin-top: 0.25em;"
 				on:click={() => modals.showModal(ViewNetblocksModal)}
-			>View Netblocks</button>
+			>View All Netblocks</button>
 		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>

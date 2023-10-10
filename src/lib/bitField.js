@@ -13,6 +13,7 @@ export const userFlags = {
 	BOT: 8,
 	VERIFIED_BOT: 16,
 	CAN_UPLOAD_FILES: 32,
+	VERIFIED: 64
 	*/
 };
 

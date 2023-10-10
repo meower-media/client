@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 
+	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
 	import ReportPostModal from "./modals/safety/ReportPost.svelte";
 	import ModeratePostModal from "./modals/moderation/ModeratePost.svelte";
@@ -13,7 +14,6 @@
 	import {authHeader, user, chat, ulist} from "../lib/stores.js";
 	import {adminPermissions, hasPermission} from "../lib/bitField.js";
 	import {apiUrl} from "./urls.js";
-	import {toHTMLElement} from "./twemoji-utils.js";
 	import {shiftHeld} from "../lib/keyDetect.js";
 	import * as modals from "./modals.js";
 
@@ -24,6 +24,8 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import twemoji from "twemoji";
+	import * as marked from 'marked';
+	import DOMPurify from 'dompurify';
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
@@ -99,7 +101,78 @@
 				if (images.length >= 3) break;
 			}
 		}
-		images = images;
+	}
+
+	function confirmHyperlink(event, link) {
+		event.preventDefault();
+		modals.showModal(ConfirmHyperlinkModal, { link });
+	}
+	// @ts-ignore
+	window.confirmHyperlink = confirmHyperlink;
+
+	function addFancyElements(content) {
+		// escape HTML tags
+		content = content.replaceAll(/<(.+?)>/gms, "&lt;$1&gt;");
+
+		// markdown
+		content = marked.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, ""), { breaks: true });
+		content = content.replaceAll(
+			/(<blockquote>.+?<\/blockquote>)/gms,
+			'<div class="quote-container">$1</div>'
+		);
+		content = DOMPurify.sanitize(content, {
+			ALLOWED_TAGS: [
+				"strong",
+				"em",
+				"ul",
+				"li",
+				"h1",
+				"h2",
+				"h3",
+				"h4",
+				"h5",
+				"h6",
+				"div",
+				"blockquote",
+				"br"
+			],
+			ALLOWED_ATTR: ["class"],
+			WHOLE_DOCUMENT: true
+		});
+
+		// hyperlinks
+		content = content.replaceAll(/(https?:\/\/[^\s]+)/g, '<a href="/" onclick="confirmHyperlink(event, \'$1\')">$1</a>');
+		content = content.replaceAll(/@([a-zA-Z0-9-_]{1,20})/g, '<a href="/users/$1">@$1</a>');
+		content = DOMPurify.sanitize(content, {
+			ALLOWED_TAGS: [
+				"strong",
+				"em",
+				"ul",
+				"li",
+				"h1",
+				"h2",
+				"h3",
+				"h4",
+				"h5",
+				"h6",
+				"div",
+				"blockquote",
+				"code",
+				"br",
+				"a"  // now with <a> tags allowed
+			],
+			ALLOWED_ATTR: ["class", "href", "onclick"],
+			WHOLE_DOCUMENT: true
+		});
+
+		// twemoji
+		content = twemoji.parse(content, {
+			folder: "svg",
+			ext: ".svg",
+			size: 20,
+		});
+
+		return content;
 	}
 
 	async function adminDelete() {
@@ -414,23 +487,22 @@
 			>
 		</div>
 	{:else}
-		<p class="post-content">
-			{@html twemoji.parse(toHTMLElement(post.content).innerText, {
-				folder: "svg",
-				ext: ".svg",
-			})}
+		<p class="post-content" style="border-left-color: #4b5563;">
+			{@html addFancyElements(post.content)}
 		</p>
 	{/if}
 	{#if editError}
 		<p style="color: crimson;">Error while editing/deleting: {editError}</p>
 	{/if}
-	<div class="post-images">
-		{#each images as { title, url }}
-			<a href={url} target="_blank" rel="noreferrer"
-				><img src={url} alt={title} {title} class="post-image" />
-			</a>
-		{/each}
-	</div>
+	{#if !editing}
+		<div class="post-images">
+			{#each images as { title, url }}
+				<a href={url} target="_blank" rel="noreferrer"
+					><img src={url} alt={title} {title} class="post-image" />
+				</a>
+			{/each}
+		</div>
+	{/if}
 </Container>
 
 <style>
@@ -466,9 +538,6 @@
 	:global(main.input-touch) .pfp:active :global(.pfp),
 	.pfp:focus-visible :global(.pfp) {
 		transform: scale(1.1);
-	}
-	.post-content {
-		white-space: pre-wrap;
 	}
 	.settings-controls {
 		position: absolute;

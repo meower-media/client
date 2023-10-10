@@ -551,7 +551,6 @@
 
 <style>
 	.createpost {
-		position: sticky;
 		top: 0;
 		display: flex;
 		margin-bottom: 0.5em;

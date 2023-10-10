@@ -6,6 +6,14 @@
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
 
+	import {
+		screen,
+		modalStack,
+		reconnecting,
+		OOBERunning,
+		user,
+		spinner,
+	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 
@@ -22,6 +30,7 @@
 			if (currentParams !== JSON.stringify($params)) {
 				currentPage = page.title;
 				currentParams = JSON.stringify($params);
+
 				remounting = true;
 				await tick();
 				remounting = false;
@@ -31,15 +40,6 @@
 			currentParams = JSON.stringify($params);
 		}
 	});
-
-	import {
-		screen,
-		modalStack,
-		reconnecting,
-		OOBERunning,
-		user,
-		spinner,
-	} from "../lib/stores.js";
 </script>
 
 <!-- routify:options bundle=true -->
@@ -165,8 +165,8 @@
 		--orange-dark: #aa0000;
 		--orange-scrollbar-back: #aa0000;*/
 		--orange: #4d97ff;
-		--orange-light: #79b7ff;
-		--orange-dark: #3685eb;
+		--orange-light: rgb(140, 189, 245);
+		--orange-dark: #3888f1;
 		--orange-scrollbar-back: #374eb1;
 		--background: white;
 		--foreground: black;
