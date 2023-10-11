@@ -115,11 +115,7 @@
 		content = content.replaceAll(/<(.+?)>/gms, "&lt;$1&gt;");
 
 		// markdown
-		content = marked.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, ""), { breaks: true });
-		content = content.replaceAll(
-			/(<blockquote>.+?<\/blockquote>)/gms,
-			'<div class="quote-container">$1</div>'
-		);
+		content = marked.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "").replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"), { breaks: true });
 		content = DOMPurify.sanitize(content, {
 			ALLOWED_TAGS: [
 				"strong",
@@ -132,17 +128,32 @@
 				"h4",
 				"h5",
 				"h6",
-				"div",
 				"blockquote",
 				"br"
 			],
-			ALLOWED_ATTR: ["class"],
-			WHOLE_DOCUMENT: true
+			ALLOWED_ATTR: []
 		});
+
+		// line breaks
+		content = content.replaceAll("\n", "<br>");
+
+		// add quote containers to blockquotes
+		content = content.replaceAll(
+			/<blockquote>(.+?)<\/blockquote>/gms,
+			'<div class="quote-container"><blockquote>$1</blockquote></div>'
+		);
 
 		// hyperlinks
 		content = content.replaceAll(/(https?:\/\/[^\s]+)/g, '<a href="/" onclick="confirmHyperlink(event, \'$1\')">$1</a>');
 		content = content.replaceAll(/@([a-zA-Z0-9-_]{1,20})/g, '<a href="/users/$1">@$1</a>');
+
+		// remove additional line breaks
+		content = content.replaceAll("<blockquote><br>", "<blockquote>");
+		content = content.replaceAll("<br></blockquote>", "</blockquote>");
+		if (content.startsWith("<br>")) content = content.slice(0, 4);
+		if (content.endsWith("<br>")) content = content.slice(0, -4);
+
+		// sanitize (now with <div> and <a> tags)
 		content = DOMPurify.sanitize(content, {
 			ALLOWED_TAGS: [
 				"strong",
@@ -155,14 +166,13 @@
 				"h4",
 				"h5",
 				"h6",
-				"div",
 				"blockquote",
 				"code",
 				"br",
-				"a"  // now with <a> tags allowed
+				"div",
+				"a"
 			],
 			ALLOWED_ATTR: ["class", "href", "onclick"],
-			WHOLE_DOCUMENT: true
 		});
 
 		// twemoji
@@ -234,7 +244,7 @@
 							editError = "";
 							editing = true;
 							await tick();
-							editContentInput.value = post.content;
+							editContentInput.value = post.unfiltered_content || post.content;
 							editContentInput.focus();
 							autoresize(editContentInput);
 						}}

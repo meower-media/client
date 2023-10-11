@@ -13,7 +13,7 @@
 	import {
 		adminPermissions,
 		hasPermission,
-		restrictions,
+		userRestrictions,
 		isRestricted,
 	} from "../../lib/bitField.js";
 	import * as modals from "../../lib/modals.js";
@@ -169,7 +169,7 @@
 								on:click={() => {
 									if (
 										isRestricted(
-											restrictions.EDITING_CHAT_NICKNAMES
+											userRestrictions.EDITING_CHAT_NICKNAMES
 										)
 									) {
 										modals.showModal(AccountBannedModal, {
@@ -238,7 +238,7 @@
 						<button
 							class="circle plus"
 							on:click={() => {
-								if (isRestricted(restrictions.NEW_CHATS)) {
+								if (isRestricted(userRestrictions.NEW_CHATS)) {
 									modals.showModal(AccountBannedModal, {
 										ban: $user.ban,
 										feature:

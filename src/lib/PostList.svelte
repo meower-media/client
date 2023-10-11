@@ -33,7 +33,7 @@
 		chat,
 		postInput as postInput_2,
 	} from "./stores.js";
-	import {restrictions, isRestricted} from "../lib/bitField.js";
+	import {userRestrictions, isRestricted} from "../lib/bitField.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
 	import * as modals from "./modals.js";
@@ -70,8 +70,8 @@
 
 	$: {
 		userRestricted =
-			(postOrigin === "home" && isRestricted(restrictions.HOME_POSTS)) ||
-			(postOrigin !== "home" && isRestricted(restrictions.CHAT_POSTS));
+			(postOrigin === "home" && isRestricted(userRestrictions.HOME_POSTS)) ||
+			(["home", "inbox"].includes(postOrigin) && isRestricted(userRestrictions.CHAT_POSTS));
 
 		if ($chat.type === 1) {
 			dmWith = $chat.members.filter(
@@ -165,6 +165,7 @@
 				post_origin: post.post_origin,
 				user: post.u,
 				content: post.p,
+				unfiltered_content: post.unfiltered_p,
 				date: post.t.e,
 				edited_at: post.edited_at,
 				isDeleted: post.isDeleted,
@@ -208,6 +209,7 @@
 						post_origin: post.post_origin,
 						user: post.u,
 						content: post.p,
+						unfiltered_content: post.unfiltered_p,
 						date: post.t.e,
 						edited_at: post.edited_at,
 						isDeleted: post.isDeleted,
@@ -224,6 +226,7 @@
 					post_origin: cmd.val.post_origin,
 					user: cmd.val.u,
 					content: cmd.val.p,
+					unfiltered_content: cmd.val.unfiltered_p,
 					date: cmd.val.t.e,
 					edited_at: cmd.val.edited_at,
 					isDeleted: cmd.val.isDeleted,
@@ -238,7 +241,7 @@
 					post_id: "",
 					post_origin: postOrigin || fetchUrl,
 					user: "Server",
-					content: `${cmd.val.u} left ${chatName}.`,
+					content: `@${cmd.val.u} left ${chatName}.`,
 					date: Date.now() / 1000,
 					isDeleted: false,
 				});
@@ -250,7 +253,7 @@
 					post_id: "",
 					post_origin: postOrigin || fetchUrl,
 					user: "Server",
-					content: `${cmd.val.u} joined ${chatName}.`,
+					content: `@${cmd.val.u} joined ${chatName}.`,
 					date: Date.now() / 1000,
 					isDeleted: false,
 				});
@@ -292,7 +295,7 @@
 				}
 
 				// substitute command
-				if (content.match(/s\/.+\//gs)) {
+				if (content.match(/^s\/.+\//gs)) {
 					let toReplace = content.split("/")[1];
 					let replaceWith = content.replace(`s/${toReplace}/`, "");
 
@@ -303,6 +306,13 @@
 								toReplace,
 								replaceWith
 							);
+							console.log(post)
+							if (post.unfiltered_content) {
+								newContent = post.unfiltered_content.replace(
+									toReplace,
+									replaceWith
+								);
+							}
 							if (newContent.trim() === "") {
 								try {
 									const resp = await fetch(

@@ -5,6 +5,7 @@
 	import FormattedDate from "../../FormattedDate.svelte";
 	import AdminNotes from "../../AdminNotes.svelte";
 
+	import EditRestrictionsModal from "./EditRestrictions.svelte";
 	import ViewPostsModal from "./ViewPosts.svelte";
 	import ClearQuoteModal from "./ClearQuote.svelte";
 	import SetAdminPermissionsModal from "./SetAdminPermissions.svelte";
@@ -14,7 +15,7 @@
 	import shieldx from "../../../assets/shield-x.svg";
 	import userx from "../../../assets/user-x.svg";
 
-	import {authHeader} from "../../stores.js";
+	import {authHeader, pendingBanState} from "../../stores.js";
 	import {
 		userFlags,
 		adminPermissions,
@@ -65,14 +66,17 @@
 		deleted = (user.flags & userFlags.DELETED) === userFlags.DELETED;
 		userProtected =
 			(user.flags & userFlags.PROTECTED) === userFlags.PROTECTED;
-		if (user.ban) banState = Object.assign({}, user.ban);
+		if (user.ban) {
+			banState = Object.assign({}, user.ban);
+			if ($pendingBanState) banState = $pendingBanState;
+		}
 	}
 
 	async function sendAlert() {
 		alertStatus = "Sending alert...";
 		try {
 			const resp = await fetch(
-				`${apiUrl}admin/users/${user._id}/inbox`,
+				`${apiUrl}admin/users/${user._id}/alert`,
 				{
 					method: "POST",
 					headers: {
@@ -105,7 +109,7 @@
 				},
 				body: JSON.stringify({
 					state: banState.state,
-					restrictions: 0,
+					restrictions: banState.restrictions,
 					expires: banState.expires,
 					reason: banState.reason,
 				}),
@@ -147,9 +151,9 @@
 	}
 </script>
 
-<Modal
+<Modal showClose={true}
 	on:close={() => {
-		username = "";
+		pendingBanState.set(null);
 		modals.closeLastModal();
 	}}
 >
@@ -359,11 +363,20 @@
 				</select><br />
 				{#if banState.state === "none"}
 					This applies no restrictions to the user.
-				{:else if banState.state.includes("restriction")}
-					<button class="long"> Edit Restrictions </button>
-					<b>Restrictions:</b> test, 123, abc
 				{:else if banState.state.includes("ban")}
 					This prevents the user from logging in.
+				{/if}
+
+				{#if banState.state.includes("restriction")}
+					<br />
+					<label for="restrictions"><b>Restrictions</b></label><br />
+					<button class="long" on:click={() => {
+						pendingBanState.set(banState);
+						modals.showModal(EditRestrictionsModal, { username: user._id });
+					}}>Edit Restrictions </button>
+					<ul id="restrictions">
+						<li>Block home posts</li>
+					</ul>
 				{/if}
 
 				{#if banState.state.includes("temp")}
@@ -498,30 +511,10 @@
 					<b>{kickStatus}</b>
 				{/if}
 
-				<br /><br /><br />
+				<br /><br />
 			{/if}
-
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => {
-						username = "";
-						modals.closeLastModal();
-					}}>Close</button
-				>
-			</div>
 		{:catch error}
 			{error}
-			<br /><br />
-			<div class="modal-buttons">
-				<button
-					type="button"
-					on:click={() => {
-						username = "";
-						modals.closeLastModal();
-					}}>Close</button
-				>
-			</div>
 		{/await}
 		<div />
 	</div>

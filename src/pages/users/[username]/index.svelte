@@ -9,7 +9,7 @@
 	import BlockUserModal from "../../../lib/modals/safety/BlockUser.svelte";
 
 	import {relationships, user} from "../../../lib/stores.js";
-	import {restrictions, isRestricted} from "../../../lib/bitField.js";
+	import {userRestrictions, isRestricted} from "../../../lib/bitField.js";
 	import {profileCache} from "../../../lib/loadProfile.js";
 	import {apiUrl, encodeApiURLParams} from "../../../lib/urls.js";
 	import * as modals from "../../../lib/modals.js";
@@ -57,7 +57,7 @@
 					style="font-style: italic"
 					placeholder="Write something..."
 					maxlength="360"
-					disabled={isRestricted(restrictions.EDITING_QUOTE)}
+					disabled={isRestricted(userRestrictions.EDITING_QUOTE)}
 					bind:value={$user.quote}
 					on:change={() => clm.updateProfile({quote: $user.quote})}
 				/>

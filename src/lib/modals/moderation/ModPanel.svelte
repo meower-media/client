@@ -305,6 +305,8 @@
 				</PagedList>
 			{/if}
 		{/if}
+
+		<br /><br />
 	</div>
 </Modal>
 

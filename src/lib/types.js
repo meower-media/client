@@ -5,6 +5,7 @@
  *  post_origin: string,
  * 	user: string,
  * 	content: string,
+ *  unfiltered_content?: string,
  * 	date: number,
  *  edited_at?: number,
  *  isDeleted: boolean,

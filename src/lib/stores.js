@@ -73,3 +73,6 @@ export const customTheme = writable({
 	foreground: "000000",
 	foregroundOrange: "ffffff",
 });
+
+// User moderation
+export const pendingBanState = writable(null);

@@ -16,7 +16,7 @@
 	import LeaveChatModal from "../../lib/modals/chats/LeaveChat.svelte";
 
 	import {chats, user} from "../../lib/stores.js";
-	import {restrictions, isRestricted} from "../../lib/bitField.js";
+	import {userRestrictions, isRestricted} from "../../lib/bitField.js";
 	import * as modals from "../../lib/modals.js";
 	import * as clm from "../../lib/clmanager.js";
 
@@ -54,7 +54,7 @@
 			<button
 				class="circle plus"
 				on:click={() => {
-					if (isRestricted(restrictions.NEW_CHATS)) {
+					if (isRestricted(userRestrictions.NEW_CHATS)) {
 						modals.showModal(AccountBannedModal, {
 							ban: $user.ban,
 							feature: "creating group chats",

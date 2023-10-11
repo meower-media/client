@@ -1,59 +1,92 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import {authHeader} from "../../stores.js";
-	import {adminPermissions, hasPermission} from "../../bitField.js";
-	import {apiUrl} from "../../urls.js";
+	import {pendingBanState} from "../../stores.js";
+	import {adminPermissions, hasPermission, userRestrictions} from "../../bitField.js";
 	import * as modals from "../../modals.js";
 
 	import {onMount} from "svelte";
 
-	const permissions = [
+	const restrictions = [
 		{
-			value: adminPermissions.VIEW_REPORTS,
-			name: "View reports",
-			description: "Allows viewing all pending and completed reports.",
+			value: userRestrictions.HOME_POSTS,
+			name: "Block home posts",
+			description: "Blocks creating new home posts.",
 		},
 		{
-			value: adminPermissions.EDIT_REPORTS,
-			name: "Edit reports",
-			description:
-				"Allows changing the status of reports.<br />(requires 'View reports' permission",
+			value: userRestrictions.CHAT_POSTS,
+			name: "Block chat posts",
+			description: "Blocks creating new chat posts.",
+		},
+		{
+			value: userRestrictions.NEW_CHATS,
+			name: "Block new chats",
+			description: "Blocks creating new group chats and starting DMs.",
+		},
+		{
+			value: userRestrictions.EDITING_CHAT_NICKNAMES,
+			name: "Block editing group chat nicknames",
+			description: "Blocks editing group chat nicknames.",
+		},
+		{
+			value: userRestrictions.EDITING_QUOTE,
+			name: "Block editing quote",
+			description: "Blocks editing their quote.",
 		},
 	];
 
 	export let modalData;
 
-	let {user, selectedRestrictions} = modalData;
+	let {username} = modalData;
+	
+	let selectedRestrictions = [];
+
+	onMount(() => {
+		selectedRestrictions = [];
+		for (let restriction of restrictions) {
+			if (
+				($pendingBanState.restrictions & restriction.value) ===
+				restriction.value
+			) {
+				selectedRestrictions.push(restriction.value);
+			}
+		}
+	});
+
+	async function saveRestrictions() {
+		let restrictionsBitField = 0;
+		for (let restriction of selectedRestrictions) {
+			restrictionsBitField |= restriction;
+		}
+		$pendingBanState.restrictions = restrictionsBitField;
+		modals.closeLastModal();
+	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">
-		{user._id}'s Restrictions
+		{username}'s Restrictions
 	</h2>
 	<div slot="default">
-		{#each permissions as permission}
+		{#each restrictions as restriction}
 			<label>
 				<input
 					type="checkbox"
-					value={permission.value}
+					value={restriction.value}
 					disabled={!hasPermission(adminPermissions.EDIT_BAN_STATES)}
 					bind:group={selectedRestrictions}
 				/>
-				{permission.name}
+				{restriction.name}
 			</label><br />
-			{@html permission.description}<br /><br />
+			{@html restriction.description}<br /><br />
 		{/each}
 		<div class="modal-buttons">
 			<button
 				type="button"
-				on:click={() => {
-					selectedRestrictions;
-					modals.closeLastModal;
-				}}>Close</button
+				on:click={modals.closeLastModal}>Close</button
 			>
-			{#if hasPermission(adminPermissions.SYSADMIN)}
-				<button type="submit" on:click={modals.closeLastModal}
+			{#if hasPermission(adminPermissions.EDIT_BAN_STATES)}
+				<button type="submit" on:click={saveRestrictions}
 					>Save</button
 				>
 			{/if}

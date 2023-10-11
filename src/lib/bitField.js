@@ -46,7 +46,7 @@ export const adminPermissions = {
 	SEND_ANNOUNCEMENTS: 262144,
 };
 
-export const restrictions = {
+export const userRestrictions = {
 	HOME_POSTS: 1,
 	CHAT_POSTS: 2,
 	NEW_CHATS: 4,
