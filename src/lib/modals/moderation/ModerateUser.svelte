@@ -5,6 +5,8 @@
 	import FormattedDate from "../../FormattedDate.svelte";
 	import AdminNotes from "../../AdminNotes.svelte";
 
+	import ModerateUserModal from "./ModerateUser.svelte";
+	import ModerateIPModal from "./ModerateIP.svelte";
 	import EditRestrictionsModal from "./EditRestrictions.svelte";
 	import ViewPostsModal from "./ViewPosts.svelte";
 	import ClearQuoteModal from "./ClearQuote.svelte";
@@ -199,10 +201,10 @@
 				<b>Last seen:</b>
 				<FormattedDate date={user.last_seen} />
 			{/if}
-			{#if user.unread_inbox}
+			{#if user.settings}
 				<br />
-				<b>Unread inbox:</b>
-				{user.unread_inbox ? "yes" : "no"}
+				<b>Unread inbox?</b>
+				{user.settings.unread_inbox ? "yes" : "no"}
 			{/if}
 
 			<br /><br />
@@ -216,8 +218,7 @@
 						<li>
 							<a
 								href="/"
-								on:click|preventDefault={() =>
-									$goto(`/users/${username}`)}>{username}</a
+								on:click|preventDefault={() => modals.replaceLastModal(ModerateUserModal, {username})}>{username}</a
 							>
 						</li>
 					{/each}
@@ -236,7 +237,12 @@
 					</tr>
 					{#each user.recent_ips as ip}
 						<tr>
-							<td>{ip.netinfo.ip}</td>
+							<td>
+								<a
+									href="/"
+									on:click|preventDefault={() => modals.showModal(ModerateIPModal, {ip: ip.ip})}>{ip.ip}</a
+								>
+							</td>
 							<td
 								><FormattedDate
 									date={ip.last_used}

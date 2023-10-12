@@ -6,6 +6,7 @@
 	import FormattedDate from "./FormattedDate.svelte";
 
 	import BasicModal from "./modals/Basic.svelte";
+	import ModerateUserModal from "./modals/moderation/ModerateUser.svelte";
 	import ReportUserModal from "./modals/safety/ReportUser.svelte";
 	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
 
@@ -40,73 +41,80 @@
 		</div>
 	{:then data}
 		<Container>
-			{#if canDoActions && (data.flags & userFlags.DELETED) !== userFlags.DELETED}
-				<div class="settings-controls">
-					{#if dmChat}
-						<button
-							class="circle star {$user.favorited_chats.includes(
-								dmChat._id
-							)
-								? 'filled'
-								: ''}"
-							on:click={() => {
-								if (
-									$user.favorited_chats.includes(dmChat._id)
-								) {
-									$user.favorited_chats.splice(
-										$user.favorited_chats.indexOf(
-											dmChat._id
-										),
-										1
-									);
-									clm.updateProfile({
-										favorited_chats: $user.favorited_chats,
+			<div class="settings-controls">
+				{#if dmChat}
+					<button
+						class="circle star {$user.favorited_chats.includes(
+							dmChat._id
+						)
+							? 'filled'
+							: ''}"
+						on:click={() => {
+							if (
+								$user.favorited_chats.includes(dmChat._id)
+							) {
+								$user.favorited_chats.splice(
+									$user.favorited_chats.indexOf(
+										dmChat._id
+									),
+									1
+								);
+								clm.updateProfile({
+									favorited_chats: $user.favorited_chats,
+								});
+							} else {
+								$user.favorited_chats =
+									$user.favorited_chats.filter(chatId => {
+										return $chats.some(
+											_chat => _chat._id === chatId
+										);
+									});
+								if ($user.favorited_chats.length >= 50) {
+									modals.showModal(BasicModal, {
+										title: "Too many stars!",
+										desc: "Sorry, you can only have up to 50 favorited chats!",
 									});
 								} else {
-									$user.favorited_chats =
-										$user.favorited_chats.filter(chatId => {
-											return $chats.some(
-												_chat => _chat._id === chatId
-											);
-										});
-									if ($user.favorited_chats.length >= 50) {
-										modals.showModal(BasicModal, {
-											title: "Too many stars!",
-											desc: "Sorry, you can only have up to 50 favorited chats!",
-										});
-									} else {
-										$user.favorited_chats.push(dmChat._id);
-										clm.updateProfile({
-											favorited_chats:
-												$user.favorited_chats,
-										});
-									}
+									$user.favorited_chats.push(dmChat._id);
+									clm.updateProfile({
+										favorited_chats:
+											$user.favorited_chats,
+									});
 								}
+							}
+						}}
+					/>
+					{#if !$user.favorited_chats.includes(dmChat._id)}
+						<button
+							class="circle close"
+							on:click={() => {
+								fetch(`${apiUrl}chats/${dmChat._id}`, {
+									method: "DELETE",
+									headers: $authHeader,
+								});
+								$chats.filter(
+									_chat => _chat._id !== dmChat._id
+								);
 							}}
 						/>
-						{#if !$user.favorited_chats.includes(dmChat._id)}
-							<button
-								class="circle close"
-								on:click={() => {
-									fetch(`${apiUrl}chats/${dmChat._id}`, {
-										method: "DELETE",
-										headers: $authHeader,
-									});
-									$chats.filter(
-										_chat => _chat._id !== dmChat._id
-									);
-								}}
-							/>
-						{/if}
-						<button
-							class="circle join"
-							on:click={$goto(`/chats/${dmChat._id}`)}
-						/>
-					{:else if data._id !== $user.name && !((data.flags & userFlags.SYSTEM) === userFlags.SYSTEM)}
+					{/if}
 					<button
+						class="circle join"
+						on:click={$goto(`/chats/${dmChat._id}`)}
+					/>
+				{:else}
+					{#if $user.permissions}
+						<button
+							title="Moderator {data._id}"
+							class="circle admin"
+							on:click={() => modals.showModal(ModerateUserModal, { username: data._id })}
+						/>
+					{/if}
+					{#if canDoActions && data._id !== $user.name && ((data.flags & userFlags.SYSTEM) !== userFlags.SYSTEM) && ((data.flags & userFlags.DELETED) !== userFlags.DELETED)}
+						<button
 							title="Report {data._id}"
 							class="circle report"
-							on:click={async () => modals.showModal(ReportUserModal, { user: data })}
+							on:click={() => modals.showModal(ReportUserModal, { user: data })}
 						/>
 						<button
 							title="Open DM with {data._id}"
@@ -170,16 +178,14 @@
 							}}
 						/>
 					{/if}
-				</div>
-			{/if}
+				{/if}
+			</div>
 
 			<div class="profile-header">
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={async () => {
-							$goto(`/users/${data._id}`);
-						}}
+						on:click={() => $goto(`/users/${data._id}`)}
 					>
 						<PFP
 							online={$ulist.includes(data._id)}

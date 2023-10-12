@@ -22,7 +22,7 @@
 						headers: $authHeader,
 					});
 					if (!resp.ok) {
-						if (resp.status === 404) {
+						if (resp.status === 501) {
 							throw new Error(
 								"Server doesn't have a restart command set!"
 							);

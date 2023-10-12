@@ -494,7 +494,7 @@
 	{#if postOrigin}
 		<TypingIndicator forPage={postOrigin} />
 	{/if}
-	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
+	<PagedList maxItems={100} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
 			{#each [...new Set(_items)] as post (post.id)}
 				<div
@@ -505,9 +505,10 @@
 					{#if "lower_username" in post}
 						{#if !$user.hide_blocked_users || $relationships[post._id] !== 2}
 							<ProfileView
-								canClick={true}
-								small={true}
 								profile={post}
+								small={true}
+								canClick={true}
+								canDoActions={true}
 							/>
 						{/if}
 					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}

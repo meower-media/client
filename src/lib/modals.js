@@ -2,6 +2,8 @@
 
 import {modalStack} from "./stores.js";
 
+import {tick} from "svelte";
+
 let _modalStack = [];
 modalStack.subscribe(v => (_modalStack = v));
 
@@ -10,8 +12,10 @@ export function showModal(modal, data) {
 	modalStack.set(_modalStack);
 }
 
-export function replaceLastModal(modal, data) {
+export async function replaceLastModal(modal, data) {
 	_modalStack.splice(0, 1);
+	modalStack.set(_modalStack);
+	await tick();
 	_modalStack.unshift({modal, data});
 	modalStack.set(_modalStack);
 }

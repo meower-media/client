@@ -7,7 +7,8 @@
 
 	import ModerateUserModal from "./ModerateUser.svelte";
 	import ModerateIPModal from "./ModerateIP.svelte";
-	import ViewNetblocksModal from "./ViewNetblocks.svelte";
+	import RecemtUsersModal from "./RecentUsers.svelte";
+	import RecentNetblocksModal from "./RecentNetblocks.svelte";
 	import SendAnnouncementModal from "./SendAnnouncement.svelte";
 	import KickAllUsersModal from "./KickAllUsers.svelte";
 	import RestartServerModal from "./RestartServer.svelte";
@@ -140,7 +141,7 @@
 		<button
 			class="long"
 			style="margin-top: 0.25em;"
-			on:click={() => modals.showModal("", "")}
+			on:click={() => modals.showModal(RecemtUsersModal)}
 		>View Recent Users</button>
 		{#if hasPermission(adminPermissions.VIEW_IPS)}
 			<h2>Moderate IP</h2>
@@ -167,8 +168,8 @@
 			<button
 				class="long"
 				style="margin-top: 0.25em;"
-				on:click={() => modals.showModal(ViewNetblocksModal)}
-			>View All Netblocks</button>
+				on:click={() => modals.showModal(RecentNetblocksModal)}
+			>View Recent Netblocks</button>
 		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
@@ -282,7 +283,6 @@
 			</select><br />
 			{#if !reloadingReports}
 				<PagedList
-					maxItems={50}
 					bind:items={reports}
 					loadPage={loadReportsPage}
 				>

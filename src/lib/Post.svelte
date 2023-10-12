@@ -236,6 +236,12 @@
 <Container>
 	<div class="post-header">
 		<div class="settings-controls">
+			{#if buttons && hasPermission(adminPermissions.VIEW_POSTS)}
+				<button
+					class="circle admin"
+					on:click={() => modals.showModal(ModeratePostModal, { postid: post.post_id })}
+				/>
+			{/if}
 			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server" && !editing}
 				{#if input && !input.disabled && post.user === $user.name}
 					<button
@@ -329,12 +335,7 @@
 							on:click={() => modals.showModal(ReportPostModal, { post })}
 						/>
 					{/if}
-					{#if hasPermission(adminPermissions.VIEW_POSTS)}
-						<button
-							class="circle admin"
-							on:click={() => modals.showModal(ModeratePostModal, { postid: post.post_id })}
-						/>
-					{/if}
+					
 				{/if}
 			{/if}
 		</div>

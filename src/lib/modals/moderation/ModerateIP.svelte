@@ -8,6 +8,7 @@
 	import ModerateUserModal from "./ModerateUser.svelte";
 	import CreateNetblockModal from "./CreateNetblock.svelte";
 	import DeleteNetblockModal from "./DeleteNetblock.svelte";
+	import NetblockNotesModal from "./NetblockNotes.svelte";
 
 	import {authHeader} from "../../stores.js";
 	import {
@@ -47,7 +48,7 @@
 		{:then}
 			<h2>Netinfo</h2>
 			<b>IP address:</b>
-			{netinfo.ip}<br />
+			{ip}<br />
 			<b>ASN:</b>
 			{netinfo.asn}<br />
 			<b>Country:</b>
@@ -83,17 +84,17 @@
 			<br /><br />
 
 			<h2>Netblocks</h2>
-			{#if netblocks.filter(_netblock => _netblock.type === 0).length > 0}
+			{#if netblocks.find(_netblock => _netblock.type === 0)}
 				<Container warning={true}>
-					{netinfo.ip} is currently fully blocked from accessing Meower's CloudLink server and REST API.
+					{ip} is currently fully blocked from accessing Meower's CloudLink server and REST API.
 				</Container>
 			{/if}
-			{#if netblocks.filter(_netblock => _netblock.type === 1).length > 0}
+			{#if netblocks.find(_netblock => _netblock.type === 1)}
 				<Container warning={true}>
-					{netinfo.ip} is currently blocked from creating new Meower accounts.
+					{ip} is currently blocked from creating new Meower accounts.
 				</Container>
 			{/if}
-			<button class="long" on:click={() => modals.showModal(CreateNetblockModal, { cidr: netinfo.ip + "/32" })}>Create Netblock</button>
+			<button class="long" on:click={() => modals.showModal(CreateNetblockModal, { cidr: ip + "/32" })}>Create Netblock</button>
 			<table>
 				<tr>
 					<th>CIDR</th>
@@ -109,11 +110,13 @@
 								<button
 									class="circle scroll"
 									title="View/edit notes"
-									on:click={() => modals.showModal("", { identifier: btoa(netblock._id) })}
+									disabled={!hasPermission(adminPermissions.VIEW_NOTES)}
+									on:click={() => modals.showModal(NetblockNotesModal, { cidr: netblock._id })}
 								/>
 								<button
 									class="circle close"
 									title="Delete netblock"
+									disabled={!hasPermission(adminPermissions.BLOCK_IPS)}
 									on:click={() => modals.showModal(DeleteNetblockModal, { cidr: netblock._id })}
 								/>
 							</div>
@@ -126,7 +129,7 @@
 
 			{#if hasPermission(adminPermissions.VIEW_NOTES)}
 				<h2>Notes</h2>
-				<AdminNotes identifier={btoa(netinfo.ip)} />
+				<AdminNotes identifier={btoa(netinfo._id)} />
 				<br /><br />
 			{/if}
 		{:catch error}
