@@ -45,7 +45,9 @@
 				{#if dmChat}
 					<button
 						class="circle star"
-						class:filled={$user.favorited_chats.includes(dmChat._id)}
+						class:filled={$user.favorited_chats.includes(
+							dmChat._id
+						)}
 						on:click={() => {
 							if ($user.favorited_chats.includes(dmChat._id)) {
 								$user.favorited_chats.splice(
@@ -250,7 +252,7 @@
 	.profile-header-info {
 		display: flex;
 		flex-direction: column;
-  		align-items: left;
+		align-items: left;
 		justify-content: center;
 		margin-left: 1em;
 		height: 6em;

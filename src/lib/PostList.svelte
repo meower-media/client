@@ -529,7 +529,13 @@
 											addToChatLoading[post._id] = true;
 											try {
 												const resp = await fetch(
-												`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}/members/${post._id}`,
+													`${apiUrl}${
+														$params.admin
+															? "admin/"
+															: ""
+													}chats/${
+														$chat._id
+													}/members/${post._id}`,
 													{
 														method: "PUT",
 														headers: $authHeader,
@@ -542,7 +548,9 @@
 																`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
 															);
 														case 404:
-															throw new Error(`${post._id} not found.`);
+															throw new Error(
+																`${post._id} not found.`
+															);
 														case 409:
 															throw new Error(
 																`${post._id} is already a member of ${$chat.nickname}.`
@@ -561,13 +569,17 @@
 												if ($params.admin) {
 													$chat = await resp.json();
 												}
-												delete addToChatLoading[post._id];
+												delete addToChatLoading[
+													post._id
+												];
 											} catch (e) {
 												modals.showModal(BasicModal, {
 													title: `Failed to add ${post._id} to ${$chat.nickname}`,
 													desc: e,
 												});
-												delete addToChatLoading[post._id];
+												delete addToChatLoading[
+													post._id
+												];
 											}
 										}}
 									/>

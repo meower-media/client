@@ -25,14 +25,19 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}`, {
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-							...$authHeader,
-						},
-						body: JSON.stringify({nickname: nickname}),
-					});
+					const resp = await fetch(
+						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${
+							$chat._id
+						}`,
+						{
+							method: "PATCH",
+							headers: {
+								"Content-Type": "application/json",
+								...$authHeader,
+							},
+							body: JSON.stringify({nickname: nickname}),
+						}
+					);
 					if (!resp.ok) {
 						if (resp.status === 429) {
 							throw new Error(

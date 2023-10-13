@@ -61,7 +61,13 @@
 			Last modified <FormattedDate
 				date={notes.last_modified_at}
 				relative={true}
-			/> by <a href="/" on:click|preventDefault={() => $goto(`/users/${notes.last_modified_by}`)}>{notes.last_modified_by}</a>
+			/> by
+			<a
+				href="/"
+				on:click|preventDefault={() =>
+					$goto(`/users/${notes.last_modified_by}`)}
+				>{notes.last_modified_by}</a
+			>
 		{/if}
 		{#if savingStatus}
 			<br /><b>{savingStatus}</b>

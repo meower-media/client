@@ -123,7 +123,7 @@
 					>
 				</label>
 			</p>
-		
+
 			<br />
 
 			<div class="modal-buttons">
@@ -133,7 +133,9 @@
 						if (!loading) modals.replaceLastModal(LoginModal);
 					}}>Login to Meower</a
 				>
-				<button type="submit" disabled={!acceptTerms || loading}>Join</button>
+				<button type="submit" disabled={!acceptTerms || loading}
+					>Join</button
+				>
 			</div>
 		</form>
 	</div>

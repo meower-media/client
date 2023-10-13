@@ -15,17 +15,13 @@
 		error = "";
 		loading = true;
 		try {
-			const resp = await fetch(
-				`${apiUrl}admin/chats/${$chat._id}`,
-				{
-					method: "DELETE",
-					headers: $authHeader,
-				}
-			);
+			const resp = await fetch(`${apiUrl}admin/chats/${$chat._id}`, {
+				method: "DELETE",
+				headers: $authHeader,
+			});
 			if (!resp.ok) {
 				throw new Error(
-					"Response code is not OK; code is " +
-						resp.status
+					"Response code is not OK; code is " + resp.status
 				);
 			}
 			$chat = await resp.json();
@@ -49,8 +45,7 @@
 			);
 			if (!resp.ok) {
 				throw new Error(
-					"Response code is not OK; code is " +
-						resp.status
+					"Response code is not OK; code is " + resp.status
 				);
 			}
 			$chat = await resp.json();
@@ -67,7 +62,9 @@
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>
-	<h2 slot="header">Moderate {$chat.type === 0 ? $chat.nickname : $chat._id}</h2>
+	<h2 slot="header">
+		Moderate {$chat.type === 0 ? $chat.nickname : $chat._id}
+	</h2>
 	<div slot="default">
 		<h2>Chat Info</h2>
 		<b>UUID:</b>

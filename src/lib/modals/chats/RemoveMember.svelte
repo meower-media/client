@@ -28,7 +28,9 @@
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}/members/${username}`,
+						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${
+							$chat._id
+						}/members/${username}`,
 						{
 							method: "DELETE",
 							headers: $authHeader,

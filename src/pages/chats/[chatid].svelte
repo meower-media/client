@@ -64,7 +64,9 @@
 					}
 				);
 				if (!resp.ok) {
-					throw new Error("Response code is not OK; code is " + resp.status);
+					throw new Error(
+						"Response code is not OK; code is " + resp.status
+					);
 				}
 				chat.set(await resp.json());
 			} catch (e) {
@@ -90,9 +92,14 @@
 						);
 						if (!resp.ok) {
 							if (resp.status === 404) {
-								throw new Error(`The chat you requested (${$params.chatid}) doesn't exist or you don't have access to it.`);
+								throw new Error(
+									`The chat you requested (${$params.chatid}) doesn't exist or you don't have access to it.`
+								);
 							}
-							throw new Error("Response code is not OK; code is " + resp.status);
+							throw new Error(
+								"Response code is not OK; code is " +
+									resp.status
+							);
 						}
 						chat.set(await resp.json());
 					} catch (e) {
@@ -153,9 +160,9 @@
 					<p style="margin-bottom: 0; color: crimson;">
 						<b
 							>This chat is currently soft-deleted! No one can
-							access it other than admins while it's
-							soft-deleted. To restore it, open the chat mod
-							panel and click 'Restore chat'.</b
+							access it other than admins while it's soft-deleted.
+							To restore it, open the chat mod panel and click
+							'Restore chat'.</b
 						>
 					</p>
 				{/if}
@@ -176,7 +183,8 @@
 									if (
 										isRestricted(
 											userRestrictions.EDITING_CHAT_NICKNAMES
-										) && !$params.admin
+										) &&
+										!$params.admin
 									) {
 										modals.showModal(AccountBannedModal, {
 											ban: $user.ban,
@@ -203,7 +211,9 @@
 				<Container>
 					<h1 class="chat-name">
 						DM between {$chat.members[0]} & {$chat.members[1]}
-						<span class="chat-id">(<code>{$params.chatid}</code>)</span>
+						<span class="chat-id"
+							>(<code>{$params.chatid}</code>)</span
+						>
 					</h1>
 					{#if $chat.deleted}
 						<p style="margin-bottom: 0; color: crimson;">
@@ -219,8 +229,7 @@
 						<button
 							class="circle admin"
 							disabled={!$chat._id}
-							on:click={() =>
-								modals.showModal(ModerateChatModal)}
+							on:click={() => modals.showModal(ModerateChatModal)}
 						/>
 					</div>
 				</Container>
@@ -228,7 +237,8 @@
 				<ProfileView
 					username={$chat.members.filter(
 						username =>
-							username !== ($params.user ? $params.user : $user.name)
+							username !==
+							($params.user ? $params.user : $user.name)
 					)[0]}
 					small={true}
 					canClick={true}
@@ -238,7 +248,9 @@
 		<PostList
 			fetchUrl={$params.chatid === "livechat"
 				? null
-				: $params.admin ? `admin/chats/${$params.chatid}/posts` : `posts/${$params.chatid}`}
+				: $params.admin
+				? `admin/chats/${$params.chatid}/posts`
+				: `posts/${$params.chatid}`}
 			postOrigin={$params.admin ? null : $params.chatid}
 			chatName={$chat.nickname}
 			canPost={$chat._id === "livechat" || !$params.admin}
@@ -272,7 +284,10 @@
 						<button
 							class="circle plus"
 							on:click={() => {
-								if (isRestricted(userRestrictions.NEW_CHATS) && !$params.admin) {
+								if (
+									isRestricted(userRestrictions.NEW_CHATS) &&
+									!$params.admin
+								) {
 									modals.showModal(AccountBannedModal, {
 										ban: $user.ban,
 										feature:
@@ -287,7 +302,7 @@
 					{#if $mobile && $chat._id !== "livechat"}
 						<button
 							class="circle join"
-							on:click={() => showMembers = !showMembers}
+							on:click={() => (showMembers = !showMembers)}
 						/>
 					{/if}
 				</div>

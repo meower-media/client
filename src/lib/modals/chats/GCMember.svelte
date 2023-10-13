@@ -6,7 +6,7 @@
 	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
 
 	import {user, chat} from "../../stores.js";
-	import { adminPermissions, hasPermission } from "../../bitField.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import * as modals from "../../modals.js";
 
 	import {params, goto} from "@roxi/routify";

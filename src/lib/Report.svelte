@@ -155,7 +155,12 @@
 			}}
 		/>
 	{:else if report.type === "user"}
-		<ProfileView canClick={true} canDoActions={true} small={true} profile={report.content} />
+		<ProfileView
+			canClick={true}
+			canDoActions={true}
+			small={true}
+			profile={report.content}
+		/>
 	{/if}
 
 	{#if error}
@@ -167,7 +172,8 @@
 			class="circle scroll"
 			title="View/edit notes"
 			disabled={loading}
-			on:click={() => modals.showModal(ReportNotesModal, {reportid: report._id})}
+			on:click={() =>
+				modals.showModal(ReportNotesModal, {reportid: report._id})}
 		/>
 		{#if report.status === "pending"}
 			{#if !report.escalated}

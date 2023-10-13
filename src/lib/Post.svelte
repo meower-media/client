@@ -346,7 +346,9 @@
 										}
 										deleteButton.disabled = false;
 									} else {
-										modals.showModal(DeletePostModal, {post});
+										modals.showModal(DeletePostModal, {
+											post,
+										});
 									}
 								}}
 							/>

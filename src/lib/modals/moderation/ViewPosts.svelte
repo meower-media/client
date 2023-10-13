@@ -13,9 +13,7 @@
 
 	let {username, userProtected} = modalData;
 
-	let postOrigin,
-		chatid,
-		reloadingPosts;
+	let postOrigin, chatid, reloadingPosts;
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>
@@ -64,13 +62,19 @@
 				title="Delete All Posts"
 				disabled={userProtected &&
 					!hasPermission(adminPermissions.SYSADMIN)}
-				on:click={() => modals.showModal(ClearPostsModal, {username, postOrigin: postOrigin === "chat" ? chatid : postOrigin})}>Delete All Posts</button
+				on:click={() =>
+					modals.showModal(ClearPostsModal, {
+						username,
+						postOrigin: postOrigin === "chat" ? chatid : postOrigin,
+					})}>Delete All Posts</button
 			><br />
 			<PostList
 				fetchUrl={`admin/users/${username}/posts`}
 				postOrigin={postOrigin === "chat" ? chatid : postOrigin}
 				canPost={false}
-				queryParams={postOrigin ? {origin: postOrigin === "chat" ? chatid : postOrigin} : ""}
+				queryParams={postOrigin
+					? {origin: postOrigin === "chat" ? chatid : postOrigin}
+					: ""}
 				adminView={true}
 			/>
 		{/if}

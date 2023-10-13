@@ -29,7 +29,9 @@
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}/members/${username}/transfer`,
+						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${
+							$chat._id
+						}/members/${username}/transfer`,
 						{
 							method: "POST",
 							headers: $authHeader,

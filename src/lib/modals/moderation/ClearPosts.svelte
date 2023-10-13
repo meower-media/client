@@ -5,9 +5,9 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-    export let modalData;
+	export let modalData;
 
-    let {username, postOrigin} = modalData;
+	let {username, postOrigin} = modalData;
 
 	let loading, error;
 </script>
@@ -20,7 +20,9 @@
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}admin/users/${username}/posts${postOrigin ? `?origin=${postOrigin}` : ""}`,
+						`${apiUrl}admin/users/${username}/posts${
+							postOrigin ? `?origin=${postOrigin}` : ""
+						}`,
 						{
 							method: "DELETE",
 							headers: $authHeader,
@@ -39,7 +41,10 @@
 			}}
 		>
 			<p>
-				Are you sure you wish to delete all of {username}'s posts{postOrigin ? ` in ${postOrigin}` : ""}? Currently, there is no easy way to recover all of their deleted posts!
+				Are you sure you wish to delete all of {username}'s posts{postOrigin
+					? ` in ${postOrigin}`
+					: ""}? Currently, there is no easy way to recover all of
+				their deleted posts!
 			</p>
 			{#if error}
 				<p style="color: crimson;">{error}</p>

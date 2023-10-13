@@ -67,9 +67,12 @@
 		</div>
 	</Container>
 	<Container>
-		<div class="chat"> 
+		<div class="chat">
 			<div class="settings-controls">
-				<button class="circle join" on:click={$goto("/chats/livechat")} />
+				<button
+					class="circle join"
+					on:click={$goto("/chats/livechat")}
+				/>
 			</div>
 
 			<h1>Livechat</h1>
@@ -87,30 +90,44 @@
 						<div class="settings-controls">
 							<button
 								class="circle star"
-								class:filled={$user.favorited_chats.includes(chat._id)}
+								class:filled={$user.favorited_chats.includes(
+									chat._id
+								)}
 								on:click={() => {
-									if ($user.favorited_chats.includes(chat._id)) {
+									if (
+										$user.favorited_chats.includes(chat._id)
+									) {
 										$user.favorited_chats.splice(
-											$user.favorited_chats.indexOf(chat._id),
+											$user.favorited_chats.indexOf(
+												chat._id
+											),
 											1
 										);
 										clm.updateProfile({
-											favorited_chats: $user.favorited_chats,
+											favorited_chats:
+												$user.favorited_chats,
 										});
 									} else {
 										$user.favorited_chats =
-											$user.favorited_chats.filter(chatId => {
-												return $chats.some(
-													_chat => _chat._id === chatId
-												);
-											});
-										if ($user.favorited_chats.length >= 50) {
+											$user.favorited_chats.filter(
+												chatId => {
+													return $chats.some(
+														_chat =>
+															_chat._id === chatId
+													);
+												}
+											);
+										if (
+											$user.favorited_chats.length >= 50
+										) {
 											modals.showModal(BasicModal, {
 												title: "Too many stars!",
 												desc: "Sorry, you can only have up to 50 favorited chats!",
 											});
 										} else {
-											$user.favorited_chats.push(chat._id);
+											$user.favorited_chats.push(
+												chat._id
+											);
 											clm.updateProfile({
 												favorited_chats:
 													$user.favorited_chats,
@@ -123,7 +140,9 @@
 								<button
 									class="circle close"
 									on:click={() =>
-										modals.showModal(LeaveChatModal, {chat})}
+										modals.showModal(LeaveChatModal, {
+											chat,
+										})}
 								/>
 							{/if}
 							<button
