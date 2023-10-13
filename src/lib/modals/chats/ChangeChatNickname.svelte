@@ -15,7 +15,7 @@
 	<h2 slot="header">Change Nickname</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {

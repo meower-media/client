@@ -50,13 +50,9 @@
 							? 'filled'
 							: ''}"
 						on:click={() => {
-							if (
-								$user.favorited_chats.includes(dmChat._id)
-							) {
+							if ($user.favorited_chats.includes(dmChat._id)) {
 								$user.favorited_chats.splice(
-									$user.favorited_chats.indexOf(
-										dmChat._id
-									),
+									$user.favorited_chats.indexOf(dmChat._id),
 									1
 								);
 								clm.updateProfile({
@@ -77,8 +73,7 @@
 								} else {
 									$user.favorited_chats.push(dmChat._id);
 									clm.updateProfile({
-										favorited_chats:
-											$user.favorited_chats,
+										favorited_chats: $user.favorited_chats,
 									});
 								}
 							}
@@ -107,14 +102,18 @@
 						<button
 							title="Moderator {data._id}"
 							class="circle admin"
-							on:click={() => modals.showModal(ModerateUserModal, { username: data._id })}
+							on:click={() =>
+								modals.showModal(ModerateUserModal, {
+									username: data._id,
+								})}
 						/>
 					{/if}
-					{#if canDoActions && data._id !== $user.name && ((data.flags & userFlags.SYSTEM) !== userFlags.SYSTEM) && ((data.flags & userFlags.DELETED) !== userFlags.DELETED)}
+					{#if canDoActions && data._id !== $user.name && (data.flags & userFlags.SYSTEM) !== userFlags.SYSTEM && (data.flags & userFlags.DELETED) !== userFlags.DELETED}
 						<button
 							title="Report {data._id}"
 							class="circle report"
-							on:click={() => modals.showModal(ReportUserModal, { user: data })}
+							on:click={() =>
+								modals.showModal(ReportUserModal, {user: data})}
 						/>
 						<button
 							title="Open DM with {data._id}"

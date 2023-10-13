@@ -13,9 +13,7 @@
 	<div slot="default">
 		<p>{desc}</p>
 		<div class="modal-buttons">
-			<button
-				on:click={modals.closeLastModal}>Close</button
-			>
+			<button on:click={modals.closeLastModal}>Close</button>
 		</div>
 	</div>
 </Modal>

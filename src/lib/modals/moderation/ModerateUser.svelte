@@ -26,7 +26,7 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-	import {goto} from "@roxi/routify";
+	import {tick} from "svelte";
 
 	export let modalData;
 
@@ -77,21 +77,17 @@
 	async function sendAlert() {
 		alertStatus = "Sending alert...";
 		try {
-			const resp = await fetch(
-				`${apiUrl}admin/users/${user._id}/alert`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						...$authHeader,
-					},
-					body: JSON.stringify({content: alertText}),
-				}
-			);
+			const resp = await fetch(`${apiUrl}admin/users/${user._id}/alert`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					...$authHeader,
+				},
+				body: JSON.stringify({content: alertText}),
+			});
 			if (!resp.ok) {
 				throw new Error(
-					"Response code is not OK; code is " +
-						resp.status
+					"Response code is not OK; code is " + resp.status
 				);
 			}
 			alertStatus = "Alert sent!";
@@ -153,7 +149,8 @@
 	}
 </script>
 
-<Modal showClose={true}
+<Modal
+	showClose={true}
 	on:close={() => {
 		pendingBanState.set(null);
 		modals.closeLastModal();
@@ -218,7 +215,13 @@
 						<li>
 							<a
 								href="/"
-								on:click|preventDefault={() => modals.replaceLastModal(ModerateUserModal, {username})}>{username}</a
+								on:click|preventDefault={async () => {
+									modals.closeLastModal();
+									await tick();
+									modals.showModal(ModerateUserModal, {
+										username,
+									});
+								}}>{username}</a
 							>
 						</li>
 					{/each}
@@ -240,7 +243,10 @@
 							<td>
 								<a
 									href="/"
-									on:click|preventDefault={() => modals.showModal(ModerateIPModal, {ip: ip.ip})}>{ip.ip}</a
+									on:click|preventDefault={() =>
+										modals.showModal(ModerateIPModal, {
+											ip: ip.ip,
+										})}>{ip.ip}</a
 								>
 							</td>
 							<td
@@ -376,10 +382,16 @@
 				{#if banState.state.includes("restriction")}
 					<br />
 					<label for="restrictions"><b>Restrictions</b></label><br />
-					<button class="long" on:click={() => {
-						pendingBanState.set(banState);
-						modals.showModal(EditRestrictionsModal, { username: user._id });
-					}}>Edit Restrictions </button>
+					<button
+						class="long"
+						on:click={() => {
+							pendingBanState.set(banState);
+							modals.showModal(EditRestrictionsModal, {
+								username: user._id,
+							});
+						}}
+						>Edit Restrictions
+					</button>
 					<ul id="restrictions">
 						<li>Block home posts</li>
 					</ul>

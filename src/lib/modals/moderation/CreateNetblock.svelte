@@ -7,11 +7,11 @@
 
 	import {focus} from "@roxi/routify";
 
-    export let modalData;
+	export let modalData;
 
-    let { cidr } = modalData;
+	let {cidr} = modalData;
 
-    let type;
+	let type;
 	let loading, error;
 </script>
 
@@ -19,18 +19,21 @@
 	<h2 slot="header">Create Netblock</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}admin/netblocks/${btoa(cidr)}`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-							...$authHeader,
-						},
-						body: JSON.stringify({ type }),
-					});
+					const resp = await fetch(
+						`${apiUrl}admin/netblocks/${btoa(cidr)}`,
+						{
+							method: "PUT",
+							headers: {
+								"Content-Type": "application/json",
+								...$authHeader,
+							},
+							body: JSON.stringify({type}),
+						}
+					);
 					if (!resp.ok) {
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
@@ -56,21 +59,22 @@
 				bind:value={cidr}
 				use:focus
 			/><br /><br />
-            <label for="netblock-type"><b>Type</b></label><br />
-            <select
-                id="netblock-type"
-                class="modal-input grow"
-                style="width: 100%; margin-bottom: 0.25em;"
-                bind:value={type}
-            >
-                <option value={0} selected={type === 0}>Full</option>
-                <option value={1} selected={type === 1}>Registration</option>
-            </select><br />
-            {#if type === 0}
-                This blocks any connection request to Meower's CloudLink server and blocks any REST API request.
-            {:else if type === 1}
-                This blocks new accounts from being created.
-            {/if}
+			<label for="netblock-type"><b>Type</b></label><br />
+			<select
+				id="netblock-type"
+				class="modal-input grow"
+				style="width: 100%; margin-bottom: 0.25em;"
+				bind:value={type}
+			>
+				<option value={0} selected={type === 0}>Full</option>
+				<option value={1} selected={type === 1}>Registration</option>
+			</select><br />
+			{#if type === 0}
+				This blocks any connection request to Meower's CloudLink server
+				and blocks any REST API request.
+			{:else if type === 1}
+				This blocks new accounts from being created.
+			{/if}
 			<br /><br />
 			<div class="modal-buttons">
 				<button
@@ -78,9 +82,8 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button
-					type="submit"
-					disabled={!cidr || loading}>Create Netblock</button
+				<button type="submit" disabled={!cidr || loading}
+					>Create Netblock</button
 				>
 			</div>
 		</form>

@@ -70,8 +70,10 @@
 
 	$: {
 		userRestricted =
-			(postOrigin === "home" && isRestricted(userRestrictions.HOME_POSTS)) ||
-			(["home", "inbox"].includes(postOrigin) && isRestricted(userRestrictions.CHAT_POSTS));
+			(postOrigin === "home" &&
+				isRestricted(userRestrictions.HOME_POSTS)) ||
+			(["home", "inbox"].includes(postOrigin) &&
+				isRestricted(userRestrictions.CHAT_POSTS));
 
 		if ($chat.type === 1) {
 			dmWith = $chat.members.filter(
@@ -306,7 +308,7 @@
 								toReplace,
 								replaceWith
 							);
-							console.log(post)
+							console.log(post);
 							if (post.unfiltered_content) {
 								newContent = post.unfiltered_content.replace(
 									toReplace,
@@ -470,7 +472,9 @@
 				>
 			{:else if $relationships[dmWith] === 2}
 				<button
-					on:click|preventDefault={() => modals.showModal(BlockUserModal, { username: dmWith })}>Unblock</button
+					on:click|preventDefault={() =>
+						modals.showModal(BlockUserModal, {username: dmWith})}
+					>Unblock</button
 				>
 			{:else}
 				<button

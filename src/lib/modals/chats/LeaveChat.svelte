@@ -9,7 +9,7 @@
 
 	export let modalData;
 
-	let { chat } = modalData;
+	let {chat} = modalData;
 
 	let loading, error;
 </script>
@@ -21,13 +21,10 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(
-						`${apiUrl}chats/${chat._id}`,
-						{
-							method: "DELETE",
-							headers: $authHeader,
-						}
-					);
+					const resp = await fetch(`${apiUrl}chats/${chat._id}`, {
+						method: "DELETE",
+						headers: $authHeader,
+					});
 					if (!resp.ok) {
 						if (resp.status === 429) {
 							throw new Error(
@@ -57,7 +54,8 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button type="submit" disabled={loading} use:focus>Leave</button>
+				<button type="submit" disabled={loading} use:focus>Leave</button
+				>
 			</div>
 		</form>
 	</div>

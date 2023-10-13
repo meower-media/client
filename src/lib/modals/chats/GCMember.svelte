@@ -13,22 +13,17 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
 	$: {
-		if (!$chat.members.includes(username))
-			modals.closeLastModal();
+		if (!$chat.members.includes(username)) modals.closeLastModal();
 	}
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">{username}'s Profile</h2>
 	<div slot="default">
-		<ProfileView
-			username={username}
-			canClick={true}
-			canDoActions={true}
-		/>
+		<ProfileView {username} canClick={true} canDoActions={true} />
 		<button
 			class="long"
 			on:click={() => {
@@ -39,13 +34,17 @@
 		{#if ($chat.owner == $user.name && username != $user.name) || hasPermission(adminPermissions.EDIT_CHATS)}
 			<button
 				class="long"
-				on:click={() => modals.replaceLastModal(RemoveMemberModal, { username })}
+				on:click={() =>
+					modals.replaceLastModal(RemoveMemberModal, {username})}
 			>
 				Remove from chat
 			</button>
 			<button
 				class="long"
-				on:click={() => modals.replaceLastModal(TransferChatOwnershipModal, { username })}
+				on:click={() =>
+					modals.replaceLastModal(TransferChatOwnershipModal, {
+						username,
+					})}
 			>
 				Make owner of chat
 			</button>

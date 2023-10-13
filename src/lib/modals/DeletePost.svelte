@@ -10,7 +10,7 @@
 
 	export let modalData;
 
-	let { post } = modalData;
+	let {post} = modalData;
 
 	let report, loading, error;
 </script>
@@ -47,7 +47,7 @@
 			}}
 		>
 			<p>Are you sure you would like to delete this post?</p>
-			<Post post={post} buttons={false} />
+			<Post {post} buttons={false} />
 			{#if post.user !== $user.name}
 				<label>
 					<input type="checkbox" bind:checked={report} />

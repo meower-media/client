@@ -10,15 +10,12 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
 	let loading, error;
 
 	$: {
-		if (
-			$chat.owner !== $user.name &&
-			!hasPermission(adminPermissions.EDIT_CHATS)
-		) {
+		if ($chat.owner !== $user.name) {
 			modals.closeLastModal();
 		}
 	}

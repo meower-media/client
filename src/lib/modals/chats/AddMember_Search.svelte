@@ -15,7 +15,10 @@
 	<div slot="default">
 		<form
 			on:submit|preventDefault={() => {
-				modals.replaceLastModal(SearchResultsModal, { type: "users", query: username });
+				modals.replaceLastModal(SearchResultsModal, {
+					type: "users",
+					query: username,
+				});
 			}}
 		>
 			<label for="userinput"><b>Username</b></label>

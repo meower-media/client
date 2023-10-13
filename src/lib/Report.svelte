@@ -56,10 +56,13 @@
 		error = null;
 		loading = true;
 		try {
-			const resp = await fetch(`${apiUrl}admin/reports/${report._id}/escalate`, {
-				method: "POST",
-				headers: $authHeader,
-			});
+			const resp = await fetch(
+				`${apiUrl}admin/reports/${report._id}/escalate`,
+				{
+					method: "POST",
+					headers: $authHeader,
+				}
+			);
 			if (!resp.ok) {
 				throw new Error(
 					"Response code is not OK; code is " + resp.status

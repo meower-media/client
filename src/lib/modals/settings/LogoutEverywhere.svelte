@@ -44,10 +44,8 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button
-					type="submit"
-					disabled={loading}
-					use:focus>Confirm</button
+				<button type="submit" disabled={loading} use:focus
+					>Confirm</button
 				>
 			</div>
 		</form>

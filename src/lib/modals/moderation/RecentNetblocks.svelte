@@ -7,10 +7,7 @@
 	import NetblockNotesModal from "./NetblockNotes.svelte";
 
 	import {authHeader} from "../../stores.js";
-	import {
-		adminPermissions,
-		hasPermission,
-	} from "../../bitField.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
@@ -46,17 +43,18 @@
 	}
 </script>
 
-<Modal showClose={true}
-	on:close={modals.closeLastModal}
->
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Recent Netblocks</h2>
 	<div slot="default">
-		<PagedList
-			bind:items={netblocks}
-			loadPage={loadNetblocksPage}
-		>
+		<PagedList bind:items={netblocks} loadPage={loadNetblocksPage}>
 			<svelte:fragment slot="loaded" let:items={_netblocks}>
-				<button class="long" disabled={!hasPermission(adminPermissions.BLOCK_IPS)} on:click={() => modals.showModal(CreateNetblockModal, { cidr: "" })}>Create Netblock</button>
+				<button
+					class="long"
+					disabled={!hasPermission(adminPermissions.BLOCK_IPS)}
+					on:click={() =>
+						modals.showModal(CreateNetblockModal, {cidr: ""})}
+					>Create Netblock</button
+				>
 				<table>
 					<tr>
 						<th>CIDR</th>
@@ -72,14 +70,26 @@
 									<button
 										class="circle scroll"
 										title="View/edit notes"
-										disabled={!hasPermission(adminPermissions.VIEW_NOTES)}
-										on:click={() => modals.showModal(NetblockNotesModal, { cidr: netblock._id })}
+										disabled={!hasPermission(
+											adminPermissions.VIEW_NOTES
+										)}
+										on:click={() =>
+											modals.showModal(
+												NetblockNotesModal,
+												{cidr: netblock._id}
+											)}
 									/>
 									<button
 										class="circle close"
 										title="Delete netblock"
-										disabled={!hasPermission(adminPermissions.BLOCK_IPS)}
-										on:click={() => modals.showModal(DeleteNetblockModal, { cidr: netblock._id })}
+										disabled={!hasPermission(
+											adminPermissions.BLOCK_IPS
+										)}
+										on:click={() =>
+											modals.showModal(
+												DeleteNetblockModal,
+												{cidr: netblock._id}
+											)}
 									/>
 								</div>
 							</td>
@@ -92,7 +102,13 @@
 				<pre><code>{error}</code></pre>
 			</slot>
 			<slot name="empty" slot="empty">
-				<button class="long" disabled={!hasPermission(adminPermissions.BLOCK_IPS)} on:click={() => modals.showModal(CreateNetblockModal, { cidr: "" })}>Create Netblock</button>
+				<button
+					class="long"
+					disabled={!hasPermission(adminPermissions.BLOCK_IPS)}
+					on:click={() =>
+						modals.showModal(CreateNetblockModal, {cidr: ""})}
+					>Create Netblock</button
+				>
 				No netblocks found. Check back later!
 			</slot>
 		</PagedList>

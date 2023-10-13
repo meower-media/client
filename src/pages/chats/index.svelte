@@ -122,7 +122,8 @@
 						{#if !$user.favorited_chats.includes(chat._id)}
 							<button
 								class="circle close"
-								on:click={() => modals.showModal(LeaveChatModal, { chat })}
+								on:click={() =>
+									modals.showModal(LeaveChatModal, {chat})}
 							/>
 						{/if}
 						<button

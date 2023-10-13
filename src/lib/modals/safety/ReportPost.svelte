@@ -9,7 +9,7 @@
 
 	export let modalData;
 
-	let { post } = modalData;
+	let {post} = modalData;
 
 	let reason, comment, loading, error;
 </script>
@@ -36,7 +36,7 @@
 					});
 					modals.replaceLastModal(BasicModal, {
 						title: "Report Post",
-						desc: "Successfully reported post! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!"
+						desc: "Successfully reported post! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!",
 					});
 				} catch (code) {
 					loading = false;
@@ -51,7 +51,7 @@
 				}
 			}}
 		>
-			<Post post={post} buttons={false} />
+			<Post {post} buttons={false} />
 			<label for="reason"><b>Reason</b></label><br />
 			<select id="reason" class="modal-input grow" bind:value={reason}>
 				<option> No reason specified/other</option>

@@ -9,7 +9,7 @@
 
 	export let modalData;
 
-	let { cidr } = modalData;
+	let {cidr} = modalData;
 
 	let loading, error;
 </script>
@@ -52,7 +52,9 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button type="submit" disabled={loading} use:focus>Delete</button>
+				<button type="submit" disabled={loading} use:focus
+					>Delete</button
+				>
 			</div>
 		</form>
 	</div>

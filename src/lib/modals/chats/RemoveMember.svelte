@@ -10,15 +10,12 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
 	let loading, error;
 
 	$: {
-		if (
-			$chat.owner !== $user.name &&
-			!hasPermission(adminPermissions.EDIT_CHATS)
-		) {
+		if ($chat.owner !== $user.name) {
 			modals.closeLastModal();
 		}
 	}
@@ -67,7 +64,9 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button type="submit" disabled={loading} use:focus>Remove member</button>
+				<button type="submit" disabled={loading} use:focus
+					>Remove member</button
+				>
 			</div>
 		</form>
 	</div>

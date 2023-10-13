@@ -7,7 +7,7 @@
 
 	export let modalData;
 
-	let { type, query } = modalData;
+	let {type, query} = modalData;
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>

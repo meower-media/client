@@ -9,12 +9,10 @@
 	let {cidr} = modalData;
 </script>
 
-<Modal showClose={true}
-	on:close={modals.closeLastModal}
->
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">{cidr} Netblock Notes</h2>
 	<div slot="default">
-            <AdminNotes identifier={btoa(cidr)} />
+		<AdminNotes identifier={btoa(cidr)} />
 		<div />
 	</div>
 </Modal>

@@ -2,7 +2,11 @@
 	import Modal from "../../Modal.svelte";
 
 	import {pendingBanState} from "../../stores.js";
-	import {adminPermissions, hasPermission, userRestrictions} from "../../bitField.js";
+	import {
+		adminPermissions,
+		hasPermission,
+		userRestrictions,
+	} from "../../bitField.js";
 	import * as modals from "../../modals.js";
 
 	import {onMount} from "svelte";
@@ -38,7 +42,7 @@
 	export let modalData;
 
 	let {username} = modalData;
-	
+
 	let selectedRestrictions = [];
 
 	onMount(() => {
@@ -81,14 +85,10 @@
 			{@html restriction.description}<br /><br />
 		{/each}
 		<div class="modal-buttons">
-			<button
-				type="button"
-				on:click={modals.closeLastModal}>Close</button
+			<button type="button" on:click={modals.closeLastModal}>Close</button
 			>
 			{#if hasPermission(adminPermissions.EDIT_BAN_STATES)}
-				<button type="submit" on:click={saveRestrictions}
-					>Save</button
-				>
+				<button type="submit" on:click={saveRestrictions}>Save</button>
 			{/if}
 		</div>
 	</div>

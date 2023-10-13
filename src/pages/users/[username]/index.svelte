@@ -142,7 +142,8 @@
 			<button
 				class="long"
 				title="{$relationships[data._id] === 2 ? 'Unb' : 'B'}lock User"
-				on:click={() => modals.showModal(BlockUserModal, { username: data._id })}
+				on:click={() =>
+					modals.showModal(BlockUserModal, {username: data._id})}
 				>{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
 			>
 		{/if}

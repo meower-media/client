@@ -16,7 +16,7 @@
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				// check username
 				if (username !== $user.name) {

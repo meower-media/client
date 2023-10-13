@@ -24,8 +24,8 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import twemoji from "twemoji";
-	import * as marked from 'marked';
-	import DOMPurify from 'dompurify';
+	import * as marked from "marked";
+	import DOMPurify from "dompurify";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
@@ -105,7 +105,7 @@
 
 	function confirmHyperlink(event, link) {
 		event.preventDefault();
-		modals.showModal(ConfirmHyperlinkModal, { link });
+		modals.showModal(ConfirmHyperlinkModal, {link});
 	}
 	// @ts-ignore
 	window.confirmHyperlink = confirmHyperlink;
@@ -115,7 +115,12 @@
 		content = content.replaceAll(/<(.+?)>/gms, "&lt;$1&gt;");
 
 		// markdown
-		content = marked.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "").replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"), { breaks: true });
+		content = marked.parse(
+			content
+				.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")
+				.replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"),
+			{breaks: true}
+		);
 		content = DOMPurify.sanitize(content, {
 			ALLOWED_TAGS: [
 				"strong",
@@ -129,9 +134,9 @@
 				"h5",
 				"h6",
 				"blockquote",
-				"br"
+				"br",
 			],
-			ALLOWED_ATTR: []
+			ALLOWED_ATTR: [],
 		});
 
 		// line breaks
@@ -144,8 +149,14 @@
 		);
 
 		// hyperlinks
-		content = content.replaceAll(/(https?:\/\/[^\s]+)/g, '<a href="/" onclick="confirmHyperlink(event, \'$1\')">$1</a>');
-		content = content.replaceAll(/@([a-zA-Z0-9-_]{1,20})/g, '<a href="/users/$1">@$1</a>');
+		content = content.replaceAll(
+			/(https?:\/\/[^\s]+)/g,
+			'<a href="/" onclick="confirmHyperlink(event, \'$1\')">$1</a>'
+		);
+		content = content.replaceAll(
+			/@([a-zA-Z0-9-_]{1,20})/g,
+			'<a href="/users/$1">@$1</a>'
+		);
 
 		// remove additional line breaks
 		content = content.replaceAll("<blockquote><br>", "<blockquote>");
@@ -170,7 +181,7 @@
 				"code",
 				"br",
 				"div",
-				"a"
+				"a",
 			],
 			ALLOWED_ATTR: ["class", "href", "onclick"],
 		});
@@ -193,7 +204,9 @@
 				headers: $authHeader,
 			});
 			if (!resp.ok) {
-				throw new Error("Response code is not OK; code is " + resp.status);
+				throw new Error(
+					"Response code is not OK; code is " + resp.status
+				);
 			}
 			post.isDeleted = true;
 			post.mod_deleted = true;
@@ -207,12 +220,17 @@
 	async function adminRestore() {
 		adminRestoreButton.disabled = true;
 		try {
-			const resp = await fetch(`${apiUrl}admin/posts/${post.post_id}/restore`, {
-				method: "POST",
-				headers: $authHeader,
-			});
+			const resp = await fetch(
+				`${apiUrl}admin/posts/${post.post_id}/restore`,
+				{
+					method: "POST",
+					headers: $authHeader,
+				}
+			);
 			if (!resp.ok) {
-				throw new Error("Response code is not OK; code is " + resp.status);
+				throw new Error(
+					"Response code is not OK; code is " + resp.status
+				);
 			}
 			post.isDeleted = false;
 			post.mod_deleted = null;
@@ -239,7 +257,10 @@
 			{#if buttons && hasPermission(adminPermissions.VIEW_POSTS)}
 				<button
 					class="circle admin"
-					on:click={() => modals.showModal(ModeratePostModal, { postid: post.post_id })}
+					on:click={() =>
+						modals.showModal(ModeratePostModal, {
+							postid: post.post_id,
+						})}
 				/>
 			{/if}
 			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server" && !editing}
@@ -250,7 +271,8 @@
 							editError = "";
 							editing = true;
 							await tick();
-							editContentInput.value = post.unfiltered_content || post.content;
+							editContentInput.value =
+								post.unfiltered_content || post.content;
 							editContentInput.focus();
 							autoresize(editContentInput);
 						}}
@@ -293,49 +315,47 @@
 							on:click={adminDelete}
 						/>
 					{/if}
-				{:else}
-					{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
-						<button
-							class="circle trash"
-							bind:this={deleteButton}
-							on:click={async () => {
-								if (shiftHeld) {
-									deleteButton.disabled = true;
-									try {
-										const resp = await fetch(
-											`${apiUrl}posts?id=${post.post_id}`,
-											{
-												method: "DELETE",
-												headers: $authHeader,
-											}
-										);
-										if (!resp.ok) {
-											if (resp.status === 429) {
-												throw new Error(
-													"Too many requests! Try again later."
-												);
-											}
+				{:else if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
+					<button
+						class="circle trash"
+						bind:this={deleteButton}
+						on:click={async () => {
+							if (shiftHeld) {
+								deleteButton.disabled = true;
+								try {
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "DELETE",
+											headers: $authHeader,
+										}
+									);
+									if (!resp.ok) {
+										if (resp.status === 429) {
 											throw new Error(
-												"Response code is not OK; code is " +
-													resp.status
+												"Too many requests! Try again later."
 											);
 										}
-									} catch (e) {
-										editError = e;
+										throw new Error(
+											"Response code is not OK; code is " +
+												resp.status
+										);
 									}
-									deleteButton.disabled = false;
-								} else {
-									modals.showModal(DeletePostModal, { post });
+								} catch (e) {
+									editError = e;
 								}
-							}}
-						/>
-					{:else}
-						<button
-							class="circle report"
-							on:click={() => modals.showModal(ReportPostModal, { post })}
-						/>
-					{/if}
-					
+								deleteButton.disabled = false;
+							} else {
+								modals.showModal(DeletePostModal, {post});
+							}
+						}}
+					/>
+				{:else}
+					<button
+						class="circle report"
+						on:click={() =>
+							modals.showModal(ReportPostModal, {post})}
+					/>
 				{/if}
 			{/if}
 		</div>
@@ -461,7 +481,7 @@
 				bind:this={editSaveButton}
 				on:click={async () => {
 					if (editContentInput.value.trim() === "") {
-						modals.showModal(DeletePostModal, { post });
+						modals.showModal(DeletePostModal, {post});
 						return;
 					}
 

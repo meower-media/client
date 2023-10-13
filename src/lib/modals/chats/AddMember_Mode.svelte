@@ -10,7 +10,10 @@
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
-		<button class="long" on:click={() => modals.replaceLastModal(AddMemberModal)}>
+		<button
+			class="long"
+			on:click={() => modals.replaceLastModal(AddMemberModal)}
+		>
 			Enter Username
 		</button><br />
 		<button

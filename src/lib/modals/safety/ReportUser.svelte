@@ -9,7 +9,7 @@
 
 	export let modalData;
 
-	let { user } = modalData;
+	let {user} = modalData;
 
 	let loading, reason, comment, error;
 </script>
@@ -36,7 +36,7 @@
 					});
 					modals.replaceLastModal(BasicModal, {
 						title: "Report User",
-						desc: "Successfully reported user! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!"
+						desc: "Successfully reported user! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!",
 					});
 				} catch (code) {
 					loading = false;

@@ -61,11 +61,7 @@
 >
 	<div class="settings-controls">
 		{#if showClose}
-			<button
-				class="circle close"
-				title="Close modal"
-				on:click={close}
-			/>
+			<button class="circle close" title="Close modal" on:click={close} />
 		{/if}
 	</div>
 

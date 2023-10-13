@@ -9,7 +9,7 @@
 
 	export let modalData;
 
-	let { username } = modalData;
+	let {username} = modalData;
 
 	let blocked, loading, error;
 
@@ -57,8 +57,8 @@
 				</p>
 			{:else}
 				<p>
-					Are you sure you would like to block {username}? This
-					will prevent them from direct messaging you or adding you to
+					Are you sure you would like to block {username}? This will
+					prevent them from direct messaging you or adding you to
 					group chats. Depending on your account settings, it may also
 					prevent you from seeing their posts. You may unblock them at
 					any time.

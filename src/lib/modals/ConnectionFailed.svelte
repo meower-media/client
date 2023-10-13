@@ -50,9 +50,7 @@
 		{/if}
 		<br />
 		<div class="modal-buttons">
-			<button
-				on:click={() => window.location.reload()}>Reconnect</button
-			>
+			<button on:click={() => window.location.reload()}>Reconnect</button>
 		</div>
 	</div>
 </Modal>

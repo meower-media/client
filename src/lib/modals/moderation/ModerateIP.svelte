@@ -11,10 +11,7 @@
 	import NetblockNotesModal from "./NetblockNotes.svelte";
 
 	import {authHeader} from "../../stores.js";
-	import {
-		adminPermissions,
-		hasPermission,
-	} from "../../bitField.js";
+	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
@@ -38,9 +35,7 @@
 	}
 </script>
 
-<Modal showClose={true}
-	on:close={modals.closeLastModal}
->
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Moderate {ip}</h2>
 	<div slot="default">
 		{#await getNetinfo()}
@@ -68,9 +63,16 @@
 				</tr>
 				{#each netlogs as netlog}
 					<tr>
-						<td><a href="/" on:click|preventDefault={() => {
-							modals.showModal(ModerateUserModal, { username: netlog.user });
-						}}>{netlog.user}</a></td>
+						<td
+							><a
+								href="/"
+								on:click|preventDefault={() => {
+									modals.showModal(ModerateUserModal, {
+										username: netlog.user,
+									});
+								}}>{netlog.user}</a
+							></td
+						>
 						<td
 							><FormattedDate
 								date={netlog.last_used}
@@ -86,7 +88,8 @@
 			<h2>Netblocks</h2>
 			{#if netblocks.find(_netblock => _netblock.type === 0)}
 				<Container warning={true}>
-					{ip} is currently fully blocked from accessing Meower's CloudLink server and REST API.
+					{ip} is currently fully blocked from accessing Meower's CloudLink
+					server and REST API.
 				</Container>
 			{/if}
 			{#if netblocks.find(_netblock => _netblock.type === 1)}
@@ -94,7 +97,12 @@
 					{ip} is currently blocked from creating new Meower accounts.
 				</Container>
 			{/if}
-			<button class="long" on:click={() => modals.showModal(CreateNetblockModal, { cidr: ip + "/32" })}>Create Netblock</button>
+			<button
+				class="long"
+				on:click={() =>
+					modals.showModal(CreateNetblockModal, {cidr: ip + "/32"})}
+				>Create Netblock</button
+			>
 			<table>
 				<tr>
 					<th>CIDR</th>
@@ -110,14 +118,24 @@
 								<button
 									class="circle scroll"
 									title="View/edit notes"
-									disabled={!hasPermission(adminPermissions.VIEW_NOTES)}
-									on:click={() => modals.showModal(NetblockNotesModal, { cidr: netblock._id })}
+									disabled={!hasPermission(
+										adminPermissions.VIEW_NOTES
+									)}
+									on:click={() =>
+										modals.showModal(NetblockNotesModal, {
+											cidr: netblock._id,
+										})}
 								/>
 								<button
 									class="circle close"
 									title="Delete netblock"
-									disabled={!hasPermission(adminPermissions.BLOCK_IPS)}
-									on:click={() => modals.showModal(DeleteNetblockModal, { cidr: netblock._id })}
+									disabled={!hasPermission(
+										adminPermissions.BLOCK_IPS
+									)}
+									on:click={() =>
+										modals.showModal(DeleteNetblockModal, {
+											cidr: netblock._id,
+										})}
 								/>
 							</div>
 						</td>

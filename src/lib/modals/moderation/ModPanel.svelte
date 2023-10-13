@@ -142,7 +142,8 @@
 			class="long"
 			style="margin-top: 0.25em;"
 			on:click={() => modals.showModal(RecemtUsersModal)}
-		>View Recent Users</button>
+			>View Recent Users</button
+		>
 		{#if hasPermission(adminPermissions.VIEW_IPS)}
 			<h2>Moderate IP</h2>
 			<form
@@ -152,7 +153,7 @@
 					const f = e.target;
 					modals.showModal(ModerateIPModal, {
 						// @ts-ignore
-						ip: f.elements[0].value
+						ip: f.elements[0].value,
 					});
 				}}
 			>
@@ -169,7 +170,8 @@
 				class="long"
 				style="margin-top: 0.25em;"
 				on:click={() => modals.showModal(RecentNetblocksModal)}
-			>View Recent Netblocks</button>
+				>View Recent Netblocks</button
+			>
 		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
@@ -282,10 +284,7 @@
 				</option>
 			</select><br />
 			{#if !reloadingReports}
-				<PagedList
-					bind:items={reports}
-					loadPage={loadReportsPage}
-				>
+				<PagedList bind:items={reports} loadPage={loadReportsPage}>
 					<svelte:fragment slot="loaded" let:items={_reports}>
 						{#each _reports as report}
 							<Report {report} />

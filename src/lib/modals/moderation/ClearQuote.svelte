@@ -54,7 +54,9 @@
 					disabled={loading}
 					on:click={modals.closeLastModal}>Cancel</button
 				>
-				<button type="submit" disabled={loading} use:focus>Clear Quote</button>
+				<button type="submit" disabled={loading} use:focus
+					>Clear Quote</button
+				>
 			</div>
 		</form>
 	</div>

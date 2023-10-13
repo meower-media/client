@@ -13,7 +13,7 @@
 	<h2 slot="header">Change Password</h2>
 	<div slot="default">
 		<form
-			on:change={() => error = ""}
+			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
 				// check new password confirmation
 				if (newPassword !== newPasswordConfirmation) {

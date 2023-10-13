@@ -62,7 +62,7 @@
 							case "E:122 | Command disabled by sysadmin":
 								modals.showModal(BasicModal, {
 									title: "Registration Disabled",
-									desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later."
+									desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later.",
 								});
 								break;
 							default:

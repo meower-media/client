@@ -219,7 +219,9 @@
 					<button
 						class="member-button"
 						on:click={() => {
-							modals.showModal(GCMemberModal, { username: chatmember });
+							modals.showModal(GCMemberModal, {
+								username: chatmember,
+							});
 						}}
 					>
 						<Member
