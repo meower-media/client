@@ -1,0 +1,20 @@
+{
+    "name": "BetterMeower",
+    "short_name": "BetterMeower",
+    "icons": [
+        {
+            "src": "/manifest/android-chrome-192x192.png?v5=true",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/manifest/android-chrome-512x512.png?v5=true",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#2d2d2d",
+    "background_color": "#2d2d2d",
+    "start_url": "https://classic.bettermeower.app",
+    "display": "standalone"
+}

@@ -1,47 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="/src/assets/style.css" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="/manifest/apple-touch-icon.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="/manifest/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="/manifest/favicon-16x16.png"
-		/>
-		<link rel="manifest" href="/manifest/manifest.webmanifest" />
-		<link
-			rel="mask-icon"
-			href="/manifest/safari-pinned-tab.svg"
-			color="#ff7432"
-		/>
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<meta name="apple-mobile-web-app-title" content="Meower" />
-		<meta name="application-name" content="Meower" />
-		<meta name="msapplication-TileColor" content="#ff7432" />
-		<meta
-			name="msapplication-TileImage"
-			content="/manifest/mstile-144x144.png"
-		/>
-		<meta name="theme-color" content="#ff7432" />
-		<title>Meower</title>
-	</head>
 
-	<body>
-		<noscript><h1 class="nojs">Please enable JavaScript.</h1></noscript>
-		<div id="app"></div>
-		<script type="module" src="/src/main.js"></script>
-	</body>
+<head>
+    <meta charset="UTF-8" />
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2d973b5133c2464186c6ccba348ea384"}'></script><!-- End Cloudflare Web Analytics -->
+    <link rel="stylesheet" href="/src/assets/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/manifest/apple-touch-icon.png?v6=true">
+    <link rel="icon" type="image/png" sizes="32x32" href="/manifest/favicon-32x32.png?v6=true">
+    <link rel="icon" type="image/png" sizes="16x16" href="/manifest/favicon-16x16.png?v6=true">
+    <link rel="manifest" href="/manifest/site.webmanifest?v6=true">
+    <link rel="mask-icon" href="/manifest/safari-pinned-tab.svg?v6=true" color="#30d27b">
+    <link rel="shortcut icon" href="/manifest/favicon.ico?v6=true">
+    <meta name="apple-mobile-web-app-title" content="BetterMeower">
+    <meta name="application-name" content="BetterMeower Classic">
+    <meta name="msapplication-TileColor" content="#30d27b">
+    <meta name="msapplication-TileImage" content="/manifest/mstile-144x144.png?v6=true">
+    <meta name="msapplication-config" content="/manifest/browserconfig.xml?v6=true">
+    <meta name="theme-color" content="#2d2d2d">
+    <title>Neon (Beta)</title>
+</head>
+
+<body>
+    <script>window.onbeforeunload = function() {
+        localStorage.removeItem(webhooksAgree);
+        return '';
+      };</script>
+    <noscript>
+        Please Enable JavaScript
+    </noscript>
+    <script src="https://uptime.betterstack.com/widgets/announcement.js" data-id="153023" async="async" type="text/javascript"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
