@@ -6,10 +6,10 @@
 	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
 
 	import {user, chat} from "../../stores.js";
-	import {adminPermissions, hasPermission} from "../../bitField.js";
+	import { adminPermissions, hasPermission } from "../../bitField.js";
 	import * as modals from "../../modals.js";
 
-	import {goto} from "@roxi/routify";
+	import {params, goto} from "@roxi/routify";
 
 	export let modalData;
 
@@ -31,7 +31,7 @@
 				$goto(`/users/${username}`);
 			}}>View full profile</button
 		>
-		{#if ($chat.owner == $user.name && username != $user.name) || hasPermission(adminPermissions.EDIT_CHATS)}
+		{#if ($chat.owner == $user.name && username != $user.name) || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
 			<button
 				class="long"
 				on:click={() =>

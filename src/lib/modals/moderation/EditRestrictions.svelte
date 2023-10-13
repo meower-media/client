@@ -99,4 +99,8 @@
 	input[type="checkbox"] {
 		vertical-align: middle;
 	}
+
+	input[type="checkbox"] {
+		border: none;
+	}
 </style>

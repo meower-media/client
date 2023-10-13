@@ -3,7 +3,7 @@
 
 	import LoginModal from "./Login.svelte";
 	import BasicModal from "./Basic.svelte";
-	import AccountCreationBlockedModal from "./moderation/AccountCreationBlocked.svelte";
+	import AccountCreationBlockedModal from "./safety/AccountCreationBlocked.svelte";
 
 	import {OOBERunning, user} from "../stores.js";
 	import * as clm from "../clmanager.js";
@@ -11,7 +11,7 @@
 
 	import {focus} from "@roxi/routify";
 
-	let username, password, loading, error;
+	let username, password, acceptTerms, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -20,6 +20,14 @@
 		<form
 			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
+				if (!username || !password) {
+					error = "You must specify a username and password!";
+					return;
+				} else if (password.length < 8) {
+					error = "Your password must be at least 8 characters!";
+					return;
+				}
+
 				loading = true;
 				clm.meowerRequest({
 					cmd: "direct",
@@ -99,8 +107,25 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={password}
-			/>
-			<br /><br /><br />
+			/><br />
+			<p class="checkboxes">
+				<input
+					id="accept-terms"
+					type="checkbox"
+					bind:checked={acceptTerms}
+				/>
+				<label for="accept-terms">
+					I agree to <a
+						href="https://meower.org/legal"
+						target="_blank"
+						rel="noreferrer"
+						>Meower's Terms of Service and Privacy Policy</a
+					>
+				</label>
+			</p>
+		
+			<br />
+
 			<div class="modal-buttons">
 				<a
 					href="/"
@@ -108,8 +133,20 @@
 						if (!loading) modals.replaceLastModal(LoginModal);
 					}}>Login to Meower</a
 				>
-				<button type="submit" disabled={loading}>Join</button>
+				<button type="submit" disabled={!acceptTerms || loading}>Join</button>
 			</div>
 		</form>
 	</div>
 </Modal>
+
+<style>
+	label,
+	.checkboxes input {
+		vertical-align: middle;
+	}
+
+	.checkboxes {
+		text-align: left;
+		font-size: 90%;
+	}
+</style>

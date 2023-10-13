@@ -11,7 +11,7 @@
 
 	let {post} = modalData;
 
-	let reason, comment, loading, error;
+	let reason = null, comment, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -54,7 +54,15 @@
 			<Post {post} buttons={false} />
 			<label for="reason"><b>Reason</b></label><br />
 			<select id="reason" class="modal-input grow" bind:value={reason}>
-				<option> No reason specified/other</option>
+				<option>Spam</option>
+				<option>Harassment or abuse towards others</option>
+				<option>Rude, vulgar or offensive language</option>
+				<option>NSFW (sexual, alcohol, violence, gore, etc.)</option>
+				<option>Scams, hacks, phishing or other malicious content</option>
+				<option>Threatening violence or real world harm</option>
+				<option>Illegal activity</option>
+				<option>Self-harm/suicide</option>
+				<option>Other</option>	
 			</select><br />
 			<label for="comment"><b>Comment</b></label>
 			<input
@@ -78,7 +86,7 @@
 					on:click|preventDefault={() => modals.closeLastModal()}
 					>Cancel</button
 				>
-				<button type="submit" disabled={loading}>Report</button>
+				<button type="submit" disabled={!reason || loading}>Report</button>
 			</div>
 		</form>
 	</div>

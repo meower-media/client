@@ -1,14 +1,20 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import {authHeader, chat} from "../../stores.js";
+	import {authHeader, chat, user} from "../../stores.js";
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-	import {focus} from "@roxi/routify";
+	import {focus, params} from "@roxi/routify";
 
 	let nickname = $chat.nickname;
 	let loading, error;
+
+	$: {
+		if (!$params.admin && $chat.owner !== $user.name) {
+			modals.closeLastModal();
+		}
+	}
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -19,7 +25,7 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					const resp = await fetch(`${apiUrl}chats/${$chat._id}`, {
+					const resp = await fetch(`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}`, {
 						method: "PATCH",
 						headers: {
 							"Content-Type": "application/json",
@@ -36,6 +42,9 @@
 						throw new Error(
 							"Response code is not OK; code is " + resp.status
 						);
+					}
+					if ($params.admin) {
+						$chat = await resp.json();
 					}
 					modals.closeLastModal();
 				} catch (e) {

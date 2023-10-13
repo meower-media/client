@@ -11,7 +11,7 @@
 	import ProfileView from "../..//lib/ProfileView.svelte";
 
 	import BasicModal from "../../lib/modals/Basic.svelte";
-	import AccountBannedModal from "../../lib/modals/moderation/AccountBanned.svelte";
+	import AccountBannedModal from "../../lib/modals/safety/AccountBanned.svelte";
 	import CreateChatModal from "../../lib/modals/chats/CreateChat.svelte";
 	import LeaveChatModal from "../../lib/modals/chats/LeaveChat.svelte";
 
@@ -25,7 +25,7 @@
 
 	import {goto} from "@roxi/routify";
 
-	let favoritedChats, nonFavoritedChats, sortedChats, toLeaveChat, leaveError;
+	let favoritedChats, nonFavoritedChats, sortedChats;
 
 	$: {
 		favoritedChats = $chats
@@ -67,12 +67,14 @@
 		</div>
 	</Container>
 	<Container>
-		<div class="settings-controls">
-			<button class="circle join" on:click={$goto("/chats/livechat")} />
-		</div>
+		<div class="chat"> 
+			<div class="settings-controls">
+				<button class="circle join" on:click={$goto("/chats/livechat")} />
+			</div>
 
-		<h1>Livechat</h1>
-		Post history isn't saved here.
+			<h1>Livechat</h1>
+			Post history isn't saved here.
+		</div>
 	</Container>
 	{#each sortedChats as chat (chat._id)}
 		<div
@@ -81,61 +83,60 @@
 		>
 			{#if chat.type === 0}
 				<Container>
-					<div class="settings-controls">
-						<button
-							class="circle star {$user.favorited_chats.includes(
-								chat._id
-							)
-								? 'filled'
-								: ''}"
-							on:click={() => {
-								if ($user.favorited_chats.includes(chat._id)) {
-									$user.favorited_chats.splice(
-										$user.favorited_chats.indexOf(chat._id),
-										1
-									);
-									clm.updateProfile({
-										favorited_chats: $user.favorited_chats,
-									});
-								} else {
-									$user.favorited_chats =
-										$user.favorited_chats.filter(chatId => {
-											return $chats.some(
-												_chat => _chat._id === chatId
-											);
-										});
-									if ($user.favorited_chats.length >= 50) {
-										modals.showModal(BasicModal, {
-											title: "Too many stars!",
-											desc: "Sorry, you can only have up to 50 favorited chats!",
+					<div class="chat">
+						<div class="settings-controls">
+							<button
+								class="circle star"
+								class:filled={$user.favorited_chats.includes(chat._id)}
+								on:click={() => {
+									if ($user.favorited_chats.includes(chat._id)) {
+										$user.favorited_chats.splice(
+											$user.favorited_chats.indexOf(chat._id),
+											1
+										);
+										clm.updateProfile({
+											favorited_chats: $user.favorited_chats,
 										});
 									} else {
-										$user.favorited_chats.push(chat._id);
-										clm.updateProfile({
-											favorited_chats:
-												$user.favorited_chats,
-										});
+										$user.favorited_chats =
+											$user.favorited_chats.filter(chatId => {
+												return $chats.some(
+													_chat => _chat._id === chatId
+												);
+											});
+										if ($user.favorited_chats.length >= 50) {
+											modals.showModal(BasicModal, {
+												title: "Too many stars!",
+												desc: "Sorry, you can only have up to 50 favorited chats!",
+											});
+										} else {
+											$user.favorited_chats.push(chat._id);
+											clm.updateProfile({
+												favorited_chats:
+													$user.favorited_chats,
+											});
+										}
 									}
-								}
-							}}
-						/>
-						{#if !$user.favorited_chats.includes(chat._id)}
-							<button
-								class="circle close"
-								on:click={() =>
-									modals.showModal(LeaveChatModal, {chat})}
+								}}
 							/>
-						{/if}
-						<button
-							class="circle join"
-							on:click={$goto(`/chats/${chat._id}`)}
-						/>
-					</div>
+							{#if !$user.favorited_chats.includes(chat._id)}
+								<button
+									class="circle close"
+									on:click={() =>
+										modals.showModal(LeaveChatModal, {chat})}
+								/>
+							{/if}
+							<button
+								class="circle join"
+								on:click={$goto(`/chats/${chat._id}`)}
+							/>
+						</div>
 
-					<h1>{chat.nickname}</h1>
-					Members: {chat.members.length > 100
-						? chat.members.slice(0, 99).join(", ") + "..."
-						: chat.members.join(", ")}
+						<h1>{chat.nickname}</h1>
+						Members: {chat.members.length > 100
+							? chat.members.slice(0, 99).join(", ") + "..."
+							: chat.members.join(", ")}
+					</div>
 				</Container>
 			{:else if chat.type === 1}
 				<ProfileView
@@ -155,6 +156,9 @@
 <style>
 	.chats {
 		height: 100%;
+	}
+	.chat {
+		height: 4.5em;
 	}
 	.settings-controls {
 		position: absolute;

@@ -20,7 +20,8 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
-	import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
+	import BasicModal from "./modals/Basic.svelte";
+	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
 	import BlockUserModal from "./modals/safety/BlockUser.svelte";
 	import AddImageModal from "./modals/AddImage.svelte";
 
@@ -61,6 +62,7 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
+	import {params} from "@roxi/routify";
 	import {onMount, onDestroy} from "svelte";
 
 	let id = 0;
@@ -68,11 +70,13 @@
 
 	let postInput, submitBtn, userRestricted, dmWith;
 
+	let addToChatLoading = {};
+
 	$: {
 		userRestricted =
 			(postOrigin === "home" &&
 				isRestricted(userRestrictions.HOME_POSTS)) ||
-			(["home", "inbox"].includes(postOrigin) &&
+			(!["home", "inbox"].includes(postOrigin) &&
 				isRestricted(userRestrictions.CHAT_POSTS));
 
 		if ($chat.type === 1) {
@@ -197,6 +201,7 @@
 
 			const isGC = postOrigin !== "home";
 			if (cmd.val.mode === "delete") {
+				if (adminView) return;
 				items = items.filter(post => post.post_id !== cmd.val.id);
 			} // This needs to be here to even function - Bloctans
 			if (cmd.val.mode === "update_post") {
@@ -512,32 +517,65 @@
 								profile={post}
 								small={true}
 								canClick={true}
-								canDoActions={true}
+								canDoActions={!addToChat}
 							/>
+							{#if addToChat && !$chat.members.includes(post._id)}
+								<div class="settings-controls">
+									<button
+										class="circle add"
+										title="Add to chat"
+										disabled={addToChatLoading[post._id]}
+										on:click={async () => {
+											addToChatLoading[post._id] = true;
+											try {
+												const resp = await fetch(
+												`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}/members/${post._id}`,
+													{
+														method: "PUT",
+														headers: $authHeader,
+													}
+												);
+												if (!resp.ok) {
+													switch (resp.status) {
+														case 403:
+															throw new Error(
+																`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
+															);
+														case 404:
+															throw new Error(`${post._id} not found.`);
+														case 409:
+															throw new Error(
+																`${post._id} is already a member of ${$chat.nickname}.`
+															);
+														case 429:
+															throw new Error(
+																"Too many requests! Try again later."
+															);
+														default:
+															throw new Error(
+																"Response code is not OK; code is " +
+																	resp.status
+															);
+													}
+												}
+												if ($params.admin) {
+													$chat = await resp.json();
+												}
+												delete addToChatLoading[post._id];
+											} catch (e) {
+												modals.showModal(BasicModal, {
+													title: `Failed to add ${post._id} to ${$chat.nickname}`,
+													desc: e,
+												});
+												delete addToChatLoading[post._id];
+											}
+										}}
+									/>
+								</div>
+							{/if}
 						{/if}
 					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}
 						<Post {post} {adminView} input={postInput} />
-					{/if}
-					{#if addToChat && !$chat.members.includes(post._id)}
-						<div class="settings-controls">
-							<button
-								class="circle add"
-								title="Add to chat"
-								on:click={() => {
-									clm.meowerRequest({
-										cmd: "direct",
-										val: {
-											cmd: "add_to_chat",
-											val: {
-												chatid: $chat._id,
-												username: post._id,
-											},
-										},
-									});
-									$chat.members.push(post._id);
-								}}
-							/>
-						</div>
 					{/if}
 				</div>
 			{/each}

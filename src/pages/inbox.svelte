@@ -21,7 +21,7 @@
 			if ($user.unread_inbox) clm.updateProfile({unread_inbox: false});
 		}}
 		fetchUrl={"inbox"}
-		postOrigin={null}
+		postOrigin={"inbox"}
 		canPost={false}
 	>
 		<Container slot="error" let:error>

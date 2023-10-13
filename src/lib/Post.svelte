@@ -253,52 +253,8 @@
 
 <Container>
 	<div class="post-header">
-		<div class="settings-controls">
-			{#if buttons && hasPermission(adminPermissions.VIEW_POSTS)}
-				<button
-					class="circle admin"
-					on:click={() =>
-						modals.showModal(ModeratePostModal, {
-							postid: post.post_id,
-						})}
-				/>
-			{/if}
-			{#if buttons && $user.name && $chat._id !== "livechat" && post.user !== "Server" && !editing}
-				{#if input && !input.disabled && post.user === $user.name}
-					<button
-						class="circle pen"
-						on:click={async () => {
-							editError = "";
-							editing = true;
-							await tick();
-							editContentInput.value =
-								post.unfiltered_content || post.content;
-							editContentInput.focus();
-							autoresize(editContentInput);
-						}}
-					/>
-				{/if}
-				{#if input && !input.disabled && post.user !== "Notification" && post.user !== "Announcement"}
-					<button
-						class="circle reply"
-						on:click={() => {
-							let existingText = input.value;
-
-							const mentionRegex = /^@\w+\s*/i;
-							const mention = "@" + post.user + " ";
-
-							if (mentionRegex.test(existingText)) {
-								input.value = existingText
-									.trim()
-									.replace(mentionRegex, mention);
-							} else {
-								input.value = mention + existingText.trim();
-							}
-
-							input.focus();
-						}}
-					/>
-				{/if}
+		{#if buttons}
+			<div class="settings-controls">
 				{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
 					{#if post.isDeleted}
 						<button
@@ -315,50 +271,96 @@
 							on:click={adminDelete}
 						/>
 					{/if}
-				{:else if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
-					<button
-						class="circle trash"
-						bind:this={deleteButton}
-						on:click={async () => {
-							if (shiftHeld) {
-								deleteButton.disabled = true;
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "DELETE",
-											headers: $authHeader,
-										}
-									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
-											throw new Error(
-												"Too many requests! Try again later."
-											);
-										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
-									}
-								} catch (e) {
-									editError = e;
+				{:else if !adminView}
+					{#if !editing && hasPermission(adminPermissions.VIEW_POSTS)}
+						<button
+							class="circle admin"
+							on:click={() =>
+								modals.showModal(ModeratePostModal, {
+									postid: post.post_id,
+								})}
+						/>
+					{/if}
+					{#if input && !input.disabled && !noPFP && !editing}
+						{#if post.user === $user.name}
+							<button
+								class="circle pen"
+								on:click={async () => {
+									editError = "";
+									editing = true;
+									await tick();
+									editContentInput.value =
+										post.unfiltered_content || post.content;
+									editContentInput.focus();
+									autoresize(editContentInput);
+								}}
+							/>
+						{/if}
+						<button
+							class="circle reply"
+							on:click={() => {
+								let existingText = input.value;
+
+								const mentionRegex = /^@\w+\s*/i;
+								const mention = "@" + post.user + " ";
+
+								if (mentionRegex.test(existingText)) {
+									input.value = existingText
+										.trim()
+										.replace(mentionRegex, mention);
+								} else {
+									input.value = mention + existingText.trim();
 								}
-								deleteButton.disabled = false;
-							} else {
-								modals.showModal(DeletePostModal, {post});
-							}
-						}}
-					/>
-				{:else}
-					<button
-						class="circle report"
-						on:click={() =>
-							modals.showModal(ReportPostModal, {post})}
-					/>
+
+								input.focus();
+							}}
+						/>
+						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
+							<button
+								class="circle trash"
+								bind:this={deleteButton}
+								on:click={async () => {
+									if (shiftHeld) {
+										deleteButton.disabled = true;
+										try {
+											const resp = await fetch(
+												`${apiUrl}posts?id=${post.post_id}`,
+												{
+													method: "DELETE",
+													headers: $authHeader,
+												}
+											);
+											if (!resp.ok) {
+												if (resp.status === 429) {
+													throw new Error(
+														"Too many requests! Try again later."
+													);
+												}
+												throw new Error(
+													"Response code is not OK; code is " +
+														resp.status
+												);
+											}
+										} catch (e) {
+											editError = e;
+										}
+										deleteButton.disabled = false;
+									} else {
+										modals.showModal(DeletePostModal, {post});
+									}
+								}}
+							/>
+						{:else}
+							<button
+								class="circle report"
+								on:click={() =>
+									modals.showModal(ReportPostModal, {post})}
+							/>
+						{/if}
+					{/if}
 				{/if}
-			{/if}
-		</div>
+			</div>
+		{/if}
 		<button
 			class="pfp"
 			on:click={async () => {

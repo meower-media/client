@@ -21,6 +21,7 @@
 	import {
 		userFlags,
 		adminPermissions,
+		userRestrictions,
 		hasPermission,
 	} from "../../bitField.js";
 	import {apiUrl} from "../../urls.js";
@@ -41,7 +42,7 @@
 	$: {
 		if (banState && banState.expires) {
 			banExpired =
-				banState.state.includes("Temp") &&
+				banState.state.includes("temp") &&
 				banState.expires < Date.now() / 1000;
 
 			const date = new Date(banState.expires * 1000); // Convert to milliseconds
@@ -196,10 +197,9 @@
 			<FormattedDate date={user.created} /><br />
 			{#if user.last_seen}
 				<b>Last seen:</b>
-				<FormattedDate date={user.last_seen} />
+				<FormattedDate date={user.last_seen} /><br />
 			{/if}
 			{#if user.settings}
-				<br />
 				<b>Unread inbox?</b>
 				{user.settings.unread_inbox ? "yes" : "no"}
 			{/if}
@@ -393,7 +393,21 @@
 						>Edit Restrictions
 					</button>
 					<ul id="restrictions">
-						<li>Block home posts</li>
+						{#if (banState.restrictions & userRestrictions.HOME_POSTS) === userRestrictions.HOME_POSTS}
+							<li>Block home posts</li>
+						{/if}
+						{#if (banState.restrictions & userRestrictions.CHAT_POSTS) === userRestrictions.CHAT_POSTS}
+							<li>Block chat posts</li>
+						{/if}
+						{#if (banState.restrictions & userRestrictions.NEW_CHATS) === userRestrictions.NEW_CHATS}
+							<li>Block new chats</li>
+						{/if}
+						{#if (banState.restrictions & userRestrictions.EDITING_CHAT_NICKNAMES) === userRestrictions.EDITING_CHAT_NICKNAMES}
+							<li>Block editing group chat nicknames</li>
+						{/if}
+						{#if (banState.restrictions & userRestrictions.EDITING_QUOTE) === userRestrictions.EDITING_QUOTE}
+							<li>Block editing quote</li>
+						{/if}
 					</ul>
 				{/if}
 

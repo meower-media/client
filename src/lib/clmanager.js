@@ -4,7 +4,7 @@
 
 import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
 import LoggedOutModal from "./modals/LoggedOut.svelte";
-import AccountBannedModal from "./modals/moderation/AccountBanned.svelte";
+import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
 
 import Cloudlink from "./cloudlink.js";
 import {

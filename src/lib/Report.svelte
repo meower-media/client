@@ -4,8 +4,11 @@
 	import Post from "./Post.svelte";
 	import ProfileView from "./ProfileView.svelte";
 
+	import ReportNotesModal from "./modals/moderation/ReportNotes.svelte";
+
 	import {authHeader} from "./stores.js";
 	import {apiUrl} from "./urls.js";
+	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
 
@@ -152,7 +155,7 @@
 			}}
 		/>
 	{:else if report.type === "user"}
-		<ProfileView canClick={true} small={true} profile={report.content} />
+		<ProfileView canClick={true} canDoActions={true} small={true} profile={report.content} />
 	{/if}
 
 	{#if error}
@@ -160,6 +163,12 @@
 	{/if}
 
 	<div class="settings-controls">
+		<button
+			class="circle scroll"
+			title="View/edit notes"
+			disabled={loading}
+			on:click={() => modals.showModal(ReportNotesModal, {reportid: report._id})}
+		/>
 		{#if report.status === "pending"}
 			{#if !report.escalated}
 				<button

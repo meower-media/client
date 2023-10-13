@@ -11,7 +11,7 @@
 
 	let {user} = modalData;
 
-	let loading, reason, comment, error;
+	let loading, reason = null, comment, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -54,7 +54,14 @@
 			<ProfileView username={user._id} profile={user} small={true} />
 			<label for="reason"><b>Reason</b></label><br />
 			<select id="reason" class="modal-input grow" bind:value={reason}>
-				<option> No reason specified/other</option>
+				<option>Inappropriate username</option>
+				<option>Inappropriate quote</option>
+				<option>Sending content that is against Meower's Terms of Service</option>
+				<option>Spamming or otherwise abusing the platform</option>
+				<option>Impersonating me or someone else</option>
+				<option>Evading a block or platform ban by using an alternative account</option>
+				<option>I am concerned about this user's safety</option>
+				<option>Other</option>
 			</select><br />
 			<label for="comment"><b>Comment</b></label>
 			<input
@@ -78,7 +85,7 @@
 					on:click|preventDefault={() => modals.closeLastModal()}
 					>Cancel</button
 				>
-				<button type="submit" disabled={loading}>Report</button>
+				<button type="submit" disabled={!reason || loading}>Report</button>
 			</div>
 		</form>
 	</div>

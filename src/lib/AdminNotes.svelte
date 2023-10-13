@@ -6,6 +6,8 @@
 	import {adminPermissions, hasPermission} from "./bitField.js";
 	import {apiUrl} from "./urls.js";
 
+	import {goto} from "@roxi/routify";
+
 	export let identifier;
 
 	let notes, savingStatus;
@@ -59,7 +61,7 @@
 			Last modified <FormattedDate
 				date={notes.last_modified_at}
 				relative={true}
-			/> by <a href="#">{notes.last_modified_by}</a>
+			/> by <a href="/" on:click|preventDefault={() => $goto(`/users/${notes.last_modified_by}`)}>{notes.last_modified_by}</a>
 		{/if}
 		{#if savingStatus}
 			<br /><b>{savingStatus}</b>

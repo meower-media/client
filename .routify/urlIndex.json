@@ -1,0 +1,14 @@
+[
+	"/@:username/index",
+	"/@:username/posts",
+	"/about",
+	"/changelog",
+	"/chats/index",
+	"/groupcat",
+	"/home",
+	"/inbox",
+	"/index",
+	"/logout",
+	"/search",
+	"/settings"
+]

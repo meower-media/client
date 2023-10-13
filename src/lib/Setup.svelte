@@ -2,7 +2,7 @@
 <script>
 	import ServerSelectorModal from "./modals/ServerSelector.svelte";
 	import BasicModal from "./modals/Basic.svelte";
-	import AccountCreationBlockedModal from "./modals/moderation/AccountCreationBlocked.svelte";
+	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
 
 	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
 	import * as clm from "./clmanager.js";

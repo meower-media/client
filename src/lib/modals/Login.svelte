@@ -19,8 +19,12 @@
 		<form
 			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {
-				loading = true;
+				if (!username || !password) {
+					error = "You must specify a username and password!";
+					return;
+				}
 
+				loading = true;
 				try {
 					await clm.meowerRequest({
 						cmd: "direct",

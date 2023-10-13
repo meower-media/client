@@ -5,7 +5,7 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
-	import {focus} from "@roxi/routify";
+	import {focus, params} from "@roxi/routify";
 
 	let username, loading, error;
 </script>
@@ -18,7 +18,7 @@
 				loading = true;
 				try {
 					const resp = await fetch(
-						`${apiUrl}chats/${$chat._id}/members/${username}`,
+						`${apiUrl}${$params.admin ? "admin/" : ""}chats/${$chat._id}/members/${username}`,
 						{
 							method: "PUT",
 							headers: $authHeader,
@@ -46,6 +46,9 @@
 										resp.status
 								);
 						}
+					}
+					if ($params.admin) {
+						$chat = await resp.json();
 					}
 					modals.closeLastModal();
 				} catch (e) {

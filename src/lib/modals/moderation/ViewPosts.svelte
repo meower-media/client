@@ -2,6 +2,8 @@
 	import Modal from "../../Modal.svelte";
 	import PostList from "../../PostList.svelte";
 
+	import ClearPostsModal from "./ClearPosts.svelte";
+
 	import {adminPermissions, hasPermission} from "../../bitField.js";
 	import * as modals from "../../modals.js";
 
@@ -11,7 +13,7 @@
 
 	let {username, userProtected} = modalData;
 
-	let postOrigin = "all",
+	let postOrigin,
 		chatid,
 		reloadingPosts;
 </script>
@@ -33,7 +35,7 @@
 				reloadingPosts = false;
 			}}
 		>
-			<option value="all" selected={postOrigin === "all"}>Any</option>
+			<option value={null} selected={!postOrigin}>Any</option>
 			<option value="home" selected={postOrigin === "home"}>Home</option>
 			<option value="inbox" selected={postOrigin === "inbox"}
 				>Inbox</option
@@ -62,14 +64,13 @@
 				title="Delete All Posts"
 				disabled={userProtected &&
 					!hasPermission(adminPermissions.SYSADMIN)}
-				on:click={() => {}}>Delete All Posts</button
+				on:click={() => modals.showModal(ClearPostsModal, {username, postOrigin: postOrigin === "chat" ? chatid : postOrigin})}>Delete All Posts</button
 			><br />
 			<PostList
-				fetchUrl={`admin/users/${username}/posts/${
-					postOrigin === "chat" ? chatid : postOrigin
-				}`}
-				postOrigin={null}
+				fetchUrl={`admin/users/${username}/posts`}
+				postOrigin={postOrigin === "chat" ? chatid : postOrigin}
 				canPost={false}
+				queryParams={postOrigin ? {origin: postOrigin === "chat" ? chatid : postOrigin} : ""}
 				adminView={true}
 			/>
 		{/if}

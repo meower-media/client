@@ -6,13 +6,13 @@
 
 	export let modalData;
 
-	let {cidr} = modalData;
+	let {reportid} = modalData;
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>
-	<h2 slot="header">Notes for {cidr}</h2>
+	<h2 slot="header">Notes for {reportid}</h2>
 	<div slot="default">
-		<AdminNotes identifier={btoa(cidr)} />
+		<AdminNotes identifier={btoa(reportid)} />
 		<div />
 	</div>
 </Modal>

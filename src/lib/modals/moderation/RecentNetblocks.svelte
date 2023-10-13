@@ -68,7 +68,7 @@
 							<td>
 								<div class="action-buttons">
 									<button
-										class="circle scroll"
+										class="circle white scroll"
 										title="View/edit notes"
 										disabled={!hasPermission(
 											adminPermissions.VIEW_NOTES
@@ -139,6 +139,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-evenly;
+	}
+	.action-buttons button {
+		border: none;
 	}
 
 	.long {

@@ -182,6 +182,9 @@
 		align-items: center;
 		justify-content: space-evenly;
 	}
+	.action-buttons button {
+		border: none;
+	}
 
 	.long {
 		width: 100%;

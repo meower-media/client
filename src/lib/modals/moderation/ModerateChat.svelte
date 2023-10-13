@@ -4,50 +4,60 @@
 	import AdminNotes from "../../AdminNotes.svelte";
 
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
 
-	import {chat} from "../../stores.js";
+	import {authHeader, chat} from "../../stores.js";
+	import {apiUrl} from "../../urls.js";
 	import {adminPermissions, hasPermission} from "../../bitField.js";
 
-	let deleteStatus;
+	let loading, error;
 
 	async function deleteChat() {
-		deleteStatus = "Deleting...";
+		error = "";
+		loading = true;
 		try {
-			await clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "update_chat",
-					val: {
-						chatid: $chat._id,
-						deleted: true,
-					},
-				},
-			});
-			$chat.deleted = true;
-			deleteStatus = "Deleted!";
+			const resp = await fetch(
+				`${apiUrl}admin/chats/${$chat._id}`,
+				{
+					method: "DELETE",
+					headers: $authHeader,
+				}
+			);
+			if (!resp.ok) {
+				throw new Error(
+					"Response code is not OK; code is " +
+						resp.status
+				);
+			}
+			$chat = await resp.json();
+			loading = false;
 		} catch (e) {
-			deleteStatus = "Error deleting chat: " + e;
+			loading = false;
+			error = e;
 		}
 	}
 
-	async function reinstateChat() {
-		deleteStatus = "Reinstating...";
+	async function restoreChat() {
+		error = "";
+		loading = true;
 		try {
-			await clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "update_chat",
-					val: {
-						chatid: $chat._id,
-						deleted: false,
-					},
-				},
-			});
-			$chat.deleted = false;
-			deleteStatus = "Reinstated!";
+			const resp = await fetch(
+				`${apiUrl}admin/chats/${$chat._id}/restore`,
+				{
+					method: "POST",
+					headers: $authHeader,
+				}
+			);
+			if (!resp.ok) {
+				throw new Error(
+					"Response code is not OK; code is " +
+						resp.status
+				);
+			}
+			$chat = await resp.json();
+			loading = false;
 		} catch (e) {
-			deleteStatus = "Error reinstating chat: " + e;
+			loading = false;
+			error = e;
 		}
 	}
 
@@ -56,8 +66,8 @@
 	}
 </script>
 
-<Modal on:close={modals.closeLastModal}>
-	<h2 slot="header">Moderate {$chat.nickname}</h2>
+<Modal showClose={true} on:close={modals.closeLastModal}>
+	<h2 slot="header">Moderate {$chat.type === 0 ? $chat.nickname : $chat._id}</h2>
 	<div slot="default">
 		<h2>Chat Info</h2>
 		<b>UUID:</b>
@@ -85,37 +95,29 @@
 
 		{#if hasPermission(adminPermissions.EDIT_CHATS)}
 			<h2>Danger Zone</h2>
-			{#if deleteStatus}
-				<b>{deleteStatus}</b>
-				<br /><br />
-			{/if}
 			{#if $chat.deleted}
 				<button
 					class="action-button"
-					on:click={async () => await reinstateChat()}
+					disabled={loading}
+					on:click={restoreChat}
 				>
-					Reinstate chat
+					Restore chat
 				</button>
 			{:else}
 				<button
 					class="action-button"
-					on:click={async () => await deleteChat()}
+					disabled={loading}
+					on:click={deleteChat}
 				>
 					Delete chat
 				</button>
 			{/if}
-			<br /><br />
+			{#if error}
+				<p style="color: crimson;">{error}</p>
+			{:else}
+				<br /><br />
+			{/if}
 		{/if}
-
-		<div class="modal-buttons">
-			<button
-				type="button"
-				on:click={() => {
-					modals.closeLastModal();
-				}}>Close</button
-			>
-		</div>
-		<div />
 	</div></Modal
 >
 

@@ -25,6 +25,7 @@
 							class="circle add"
 							disabled={loading[chat._id]}
 							on:click={async () => {
+								errors[chat._id] = "";
 								loading[chat._id] = true;
 								try {
 									const resp = await fetch(

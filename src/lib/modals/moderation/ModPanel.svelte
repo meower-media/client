@@ -7,6 +7,7 @@
 
 	import ModerateUserModal from "./ModerateUser.svelte";
 	import ModerateIPModal from "./ModerateIP.svelte";
+	import ModeratePostModal from "./ModeratePost.svelte";
 	import RecemtUsersModal from "./RecentUsers.svelte";
 	import RecentNetblocksModal from "./RecentNetblocks.svelte";
 	import SendAnnouncementModal from "./SendAnnouncement.svelte";
@@ -19,6 +20,7 @@
 	import {apiUrl} from "../../urls.js";
 	import * as modals from "../../modals.js";
 
+	import {goto} from "@roxi/routify";
 	import {createEventDispatcher, tick} from "svelte";
 
 	const dispatch = createEventDispatcher();
@@ -173,6 +175,50 @@
 				>View Recent Netblocks</button
 			>
 		{/if}
+		{#if hasPermission(adminPermissions.VIEW_POSTS)}
+			<h2>Moderate Post</h2>
+			<form
+				on:submit|preventDefault={async e => {
+					/** @type {HTMLFormElement} */
+					// @ts-ignore
+					const f = e.target;
+					modals.showModal(ModeratePostModal, {
+						// @ts-ignore
+						postid: f.elements[0].value,
+					});
+				}}
+			>
+				<div class="input-row">
+					<input
+						class="grow white"
+						type="text"
+						placeholder="Post ID..."
+					/>
+					<button class="static">Submit</button>
+				</div>
+			</form>
+		{/if}
+		{#if hasPermission(adminPermissions.VIEW_CHATS)}
+			<h2>Moderate Chat</h2>
+			<form
+				on:submit|preventDefault={async e => {
+					/** @type {HTMLFormElement} */
+					// @ts-ignore
+					const f = e.target;
+					// @ts-ignore
+					$goto(`/chats/${f.elements[0].value}?admin=true`);
+				}}
+			>
+				<div class="input-row">
+					<input
+						class="grow white"
+						type="text"
+						placeholder="Chat ID..."
+					/>
+					<button class="static">Submit</button>
+				</div>
+			</form>
+		{/if}
 		{#if hasPermission(adminPermissions.SEND_ANNOUNCEMENTS)}
 			<h2>Send Announcement</h2>
 			<form
@@ -305,7 +351,7 @@
 			{/if}
 		{/if}
 
-		<br /><br />
+		<br />
 	</div>
 </Modal>
 
