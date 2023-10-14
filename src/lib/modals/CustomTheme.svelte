@@ -4,7 +4,7 @@
 	import {user, customTheme} from "../stores.js";
     import * as modals from "../modals.js";
     import * as clm from "../clmanager.js";
-    import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../customTheme.js";
+    import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../CustomTheme.js";
 
     let jsonInput, error;
 

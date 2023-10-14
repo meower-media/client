@@ -15,7 +15,7 @@ import {
 	disconnectReason,
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
-import {stringToTheme, applyTheme, removeTheme} from "./customTheme.js";
+import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
 import {linkUrl} from "./urls.js";
 import * as modals from "./modals.js";
 
