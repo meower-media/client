@@ -138,7 +138,7 @@
 			name="imageName"
 			class="long white"
 			placeholder="Image Name"
-			autocomplete="false"
+			autocomplete="off"
 			bind:this={imgName}
 			on:change={change}
 		/>
@@ -147,7 +147,7 @@
 			name="ImageURL"
 			class="long white"
 			placeholder="Image URL"
-			autocomplete="false"
+			autocomplete="off"
 			bind:this={imgUrl}
 			on:change={change}
 		/>
