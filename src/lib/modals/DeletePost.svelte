@@ -66,7 +66,6 @@
 					on:click|preventDefault={modals.closeLastModal}
 					>Cancel</button
 				>
-				<!-- svelte-ignore a11y-autofocus -->
 				<button type="submit" disabled={loading} use:focus
 					>Delete</button
 				>

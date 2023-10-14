@@ -293,6 +293,11 @@
 										feature:
 											"adding members to group chats",
 									});
+								} else if ($chat.members.length >= 1) {
+									modals.showModal(BasicModal, {
+										title: "Too many cats!",
+										desc: "This chat has reached the maximum member limit of 256! You may not add anymore members until there are fewer than 256 members."
+									});
 								} else {
 									modals.showModal(AddMemberModeModal);
 								}

@@ -60,7 +60,6 @@
 			}}
 		>
 			<label for="username"><b>Username</b></label>
-			<!-- svelte-ignore a11y-autofocus -->
 			<input
 				type="text"
 				class="long white"

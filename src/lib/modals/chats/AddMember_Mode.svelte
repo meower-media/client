@@ -7,7 +7,7 @@
 	import * as modals from "../../modals.js";
 </script>
 
-<Modal on:close={modals.closeLastModal}>
+<Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
 		<button
@@ -21,9 +21,6 @@
 			on:click={() => modals.replaceLastModal(AddMemberSearchModal)}
 		>
 			Search for Users
-		</button><br />
-		<button class="long" on:click={() => modals.closeLastModal()}>
-			Cancel
 		</button>
 	</div>
 </Modal>
