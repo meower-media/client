@@ -3,7 +3,8 @@
  */
 
 import {writable} from "svelte/store";
-import {systemDarkMode} from "./responsiveness.js";
+import unloadedProfile from "./unloadedprofile.js";
+import {fallback as customThemeFallback} from "./customTheme.js";
 
 // Used for setup screen
 export const screen = writable("setup");
@@ -52,25 +53,13 @@ export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);
 
 // Image adding stuff
-export const postInput = writable();
+export const postInput = writable("");
 
 // Current auth header
 export const authHeader = writable({});
 
 // The current user profile
-export const user = writable({
-	name: null,
-	lvl: 0,
-	unread_inbox: false,
-	theme: "orange",
-	mode: !systemDarkMode(),
-	sfx: true,
-	bgm: false,
-	bgm_song: 2,
-	layout: "new",
-	pfp_data: 1,
-	quote: "",
-});
+export const user = writable(unloadedProfile());
 
 // Spinner thing
 export const spinner = writable(false);
@@ -81,12 +70,4 @@ export const GroupCats = writable(100);
 
 // Custom theme
 export const useCustomTheme = writable(false);
-export const customTheme = writable({
-	orange: "#f9a636",
-	orangeLight: "#ffce8c",
-	orangeDark: "#b46d34",
-	background: "#ffffff",
-	foreground: "#000000",
-	foregroundOrange: "#ffffff",
-	tinting: "#252525"
-});
+export const customTheme = writable(customThemeFallback);

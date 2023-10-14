@@ -2,9 +2,9 @@
 <script>
 	import Container from "../lib/Container.svelte";
 
-	import {user, modalShown, modalPage} from "../lib/stores.js";
+	import {user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
-	import * as Modals from "../lib/modals.js";
+	import * as modals from "../lib/modals.js";
 	import * as BGM from "../lib/BGM.js";
 </script>
 
@@ -34,9 +34,7 @@
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={() => {
-				Modals.showModal("switchTheme");
-			}}
+			on:click={() => modals.showModal("switchTheme")}
 		/>
 	</div>
 
@@ -72,9 +70,7 @@
 		{#if $user.bgm}
 			<button
 				class="circle settings"
-				on:click={() => {
-					Modals.showModal("switchBGM");
-				}}
+				on:click={() => modals.showModal("switchBGM")}
 			/>
 		{/if}
 		<input
@@ -102,10 +98,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					$modalPage = "changePassword";
-					$modalShown = true;
-				}}
+				on:click={() => modals.showModal("changePassword")}
 			/>
 		</div>
 
@@ -116,10 +109,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					$modalPage = "deleteAccount";
-					$modalShown = true;
-				}}
+				on:click={() => modals.showModal("deleteAccount")}
 			/>
 		</div>
 

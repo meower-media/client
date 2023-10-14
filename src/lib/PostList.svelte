@@ -55,8 +55,7 @@
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
-	import {onDestroy, onMount} from "svelte";
-	import { stringToTheme } from "./CustomTheme.js";
+	import {onMount, onDestroy} from "svelte";
 
 	let id = 0;
 	let postErrors = "";

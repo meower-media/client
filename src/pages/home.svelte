@@ -3,7 +3,7 @@
 	It features live post updates and a load more button which is pretty nice.
 -->
 <script>
-	import {ulist, modalPage,modalShown} from "../lib/stores.js";
+	import {ulist} from "../lib/stores.js";
 	import Container from "../lib/Container.svelte";
 	import PostList from "../lib/PostList.svelte";
 </script>

@@ -7,8 +7,6 @@
 	// @ts-ignore
 	window.clm = clm;
 
-	import unloadedProfile from "./unloadedprofile.js";
-
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
 
@@ -18,8 +16,7 @@
 	import version from "./version.js";
 	import * as BGM from "./BGM.js";
 
-	import {isActive, goto} from "@roxi/routify";
-	import { loadTheme } from "./CustomTheme.js";
+	import {isActive} from "@roxi/routify";
 
 	let logo,
 		setup,
@@ -91,8 +88,6 @@
 	 * Goes to main setup screen.
 	 */
 	async function mainSetup() {
-		localStorage.clear();
-		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
 		await sleep(500);
@@ -156,7 +151,6 @@
 					}
 					loginStatus = "";
 					BGM.playBGM($user.bgm_song);
-					loadTheme()
 					screen.set("main");
 				})
 				.catch(code => {

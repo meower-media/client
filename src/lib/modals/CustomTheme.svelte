@@ -1,85 +1,88 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {modalShown, user, customTheme, useCustomTheme} from "../stores.js";
+	import {user, customTheme} from "../stores.js";
+    import * as modals from "../modals.js";
     import * as clm from "../clmanager.js";
-    import {saveTheme,fallback,previewTheme} from "../CustomTheme.js"
+    import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../customTheme.js";
 
-    let MainColor = $customTheme.orange
-    let Add = $customTheme.tinting
-    let Background = $customTheme.background
-    let Foreground = $customTheme.foreground
-    let Foreground2 = $customTheme.foregroundOrange
+    let jsonInput, error;
 
-    let PreviousCTheme = $useCustomTheme
+    let theme = $customTheme;
+
+    $: {
+        try {
+            applyTheme(theme);
+            error = "";
+        } catch (e) {
+            error = e;
+        }
+
+        if (jsonInput) jsonInput.value = JSON.stringify(theme);
+    }
 </script>
 
 <Modal
 	on:close={() => {
-		$modalShown = false;
+        if ($user.theme.includes("custom:")) {
+            applyTheme(stringToTheme($user.theme));
+        } else {
+            removeTheme();
+        }
+		modals.showModal("switchTheme");
 	}}
 >
 	<h2 slot="header">Custom Theme</h2>
 	<div slot="default">
 		<label for="MainColor">Main Color: </label>
-        <input type="color" id="MainColor" bind:value={MainColor}>
-        <br>
+        <input type="color" id="MainColor" bind:value={theme.orange} />
+        <br />
         <label for="Tint">Tinting: </label>
-        <input type="color" id="Tint" bind:value={Add}>
-        <br>
+        <input type="color" id="Tint" bind:value={theme.tinting} />
+        <br />
         <label for="Bg">Background: </label>
-        <input type="color" id="Bg" bind:value={Background}>
-        <br>
+        <input type="color" id="Bg" bind:value={theme.background} />
+        <br />
         <label for="Fg">Foreground: </label>
-        <input type="color" id="Fg" bind:value={Foreground}>
-        <br>
+        <input type="color" id="Fg" bind:value={theme.foreground} />
+        <br />
         <label for="Fg2">Foreground 2: </label>
-        <input type="color" id="Fg2" bind:value={Foreground2}>
-        <br>
-        <br>
-        <button
-            on:click={() => {
-                PreviousCTheme = $useCustomTheme
-                previewTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
-            }}>Preview</button
-        >
-        <button
-            on:click={() => {
-                PreviousCTheme = $useCustomTheme
-                useCustomTheme.set(false)
-            }}>Disable Preview</button
-        >
-        <br>
-        <br>
+        <input type="color" id="Fg2" bind:value={theme.foregroundOrange} >
+        <br /><br />
+        <button on:click={() => theme = fallback}>Reset </button>
+        <br /><br />
+        {#if error}
+            <label for="json" style="color: crimson;"><b>JSON: </b> <i>{error}</i></label>
+        {:else}
+            <label for="json"><b>JSON</b></label>
+        {/if}
+        <input style="width: 100%;" type="text" id="json" placeholder="Testing..." bind:this={jsonInput} on:change={() => {
+            try {
+                theme = JSON.parse(jsonInput.value);
+            } catch (e) {
+                error = e;
+            }
+        }} />
+        <br /><br />
 		<div class="modal-buttons">
 			<button
 				on:click={() => {
-					$modalShown = false;
-                    useCustomTheme.set(PreviousCTheme)
-				}}>Close</button
+					if ($user.theme.includes("custom:")) {
+                        applyTheme(stringToTheme($user.theme));
+                    } else {
+                        removeTheme();
+                    }
+                    modals.showModal("switchTheme");
+				}}>Cancel</button
 			>
-            <button
-				on:click={() => {
-                    MainColor = fallback.orange
-                    Add = fallback.tinting
-                    Background = fallback.background
-                    Foreground = fallback.foreground
-                    Foreground2 = fallback.foregroundOrange
-				}}>Reset</button>
-            <button
+            <button disabled={error}
                 on:click={() => {
-                    saveTheme({"Orange":MainColor,"Add":Add,"Bg":Background,"Fg":Foreground,"Fg2":Foreground2})
-
+                    applyTheme(theme);
+                    $user.theme = themeToString(theme);
                     clm.updateProfile();
-                    $modalShown = false;
-                }}>OK</button
+                    modals.closeModal();
+                }}>Save</button
             >
 		</div>
 	</div>
 </Modal>
-
-<style>
-	.smol {
-		font-size: 8px;
-	}
-</style>

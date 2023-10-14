@@ -2,20 +2,22 @@
 	import {
 		screen,
 		setupPage,
-		modalShown,
 		user,
 		authHeader,
 	} from "../lib/stores.js";
 	import unloadedProfile from "../lib/unloadedprofile.js";
+	import * as modals from "../lib/modals.js";
 
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
 	onMount(async () => {
-		localStorage.clear();
+		localStorage.removeItem("meower_savedusername");
+		localStorage.removeItem("meower_savedpassword");
+		localStorage.removeItem("meower_savedconfig");
 		user.set(unloadedProfile());
 		authHeader.set({});
-		modalShown.set(false);
+		modals.closeModal();
 		$goto("/");
 		screen.set("setup");
 		await tick();

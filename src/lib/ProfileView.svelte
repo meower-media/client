@@ -13,7 +13,8 @@
 
 <script>
 	import loadProfile from "./loadProfile.js";
-	import {ulist, user, modalShown} from "./stores.js";
+	import {ulist, user} from "./stores.js";
+	import * as modals from "./modals.js";
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
 	import PFP from "./PFP.svelte";
@@ -25,7 +26,7 @@
 	export let profile = null;
 	export let small = false;
 	export let canClick = false;
-	export let CloseCurrentModal = true;
+	export let closeCurrentModal = true;
 
 	function load() {
 		if (profile) {
@@ -46,10 +47,8 @@
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={async () => {
-							if (CloseCurrentModal) {
-								modalShown.set(false)
-							}
+						on:click={() => {
+							if (closeCurrentModal) modals.closeModal();
 							$goto(`/users/${data._id}`);
 						}}
 					>

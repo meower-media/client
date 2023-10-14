@@ -1,9 +1,11 @@
 <!-- routify:options bundle=false -->
 <script>
-	import { modalPage, modalShown, OOBERunning, GroupCats} from "../lib/stores";
 	import Container from "../lib/Container.svelte";
     import PFP from "../lib/PFP.svelte";
     import LiText from "../lib/LiText.svelte";
+
+    import {OOBERunning, GroupCats} from "../lib/stores.js";
+    import * as modals from "../lib/modals.js";
 
     import {levels} from "../lib/formatting.js"
 	import version from "../lib/version.js";
@@ -40,15 +42,14 @@
         <br>
         <button
             on:click = {() => {
-                var modals = ["banned","accountCreationBlocked","reportUser","searchResults","createChat","gcMember","addMember","addMember2","addMemberSearch","addMemberMode","removeMember","connectionFailed","switchTheme","switchBGM","customTheme","basic"]
+                var allModals = ["banned","accountCreationBlocked","reportUser","searchResults","createChat","gcMember","addMember","addMember2","addMemberSearch","addMemberMode","removeMember","connectionFailed","switchTheme","switchBGM","customTheme","basic"];
                 // Switchtheme broken
 
-                var randmodal = modals[Math.round(Math.random() * modals.length-1)]
+                var randmodal = allModals[Math.round(Math.random() * allModals.length-1)];
 
-                alert(randmodal)
+                alert(randmodal);
             
-                modalPage.set(randmodal)
-                modalShown.set(true)
+                modals.showModal(randmodal);
             }}	
         >Me!</button>
     </Container>
