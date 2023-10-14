@@ -343,8 +343,16 @@
 							!hasPermission(adminPermissions.SYSADMIN))}
 					bind:value={banState.state}
 					on:change={() => {
-						if (banState.state.includes("restriction") && !banState.restrictions) {
-							banState.restrictions = (userRestrictions.HOME_POSTS | userRestrictions.CHAT_POSTS | userRestrictions.NEW_CHATS | userRestrictions.EDITING_CHAT_NICKNAMES | userRestrictions.EDITING_QUOTE);
+						if (
+							banState.state.includes("restriction") &&
+							!banState.restrictions
+						) {
+							banState.restrictions =
+								userRestrictions.HOME_POSTS |
+								userRestrictions.CHAT_POSTS |
+								userRestrictions.NEW_CHATS |
+								userRestrictions.EDITING_CHAT_NICKNAMES |
+								userRestrictions.EDITING_QUOTE;
 						}
 					}}
 				>

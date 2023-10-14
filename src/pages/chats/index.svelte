@@ -177,7 +177,7 @@
 		height: 100%;
 	}
 	.chat {
-		height: 4.5em;
+		min-height: 4.5em;
 	}
 	.settings-controls {
 		position: absolute;
