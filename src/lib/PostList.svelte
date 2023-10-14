@@ -371,7 +371,7 @@
 										);
 									}
 								} catch (e) {
-									postErrors = `Error while editing post: ${e}`;
+									postErrors = e;
 								}
 							}
 						}, 0);

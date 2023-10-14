@@ -123,31 +123,51 @@
 			.replaceAll("'", "&apos;");
 
 		// markdown
-		const md = new MarkdownIt("default", {
-			breaks: true,
-			linkify: true,
-		});
-		const tokens = md.parse(content);
-		for (const token of tokens) {
-			if (token.children) {
-				for (const childToken of token.children) {
-					if (childToken.type === "image") {
-						const srcPos = childToken.attrs.findIndex(attr => attr[0] === "src");
-						if (!IMAGE_HOST_WHITELIST.some(o =>
-							childToken.attrs[srcPos][1].toLowerCase().startsWith(o.toLowerCase())
-						)) {
-							childToken.attrs[srcPos][1] = "about:blank";
-							console.log(childToken);
+		try {
+			const md = new MarkdownIt("default", {
+				breaks: true,
+				linkify: true,
+				typographer:  true,
+			});
+			md.linkify.add("@", {
+				validate: function (text, pos) {
+					var tail = text.slice(pos);
+					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+				},
+				normalize: function (match) {
+					match.url = window.location.host + "/users/" + match.url.replace(/^@/, '');
+				}
+			});
+			const tokens = md.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "").replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"));
+			for (const token of tokens) {
+				if (token.children) {
+					for (const childToken of token.children) {
+						if (childToken.type === "image") {
+							const srcPos = childToken.attrs.findIndex(attr => attr[0] === "src");
+							if (!IMAGE_HOST_WHITELIST.some(o =>
+								childToken.attrs[srcPos][1].toLowerCase().startsWith(o.toLowerCase())
+							)) {
+								childToken.attrs[srcPos][1] = "about:blank";
+								console.log(childToken);
+							}
 						}
-					}
-					if (childToken.type === "link_open") {
-						const href = childToken.attrs.find(attr => attr[0] === "href")[1];
-						childToken.attrs.push(["onclick", `return confirmLink('${href}')`]);
+						if (childToken.type === "link_open") {
+							const href = childToken.attrs.find(attr => attr[0] === "href")[1];
+							childToken.attrs.push(["onclick", `return confirmLink('${href}')`]);
+						}
 					}
 				}
 			}
+			content = md.renderer.render(tokens, md.options);
+
+			// add quote containers to blockquotes
+			content = content.replaceAll(
+				/<blockquote>(.+?)<\/blockquote>/gms,
+				'<div class="quote-container"><blockquote>$1</blockquote></div>'
+			);
+		} catch (e) {
+			console.error(`Failed to load markdown on ${post.post_id}: ${e}`);
 		}
-		content = md.renderer.render(tokens, md.options);
 
 		// twemoji
 		content = twemoji.parse(content, {
@@ -490,7 +510,7 @@
 		</p>
 	{/if}
 	{#if editError}
-		<p style="color: crimson;">Error while editing/deleting: {editError}</p>
+		<p style="color: crimson;">{editError}</p>
 	{/if}
 	{#if !editing}
 		<div class="post-images">
