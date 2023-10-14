@@ -47,7 +47,7 @@
 			class:loading={icon === -1}
 			draggable={false}
 			width="auto"
-			height="100%"
+			height="85%"
 		/>
 	</span>
 </span>
