@@ -1,14 +1,14 @@
 <script>
 	import Modal from "../Modal.svelte";
 
-	import {user, currentCustomTheme} from "../stores.js";
+	import {user, customTheme} from "../stores.js";
     import * as modals from "../modals.js";
     import * as clm from "../clmanager.js";
     import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../customTheme.js";
 
     let jsonInput, error;
 
-    let theme = $currentCustomTheme;
+    let theme = $customTheme;
 
     $: {
         try {

@@ -11,7 +11,7 @@ export let fallback = {
 	tinting: "#252525",
 };
 
-import {useCustomTheme, currentCustomTheme as currentCustomTheme} from "./stores.js";
+import {useCustomTheme, customTheme as currentCustomTheme} from "./stores.js";
 
 export function themeToString(theme) {
 	return "custom:" + JSON.stringify(theme);
@@ -78,11 +78,11 @@ export function applyTheme(theme) {
 	theme.orangeLight = "#"+addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
     theme.orangeDark = "#"+removeHexColor(theme.orange.slice(1), theme.tinting.slice(1));
 
-	currentcurrentCustomTheme.set(theme);
-	usecurrentCustomTheme.set(true);
+	currentCustomTheme.set(theme);
+	useCustomTheme.set(true);
 }
 
 export function removeTheme() {
-	usecurrentCustomTheme.set(false);
-	currentcurrentCustomTheme.set(fallback);
+	useCustomTheme.set(false);
+	currentCustomTheme.set(fallback);
 }

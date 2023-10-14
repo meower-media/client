@@ -70,4 +70,4 @@ export const GroupCats = writable(100);
 
 // Custom theme
 export const useCustomTheme = writable(false);
-export const currentCustomTheme = writable(customThemeFallback);
+export const customTheme = writable(customThemeFallback);
