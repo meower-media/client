@@ -18,7 +18,7 @@
 		user,
 		spinner,
 		useCustomTheme,
-		customTheme,
+		currentCustomTheme,
 	} from "../lib/stores.js";
 </script>
 
@@ -26,13 +26,13 @@
 
 <main
 	id="main"
-	style:--orange={$useCustomTheme ? $customTheme.orange : null}
-	style:--orange-button={$useCustomTheme ? $customTheme.orange : null}
-	style:--orange-light={$useCustomTheme ? $customTheme.orangeLight : null}
-	style:--orange-dark={$useCustomTheme ? $customTheme.orangeDark : null}
-	style:--background={$useCustomTheme ? $customTheme.background : null}
-	style:--foreground={$useCustomTheme ? $customTheme.foreground : null}
-	style:--foreground-orange={$useCustomTheme ? $customTheme.foregroundOrange : null}
+	style:--orange={$useCustomTheme ? $currentCustomTheme.orange : null}
+	style:--orange-button={$useCustomTheme ? $currentCustomTheme.orange : null}
+	style:--orange-light={$useCustomTheme ? $currentCustomTheme.orangeLight : null}
+	style:--orange-dark={$useCustomTheme ? $currentCustomTheme.orangeDark : null}
+	style:--background={$useCustomTheme ? $currentCustomTheme.background : null}
+	style:--foreground={$useCustomTheme ? $currentCustomTheme.foreground : null}
+	style:--foreground-orange={$useCustomTheme ? $currentCustomTheme.foregroundOrange : null}
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
 	class:mode-light={!($user.mode === false)}

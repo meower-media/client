@@ -2,6 +2,7 @@
 	import Modal from "../Modal.svelte";
 
 	import {user} from "../stores.js";
+	// @ts-ignore
 	import {removeTheme} from "../customTheme.js";
 	import * as clm from "../clmanager.js";
 
