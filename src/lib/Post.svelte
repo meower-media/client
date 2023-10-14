@@ -23,9 +23,8 @@
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
+	import MarkdownIt from "markdown-it";
 	import twemoji from "twemoji";
-	import * as marked from "marked";
-	import DOMPurify from "dompurify";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
@@ -103,91 +102,52 @@
 		}
 	}
 
-	function confirmHyperlink(event, link) {
-		event.preventDefault();
-		modals.showModal(ConfirmHyperlinkModal, {link});
+	function confirmLink(link) {
+		if (link.startsWith(`${window.location.protocol}//${window.location.host}`) || link.startsWith(window.location.host)) {
+			$goto(link.replace(`${window.location.protocol}//${window.location.host}`, "").replace(window.location.host, ""));
+		} else {
+			modals.showModal(ConfirmHyperlinkModal, {link});
+		}
+		return false;
 	}
 	// @ts-ignore
-	window.confirmHyperlink = confirmHyperlink;
+	window.confirmLink = confirmLink;
 
 	function addFancyElements(content) {
 		// escape HTML tags
-		content = content.replaceAll(/<(.+?)>/gms, "&lt;$1&gt;");
+		content = content
+			.replaceAll("&", "&amp;")
+			.replaceAll("<", "&lt;")
+			.replaceAll(">", "&gt;")
+			.replaceAll('"', "&quot;")
+			.replaceAll("'", "&apos;");
 
 		// markdown
-		content = marked.parse(
-			content
-				.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")
-				.replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"),
-			{breaks: true}
-		);
-		content = DOMPurify.sanitize(content, {
-			ALLOWED_TAGS: [
-				"strong",
-				"em",
-				"del",
-				"ul",
-				"li",
-				"h1",
-				"h2",
-				"h3",
-				"h4",
-				"h5",
-				"h6",
-				"blockquote",
-				"code",
-				"br",
-			],
-			ALLOWED_ATTR: [],
+		const md = new MarkdownIt("default", {
+			breaks: true,
+			linkify: true,
 		});
-
-		// line breaks
-		content = content.replaceAll("\n", "<br>");
-
-		// add quote containers to blockquotes
-		content = content.replaceAll(
-			/<blockquote>(.+?)<\/blockquote>/gms,
-			'<div class="quote-container"><blockquote>$1</blockquote></div>'
-		);
-
-		// hyperlinks
-		content = content.replaceAll(
-			/(https?:\/\/[^\s]+)/g,
-			'<a href="/" onclick="confirmHyperlink(event, \'$1\')">$1</a>'
-		);
-		content = content.replaceAll(
-			/@([a-zA-Z0-9-_]{1,20})/g,
-			'<a href="/users/$1">@$1</a>'
-		);
-
-		// remove additional line breaks
-		content = content.replaceAll("<blockquote><br>", "<blockquote>");
-		content = content.replaceAll("<br></blockquote>", "</blockquote>");
-		if (content.startsWith("<br>")) content = content.slice(0, 4);
-		if (content.endsWith("<br>")) content = content.slice(0, -4);
-
-		// sanitize (now with <div> and <a> tags)
-		content = DOMPurify.sanitize(content, {
-			ALLOWED_TAGS: [
-				"strong",
-				"em",
-				"del",
-				"ul",
-				"li",
-				"h1",
-				"h2",
-				"h3",
-				"h4",
-				"h5",
-				"h6",
-				"blockquote",
-				"code",
-				"br",
-				"div",
-				"a",
-			],
-			ALLOWED_ATTR: ["class", "href", "onclick"],
-		});
+		const tokens = md.parse(content);
+		for (const token of tokens) {
+			if (token.children) {
+				for (const childToken of token.children) {
+					if (childToken.type === "image") {
+						const srcPos = childToken.attrs.findIndex(attr => attr[0] === "src");
+						if (!IMAGE_HOST_WHITELIST.some(o =>
+							childToken.attrs[srcPos][1].toLowerCase().startsWith(o.toLowerCase())
+						)) {
+							childToken.attrs[srcPos][1] = "about:blank";
+							console.log(childToken);
+						}
+					}
+					if (childToken.type === "link_open") {
+						const href = childToken.attrs.find(attr => attr[0] === "href")[1];
+						childToken.attrs.push(["onclick", `return confirmLink('${href}')`]);
+					}
+				}
+			}
+		}
+		content = md.renderer.render(tokens, md.options);
 
 		// twemoji
 		content = twemoji.parse(content, {
