@@ -35,7 +35,7 @@
 			src={icons[
 				`../assets/avatars/icon_${
 					id === -1
-						? 21
+						? 39
 						: id === -2
 						? "err"
 						: id === -3

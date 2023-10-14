@@ -263,7 +263,7 @@
 					</p>
 				{/if}
 				<div>
-					<p class="small">Meower Svelte v{version}</p>
+					<p class="small">BetterMeower Project Neon v{version}</p>
 					<img src={meowy} alt="" height="64" />
 				</div>
 			</div>
