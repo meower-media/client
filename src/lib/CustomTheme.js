@@ -78,11 +78,11 @@ export function applyTheme(theme) {
 	theme.orangeLight = "#"+addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
     theme.orangeDark = "#"+removeHexColor(theme.orange.slice(1), theme.tinting.slice(1));
 
-	currentcurrentCustomTheme.set(theme);
-	usecurrentCustomTheme.set(true);
+	currentCustomTheme.set(theme);
+	useCustomTheme.set(true);
 }
 
 export function removeTheme() {
-	usecurrentCustomTheme.set(false);
-	currentcurrentCustomTheme.set(fallback);
+	useCustomTheme.set(false);
+	currentCustomTheme.set(fallback);
 }
