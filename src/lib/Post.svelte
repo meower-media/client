@@ -125,6 +125,7 @@
 			ALLOWED_TAGS: [
 				"strong",
 				"em",
+				"del",
 				"ul",
 				"li",
 				"h1",
@@ -134,6 +135,7 @@
 				"h5",
 				"h6",
 				"blockquote",
+				"code",
 				"br",
 			],
 			ALLOWED_ATTR: [],
@@ -169,6 +171,7 @@
 			ALLOWED_TAGS: [
 				"strong",
 				"em",
+				"del",
 				"ul",
 				"li",
 				"h1",
