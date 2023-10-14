@@ -4,7 +4,7 @@
 
 import {writable} from "svelte/store";
 import unloadedProfile from "./unloadedprofile.js";
-import {fallback as customThemeFallback} from "./customTheme.js";
+import {fallback as customThemeFallback} from "../lib/customTheme.js";
 
 // Used for setup screen
 export const screen = writable("setup");
