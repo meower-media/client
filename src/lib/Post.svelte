@@ -224,7 +224,7 @@
 
 			<FormattedDate date={post.date} />
 			{#if post.isDeleted}
-				<i>(deleted)</i>
+				<i>(Deleted)</i>
 			{/if}
 		</div>
 	</div>
