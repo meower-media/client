@@ -466,7 +466,7 @@
 			class="white"
 			name="input"
 			autocomplete="false"
-			maxlength="500"
+			maxlength="4000"
 			rows="1"
 			bind:this={editContentInput}
 			use:autoresize

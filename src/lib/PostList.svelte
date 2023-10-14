@@ -432,7 +432,7 @@
 					: "Write something..."}
 				name="input"
 				autocomplete="false"
-				maxlength="500"
+				maxlength="4000"
 				rows="1"
 				disabled={userRestricted || $relationships[dmWith] === 2}
 				use:autoresize
