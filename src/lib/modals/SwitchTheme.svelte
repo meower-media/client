@@ -14,7 +14,7 @@
 		eager: true,
 	});
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
+	let selections = ["orange", "dark-orange", "blue", "dark-blue", "green", "dark-green", "magenta", "dark-magenta", "red", "dark-red", "pink", "dark-pink", "gray", "dark-gray", "purple", "dark-purple"];
 
 	let error = false;
 
@@ -42,7 +42,7 @@
 		defaultPreview;
 
 	function changeTheme() {
-		selection = clamp(selection, 0, 3);
+		selection = clamp(selection, 0, 16);
 		theme = selections[selection];
 		darkMode = false;
 		if (theme.startsWith("dark-")) {

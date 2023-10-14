@@ -4,7 +4,6 @@
 	import PFP from "../lib/PFP.svelte";
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
-	import twemoji from "twemoji";
 	import {toHTMLElement} from "./twemoji-utils.js";
 
 	import LiText from "./LiText.svelte";
@@ -230,10 +229,7 @@
 		</div>
 	</div>
 	<p class="post-content">
-		{@html twemoji.parse(toHTMLElement(post.content).innerText, {
-			folder: "svg",
-			ext: ".svg",
-		})}
+		{post.content}
 	</p>
 	<div class="post-images">
 		{#each images as { title, url }}

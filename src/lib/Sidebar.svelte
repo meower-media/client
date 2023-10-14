@@ -43,7 +43,7 @@
 	<div class="logo">
 		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
 			<img
-				alt="Meower"
+				alt="Home"
 				src={logo}
 				draggable={false}
 				height="100%"
