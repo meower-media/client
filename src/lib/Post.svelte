@@ -114,7 +114,7 @@
 	window.confirmLink = confirmLink;
 
 	function addFancyElements(content) {
-		// escape HTML tags
+		// escape HTML
 		content = content
 			.replaceAll("&", "&amp;")
 			.replaceAll("<", "&lt;")
