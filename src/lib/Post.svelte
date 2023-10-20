@@ -94,17 +94,11 @@
 				)
 				) {
 
-				fetch(result.value[2]).then(resp => {
-					if (resp.ok) {
-						images.push({
-							title: result.value[1],
-							url: result.value[2],
-							type: resp.headers.get("Content-Type")
-						});
-					}
+				images.push({
+					title: result.value[1],
+					url: result.value[2],
 				});
 
-				// Prevent flooding
 				if (images.length >= 3) break;
 			}
 		}
@@ -168,7 +162,7 @@
 			}
 			content = md.renderer.render(tokens, md.options);
 
-			// add quote containers to blockquotes
+			// add quote containers to blockquotes (although, quotes are currently broken)
 			content = content.replaceAll(
 				/<blockquote>(.+?)<\/blockquote>/gms,
 				'<div class="quote-container"><blockquote>$1</blockquote></div>'
@@ -522,8 +516,8 @@
 	{/if}
 	{#if !editing}
 		<div class="post-images">
-			{#each images as { title, url, type }}
-				<Attachment title={title} url={url} type={type} />
+			{#each images as { title, url }}
+				<Attachment {title} {url} />
 			{/each}
 		</div>
 	{/if}

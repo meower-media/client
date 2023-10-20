@@ -3,24 +3,32 @@
 -->
 
 <script>
+    import {onMount} from "svelte";
+
     export let title;
     export let url;
-    export let type;
 
-    let typesplit = type.split(";")[0].split("/")[0]
+    let type, typeSplit, show;
 
-    let show = true
+    onMount(async () => {
+        const resp = await fetch(url);
+        if (resp.ok) {
+            type = resp.headers.get("Content-Type");
+            typeSplit = type.split(";")[0].split("/")[0];
+            show = true;
+        }
+    });
 </script>
 
 <div class="AttachmentClass">
     {#if show}
         <a href={url} target="_blank" rel="noreferrer">
-            {#if typesplit == "image"}
+            {#if typeSplit == "image"}
                 <img src={url} alt={title} {title} class="post-image" />
-            {:else if typesplit == "video"}
+            {:else if typeSplit == "video"}
                 <!-- svelte-ignore a11y-media-has-caption -->
                 <video src={url} controls class="post-image" />
-            {:else if typesplit == "audio"}
+            {:else if typeSplit == "audio"}
                 <!-- svelte-ignore a11y-media-has-caption -->
                 <audio controls>
                     <source src={url}>
