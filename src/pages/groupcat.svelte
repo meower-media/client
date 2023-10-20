@@ -2,19 +2,19 @@
 	import Cats from "../lib/MEOW.svelte";
 	import {goto} from "@roxi/routify";
 
-	let Hide = false
+	let hide = false
 </script>
 
 <div>
 	<div class="message">GROUP CAT 2.0!!!!</div>
-	{#if !Hide}
+	{#if !hide}
 		<Cats />
 		<button class="help"
-			on:click={() => {Hide = true}}
+			on:click={() => hide = true}
 		>AAAAAA THERE'S TOO MANY</button>
 	{/if}
-	<button class="EasterEgg"
-		on:click={() => {$goto("/easteregg")}}
+	<button class="easter-egg"
+		on:click={$goto("/easteregg")}
 	></button>
 </div>
 
@@ -30,16 +30,16 @@
 		top: 5%;
 	}
 
-	.EasterEgg {
+	.easter-egg {
 		background-color: var(--background);
 		border: none;
 	}
 
-	.EasterEgg:hover {
+	.easter-egg:hover {
 		background-color: var(--background) !important;
 	}
 
-	.EasterEgg:active {
+	.easter-egg:active {
 		background-color: red !important;
 	}
 </style>
