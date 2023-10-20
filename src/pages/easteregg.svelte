@@ -4,10 +4,34 @@
     import PFP from "../lib/PFP.svelte";
     import LiText from "../lib/LiText.svelte";
 
-    import {OOBERunning, GroupCats} from "../lib/stores.js";
+    import DebugModal from "../lib/modals/Debug.svelte";
+    import LogoutModal from "../lib/modals/Logout.svelte";
+    import ServerSelectorModal from "../lib/modals/ServerSelector.svelte";
+    import CreateChatModal from "../lib/modals/chats/CreateChat.svelte";
+    import ChangePasswordModal from "../lib/modals/settings/ChangePassword.svelte";
+    import CustomThemeModal from "../lib/modals/settings/CustomTheme.svelte";
+    import DeleteAccountModal from "../lib/modals/settings/DeleteAccount.svelte";
+    import LogoutEverywhereModal from "../lib/modals/settings/LogoutEverywhere.svelte";
+    import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
+    import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
+
+    import {OOBERunning, groupCats} from "../lib/stores.js";
     import * as modals from "../lib/modals.js";
 
 	import version from "../lib/version.js";
+
+    const allModals = [
+        DebugModal,
+        LogoutModal,
+        ServerSelectorModal,
+        CreateChatModal,
+        ChangePasswordModal,
+        CustomThemeModal,
+        DeleteAccountModal,
+        LogoutEverywhereModal,
+        SwitchBGMSFXModal,
+        SwitchThemeModal,
+    ];
 
     const PFP_COUNT = 34;
 
@@ -20,55 +44,40 @@
 		pfpOverflow = pfp < 0 || pfp > PFP_COUNT;
 	}
 
-    let GCats = 100
-
-    let Profile_Username = "EasterEgg";
-    let Profile_Level = 0;
-    let Profile_Quote = "Quote Here";
-    let Profile_PFP = 1;
-    let Profile_QuoteEnabled = true;
+    let profileUsername = "EasterEgg";
+    let profileQuote = "Quote Here";
+    let profilePfp = 1;
+    let profileQuoteEnabled = true;
 </script>
 
 <div>
 	<Container>
         <h1>Look at that!</h1>
-        You found a secret! Here you can mess around with a bit of svelte
+        You found a secret! Here you can mess around with a bit of Meower Svelte.
     </Container>
     <Container>
         <h1>Modal Roulette</h1>
         Press the button below to pick a random modal (of course with moderation, harmful and errored ones removed)
-        <br>
-        <br>
+        <br /><br />
         <button
             on:click = {() => {
-                var allModals = ["banned","accountCreationBlocked","reportUser","searchResults","createChat","gcMember","addMember","addMember2","addMemberSearch","addMemberMode","removeMember","connectionFailed","switchTheme","switchBGM","customTheme","basic"];
-                // Switchtheme broken
-
-                var randmodal = allModals[Math.round(Math.random() * allModals.length-1)];
-
-                alert(randmodal);
-            
-                modals.showModal(randmodal);
+                let randModal = allModals[Math.round(Math.random() * allModals.length-1)];
+                modals.showModal(randModal);
             }}	
         >Me!</button>
     </Container>
     <Container>
-        <h1>Group cats</h1>
+        <h1>Group Cats</h1>
         Crash your browser by changing the amount of group cats!
 
         <br /><br />
 
-        <input type="number" placeholder="Enter a number" bind:value={GCats}/>
-        <button
-            on:click={() => {
-                GroupCats.set(GCats)
-            }}
-        >Update</button>
+        <input type="number" placeholder="Enter a number" bind:value={$groupCats}/>
     </Container>
     <Container>
         <!--Posts, Profiles and Profile Views (Later on, maybe GC Member list and postlist)-->
         <h1>Make your own!</h1>
-        Make your own profile, post, etc list with this!
+        Make your own profile, post, etc. with this!
 
         <br /><br />
 
@@ -77,45 +86,26 @@
 
             Username
             <br />
-            <input placeholder="Username" type="text" bind:value={Profile_Username} class="modal-input white"/>
+            <input placeholder="Username" type="text" bind:value={profileUsername} class="modal-input white"/>
             <br /><br />
 
             Quote
             <br />
-            <input placeholder="Quote" type="text" bind:value={Profile_Quote} class="modal-input white"/>
+            <input placeholder="Quote" type="text" bind:value={profileQuote} class="modal-input white"/>
             <br /><br />
 
             Enable Quote
             <br />
-            <input type="checkbox" bind:checked={Profile_QuoteEnabled} class="modal-input white"/>
+            <input type="checkbox" bind:checked={profileQuoteEnabled} class="modal-input white"/>
             <br /><br />
 
-            User Level
-
-            <br />
-            <select
-                class="grow"
-                on:change={e => {
-                    // @ts-ignore
-                    Profile_Level = e.target.value;
-                }}
-            >
-                <option value = 0>User</option>
-                <option value = 1>Low-level Moderator</option>
-                <option value = 2>Moderator</option>
-                <option value = 3>Administrator</option>
-                <option value = 4>Sysadmin</option>
-            </select>
-            <br /><br />
-
-            PFP
-
+            Profile Picture
             <br />
             {#if pfpSwitcher}
 				<Container>
 					<h2>Profile Picture</h2>
 					<div id="pfp-list">
-						{#if pfpOverflow && Profile_PFP < 0}
+						{#if pfpOverflow && profilePfp < 0}
 							<button
 								on:click={() => {
 									pfpSwitcher = false;
@@ -123,18 +113,18 @@
 								class="pfp selected"
 								><PFP
 									online={false}
-									icon={Profile_PFP}
-									alt="Profile picture {Profile_PFP}"
+									icon={profilePfp}
+									alt="Profile picture {profilePfp}"
 								/></button
 							>
 						{/if}
 						{#each pfps as pfp}
 							<button
 								on:click={() => {
-									Profile_PFP = pfp
+									profilePfp = pfp
 								}}
 								class="pfp"
-								class:selected={Profile_PFP === pfp}
+								class:selected={profilePfp === pfp}
 								><PFP
 									online={false}
 									icon={pfp}
@@ -142,13 +132,13 @@
 								/></button
 							>
 						{/each}
-						{#if pfpOverflow && Profile_PFP > 0}
+						{#if pfpOverflow && profilePfp > 0}
 							<button
 								class="pfp selected"
 								><PFP
 									online={false}
-									icon={Profile_PFP}
-									alt="Profile picture {Profile_PFP}"
+									icon={profilePfp}
+									alt="Profile picture {profilePfp}"
 								/></button
 							>
 						{/if}
@@ -174,13 +164,13 @@
                 <div class="profile-header">
                     <PFP
                         online={false}
-                        icon={Profile_PFP}
-                        alt="{Profile_Username}'s profile picture"
+                        icon={profilePfp}
+                        alt="{profileUsername}'s profile picture"
                         size={1.4}
                     />
                     <div class="profile-header-info">
                         <h1 class="profile-username">
-                            <LiText text={Profile_Username} />
+                            <LiText text={profileUsername} />
                         </h1>
                         <div class="profile-active">
                             Offline
@@ -189,29 +179,26 @@
                 </div>
             </Container>
 
-            {#if Profile_QuoteEnabled}
+            {#if profileQuoteEnabled}
                 <Container>
                     <h3>Quote</h3>
-                    <p>"<i>{Profile_Quote}</i>"</p>
+                    <p>"<i>{profileQuote}</i>"</p>
                 </Container>
             {/if}
         </Container>
 
         <Container>
             <h1>Post</h1>
-            Coming Later on
+            Coming soon!
         </Container>
     </Container>
     <Container>
         <h1>OOBE</h1>
         Wanna see the OOBE?
 
-        <br>
-        <br>
+        <br /><br />
 
-        <button on:click = {() => {
-            OOBERunning.set(true)
-        }}>Click me</button>
+        <button on:click = {() => $OOBERunning = true}>Click me</button>
     </Container>
     <!--<Container>
         <h1>Internal/Debug Info</h1>
@@ -219,7 +206,7 @@
 
 
     </Container>-->
-    Meower Svelte V{version}
+    Meower Svelte v{version}
 </div>
 
 <style>
@@ -260,11 +247,6 @@
 
 	.profile-active {
 		font-style: italic;
-	}
-
-	.profile-role {
-		position: absolute;
-		font-size: 90%;
 	}
 
 	.profile-username {

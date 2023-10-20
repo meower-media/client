@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import CustomThemeModal from "../CustomTheme.svelte";
+	import CustomThemeModal from "./CustomTheme.svelte";
 
 	import {user} from "../../stores.js";
 	import {removeTheme} from "../../CustomTheme.js";

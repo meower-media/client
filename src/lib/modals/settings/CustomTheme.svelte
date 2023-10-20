@@ -1,12 +1,10 @@
 <script>
-	import Modal from "../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 
-    import SwitchThemeModal from "./settings/SwitchTheme.svelte";
-
-	import {user, customTheme} from "../stores.js";
-    import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../CustomTheme.js";
-    import * as modals from "../modals.js";
-    import * as clm from "../clmanager.js";
+	import {user, customTheme} from "../../stores.js";
+    import {fallback, stringToTheme, themeToString, applyTheme, removeTheme} from "../../CustomTheme.js";
+    import * as modals from "../../modals.js";
+    import * as clm from "../../clmanager.js";
 
     let jsonInput, error;
 

@@ -4,9 +4,9 @@
 -->
 <script>
 	import meowy from "../assets/meowy.svg";
-	import {GroupCats} from "../lib/stores";
+	import {groupCats} from "../lib/stores";
 
-	let cats = new Array($GroupCats).fill({}).map(_ => {
+	let cats = new Array($groupCats).fill({}).map(_ => {
 		return {
 			x: Math.random() * 100,
 			y: Math.random() * 100,
