@@ -358,7 +358,11 @@ export async function connect() {
 					username: cmd.val.payload.username,
 					token: cmd.val.payload.token,
 				});
-				relationships.set(cmd.val.payload.relationships);
+				_relationships = {};
+				for (let relationship of cmd.val.payload.relationships) {
+					_relationships[relationship.username] = relationship.state;
+				}
+				relationships.set(_relationships);
 
 				// get and set chats
 				await tick();
