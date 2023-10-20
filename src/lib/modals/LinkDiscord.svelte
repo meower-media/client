@@ -33,7 +33,7 @@
 				placeholder="Link token"
 				id="userinput"
 				name="userinput"
-				autocomplete="false"
+				autocomplete="off"
 				maxlength="64"
 				bind:value={token}
 			/>
