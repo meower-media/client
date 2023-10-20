@@ -65,7 +65,7 @@
 					placeholder="Find posts and maybe even relics."
 					maxlength="360"
 					name="query"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();
@@ -95,7 +95,7 @@
 					placeholder="Find all the legit users, memes, bots and namesnipes."
 					maxlength="20"
 					name="query"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();
@@ -158,7 +158,7 @@
 					class="white"
 					placeholder="Username"
 					name="user"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();

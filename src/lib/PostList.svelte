@@ -296,7 +296,7 @@
 				class="white"
 				placeholder="Write something..."
 				name="input"
-				autocomplete="false"
+				autocomplete="off"
 				maxlength="500"
 				rows="1"
 				use:autoresize
