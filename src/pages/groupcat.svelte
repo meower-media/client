@@ -11,7 +11,7 @@
 		<Cats />
 		<button class="help"
 			on:click={() => {Hide = true}}
-		>AAAAAA THERES TOO MANY</button>
+		>AAAAAA THERE'S TOO MANY</button>
 	{/if}
 	<button class="EasterEgg"
 		on:click={() => {$goto("/easteregg")}}
