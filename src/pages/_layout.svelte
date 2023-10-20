@@ -1,18 +1,14 @@
 <!-- Meower Svelte, the app itself. -->
 <script>
 	import Setup from "../lib/Setup.svelte";
-	import Modals from "../lib/Modals.svelte";
-
+	import Modal from "../lib/Modal.svelte";
 	import OOBE from "../lib/OOBE/Main.svelte";
-
 	import Sidebar from "../lib/Sidebar.svelte";
-
 	import Spinner from "../lib/Spinner.svelte";
-	import {mobile, touch} from "../lib/responsiveness.js";
-	import * as BGM from "../lib/BGM.js";
 
 	import {
 		screen,
+		modalStack,
 		reconnecting,
 		OOBERunning,
 		user,
@@ -20,6 +16,32 @@
 		useCustomTheme,
 		customTheme,
 	} from "../lib/stores.js";
+	import {mobile, touch} from "../lib/responsiveness.js";
+	import * as BGM from "../lib/BGM.js";
+
+	import {afterPageLoad, params} from "@roxi/routify";
+	import {tick} from "svelte";
+
+	let currentPage = "";
+	let currentParams = JSON.stringify($params);
+	let remounting = false;
+	$afterPageLoad(async page => {
+		if (remounting) return;
+
+		if (page.title === currentPage) {
+			if (currentParams !== JSON.stringify($params)) {
+				currentPage = page.title;
+				currentParams = JSON.stringify($params);
+
+				remounting = true;
+				await tick();
+				remounting = false;
+			}
+		} else {
+			currentPage = page.title;
+			currentParams = JSON.stringify($params);
+		}
+	});
 </script>
 
 <!-- routify:options bundle=true -->
@@ -44,7 +66,23 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-	<Modals />
+	{#if $reconnecting}
+		<Modal>
+			<h2 slot="header">Reconnecting...</h2>
+			<div slot="default">
+				<p>
+					Looks like we're having some problems connecting you to
+					Meower. Give us a moment and we'll reconnect you as soon as
+					possible...
+				</p>
+			</div>
+		</Modal>
+	{:else if $modalStack.length > 0}
+		<svelte:component
+			this={$modalStack[0].modal}
+			modalData={$modalStack[0].data}
+		/>
+	{/if}
 
 	{#if $screen === "blank"}
 		<div id="blank" />
@@ -57,9 +95,14 @@
 				<Sidebar />
 			</div>
 			<div class="view">
+				<!-- banner (maybe for future use)
+				<div class="banner">
+					<span>This is a banner!</span>
+				</div>
+				-->
 				{#if $OOBERunning}
 					<OOBE />
-				{:else}
+				{:else if !remounting}
 					<slot />
 				{/if}
 			</div>
@@ -120,8 +163,8 @@
 		--orange-dark: #aa0000;
 		--orange-scrollbar-back: #aa0000;*/
 		--orange: #4d97ff;
-		--orange-light: #79b7ff;
-		--orange-dark: #3685eb;
+		--orange-light: rgb(140, 189, 245);
+		--orange-dark: #3888f1;
 		--orange-scrollbar-back: #374eb1;
 		--background: white;
 		--foreground: black;
@@ -207,6 +250,13 @@
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
+	}
+
+	.banner {
+		background-color: crimson;
+		margin: 0;
+		padding: 0.5em;
+		text-align: center;
 	}
 
 	:global(main.layout-old) .main-screen {

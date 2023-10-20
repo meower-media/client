@@ -9,7 +9,8 @@ import {systemDarkMode} from "./responsiveness.js";
 export default function unloadedProfile() {
 	return {
 		name: null,
-		lvl: 0,
+		flags: 0,
+		permissions: 0,
 		unread_inbox: false,
 		theme: "orange",
 		mode: !systemDarkMode(),
@@ -17,7 +18,15 @@ export default function unloadedProfile() {
 		bgm: false,
 		bgm_song: 2,
 		layout: "new",
+		debug: false,
+		hide_blocked_users: false,
+		favorited_chats: [],
 		pfp_data: 1,
 		quote: "",
+		ban: {
+			state: "None",
+			expires: 0,
+			reason: "",
+		},
 	};
 }

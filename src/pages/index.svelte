@@ -1,5 +1,5 @@
 <script>
-	import {goto} from "@roxi/routify";
+	import {redirect} from "@roxi/routify";
 
-	$goto("/home");
+	$redirect("/home");
 </script>

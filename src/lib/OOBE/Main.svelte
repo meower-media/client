@@ -11,7 +11,7 @@
 	$: allowNext = $OOBEPage < 2;
 
 	onMount(() => {
-		clm.updateProfile();
+		clm.updateProfile({});
 		OOBEPage.set(0);
 	});
 </script>

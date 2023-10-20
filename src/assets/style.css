@@ -78,10 +78,19 @@ img.emoji {
 	vertical-align: bottom;
 }
 
+button:not(:disabled),
+select:not(:disabled),
+select > option:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="datetime-local"]:not(:disabled) {
+	cursor: pointer;
+}
+
 button,
 input[type="text"],
 input[type="search"],
 input[type="password"],
+input[type="datetime-local"],
 textarea,
 select {
 	border: solid 2px var(--foreground-orange);
@@ -261,11 +270,26 @@ input[type="checkbox"] {
 
 button.settings {
 	background-image: url("./settings.svg");
+	background-size: 70%;
 }
 
 button.plus {
 	background-image: url("./plus.svg");
-	background-size: 50%;
+	background-size: 60%;
+}
+
+button.reply {
+	background-image: url("./reply.svg");
+	background-size: 70%;
+}
+
+button.pen {
+	background-image: url("./pen.svg");
+	background-size: 60%;
+}
+
+button.check {
+	background-image: url("./check.svg");
 }
 
 button.close {
@@ -273,9 +297,14 @@ button.close {
 	background-size: 50%;
 }
 
+button.siren {
+	background-image: url("./siren.svg");
+	background-size: 65%;
+}
+
 button.trash {
 	background-image: url("./trash.svg");
-	background-size: 56%;
+	background-size: 55%;
 }
 
 button.report {
@@ -283,8 +312,33 @@ button.report {
 	background-size: 50%;
 }
 
+button.restore {
+	background-image: url("./restore.svg");
+	background-size: 65%;
+}
+
+button.scroll {
+	background-image: url("./scroll.svg");
+	background-size: 60%;
+}
+
 button.join {
 	background-image: url("./chat_join.svg");
+	background-size: 50%;
+}
+
+button.star {
+	background-image: url("./star.svg");
+	background-size: 62%;
+}
+
+button.star.filled {
+	background-image: url("./star_filled.svg");
+	background-size: 62%;
+}
+
+button.admin {
+	background-image: url("./shield.svg");
 	background-size: 50%;
 }
 
@@ -295,7 +349,7 @@ button.profile {
 
 button.members {
 	background-image: url("./members.svg");
-	background-size: 50%;
+	background-size: 55%;
 }
 
 button.search {
@@ -325,7 +379,7 @@ input[type="checkbox"]:checked {
 }
 
 a {
-	color: #0066ff;
+	color: var(--orange-dark);
 }
 
 :disabled {
@@ -364,4 +418,13 @@ hr {
 	font-family: simvoni, sans-serif;
 	color: white;
 	font-weight: bold;
+}
+
+.quote-container {
+	margin-left: 0.25em;
+	border-left: 4px solid var(--orange-dark);
+}
+
+.quote-container blockquote {
+	margin-left: 1em;
 }

@@ -8,6 +8,12 @@
 	What's new?
 </Container>
 <Container>
+	<h2>1.8.0</h2>
+	<ul>
+		<li>To be filled in...</li>
+	</ul>
+</Container>
+<Container>
 	<h2>1.7.1</h2>
 	<ul>
 		<li>Fixed repair mode check on connection failed modal</li>

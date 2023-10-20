@@ -6,6 +6,8 @@
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch("close");
 
+	export let showClose = false;
+
 	let modal;
 
 	const handle_keydown = e => {
@@ -57,6 +59,12 @@
 	bind:this={modal}
 	transition:scale={{start: 0.8, duration: 200, easing: expoOut}}
 >
+	<div class="settings-controls">
+		{#if showClose}
+			<button class="circle close" title="Close modal" on:click={close} />
+		{/if}
+	</div>
+
 	<slot name="header" />
 	<hr />
 	<slot />

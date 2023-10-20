@@ -11,13 +11,11 @@
 
 	import {params, goto} from "@roxi/routify";
 
+	let showResults = $params.type && $params.q; // causes duplicate requests without this due to remounting when page params change
 	let errors = "";
-
-	console.log($params.type);
-	console.log($params.q);
 </script>
 
-{#if $params.type && $params.q}
+{#if showResults}
 	<div class="search-results">
 		<Container>
 			<h1>Search Results for "{$params.q}"</h1>
@@ -65,7 +63,7 @@
 					placeholder="Find posts and maybe even relics."
 					maxlength="360"
 					name="query"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();
@@ -95,7 +93,7 @@
 					placeholder="Find all the legit users, memes, bots and namesnipes."
 					maxlength="20"
 					name="query"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();
@@ -109,16 +107,11 @@
 		</Container>
 		<Container>
 			<h1>Go to User</h1>
-			<p>
-				Note that usernames are currently case-sensitive (e.g going to
-				MikeDEV will work, but going to mikedev or MIKEDEV won't)!
-			</p>
 			<form
 				class="search"
 				autocomplete="off"
+				on:change={() => (errors = "")}
 				on:submit|preventDefault={async e => {
-					errors = "";
-
 					// @ts-ignore
 					const input = e.target.elements.user;
 
@@ -158,7 +151,7 @@
 					class="white"
 					placeholder="Username"
 					name="user"
-					autocomplete="false"
+					autocomplete="off"
 					on:keydown={e => {
 						if (e.key == "Enter") {
 							e.preventDefault();
@@ -167,7 +160,7 @@
 						}
 					}}
 				/>
-				<button>Go to User</button>
+				<button type="submit">Go to User</button>
 			</form>
 			<div class="errors">{errors}</div>
 		</Container>
@@ -199,7 +192,7 @@
 			text-align: center;
 		}
 		.errors {
-			color: red;
+			color: crimson;
 			font-size: 75%;
 			font-weight: bold;
 			margin: 0.25em 0;

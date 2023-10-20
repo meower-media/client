@@ -1,8 +1,11 @@
 <!--
 	The typical Meower container, used literally everywhere.
 -->
+<script>
+	export let warning = false;
+</script>
 
-<div><slot /></div>
+<div class={warning ? "warning" : ""}><slot /></div>
 
 <style>
 	div {
@@ -14,5 +17,11 @@
 		overflow-wrap: break-word;
 		position: relative;
 		overflow: auto;
+	}
+
+	.warning {
+		background-color: #eb4e33;
+		border: none;
+		color: white;
 	}
 </style>
