@@ -23,6 +23,7 @@
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
 	import changelog from "../assets/changelog.svg";
+	import info from "../assets/info.svg";
 
 	import {fade} from "svelte/transition";
 	import {goto} from "@roxi/routify";
@@ -30,8 +31,6 @@
 	let popupShown = false;
 	let popupDebounce = false;
 </script>
-
-<!-- Wait, isn't it a topbar on old layout? -->
 
 <svelte:body on:click={() => (popupShown = false)} />
 
@@ -182,12 +181,16 @@
 			<img src={changelog} alt="Changelog" draggable={false} />
 			<span class="label">Changelog</span>
 		</button>
-		<!-- still WIP
-			<button on:click={() => goto("about")} class="about-btn round">
-				<img src={info} alt="About" draggable={false} />
-				<span class="label">About</span>
-			</button>
-		-->
+		<button
+			on:click={() => {
+				$goto("/about");
+				popupShown = false;
+			}}
+			class="about-btn round"
+		>
+			<img src={info} alt="About" draggable={false} />
+			<span class="label">About</span>
+		</button>
 		<button
 			on:click={() => {
 				popupShown = true;
