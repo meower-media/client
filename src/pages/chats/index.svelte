@@ -7,65 +7,41 @@
 	Home but it's a list of group chats.
 -->
 <script>
-	import {
-		chatName,
-		chatid,
-		chatMembers,
-		chatOwner,
-	} from "../../lib/stores.js";
-	import * as modals from "../../lib/modals.js";
-	import PagedList from "../../lib/PagedList.svelte";
 	import Container from "../../lib/Container.svelte";
+	import ProfileView from "../..//lib/ProfileView.svelte";
+
+	import BasicModal from "../../lib/modals/Basic.svelte";
+	import AccountBannedModal from "../../lib/modals/safety/AccountBanned.svelte";
+	import CreateChatModal from "../../lib/modals/chats/CreateChat.svelte";
+	import LeaveChatModal from "../../lib/modals/chats/LeaveChat.svelte";
+
+	import {chats, user} from "../../lib/stores.js";
+	import {userRestrictions, isRestricted} from "../../lib/bitField.js";
+	import * as modals from "../../lib/modals.js";
 	import * as clm from "../../lib/clmanager.js";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
 
 	import {goto} from "@roxi/routify";
-	import Modal from "../../lib/Modal.svelte";
 
-	let items;
-	let toLeaveChat = false;
+	let favoritedChats, nonFavoritedChats, sortedChats;
 
-	/**
-	 * Loads a page.
-	 * @param {number} page
-	 * @returns {Promise<{
-	 * 	numPages: number,
-	 * 	result: *
-	 * }>}
-	 */
-	async function loadPage(page) {
-		if (page !== undefined) {
-			let ev, result, numPages;
+	$: {
+		favoritedChats = $chats
+			.filter(_chat => $user.favorited_chats.includes(_chat._id))
+			.sort((a, b) => {
+				//return $user.favorited_chats.indexOf(a._id) - $user.favorited_chats.indexOf(b._id);
+				return b.last_active - a.last_active;
+			});
 
-			try {
-				ev = clm.link.on("direct", cmd => {
-					if (cmd.val.mode === "chats") {
-						result = cmd.val.payload.all_chats;
-						numPages = cmd.val.payload.pages;
-					}
-				});
-				await clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: "get_chat_list",
-						val: {
-							page: page,
-						},
-					},
-				});
-				if (!result || numPages === undefined)
-					throw "This message should not appear";
-				return {result, numPages};
-			} finally {
-				if (ev) clm.link.off(ev);
-			}
-		}
-		return {
-			numPages: 1,
-			result: [],
-		};
+		nonFavoritedChats = $chats
+			.filter(_chat => !$user.favorited_chats.includes(_chat._id))
+			.sort((a, b) => {
+				return b.last_active - a.last_active;
+			});
+
+		sortedChats = favoritedChats.concat(nonFavoritedChats);
 	}
 </script>
 
@@ -78,54 +54,100 @@
 			<button
 				class="circle plus"
 				on:click={() => {
-					modals.showModal("createChat");
+					if (isRestricted(userRestrictions.NEW_CHATS)) {
+						modals.showModal(AccountBannedModal, {
+							ban: $user.ban,
+							feature: "creating group chats",
+						});
+					} else {
+						modals.showModal(CreateChatModal);
+					}
 				}}
 			/>
 		</div>
 	</Container>
 	<Container>
-		<div class="settings-controls">
-			<button
-				class="circle join"
-				on:click={() => {
-					chatName.set("Livechat");
-					chatid.set("livechat");
-					chatMembers.set([]);
-					chatOwner.set("");
-					$goto("/chats/livechat");
-				}}
-			/>
-		</div>
+		<div class="chat">
+			<div class="settings-controls">
+				<button
+					class="circle join"
+					on:click={$goto("/chats/livechat")}
+				/>
+			</div>
 
-		<h1>Livechat</h1>
-		Post history isn't saved here.
+			<h1>Livechat</h1>
+			Post history isn't saved here.
+		</div>
 	</Container>
-	<PagedList bind:items {loadPage}>
-		<svelte:fragment slot="loaded" let:items>
-			{#each items as chat (chat._id)}
-				<div
-					transition:fly|local={{y: -50, duration: 250}}
-					animate:flip={{duration: 250}}
-				>
-					<Container>
+	{#each sortedChats as chat (chat._id)}
+		<div
+			transition:fly|local={{y: -50, duration: 250}}
+			animate:flip={{duration: 250}}
+		>
+			{#if chat.type === 0}
+				<Container>
+					<div class="chat">
 						<div class="settings-controls">
 							<button
-								class="circle close"
+								class="circle star"
+								class:filled={$user.favorited_chats.includes(
+									chat._id
+								)}
 								on:click={() => {
-									chatName.set(chat.nickname);
-									chatid.set(chat._id);
-									toLeaveChat = true;
+									if (
+										$user.favorited_chats.includes(chat._id)
+									) {
+										$user.favorited_chats.splice(
+											$user.favorited_chats.indexOf(
+												chat._id
+											),
+											1
+										);
+										clm.updateProfile({
+											favorited_chats:
+												$user.favorited_chats,
+										});
+									} else {
+										$user.favorited_chats =
+											$user.favorited_chats.filter(
+												chatId => {
+													return $chats.some(
+														_chat =>
+															_chat._id === chatId
+													);
+												}
+											);
+										if (
+											$user.favorited_chats.length >= 50
+										) {
+											modals.showModal(BasicModal, {
+												title: "Too many stars!",
+												desc: "Sorry, you can only have up to 50 favorited chats!",
+											});
+										} else {
+											$user.favorited_chats.push(
+												chat._id
+											);
+											clm.updateProfile({
+												favorited_chats:
+													$user.favorited_chats,
+											});
+										}
+									}
 								}}
 							/>
+							{#if !$user.favorited_chats.includes(chat._id)}
+								<button
+									class="circle close"
+									on:click={() =>
+										modals.showModal(LeaveChatModal, {
+											chat,
+										})}
+								/>
+							{/if}
 							<button
 								class="circle join"
-								on:click={() => {
-									chatName.set(chat.nickname);
-									chatid.set(chat._id);
-									chatMembers.set(chat.members);
-									chatOwner.set(chat.owner);
-									$goto(`/chats/${chat._id}`);
-								}}
+								on:click={$goto(`/chats/${chat._id}`)}
 							/>
 						</div>
 
@@ -133,54 +155,29 @@
 						Members: {chat.members.length > 100
 							? chat.members.slice(0, 99).join(", ") + "..."
 							: chat.members.join(", ")}
-					</Container>
-				</div>
-			{/each}
-		</svelte:fragment>
-		<Container slot="error" let:error>
-			Error loading posts. Please try again.
-			<pre><code>{error}</code></pre>
-		</Container>
-	</PagedList>
-	{#if toLeaveChat}
-		<Modal
-			on:close={() => {
-				toLeaveChat = false;
-			}}
-		>
-			<h2 slot="header">Leave Chat</h2>
-			<div slot="default">
-				<span>Are you sure you want to leave {$chatName}?</span>
-				<br /><br />
-				<div class="modal-buttons">
-					<button
-						on:click={() => {
-							toLeaveChat = false;
-						}}>No</button
-					>
-					<button
-						on:click={() => {
-							clm.meowerRequest({
-								cmd: "direct",
-								val: {
-									cmd: "leave_chat",
-									val: $chatid,
-								},
-							}).then(() => {
-								items = items.filter(v => v._id !== $chatid);
-								toLeaveChat = false;
-							});
-						}}>Yes</button
-					>
-				</div>
-			</div>
-		</Modal>
-	{/if}
+					</div>
+				</Container>
+			{:else if chat.type === 1}
+				<ProfileView
+					username={chat.members.filter(
+						username => username !== $user.name
+					)[0]}
+					small={true}
+					canClick={true}
+					canDoActions={true}
+					dmChat={chat}
+				/>
+			{/if}
+		</div>
+	{/each}
 </div>
 
 <style>
 	.chats {
 		height: 100%;
+	}
+	.chat {
+		min-height: 4.5em;
 	}
 	.settings-controls {
 		position: absolute;

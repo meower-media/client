@@ -9,20 +9,6 @@
 	const PFP_COUNT = 34;
 
 	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
-	let pfpSwitcher = false;
-
-	/**
-	 * Saves the user profile, and also clears its cache entry.
-	 */
-	function save() {
-		if ($profileCache[$user.name]) {
-			const _profileCache = $profileCache;
-			delete _profileCache[$user.name];
-			profileCache.set(_profileCache);
-		}
-
-		clm.updateProfile();
-	}
 
 	let pfpOverflow = false;
 	$: {
@@ -36,11 +22,7 @@
 	<div class="pfp-outer">
 		<div class="pfp-list">
 			{#if pfpOverflow && $user.pfp_data < 0}
-				<button
-					on:click={() => {
-						pfpSwitcher = false;
-					}}
-					class="pfp selected"
+				<button class="pfp selected"
 					><PFP
 						online={false}
 						icon={$user.pfp_data}
@@ -51,9 +33,9 @@
 			{#each pfps as pfp}
 				<button
 					on:click={() => {
-						pfpSwitcher = false;
-						$user.pfp_data = pfp;
-						save();
+						if ($profileCache[$user.name])
+							delete $profileCache[$user.name];
+						clm.updateProfile({pfp_data: pfp});
 					}}
 					class="pfp"
 					class:selected={$user.pfp_data === pfp}
@@ -65,11 +47,7 @@
 				>
 			{/each}
 			{#if pfpOverflow && $user.pfp_data > 0}
-				<button
-					on:click={() => {
-						pfpSwitcher = false;
-					}}
-					class="pfp selected"
+				<button class="pfp selected"
 					><PFP
 						online={false}
 						icon={$user.pfp_data}

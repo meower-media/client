@@ -20,15 +20,21 @@
 	- loaded: Fired when the list loads for the first time.
 -->
 <script>
+	import BasicModal from "./modals/Basic.svelte";
+	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
+	import BlockUserModal from "./modals/safety/BlockUser.svelte";
+	import AddImageModal from "./modals/AddImage.svelte";
+
 	import {
+		relationships,
 		authHeader,
 		user,
 		spinner,
 		lastTyped,
-		chatid,
-		chatMembers,
+		chat,
 		postInput as postInput_2,
 	} from "./stores.js";
+	import {userRestrictions, isRestricted} from "../lib/bitField.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import {playNotification} from "./sounds.js";
 	import * as modals from "./modals.js";
@@ -49,18 +55,38 @@
 	export let canPost = true;
 	export let queryParams = {};
 	export let addToChat = false;
+	export let adminView = false;
 
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 
 	import {fly} from "svelte/transition";
 	import {flip} from "svelte/animate";
-	import {onDestroy, onMount} from "svelte";
+	import {params} from "@roxi/routify";
+	import {onMount, onDestroy} from "svelte";
 
 	let id = 0;
 	let postErrors = "";
 
-	let postInput, submitBtn;
+	let postInput, submitBtn, userRestricted, dmWith;
+
+	let addToChatLoading = {};
+
+	$: {
+		userRestricted =
+			(postOrigin === "home" &&
+				isRestricted(userRestrictions.HOME_POSTS)) ||
+			(!["home", "inbox"].includes(postOrigin) &&
+				isRestricted(userRestrictions.CHAT_POSTS));
+
+		if ($chat.type === 1) {
+			dmWith = $chat.members.filter(
+				username => username !== $user.name
+			)[0];
+		} else {
+			dmWith = null;
+		}
+	}
 
 	// PagedList stuff
 	let list;
@@ -141,13 +167,16 @@
 			}
 			return {
 				id: id++,
-				_id: post._id,
-				post_id: post.post_id,
+				post_id: post._id,
+				post_origin: post.post_origin,
 				user: post.u,
 				content: post.p,
+				unfiltered_content: post.unfiltered_p,
 				date: post.t.e,
-				post_origin: post.post_origin,
+				edited_at: post.edited_at,
 				isDeleted: post.isDeleted,
+				mod_deleted: post.mod_deleted,
+				deleted_at: post.deleted_at,
 			};
 		});
 		const numPages = json["pages"];
@@ -158,16 +187,6 @@
 			numPages,
 			result,
 		};
-	}
-
-	function post(url = "", data = {}) {
-		fetch(url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
 	}
 
 	let destroy = () => {};
@@ -181,19 +200,45 @@
 			if (!cmd.val) return;
 
 			const isGC = postOrigin !== "home";
-			if (cmd.val.mode == "delete") {
+			if (cmd.val.mode === "delete") {
+				if (adminView) return;
 				items = items.filter(post => post.post_id !== cmd.val.id);
 			} // This needs to be here to even function - Bloctans
+			if (cmd.val.mode === "update_post") {
+				let itemIndex = items.findIndex(
+					post => post.post_id === cmd.val.payload._id
+				);
+				if (itemIndex !== -1) {
+					let post = cmd.val.payload;
+					items[itemIndex] = {
+						id: items[itemIndex].id,
+						post_id: post._id,
+						post_origin: post.post_origin,
+						user: post.u,
+						content: post.p,
+						unfiltered_content: post.unfiltered_p,
+						date: post.t.e,
+						edited_at: post.edited_at,
+						isDeleted: post.isDeleted,
+						mod_deleted: post.mod_deleted,
+						deleted_at: post.deleted_at,
+					};
+				}
+			}
 			if (!isGC || cmd.val.state === 2) {
 				if (cmd.val.post_origin !== postOrigin) return;
 				list.addItem({
 					id: id++,
 					post_id: cmd.val._id,
+					post_origin: cmd.val.post_origin,
 					user: cmd.val.u,
 					content: cmd.val.p,
+					unfiltered_content: cmd.val.unfiltered_p,
 					date: cmd.val.t.e,
-					post_origin: cmd.val.post_origin,
+					edited_at: cmd.val.edited_at,
 					isDeleted: cmd.val.isDeleted,
+					mod_deleted: cmd.val.mod_deleted,
+					deleted_at: cmd.val.deleted_at,
 				});
 				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
 			}
@@ -201,10 +246,10 @@
 				list.addItem({
 					id: id++,
 					post_id: "",
-					user: "Server",
-					content: `${cmd.val.u} left ${chatName}.`,
-					date: Date.now() / 1000,
 					post_origin: postOrigin || fetchUrl,
+					user: "Server",
+					content: `@${cmd.val.u} left ${chatName}.`,
+					date: Date.now() / 1000,
 					isDeleted: false,
 				});
 				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
@@ -213,10 +258,10 @@
 				list.addItem({
 					id: id++,
 					post_id: "",
-					user: "Server",
-					content: `${cmd.val.u} joined ${chatName}!`,
-					date: Date.now() / 1000,
 					post_origin: postOrigin || fetchUrl,
+					user: "Server",
+					content: `@${cmd.val.u} joined ${chatName}.`,
+					date: Date.now() / 1000,
 					isDeleted: false,
 				});
 				if ($user.sfx) playNotification();
@@ -256,6 +301,88 @@
 					return false;
 				}
 
+				// substitute command
+				if (content.match(/^s\/.+\//gs)) {
+					let toReplace = content.split("/")[1];
+					let replaceWith = content.replace(`s/${toReplace}/`, "");
+
+					let post = items.find(_post => _post.user === $user.name);
+					if (post) {
+						setTimeout(async () => {
+							let newContent = post.content.replace(
+								toReplace,
+								replaceWith
+							);
+							console.log(post);
+							if (post.unfiltered_content) {
+								newContent = post.unfiltered_content.replace(
+									toReplace,
+									replaceWith
+								);
+							}
+							if (newContent.trim() === "") {
+								try {
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "DELETE",
+											headers: $authHeader,
+										}
+									);
+									if (!resp.ok) {
+										if (resp.status === 429) {
+											throw new Error(
+												"Too many requests! Try again later."
+											);
+										}
+										throw new Error(
+											"Response code is not OK; code is " +
+												resp.status
+										);
+									}
+								} catch (e) {
+									postErrors = `Error while deleting post: ${e}`;
+								}
+							} else if (newContent !== post.content) {
+								try {
+									const resp = await fetch(
+										`${apiUrl}posts?id=${post.post_id}`,
+										{
+											method: "PATCH",
+											headers: {
+												"Content-Type":
+													"application/json",
+												...$authHeader,
+											},
+											body: JSON.stringify({
+												content: newContent,
+											}),
+										}
+									);
+									if (!resp.ok) {
+										if (resp.status === 429) {
+											throw new Error(
+												"Too many requests! Try again later."
+											);
+										}
+										throw new Error(
+											"Response code is not OK; code is " +
+												resp.status
+										);
+									}
+								} catch (e) {
+									postErrors = e;
+								}
+							}
+						}, 0);
+					}
+
+					input.value = "";
+					input.rows = "1";
+					input.style.height = "45px";
+					return;
+				}
+
 				spinner.set(true);
 
 				submitBtn.disabled = true;
@@ -272,7 +399,7 @@
 								  },
 					},
 				})
-					.then(data => {
+					.then(() => {
 						input.value = "";
 						input.rows = "1";
 						input.style.height = "45px";
@@ -284,6 +411,10 @@
 							case "E:106 | Too many requests":
 								postErrors = "You're posting too fast!";
 								break;
+							case "I:017 | Missing permissions":
+								postErrors =
+									"Someone’s privacy settings are preventing you from sending messages here.";
+								break;
 							default:
 								postErrors = "Unexpected " + code + " error!";
 						}
@@ -294,13 +425,19 @@
 			<textarea
 				type="text"
 				class="white"
-				placeholder="Write something..."
+				placeholder={userRestricted
+					? "Your account is currently restricted."
+					: $relationships[dmWith] === 2
+					? `You have blocked ${dmWith}.`
+					: "Write something..."}
 				name="input"
 				autocomplete="off"
-				maxlength="500"
+				maxlength="4000"
 				rows="1"
+				disabled={userRestricted || $relationships[dmWith] === 2}
 				use:autoresize
 				on:input={() => {
+					postErrors = "";
 					if ($lastTyped + 1500 < +new Date()) {
 						lastTyped.set(+new Date());
 						clm.link.send({
@@ -327,25 +464,46 @@
 				}}
 				bind:this={postInput}
 			/>
-			<button
-				class="upload-image"
-				name="addImage"
-				title="Add an image"
-				on:click|preventDefault={() => {
-					postInput_2.set(postInput);
-					modals.showModal("addImg");
-				}}>+</button
-			>
-			<button bind:this={submitBtn} name="submit" disabled={!postInput}
-				>Post</button
-			>
+			{#if userRestricted}
+				<button
+					on:click|preventDefault={() => {
+						modals.showModal(AccountBannedModal, {
+							ban: $user.ban,
+							feature: `creating ${
+								postOrigin === "home" ? "home" : "group chat"
+							} posts`,
+						});
+					}}>View details</button
+				>
+			{:else if $relationships[dmWith] === 2}
+				<button
+					on:click|preventDefault={() =>
+						modals.showModal(BlockUserModal, {username: dmWith})}
+					>Unblock</button
+				>
+			{:else}
+				<button
+					class="upload-image"
+					name="addImage"
+					title="Add an image"
+					on:click|preventDefault={() => {
+						postInput_2.set(postInput);
+						modals.showModal(AddImageModal);
+					}}>+</button
+				>
+				<button
+					bind:this={submitBtn}
+					name="submit"
+					disabled={!postInput}>Post</button
+				>
+			{/if}
 		</form>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
 	{#if postOrigin}
 		<TypingIndicator forPage={postOrigin} />
 	{/if}
-	<PagedList maxItems={50} bind:items {loadPage} bind:this={list}>
+	<PagedList maxItems={100} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
 			{#each [...new Set(_items)] as post (post.id)}
 				<div
@@ -354,95 +512,82 @@
 					animate:flip={{duration: 250}}
 				>
 					{#if "lower_username" in post}
-						<ProfileView
-							canClick={true}
-							small={true}
-							profile={post}
-						/>
-					{:else}
-						<Post
-							canDoActions={fetchUrl !== "reports"}
-							{post}
-							input={postInput}
-						/>
-					{/if}
-					{#if fetchUrl === "reports"}
-						<div class="settings-controls">
-							{#if !post.lower_username}
-								<button
-									disabled={post.deleted}
-									class="circle trash"
-									title="Delete post"
-									on:click={async () => {
-										try {
-											await clm.meowerRequest({
-												cmd: "direct",
-												val: {
-													cmd: "delete_post",
-													val: post.post_id,
-												},
-											});
-											if (post.post_origin === "inbox") {
-												await clm.meowerRequest({
-													cmd: "direct",
-													val: {
-														cmd: "close_report",
-														val: post._id,
-													},
+						{#if !$user.hide_blocked_users || $relationships[post._id] !== 2}
+							<ProfileView
+								profile={post}
+								small={true}
+								canClick={true}
+								canDoActions={!addToChat}
+							/>
+							{#if addToChat && !$chat.members.includes(post._id)}
+								<div class="settings-controls">
+									<button
+										class="circle add"
+										title="Add to chat"
+										disabled={addToChatLoading[post._id]}
+										on:click={async () => {
+											addToChatLoading[post._id] = true;
+											try {
+												const resp = await fetch(
+													`${apiUrl}${
+														$params.admin
+															? "admin/"
+															: ""
+													}chats/${
+														$chat._id
+													}/members/${post._id}`,
+													{
+														method: "PUT",
+														headers: $authHeader,
+													}
+												);
+												if (!resp.ok) {
+													switch (resp.status) {
+														case 403:
+															throw new Error(
+																`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
+															);
+														case 404:
+															throw new Error(
+																`${post._id} not found.`
+															);
+														case 409:
+															throw new Error(
+																`${post._id} is already a member of ${$chat.nickname}.`
+															);
+														case 429:
+															throw new Error(
+																"Too many requests! Try again later."
+															);
+														default:
+															throw new Error(
+																"Response code is not OK; code is " +
+																	resp.status
+															);
+													}
+												}
+												if ($params.admin) {
+													$chat = await resp.json();
+												}
+												delete addToChatLoading[
+													post._id
+												];
+											} catch (e) {
+												modals.showModal(BasicModal, {
+													title: `Failed to add ${post._id} to ${$chat.nickname}`,
+													desc: e,
 												});
+												delete addToChatLoading[
+													post._id
+												];
 											}
-											items = items.filter(
-												p => p._id !== post._id
-											);
-										} catch (e) {
-											console.error(e);
-										}
-									}}
-								/>
+										}}
+									/>
+								</div>
 							{/if}
-							<button
-								class="circle close"
-								title="Close report"
-								on:click={async () => {
-									try {
-										await clm.meowerRequest({
-											cmd: "direct",
-											val: {
-												cmd: "close_report",
-												val: post._id,
-											},
-										});
-										items = items.filter(
-											p => p._id !== post._id
-										);
-									} catch (e) {
-										console.error(e);
-									}
-								}}
-							/>
-						</div>
-					{/if}
-					{#if addToChat && !$chatMembers.includes(post._id)}
-						<div class="settings-controls">
-							<button
-								class="circle add"
-								title="Add to chat"
-								on:click={async () => {
-									clm.meowerRequest({
-										cmd: "direct",
-										val: {
-											cmd: "add_to_chat",
-											val: {
-												chatid: $chatid,
-												username: post._id,
-											},
-										},
-									});
-									$chatMembers.push(post._id);
-									chatMembers.set($chatMembers);
-								}}
-							/>
-						</div>
+						{/if}
+					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}
+						<Post {post} {adminView} input={postInput} />
 					{/if}
 				</div>
 			{/each}
@@ -458,7 +603,7 @@
 				{""}
 			{:else}
 				<Container>
-					{#if $user.name}
+					{#if $user.name && canPost}
 						No posts here. Check back later or be the first to post!
 					{:else}
 						No posts here. Check back later!
@@ -471,6 +616,7 @@
 
 <style>
 	.createpost {
+		top: 0;
 		display: flex;
 		margin-bottom: 0.5em;
 		gap: 0.25em;
@@ -482,7 +628,7 @@
 	}
 
 	.post-errors {
-		color: red;
+		color: crimson;
 		font-size: 75%;
 		font-weight: bold;
 		margin: 0.25em 0;

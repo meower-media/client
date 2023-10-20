@@ -1,7 +1,7 @@
 {
 	"name": "meower-svelte",
 	"private": true,
-	"version": "1.7.1",
+	"version": "1.8.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -19,6 +19,7 @@
 		"prettier-plugin-svelte": "^2.9.0",
 		"svelte": "^3.49.0",
 		"svelte-textarea-autoresize": "^1.0.0",
+		"markdown-it": "^13.0.2",
 		"vite": "^4.0.0",
 		"twemoji": "^14.0.2"
 	}
