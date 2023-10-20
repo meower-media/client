@@ -1,11 +1,14 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import defaultPreview from "../../../assets/themePreviews/OrangeLight.png";
+	import CustomThemeModal from "./CustomTheme.svelte";
 
 	import {user} from "../../stores.js";
+	import {removeTheme} from "../../CustomTheme.js";
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
+
+	import defaultPreview from "../../../assets/themePreviews/OrangeLight.png";
 
 	const themePreviews = import.meta.glob(
 		"../../../assets/themePreviews/*.png",
@@ -15,40 +18,57 @@
 		}
 	);
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue"];
+	let selections = ["orange", "dark-orange", "blue", "dark-blue","custom"];
 
 	let error = false;
 
-	let darkMode = !$user.mode;
+    let darkMode = !$user.mode;
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
-		theme = "orange";
-		error = true;
+		if (!theme.startsWith("custom:")) {
+			theme = "orange";
+			error = true;
+		} else {
+			theme = "custom";
+			darkMode = false;
+		}
 	}
 
-	const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 	let selection = selections.indexOf((darkMode ? "dark-" : "") + theme);
 
 	let darkModeStr = (!darkMode && "Light") || "Dark";
 	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 	let themeName = themeCaps + darkModeStr;
-
-	/**
-	 * @type {string}
-	 */
+	
+    /**
+     * @type {string}
+     */
 	// @ts-ignore
 	let currentPreviewImage =
 		themePreviews["../../../assets/themePreviews/" + themeName + ".png"] ||
 		defaultPreview;
 
 	function changeTheme() {
-		selection = clamp(selection, 0, 3);
+		if (selection < 0) {selection = selections.length-1}
+
+		selection = selection % selections.length;
 		theme = selections[selection];
-		darkMode = false;
-		if (theme.startsWith("dark-")) {
-			darkMode = true;
-			theme = theme.substring(5);
+
+		if (theme != "custom") {
+			darkMode = false;
+			if (theme.startsWith("dark-")) {
+				darkMode = true;
+				theme = theme.substring(5);
+			}
+
+			darkModeStr = darkMode ? "Dark" : "Light";
+			themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
+			themeName = themeCaps + darkModeStr; // Change vars
+			
+			// @ts-ignore
+			currentPreviewImage =
+				themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
 		}
 
 		darkModeStr = darkMode ? "Dark" : "Light";
@@ -74,14 +94,21 @@
 				}}>{"<"}</button
 			>
 			<div class="theme-middle">
-				<img
-					src={currentPreviewImage}
-					class="theme-preview"
-					alt={themeName}
-				/>
-				<div class="theme-name">
-					{themeCaps + " (" + darkModeStr + ")"}
-				</div>
+				{#if theme === "custom"}
+					<div class="theme-name">
+						Custom Theme
+					</div>
+					<button on:click={() => modals.showModal(CustomThemeModal)}>Edit theme</button>
+				{:else}
+					<div class="theme-name">
+						{themeCaps + " (" + darkModeStr + ")"}
+					</div>
+					<img
+						src={currentPreviewImage}
+						class="theme-preview"
+						alt={themeName}
+					/>
+				{/if}
 			</div>
 			<button
 				on:click={() => {
@@ -98,15 +125,19 @@
 		<p class="layout-text">(Change the layout in the settings.)</p>
 		<div class="modal-buttons">
 			<button
-				on:click={() => {
-					modals.closeLastModal();
-				}}>Close</button
+				on:click={modals.closeLastModal}>Close</button
 			>
 			<button
+				disabled={theme === "custom"}
 				on:click={() => {
+					removeTheme();
+					const _user = $user;
+					_user.theme = theme;
+					_user.mode = !darkMode;
+					user.set(_user);
 					clm.updateProfile({theme: theme, mode: !darkMode});
 					modals.closeLastModal();
-				}}>OK</button
+				}}>Save</button
 			>
 		</div>
 	</div>
@@ -142,7 +173,7 @@
 
 	.layout-text {
 		text-align: center;
-		margin: 0.75em 0;
-		font-size: 80%;
+        margin: 0.75em 0;
+        font-size: 80%;
 	}
 </style>

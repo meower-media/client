@@ -66,7 +66,7 @@
 				placeholder="Username"
 				id="username"
 				name="username"
-				autocomplete="false"
+				autocomplete="off"
 				maxlength="20"
 				disabled={loading}
 				bind:value={username}

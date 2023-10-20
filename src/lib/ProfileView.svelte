@@ -1,3 +1,16 @@
+<!--
+	Profile view thing to make codebase better
+
+	(Arrow I swear if you comment that this makes your life harder)
+
+	Args:
+		Username: The profile username
+		Profile: Custom profile JSON, Optional
+		Small: If True, the View will be shorter
+		CanClick: If True, when you click the PFP, it will go to their profile
+		CloseCurrentModal (Defaults to true): If false, the current Modal wont close when Clicking the PFP 
+-->
+
 <script>
 	import Loading from "./Loading.svelte";
 	import Container from "./Container.svelte";
@@ -183,7 +196,7 @@
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={() => $goto(`/users/${data._id}`)}
+						on:click={$goto(`/users/${data._id}`)}
 					>
 						<PFP
 							online={$ulist.includes(data._id)}

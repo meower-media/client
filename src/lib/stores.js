@@ -3,7 +3,8 @@
  */
 
 import {writable} from "svelte/store";
-import unloadedprofile from "./unloadedprofile.js";
+import unloadedProfile from "./unloadedprofile.js";
+import {fallback as customThemeFallback} from "./CustomTheme.js";
 
 // Used for setup screen
 export const screen = writable("setup");
@@ -45,7 +46,7 @@ export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);
 
 // Image adding stuff
-export const postInput = writable();
+export const postInput = writable("");
 
 // Current auth header
 export const authHeader = writable({
@@ -54,25 +55,18 @@ export const authHeader = writable({
 });
 
 // The current user profile
-export const user = writable(unloadedprofile());
+export const user = writable(unloadedProfile());
 
 // Spinner thing
 export const spinner = writable(false);
 
 // What is this
 export const windowStyle = writable({});
+export const groupCats = writable(100);
 
 // Custom theme
 export const useCustomTheme = writable(false);
-export const customTheme = writable({
-	orange: "f9a636",
-	orangeButton: "f9a636",
-	orangeLight: "ffce8c",
-	orangeDark: "b46d34",
-	background: "ffffff",
-	foreground: "000000",
-	foregroundOrange: "ffffff",
-});
+export const customTheme = writable(customThemeFallback);
 
 // User moderation
 export const pendingBanState = writable(null);

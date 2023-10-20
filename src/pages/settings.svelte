@@ -43,9 +43,11 @@
 	</div>
 
 	<h2>Theme</h2>
-	The theme is currently set to {$user.theme} ({$user.mode
-		? "light"
-		: "dark"}).
+	{#if !$user.theme.startsWith("custom:")}
+		The theme is currently set to {$user.theme} ({$user.mode ? "light" : "dark"}).
+	{:else}
+		You are currently using a custom theme! How cool is that!
+	{/if}
 </Container>
 <Container>
 	<div class="settings-controls">
@@ -141,6 +143,10 @@
 		<b class="important">THIS CANNOT BE UNDONE!</b>
 	</Container>
 {/if}
+
+<!--
+	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
+-->
 
 <style>
 	.settings-controls {

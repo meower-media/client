@@ -20,6 +20,8 @@ import {
 	disconnected,
 	disconnectReason,
 } from "./stores.js";
+import unloadedProfile from "./unloadedprofile.js";
+import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
 import {linkUrl, apiUrl} from "./urls.js";
 import * as modals from "./modals.js";
 
@@ -35,14 +37,31 @@ const disconnectCodes = [
 	"E:119 | IP Blocked",
 ];
 
-let _user = null;
+let _user = unloadedProfile();
+let _userLoaded = false;
 user.subscribe(v => {
-	_user = v;
-	if (_user.name)
+	if (_userLoaded) {
+		_user = v;
+		if (_user.theme.startsWith("custom:")) {
+			applyTheme(stringToTheme(_user.theme));
+		} else {
+			removeTheme();
+		}
 		localStorage.setItem(
 			"meower_savedconfig",
-			JSON.stringify({theme: _user.theme, mode: _user.mode})
+			JSON.stringify({
+				theme: _user.theme,
+				mode: _user.mode,
+				sfx: _user.sfx,
+				bgm: _user.bgm,
+				bgm_song: _user.bgm_song,
+				layout: _user.layout,
+			})
 		);
+	} else {
+		_user = v;
+		_userLoaded = true;
+	}
 });
 
 let _authHeader = null;
@@ -84,12 +103,14 @@ addEventListener("storage", event => {
 
 // Load saved config from local storage
 if (localStorage.getItem("meower_savedconfig")) {
-	const profile = _user;
 	const savedConfig = JSON.parse(localStorage.getItem("meower_savedconfig"));
-
-	profile.theme = savedConfig.theme;
-	profile.mode = savedConfig.mode;
-	user.set(profile);
+	_user.theme = savedConfig.theme;
+	_user.mode = savedConfig.mode;
+	_user.sfx = savedConfig.sfx;
+	_user.bgm = savedConfig.bgm;
+	_user.bgm_song = savedConfig.bgm_song;
+	_user.layout = savedConfig.layout;
+	user.set(_user);
 }
 
 /**

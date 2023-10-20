@@ -1,3 +1,5 @@
+<!--Adding images. not really-->
+
 <script>
 	import Modal from "../Modal.svelte";
 	import Container from "../Container.svelte";
@@ -25,7 +27,6 @@
 		isDeleted: false,
 	};
 
-	// TODO: make bridged tag a setting
 	import {default as loadProfile} from "../loadProfile.js";
 
 	/**

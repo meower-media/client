@@ -5,6 +5,7 @@
 	import FormattedDate from "./FormattedDate.svelte";
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
+	import Attachment from "./Attachment.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -51,7 +52,7 @@
 	/**
 	 * Initialize this post's special behavior (user profile, images)).
 	 */
-	export function initPostUser() {
+	export async function initPostUser() {
 		if (!post.user) return;
 
 		if (post.content.includes(":")) {
@@ -91,12 +92,13 @@
 				IMAGE_HOST_WHITELIST.some(o =>
 					result.value[2].toLowerCase().startsWith(o.toLowerCase())
 				)
-			) {
+				) {
+
 				images.push({
 					title: result.value[1],
 					url: result.value[2],
 				});
-				// Prevent flooding
+
 				if (images.length >= 3) break;
 			}
 		}
@@ -160,7 +162,7 @@
 			}
 			content = md.renderer.render(tokens, md.options);
 
-			// add quote containers to blockquotes
+			// add quote containers to blockquotes (although, quotes are currently broken)
 			content = content.replaceAll(
 				/<blockquote>(.+?)<\/blockquote>/gms,
 				'<div class="quote-container"><blockquote>$1</blockquote></div>'
@@ -448,7 +450,7 @@
 			type="text"
 			class="white"
 			name="input"
-			autocomplete="false"
+			autocomplete="off"
 			maxlength="4000"
 			rows="1"
 			bind:this={editContentInput}
@@ -515,9 +517,7 @@
 	{#if !editing}
 		<div class="post-images">
 			{#each images as { title, url }}
-				<a href={url} target="_blank" rel="noreferrer"
-					><img src={url} alt={title} {title} class="post-image" />
-				</a>
+				<Attachment {title} {url} />
 			{/each}
 		</div>
 	{/if}
@@ -566,11 +566,6 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
-	}
-
-	.post-image {
-		max-height: 12em;
-		max-width: 100%;
 	}
 
 	.post-images {

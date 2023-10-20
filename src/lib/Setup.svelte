@@ -5,13 +5,12 @@
 	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
 
 	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
+	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
 	const link = clm.link;
 	// @ts-ignore
 	window.clm = clm;
-
-	import unloadedProfile from "./unloadedprofile.js";
 
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
