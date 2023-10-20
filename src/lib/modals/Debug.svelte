@@ -30,7 +30,7 @@
 							class="white"
 							style="width: 100%;"
 							name="input"
-							autocomplete="false"
+							autocomplete="off"
 							bind:value={editingStoreVal}
 							on:keydown={e => {
 								if (e.key == "Enter") e.preventDefault();
@@ -44,7 +44,7 @@
 							class="white"
 							style="width: 100%;"
 							name="input"
-							autocomplete="false"
+							autocomplete="off"
 							bind:value={editingStoreVal}
 						/>
 					{:else}
@@ -53,7 +53,7 @@
 							class="white"
 							style="width: 100%;"
 							name="input"
-							autocomplete="false"
+							autocomplete="off"
 							bind:value={editingStoreVal}
 						/>
 					{/if}
