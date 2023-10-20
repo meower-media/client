@@ -6,13 +6,15 @@
 	import {onMount} from "svelte";
 
 	let repairMode = false;
+	let ipBlocked = false;
 
 	onMount(async () => {
 		const resp = await fetch(`${apiUrl}status`);
 		if (!resp.ok) return;
 
 		const json = await resp.json();
-		if (json.repairMode) repairMode = true;
+		if (json.isRepairMode) repairMode = true;
+		if (json.ipBlocked) ipBlocked = true;
 	});
 </script>
 
@@ -28,18 +30,27 @@
 					rel="noreferrer">https://status.meower.org</a
 				>.
 			</p>
+		{:else if ipBlocked}
+			<p>
+				Your IP address has been blocked because it was used to violate
+				Meower's Terms of Service or is likely to cause spam.
+				<br /><br />
+				If you think this is a mistake, please email
+				<a
+					href="mailto:support@meower.org"
+					target="_blank"
+					rel="noreferrer">support@meower.org</a
+				>.
+			</p>
 		{:else}
 			<p>
-				Failed connecting to server. View console for more information.
+				Failed connecting to server. View console for more information
+				or try again later.
 			</p>
 		{/if}
 		<br />
 		<div class="modal-buttons">
-			<button
-				on:click={() => {
-					window.location.reload();
-				}}>Reconnect</button
-			>
+			<button on:click={() => window.location.reload()}>Reconnect</button>
 		</div>
 	</div>
 </Modal>

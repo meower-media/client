@@ -1,5 +1,9 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
+	import ServerSelectorModal from "./modals/ServerSelector.svelte";
+	import BasicModal from "./modals/Basic.svelte";
+	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
+
 	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -12,17 +16,18 @@
 	import meowerLogo from "../assets/logo.svg";
 	import meowy from "../assets/meowy.svg";
 
-	import {tick, onMount} from "svelte";
+	import {tick, onMount, onDestroy} from "svelte";
 	import {fade} from "svelte/transition";
 	import sleep from "./sleep.js";
 	import version from "./version.js";
 	import * as BGM from "./BGM.js";
 
-	import {isActive, goto} from "@roxi/routify";
+	import {isActive} from "@roxi/routify";
 
 	let logo,
 		setup,
 		logoImg,
+		serverSelectorTimeout,
 		loginStatus = "";
 
 	async function connect() {
@@ -30,6 +35,12 @@
 		clm.connect();
 
 		await new Promise(resolve => link.once("connected", resolve));
+	}
+
+	function cancelServerSelector() {
+		if (serverSelectorTimeout) {
+			clearTimeout(serverSelectorTimeout);
+		}
 	}
 
 	let acceptTerms = false;
@@ -84,13 +95,20 @@
 				page.set("welcome");
 			}
 		});
+
+		window.addEventListener("mouseup", cancelServerSelector);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener("mouseup", cancelServerSelector);
 	});
 
 	/**
 	 * Goes to main setup screen.
 	 */
 	async function mainSetup() {
-		localStorage.clear();
+		localStorage.removeItem("meower_savedusername");
+		localStorage.removeItem("meower_savedpassword");
 		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
@@ -109,15 +127,16 @@
 	 * @param {string} username
 	 * @param {string} password
 	 */
-	function doLogin(
+	async function doLogin(
 		username,
 		password,
 		autoLogin = false,
 		savedLogin = false
 	) {
+		loginStatus = "Logging in...";
+
 		try {
-			loginStatus = "Logging in...";
-			clm.meowerRequest({
+			await clm.meowerRequest({
 				cmd: "direct",
 				val: {
 					cmd: "authpswd",
@@ -126,71 +145,40 @@
 						pswd: password,
 					},
 				},
-			})
-				.then(async val => {
-					try {
-						loginStatus = "Getting user data...";
-						const profileVal = await clm.meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "get_profile",
-								val: val.payload.username,
-							},
-						});
-						user.update(v =>
-							Object.assign(v, {
-								...profileVal.payload,
-								name: val.payload.username,
-							})
-						);
-					} catch (e) {
-						console.error(
-							"Unexpected " + e + " error getting user data!"
-						);
-						modals.showModal(
-							"basic",
-							"Error",
-							"An unexpected error occurred while trying to load your userdata! Check console for more information."
-						);
-					}
-					loginStatus = "";
-					BGM.playBGM($user.bgm_song);
-					screen.set("main");
-				})
-				.catch(code => {
-					if (autoLogin) return mainSetup();
-
-					switch (code) {
-						case "E:103 | ID not found":
-							loginStatus = "Invalid username!";
-							break;
-						case "I:011 | Invalid Password":
-							loginStatus = savedLogin
-								? "Session expired! Please login again."
-								: "Invalid password!";
-							break;
-						case "E:018 | Account Banned":
-							modals.showModal("banned");
-							loginStatus = "";
-							break;
-						case "E:019 | Illegal characters detected":
-							loginStatus =
-								"Usernames must not have spaces or other special characters!";
-							break;
-						case "E:106 | Too many requests":
-							loginStatus =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							loginStatus = `Unexpected ${code} error!`;
-					}
-				});
+			});
 		} catch (e) {
 			if (autoLogin) return mainSetup();
-
-			console.error(e);
-			loginStatus = "Error logging in: " + e;
+			switch (e) {
+				case "E:103 | ID not found":
+					loginStatus = "Invalid username!";
+					break;
+				case "E:025 | Deleted":
+					loginStatus = "This account has been deleted!";
+					break;
+				case "I:011 | Invalid Password":
+					loginStatus = savedLogin
+						? "Session expired! Please login again."
+						: "Invalid password!";
+					break;
+				case "E:018 | Account Banned":
+					loginStatus = "";
+					break;
+				case "E:019 | Illegal characters detected":
+					loginStatus =
+						"Usernames must not have spaces or other special characters!";
+					break;
+				case "E:106 | Too many requests":
+					loginStatus = "Too many requests! Please try again later.";
+					break;
+				default:
+					loginStatus = `Unexpected ${e} error!`;
+			}
+			return;
 		}
+
+		loginStatus = "";
+		BGM.playBGM($user.bgm_song);
+		screen.set("main");
 	}
 </script>
 
@@ -224,7 +212,14 @@
 					/>
 					<br /><br />
 				</div>
-				<button on:click={() => page.set("login")}>Log in</button>
+				<button
+					on:click={() => page.set("login")}
+					on:mousedown={() => {
+						serverSelectorTimeout = setTimeout(() => {
+							modals.showModal(ServerSelectorModal);
+						}, 1000);
+					}}>Log in</button
+				>
 				<br />
 				<button on:click={() => page.set("join")}
 					>Create an account</button
@@ -332,6 +327,7 @@
 							user.update(v =>
 								Object.assign(v, {
 									name: val.payload.username,
+									unread_inbox: true,
 									layout: "new",
 								})
 							);
@@ -342,12 +338,7 @@
 						.catch(code => {
 							switch (code) {
 								case "I:015 | Account exists":
-									loginStatus =
-										"That username already exists!";
-									break;
-								case "E:119 | IP Blocked":
-									modals.showModal("accountCreationBlocked");
-									loginStatus = "";
+									loginStatus = `${username} is taken!`;
 									break;
 								case "E:019 | Illegal characters detected":
 									loginStatus =
@@ -356,6 +347,19 @@
 								case "E:106 | Too many requests":
 									loginStatus =
 										"Too many requests! Please try again later.";
+									break;
+								case "E:119 | IP Blocked":
+									modals.showModal(
+										AccountCreationBlockedModal
+									);
+									loginStatus = "";
+									break;
+								case "E:122 | Command disabled by sysadmin":
+									modals.showModal(BasicModal, {
+										title: "Registration Disabled",
+										desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later.",
+									});
+									loginStatus = "";
 									break;
 								default:
 									loginStatus = `Unexpected ${code} error!`;
