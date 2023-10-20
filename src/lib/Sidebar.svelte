@@ -63,7 +63,7 @@
 			$goto("/inbox");
 		}}
 		class="round"
-		title="The Inbox"
+		title="Inbox"
 		class:new-msgs={$user.unread_inbox}
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />

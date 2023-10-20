@@ -431,7 +431,7 @@
 					? `You have blocked ${dmWith}.`
 					: "Write something..."}
 				name="input"
-				autocomplete="false"
+				autocomplete="off"
 				maxlength="4000"
 				rows="1"
 				disabled={userRestricted || $relationships[dmWith] === 2}

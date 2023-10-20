@@ -24,8 +24,7 @@ npm run dev:routify (in a separate terminal)
 npm run dev
 ```
 
-If you are planning to edit the way routes are laid out or add additional pages, you will need to run this command in a separate terminal:
-
+Then in a separate shell:
 ```
 npm run dev:routify
 ```

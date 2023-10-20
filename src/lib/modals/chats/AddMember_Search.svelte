@@ -28,7 +28,7 @@
 				placeholder="Username"
 				id="userinput"
 				name="userinput"
-				autocomplete="false"
+				autocomplete="off"
 				maxlength="20"
 				bind:value={username}
 				use:focus
