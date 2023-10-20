@@ -7,7 +7,6 @@
     import {OOBERunning, GroupCats} from "../lib/stores.js";
     import * as modals from "../lib/modals.js";
 
-    import {levels} from "../lib/formatting.js"
 	import version from "../lib/version.js";
 
     const PFP_COUNT = 34;
@@ -185,9 +184,6 @@
                         </h1>
                         <div class="profile-active">
                             Offline
-                        </div>
-                        <div class="profile-role">
-                            {levels[Profile_Level]}
                         </div>
                     </div>
                 </div>
