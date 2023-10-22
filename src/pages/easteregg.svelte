@@ -68,7 +68,7 @@
     </Container>
     <Container>
         <h1>Group Cats</h1>
-        Crash your browser by changing the amount of group cats!
+        Crash your browser by changing the amount of group cats! (Default is 200)
 
         <br /><br />
 
