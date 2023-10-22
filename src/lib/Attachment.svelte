@@ -4,18 +4,25 @@
 
 <script>
     import {onMount} from "svelte";
+	import Container from "./Container.svelte";
 
     export let title;
     export let url;
 
-    let type, typeSplit, show;
+    let type, typeSplit, show, error;
 
     onMount(async () => {
-        const resp = await fetch(url);
-        if (resp.ok) {
-            type = resp.headers.get("Content-Type");
-            typeSplit = type.split(";")[0].split("/")[0];
-            show = true;
+        try {
+            const resp = await fetch(url);
+            if (resp.ok) {
+                type = resp.headers.get("Content-Type");
+                typeSplit = type.split(";")[0].split("/")[0];
+                show = true;
+            } else {
+                error = "Status Code "+resp.status
+            }
+        } catch (e) {
+            error = e
         }
     });
 </script>
@@ -37,6 +44,16 @@
                 Other File Type ({type})
             {/if}
         </a>
+    {/if}
+    {#if error}
+        <Container>
+            This attachment had an error loading. Reason:
+            <br />
+            {error}
+            <br />
+            <br />
+            View the Attachment <a href={url} target="_blank" rel="noreferrer">Here</a> Instead
+        </Container>
     {/if}
 </div>
 
