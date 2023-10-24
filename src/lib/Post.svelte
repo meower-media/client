@@ -116,15 +116,7 @@
 	window.confirmLink = confirmLink;
 
 	function addFancyElements(content) {
-		// escape HTML
-		content = content
-			.replaceAll("&", "&amp;")
-			.replaceAll("<", "&lt;")
-			.replaceAll(">", "&gt;")
-			.replaceAll('"', "&quot;")
-			.replaceAll("'", "&apos;");
-
-		// markdown
+		// markdown (which has HTML escaping built-in)
 		try {
 			const md = new MarkdownIt("default", {
 				breaks: true,
