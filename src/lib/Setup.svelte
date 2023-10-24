@@ -310,7 +310,8 @@
 						return false;
 					}
 					if (password !== confirmPassword) {
-						loginStatus = "Passwords do not match! Make sure you have entered your password correctly.";
+						loginStatus =
+							"Passwords do not match! Make sure you have entered your password correctly.";
 						return false;
 					}
 

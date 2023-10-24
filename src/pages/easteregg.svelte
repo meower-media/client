@@ -1,107 +1,127 @@
 <!-- routify:options bundle=false -->
 <script>
 	import Container from "../lib/Container.svelte";
-    import PFP from "../lib/PFP.svelte";
-    import LiText from "../lib/LiText.svelte";
+	import PFP from "../lib/PFP.svelte";
+	import LiText from "../lib/LiText.svelte";
 
-    import DebugModal from "../lib/modals/Debug.svelte";
-    import LogoutModal from "../lib/modals/Logout.svelte";
-    import ServerSelectorModal from "../lib/modals/ServerSelector.svelte";
-    import CreateChatModal from "../lib/modals/chats/CreateChat.svelte";
-    import ChangePasswordModal from "../lib/modals/settings/ChangePassword.svelte";
-    import CustomThemeModal from "../lib/modals/settings/CustomTheme.svelte";
-    import DeleteAccountModal from "../lib/modals/settings/DeleteAccount.svelte";
-    import LogoutEverywhereModal from "../lib/modals/settings/LogoutEverywhere.svelte";
-    import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
-    import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
+	import DebugModal from "../lib/modals/Debug.svelte";
+	import LogoutModal from "../lib/modals/Logout.svelte";
+	import ServerSelectorModal from "../lib/modals/ServerSelector.svelte";
+	import CreateChatModal from "../lib/modals/chats/CreateChat.svelte";
+	import ChangePasswordModal from "../lib/modals/settings/ChangePassword.svelte";
+	import CustomThemeModal from "../lib/modals/settings/CustomTheme.svelte";
+	import DeleteAccountModal from "../lib/modals/settings/DeleteAccount.svelte";
+	import LogoutEverywhereModal from "../lib/modals/settings/LogoutEverywhere.svelte";
+	import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
+	import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
 
-    import {OOBERunning, groupCats} from "../lib/stores.js";
-    import * as modals from "../lib/modals.js";
+	import {OOBERunning, groupCats} from "../lib/stores.js";
+	import * as modals from "../lib/modals.js";
 
 	import version from "../lib/version.js";
 
-    const allModals = [
-        DebugModal,
-        LogoutModal,
-        ServerSelectorModal,
-        CreateChatModal,
-        ChangePasswordModal,
-        CustomThemeModal,
-        DeleteAccountModal,
-        LogoutEverywhereModal,
-        SwitchBGMSFXModal,
-        SwitchThemeModal,
-    ];
+	const allModals = [
+		DebugModal,
+		LogoutModal,
+		ServerSelectorModal,
+		CreateChatModal,
+		ChangePasswordModal,
+		CustomThemeModal,
+		DeleteAccountModal,
+		LogoutEverywhereModal,
+		SwitchBGMSFXModal,
+		SwitchThemeModal,
+	];
 
-    const PFP_COUNT = 34;
+	const PFP_COUNT = 34;
 
 	const pfps = new Array(PFP_COUNT).fill().map((_, i) => i + 1);
 	let pfpSwitcher = false;
 
-    let pfpOverflow = false;
+	let pfpOverflow = false;
 	$: {
 		const pfp = 1;
 		pfpOverflow = pfp < 0 || pfp > PFP_COUNT;
 	}
 
-    let profileUsername = "EasterEgg";
-    let profileQuote = "Quote Here";
-    let profilePfp = 1;
-    let profileQuoteEnabled = true;
+	let profileUsername = "EasterEgg";
+	let profileQuote = "Quote Here";
+	let profilePfp = 1;
+	let profileQuoteEnabled = true;
 </script>
 
 <div>
 	<Container>
-        <h1>Look at that!</h1>
-        You found a secret! Here you can mess around with a bit of Meower Svelte.
-    </Container>
-    <Container>
-        <h1>Modal Roulette</h1>
-        Press the button below to pick a random modal (of course with moderation, harmful and errored ones removed)
-        <br /><br />
-        <button
-            on:click = {() => {
-                let randModal = allModals[Math.round(Math.random() * allModals.length-1)];
-                modals.showModal(randModal);
-            }}	
-        >Me!</button>
-    </Container>
-    <Container>
-        <h1>Group Cats</h1>
-        Crash your browser by changing the amount of group cats!
+		<h1>Look at that!</h1>
+		You found a secret! Here you can mess around with a bit of Meower Svelte.
+	</Container>
+	<Container>
+		<h1>Modal Roulette</h1>
+		Press the button below to pick a random modal (of course with moderation,
+		harmful and errored ones removed)
+		<br /><br />
+		<button
+			on:click={() => {
+				let randModal =
+					allModals[Math.round(Math.random() * allModals.length - 1)];
+				modals.showModal(randModal);
+			}}>Me!</button
+		>
+	</Container>
+	<Container>
+		<h1>Group Cats</h1>
+		Crash your browser by changing the amount of group cats!
 
-        <br /><br />
+		<br /><br />
 
-        <input type="number" placeholder="Enter a number" bind:value={$groupCats}/>
-    </Container>
-    <Container>
-        <!--Posts, Profiles and Profile Views (Later on, maybe GC Member list and postlist)-->
-        <h1>Make your own!</h1>
-        Make your own profile, post, etc. with this!
+		<input
+			type="number"
+			placeholder="Enter a number"
+			bind:value={$groupCats}
+		/>
+	</Container>
+	<Container>
+		<!--Posts, Profiles and Profile Views (Later on, maybe GC Member list and postlist)-->
+		<h1>Make your own!</h1>
+		Make your own profile, post, etc. with this!
 
-        <br /><br />
+		<br /><br />
 
-        <Container>
-            <h1>Profile</h1>
+		<Container>
+			<h1>Profile</h1>
 
-            Username
-            <br />
-            <input placeholder="Username" type="text" bind:value={profileUsername} class="modal-input white"/>
-            <br /><br />
+			Username
+			<br />
+			<input
+				placeholder="Username"
+				type="text"
+				bind:value={profileUsername}
+				class="modal-input white"
+			/>
+			<br /><br />
 
-            Quote
-            <br />
-            <input placeholder="Quote" type="text" bind:value={profileQuote} class="modal-input white"/>
-            <br /><br />
+			Quote
+			<br />
+			<input
+				placeholder="Quote"
+				type="text"
+				bind:value={profileQuote}
+				class="modal-input white"
+			/>
+			<br /><br />
 
-            Enable Quote
-            <br />
-            <input type="checkbox" bind:checked={profileQuoteEnabled} class="modal-input white"/>
-            <br /><br />
+			Enable Quote
+			<br />
+			<input
+				type="checkbox"
+				bind:checked={profileQuoteEnabled}
+				class="modal-input white"
+			/>
+			<br /><br />
 
-            Profile Picture
-            <br />
-            {#if pfpSwitcher}
+			Profile Picture
+			<br />
+			{#if pfpSwitcher}
 				<Container>
 					<h2>Profile Picture</h2>
 					<div id="pfp-list">
@@ -121,7 +141,7 @@
 						{#each pfps as pfp}
 							<button
 								on:click={() => {
-									profilePfp = pfp
+									profilePfp = pfp;
 								}}
 								class="pfp"
 								class:selected={profilePfp === pfp}
@@ -133,8 +153,7 @@
 							>
 						{/each}
 						{#if pfpOverflow && profilePfp > 0}
-							<button
-								class="pfp selected"
+							<button class="pfp selected"
 								><PFP
 									online={false}
 									icon={profilePfp}
@@ -143,12 +162,12 @@
 							>
 						{/if}
 					</div>
-                    <br /><br />
-                    <button
-                        class="long"
-                        title="Close"
-                        on:click={() => (pfpSwitcher = false)}
-                    >Close</button>
+					<br /><br />
+					<button
+						class="long"
+						title="Close"
+						on:click={() => (pfpSwitcher = false)}>Close</button
+					>
 				</Container>
 			{:else}
 				<button
@@ -158,55 +177,53 @@
 					>Change Profile Picture</button
 				>
 			{/if}
-            <br /><br />
-            
-            <Container>
-                <div class="profile-header">
-                    <PFP
-                        online={false}
-                        icon={profilePfp}
-                        alt="{profileUsername}'s profile picture"
-                        size={1.4}
-                    />
-                    <div class="profile-header-info">
-                        <h1 class="profile-username">
-                            <LiText text={profileUsername} />
-                        </h1>
-                        <div class="profile-active">
-                            Offline
-                        </div>
-                    </div>
-                </div>
-            </Container>
+			<br /><br />
 
-            {#if profileQuoteEnabled}
-                <Container>
-                    <h3>Quote</h3>
-                    <p>"<i>{profileQuote}</i>"</p>
-                </Container>
-            {/if}
-        </Container>
+			<Container>
+				<div class="profile-header">
+					<PFP
+						online={false}
+						icon={profilePfp}
+						alt="{profileUsername}'s profile picture"
+						size={1.4}
+					/>
+					<div class="profile-header-info">
+						<h1 class="profile-username">
+							<LiText text={profileUsername} />
+						</h1>
+						<div class="profile-active">Offline</div>
+					</div>
+				</div>
+			</Container>
 
-        <Container>
-            <h1>Post</h1>
-            Coming soon!
-        </Container>
-    </Container>
-    <Container>
-        <h1>OOBE</h1>
-        Wanna see the OOBE?
+			{#if profileQuoteEnabled}
+				<Container>
+					<h3>Quote</h3>
+					<p>"<i>{profileQuote}</i>"</p>
+				</Container>
+			{/if}
+		</Container>
 
-        <br /><br />
+		<Container>
+			<h1>Post</h1>
+			Coming soon!
+		</Container>
+	</Container>
+	<Container>
+		<h1>OOBE</h1>
+		Wanna see the OOBE?
 
-        <button on:click = {() => $OOBERunning = true}>Click me</button>
-    </Container>
-    <!--<Container>
+		<br /><br />
+
+		<button on:click={() => ($OOBERunning = true)}>Click me</button>
+	</Container>
+	<!--<Container>
         <h1>Internal/Debug Info</h1>
         Want a look inside Svelte? Here you go!
 
 
     </Container>-->
-    Meower Svelte v{version}
+	Meower Svelte v{version}
 </div>
 
 <style>
@@ -240,7 +257,7 @@
 		flex-wrap: wrap;
 	}
 
-    .profile-header-info {
+	.profile-header-info {
 		margin-left: 1em;
 		height: 6em;
 	}

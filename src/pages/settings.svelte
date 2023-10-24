@@ -44,7 +44,9 @@
 
 	<h2>Theme</h2>
 	{#if !$user.theme.startsWith("custom:")}
-		The theme is currently set to {$user.theme} ({$user.mode ? "light" : "dark"}).
+		The theme is currently set to {$user.theme} ({$user.mode
+			? "light"
+			: "dark"}).
 	{:else}
 		You are currently using a custom theme! How cool is that!
 	{/if}

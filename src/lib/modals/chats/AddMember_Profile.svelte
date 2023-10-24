@@ -23,7 +23,8 @@
 					{#if !chat.members.includes(username)}
 						<button
 							class="circle add"
-							disabled={loading[chat._id] || chat.members.length >= 256}
+							disabled={loading[chat._id] ||
+								chat.members.length >= 256}
 							on:click={async () => {
 								errors[chat._id] = "";
 								loading[chat._id] = true;

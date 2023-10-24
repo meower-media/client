@@ -25,7 +25,8 @@
 					return;
 				}
 				if (password !== confirmPassword) {
-					error = "Passwords do not match! Make sure you have entered your password correctly.";
+					error =
+						"Passwords do not match! Make sure you have entered your password correctly.";
 					return;
 				}
 
@@ -110,7 +111,10 @@
 				bind:value={password}
 			/>
 			<br /><br />
-			<label for="confirm-password" style={error ? "color: crimson;" : ""}>
+			<label
+				for="confirm-password"
+				style={error ? "color: crimson;" : ""}
+			>
 				<b>Confirm Password</b>{#if error}<i> - {error}</i>{/if}
 			</label>
 			<input

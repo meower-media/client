@@ -2,20 +2,18 @@
 	import Cats from "../lib/MEOW.svelte";
 	import {goto} from "@roxi/routify";
 
-	let hide = false
+	let hide = false;
 </script>
 
 <div>
 	<div class="message">GROUP CAT 2.0!!!!</div>
 	{#if !hide}
 		<Cats />
-		<button class="help"
-			on:click={() => hide = true}
-		>AAAAAA THERE'S TOO MANY</button>
+		<button class="help" on:click={() => (hide = true)}
+			>AAAAAA THERE'S TOO MANY</button
+		>
 	{/if}
-	<button class="easter-egg"
-		on:click={$goto("/easteregg")}
-	></button>
+	<button class="easter-egg" on:click={$goto("/easteregg")} />
 </div>
 
 <style>

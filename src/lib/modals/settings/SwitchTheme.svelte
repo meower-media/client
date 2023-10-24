@@ -18,11 +18,11 @@
 		}
 	);
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue","custom"];
+	let selections = ["orange", "dark-orange", "blue", "dark-blue", "custom"];
 
 	let error = false;
 
-    let darkMode = !$user.mode;
+	let darkMode = !$user.mode;
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
@@ -40,17 +40,19 @@
 	let darkModeStr = (!darkMode && "Light") || "Dark";
 	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 	let themeName = themeCaps + darkModeStr;
-	
-    /**
-     * @type {string}
-     */
+
+	/**
+	 * @type {string}
+	 */
 	// @ts-ignore
 	let currentPreviewImage =
 		themePreviews["../../../assets/themePreviews/" + themeName + ".png"] ||
 		defaultPreview;
 
 	function changeTheme() {
-		if (selection < 0) {selection = selections.length-1}
+		if (selection < 0) {
+			selection = selections.length - 1;
+		}
 
 		selection = selection % selections.length;
 		theme = selections[selection];
@@ -65,10 +67,12 @@
 			darkModeStr = darkMode ? "Dark" : "Light";
 			themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 			themeName = themeCaps + darkModeStr; // Change vars
-			
+
 			// @ts-ignore
 			currentPreviewImage =
-				themePreviews["../../assets/themePreviews/" + themeName + ".png"] || defaultPreview;
+				themePreviews[
+					"../../assets/themePreviews/" + themeName + ".png"
+				] || defaultPreview;
 		}
 
 		darkModeStr = darkMode ? "Dark" : "Light";
@@ -95,10 +99,10 @@
 			>
 			<div class="theme-middle">
 				{#if theme === "custom"}
-					<div class="theme-name">
-						Custom Theme
-					</div>
-					<button on:click={() => modals.showModal(CustomThemeModal)}>Edit theme</button>
+					<div class="theme-name">Custom Theme</div>
+					<button on:click={() => modals.showModal(CustomThemeModal)}
+						>Edit theme</button
+					>
 				{:else}
 					<div class="theme-name">
 						{themeCaps + " (" + darkModeStr + ")"}
@@ -124,9 +128,7 @@
 		{/if}
 		<p class="layout-text">(Change the layout in the settings.)</p>
 		<div class="modal-buttons">
-			<button
-				on:click={modals.closeLastModal}>Close</button
-			>
+			<button on:click={modals.closeLastModal}>Close</button>
 			<button
 				disabled={theme === "custom"}
 				on:click={() => {
@@ -173,7 +175,7 @@
 
 	.layout-text {
 		text-align: center;
-        margin: 0.75em 0;
-        font-size: 80%;
+		margin: 0.75em 0;
+		font-size: 80%;
 	}
 </style>
