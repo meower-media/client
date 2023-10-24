@@ -84,6 +84,7 @@
 			pfp={23}
 			isMeower={true}
 		>
+			Web developer
 		</Contributor>
 		<Contributor
 			username="Voxalice"
