@@ -52,23 +52,25 @@
 
 <div>
 	<Container>
-        <h1>Look at that!</h1>
-        You found a secret! Here you can mess around with a bit of Meower Svelte.
-    </Container>
-    <Container>
-        <h1>Modal Roulette</h1>
-        Press the button below to pick a random modal (of course with moderation, harmful and errored ones removed)
-        <br /><br />
-        <button
-            on:click = {() => {
-                let randModal = allModals[Math.round(Math.random() * allModals.length-1)];
-                modals.showModal(randModal);
-            }}	
-        >Me!</button>
-    </Container>
-    <Container>
-        <h1>Group Cats</h1>
-        Crash your browser by changing the amount of group cats! (Default is 200)
+		<h1>Look at that!</h1>
+		You found a secret! Here you can mess around with a bit of Meower Svelte.
+	</Container>
+	<Container>
+		<h1>Modal Roulette</h1>
+		Press the button below to pick a random modal (of course with moderation,
+		harmful and errored ones removed)
+		<br /><br />
+		<button
+			on:click={() => {
+				let randModal =
+					allModals[Math.round(Math.random() * allModals.length - 1)];
+				modals.showModal(randModal);
+			}}>Me!</button
+		>
+	</Container>
+	<Container>
+		<h1>Group Cats</h1>
+		Crash your browser by changing the amount of group cats! (Default is 200)
 
 		<br /><br />
 
