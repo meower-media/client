@@ -50,9 +50,8 @@
             This attachment had an error loading. Reason:
             <br />
             {error}
-            <br />
-            <br />
-            View the Attachment <a href={url} target="_blank" rel="noreferrer">Here</a> Instead
+            <br /><br />
+            View the Attachment <a href={url} target="_blank" rel="noreferrer">here</a> instead.
         </Container>
     {/if}
 </div>
