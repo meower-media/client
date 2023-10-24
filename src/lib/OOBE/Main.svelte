@@ -32,7 +32,8 @@
 						}}>Let's go!</button
 					>
 				{:else}
-					<p>{$OOBEPage}</p>
+					<p>You aren't supposed to be here.</p>
+					<p>Current Page: {$OOBEPage}</p>
 				{/if}
 			</div>
 		</div>
