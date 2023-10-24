@@ -92,8 +92,7 @@
 				IMAGE_HOST_WHITELIST.some(o =>
 					result.value[2].toLowerCase().startsWith(o.toLowerCase())
 				)
-				) {
-
+			) {
 				images.push({
 					title: result.value[1],
 					url: result.value[2],
@@ -105,8 +104,20 @@
 	}
 
 	function confirmLink(link) {
-		if (link.startsWith(`${window.location.protocol}//${window.location.host}`) || link.startsWith(window.location.host)) {
-			$goto(link.replace(`${window.location.protocol}//${window.location.host}`, "").replace(window.location.host, ""));
+		if (
+			link.startsWith(
+				`${window.location.protocol}//${window.location.host}`
+			) ||
+			link.startsWith(window.location.host)
+		) {
+			$goto(
+				link
+					.replace(
+						`${window.location.protocol}//${window.location.host}`,
+						""
+					)
+					.replace(window.location.host, "")
+			);
 		} else {
 			modals.showModal(ConfirmHyperlinkModal, {link});
 		}
@@ -116,20 +127,12 @@
 	window.confirmLink = confirmLink;
 
 	function addFancyElements(content) {
-		// escape HTML
-		content = content
-			.replaceAll("&", "&amp;")
-			.replaceAll("<", "&lt;")
-			.replaceAll(">", "&gt;")
-			.replaceAll('"', "&quot;")
-			.replaceAll("'", "&apos;");
-
-		// markdown
+		// markdown (which has HTML escaping built-in)
 		try {
 			const md = new MarkdownIt("default", {
 				breaks: true,
 				linkify: true,
-				typographer:  true,
+				typographer: true,
 			});
 			md.linkify.add("@", {
 				validate: function (text, pos) {
@@ -137,25 +140,43 @@
 					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
 				},
 				normalize: function (match) {
-					match.url = window.location.host + "/users/" + match.url.replace(/^@/, '');
-				}
+					match.url =
+						window.location.host +
+						"/users/" +
+						match.url.replace(/^@/, "");
+				},
 			});
-			const tokens = md.parse(content.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "").replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"));
+			const tokens = md.parse(
+				content
+					.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")
+					.replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*")
+			);
 			for (const token of tokens) {
 				if (token.children) {
 					for (const childToken of token.children) {
 						if (childToken.type === "image") {
-							const srcPos = childToken.attrs.findIndex(attr => attr[0] === "src");
-							if (!IMAGE_HOST_WHITELIST.some(o =>
-								childToken.attrs[srcPos][1].toLowerCase().startsWith(o.toLowerCase())
-							)) {
+							const srcPos = childToken.attrs.findIndex(
+								attr => attr[0] === "src"
+							);
+							if (
+								!IMAGE_HOST_WHITELIST.some(o =>
+									childToken.attrs[srcPos][1]
+										.toLowerCase()
+										.startsWith(o.toLowerCase())
+								)
+							) {
 								childToken.attrs[srcPos][1] = "about:blank";
 								console.log(childToken);
 							}
 						}
 						if (childToken.type === "link_open") {
-							const href = childToken.attrs.find(attr => attr[0] === "href")[1];
-							childToken.attrs.push(["onclick", `return confirmLink('${href}')`]);
+							const href = childToken.attrs.find(
+								attr => attr[0] === "href"
+							)[1];
+							childToken.attrs.push([
+								"onclick",
+								`return confirmLink('${href}')`,
+							]);
 						}
 					}
 				}

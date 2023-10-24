@@ -10,7 +10,7 @@ export const IMAGE_HOST_WHITELIST = [
 	"https://go.meower.org/", // not everyone can add urls to go.meower.org, should be fine
 	"https://hedgedoc.meower.org/",
 	"https://docs.meower.org/",
-	"https://uploads.meower.org/",  // soon™️
+	"https://uploads.meower.org/", // soon™️
 
 	// cubeupload
 	"https://u.cubeupload.com/",

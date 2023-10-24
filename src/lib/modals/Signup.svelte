@@ -11,7 +11,7 @@
 
 	import {focus} from "@roxi/routify";
 
-	let username, password, acceptTerms, loading, error;
+	let username, password, confirmPassword, acceptTerms, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -23,8 +23,10 @@
 				if (!username || !password) {
 					error = "You must specify a username and password!";
 					return;
-				} else if (password.length < 8) {
-					error = "Your password must be at least 8 characters!";
+				}
+				if (password !== confirmPassword) {
+					error =
+						"Passwords do not match! Make sure you have entered your password correctly.";
 					return;
 				}
 
@@ -107,6 +109,23 @@
 				maxlength="255"
 				disabled={loading}
 				bind:value={password}
+			/>
+			<br /><br />
+			<label
+				for="confirm-password"
+				style={error ? "color: crimson;" : ""}
+			>
+				<b>Confirm Password</b>{#if error}<i> - {error}</i>{/if}
+			</label>
+			<input
+				id="confirm-password"
+				type="password"
+				class="modal-input white"
+				placeholder="Confirm password..."
+				maxlength="255"
+				autocomplete="new-password"
+				disabled={loading}
+				bind:value={confirmPassword}
 			/><br />
 			<p class="checkboxes">
 				<input

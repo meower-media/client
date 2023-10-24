@@ -303,9 +303,15 @@
 				on:submit|preventDefault={e => {
 					const username = e.target[0].value;
 					const password = e.target[1].value;
+					const confirmPassword = e.target[2].value;
 					if (!(username && password)) {
 						loginStatus =
 							"You must specify a username and a password to create an account!";
+						return false;
+					}
+					if (password !== confirmPassword) {
+						loginStatus =
+							"Passwords do not match! Make sure you have entered your password correctly.";
 						return false;
 					}
 
@@ -372,6 +378,12 @@
 					placeholder="Password"
 					minlength="8"
 					maxlength="255"
+				/>
+				<input
+					type="password"
+					placeholder="Confirm password"
+					maxlength="255"
+					autocomplete="new-password"
 				/>
 				<p class="checkboxes">
 					<input
@@ -509,7 +521,6 @@
 	}
 
 	.login-status {
-		display: inline-block;
 		height: 0;
 		overflow: visible;
 	}

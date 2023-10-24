@@ -3,7 +3,7 @@
 // MODDERS AND CUSTOM CLIENT CREATORS:
 //  Step 1: put your audio in src/assets/bgm/
 //  Step 2: add a new thing of JSON to the audioData List, in file put the name of the audio with its extension. then fill out the rest of the metadata
-//  Done!  
+//  Done!
 
 export const audioData = [
 	{

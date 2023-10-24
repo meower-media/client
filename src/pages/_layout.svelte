@@ -54,7 +54,9 @@
 	style:--orange-dark={$useCustomTheme ? $customTheme.orangeDark : null}
 	style:--background={$useCustomTheme ? $customTheme.background : null}
 	style:--foreground={$useCustomTheme ? $customTheme.foreground : null}
-	style:--foreground-orange={$useCustomTheme ? $customTheme.foregroundOrange : null}
+	style:--foreground-orange={$useCustomTheme
+		? $customTheme.foregroundOrange
+		: null}
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
 	class:mode-light={!($user.mode === false)}

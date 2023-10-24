@@ -10,7 +10,46 @@
 <Container>
 	<h2>1.8.0</h2>
 	<ul>
-		<li>To be filled in...</li>
+		<li>
+			Added the ability to include markdown within posts (such as
+			headings, <b>bold</b>, <i>italics</i>, etc.)
+		</li>
+		<li>Added the ability to edit posts</li>
+		<li>Added custom themes</li>
+		<li>Added the ability to direct message users</li>
+		<li>
+			Added the ability for group chat owners to delete other members'
+			posts
+		</li>
+		<li>
+			Added the ability for group chat owners to change the nickname of
+			their chat
+		</li>
+		<li>
+			Added the ability for group chat owners to transfer ownership to
+			another member of their chat
+		</li>
+		<li>
+			Added the ability to favorite chats (this will push them to the top
+			of your chats list)
+		</li>
+		<li>
+			Added the ability to block users (along with being able to hide
+			posts made by blocked users)
+		</li>
+		<li>
+			Added the ability to leave a reason and comment when reporting a
+			post or user
+		</li>
+		<li>
+			Added the ability for moderators to issue feature restrictions and
+			temporary account bans in response to ToS violations
+		</li>
+		<li>
+			Added a 7-day delay when deleting an account, rather than it being
+			instant
+		</li>
+		<li>Fixed numerous bugs</li>
 	</ul>
 </Container>
 <Container>

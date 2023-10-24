@@ -3,11 +3,11 @@
 -->
 
 <script>
-    import {onMount} from "svelte";
+  import {onMount} from "svelte";
 	import Container from "./Container.svelte";
 
-    export let title;
-    export let url;
+	export let title;
+	export let url;
 
     let type, typeSplit, show, error;
 
@@ -57,9 +57,9 @@
 </div>
 
 <style>
-    .post-image {
+	.post-image {
 		max-height: 12em;
 		max-width: 100%;
-        border-radius: 5px;
+		border-radius: 5px;
 	}
 </style>
