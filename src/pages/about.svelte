@@ -7,8 +7,6 @@
 
 	import Contributor from "../lib/Contributor.svelte";
 
-	import {onMount} from "svelte";
-
 	const REPO_OWNER = "meower-media-co";
 	const REPO_NAME = "Meower-Svelte";
 
@@ -35,9 +33,17 @@
 <b class="center friendlier">The friendlier social media for everyone.</b>
 <div class="center">Svelte Client, version {version}</div>
 <div class="center links">
-	<a href="https://meower.org">Learn more</a>
+	<a
+		href="https://meower.org"
+		target="_blank"
+		rel="noreferrer"
+	>Learn more</a>
 	|
-	<a href="https://github.com/meower-media-co">Source code</a>
+	<a
+		href="https://github.com/meower-media-co"
+		target="_blank"
+		rel="noreferrer"
+	>Source code</a>
 </div>
 
 <Container>
