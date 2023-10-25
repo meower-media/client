@@ -1,11 +1,11 @@
-# Meower Svelte
-The main Meower client, written in [Svelte](https://svelte.dev).
+# Meower F client
+A meower client made by WlodekM.
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Contributors
-The Meower client is possible thanks to these ***amazing*** **people**!
+Meower F client is possible thanks to these ***amazing*** **people**!
 
 - @CST1229
 - @tnix100
