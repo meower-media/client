@@ -2,7 +2,7 @@
  * @file Server-related URL constants.
  */
 
-export const beta = true;
+export const beta = false;
 
 export const linkUrl =
 	localStorage.getItem("meower_linkurl") ||

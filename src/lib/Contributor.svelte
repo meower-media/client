@@ -10,25 +10,23 @@
 	$: if (isMeower) url = "/users/" + username;
 </script>
 
-<a target="_blank" href={url} title={username} class="contributor" on:click={(e) => {
-	if (!isMeower) return;
-	e.preventDefault();
-	$goto(url);
-}}>
+<a
+	target="_blank"
+	href={url}
+	title={username}
+	class="contributor"
+	on:click={e => {
+		if (!isMeower) return;
+		e.preventDefault();
+		$goto(url);
+	}}
+>
 	{#if isMeower && pfp != null}
 		<div class="contrib-pfp">
-			<PFP
-				icon={Number(pfp)}
-				alt={username}
-				size={3 / 3.75}
-			/>
+			<PFP icon={Number(pfp)} alt={username} size={3 / 3.75} />
 		</div>
 	{:else if pfp}
-		<img
-			class="contrib-pfp"
-			src={pfp}
-			alt={username}
-		>
+		<img class="contrib-pfp" src={pfp} alt={username} />
 	{/if}
 	<div class="contrib-text">
 		<b class="contrib-username">{username}</b>
@@ -73,7 +71,8 @@
 		font-weight: bold;
 		display: block;
 	}
-	.contrib-username, .contrib-text {
+	.contrib-username,
+	.contrib-text {
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;

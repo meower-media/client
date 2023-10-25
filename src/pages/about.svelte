@@ -11,9 +11,13 @@
 	const REPO_NAME = "Meower-Svelte";
 
 	async function fetchContributors() {
-		const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contributors`);
+		const res = await fetch(
+			`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contributors`
+		);
 		if (!res.ok) {
-			throw new Error(`Received response code: ${res.status} ${res.statusText}`)
+			throw new Error(
+				`Received response code: ${res.status} ${res.statusText}`
+			);
 		}
 		const json = await res.json();
 
@@ -33,70 +37,38 @@
 <b class="center friendlier">The friendlier social media for everyone.</b>
 <div class="center">Svelte Client, version {version}</div>
 <div class="center links">
-	<a
-		href="https://meower.org"
-		target="_blank"
-		rel="noreferrer"
-	>Learn more</a>
+	<a href="https://meower.org" target="_blank" rel="noreferrer">Learn more</a>
 	|
 	<a
 		href="https://github.com/meower-media-co"
 		target="_blank"
-		rel="noreferrer"
-	>Source code</a>
+		rel="noreferrer">Source code</a
+	>
 </div>
 
 <Container>
 	<h2>The Council</h2>
 	<p>These people have the highest authority of the Meower project.</p>
 	<div class="contributors-list">
-		<Contributor
-			username="MikeDEV"
-			pfp={26}
-			isMeower={true}
-		>
+		<Contributor username="MikeDEV" pfp={26} isMeower={true}>
 			Current owner of Meower
 		</Contributor>
-		<Contributor
-			username="tnix"
-			pfp={20}
-			isMeower={true}
-		>
+		<Contributor username="tnix" pfp={20} isMeower={true}>
 			Backend developer
 		</Contributor>
-		<Contributor
-			username="silvxrcat"
-			pfp={-3}
-			isMeower={true}
-		>
+		<Contributor username="silvxrcat" pfp={-3} isMeower={true}>
 			Original owner of Meower
 		</Contributor>
-		<Contributor
-			username="CST1229"
-			pfp={-1}
-			isMeower={true}
-		>
+		<Contributor username="CST1229" pfp={-1} isMeower={true}>
 			Frontend developer
 		</Contributor>
-		<Contributor
-			username="zedthehedgehog"
-			pfp={22}
-			isMeower={true}
-		>
+		<Contributor username="zedthehedgehog" pfp={22} isMeower={true}>
 			Designer
 		</Contributor>
-		<Contributor
-			username="DaCatBlock"
-			pfp={23}
-			isMeower={true}
-		>
+		<Contributor username="DaCatBlock" pfp={23} isMeower={true}>
 			Web developer
 		</Contributor>
-		<Contributor
-			username="Voxalice"
-			pfp={28}
-			isMeower={true}
-		>
+		<Contributor username="Voxalice" pfp={28} isMeower={true}>
 			Musician
 		</Contributor>
 	</div>
@@ -105,7 +77,7 @@
 	<h2>Client Contributors</h2>
 	<p>(This list uses GitHub usernames/PFPs and the order is randomized.)</p>
 	{#await fetchContributors()}
-		<Loading></Loading>
+		<Loading />
 	{:then contributors}
 		<div class="contributors-list">
 			{#each contributors as contributor}
@@ -115,7 +87,10 @@
 						url={contributor.html_url}
 						pfp={contributor.avatar_url}
 					>
-						{contributor.contributions} commit{contributor.contributions === 1 ? "" : "s"}
+						{contributor.contributions} commit{contributor.contributions ===
+						1
+							? ""
+							: "s"}
 					</Contributor>
 				{/if}
 			{/each}
@@ -133,7 +108,8 @@
 			url="https://scratch.mit.edu/users/trappist-1e/"
 			pfp="https://uploads.scratch.mit.edu/get_image/user/61483990_100x100.png"
 		>
-			<img class="inline-meowy" src={meowy} height="24" alt="Meowy"> Original creator of Meowy
+			<img class="inline-meowy" src={meowy} height="24" alt="Meowy" /> Original
+			creator of Meowy
 		</Contributor>
 	</div>
 </Container>
@@ -142,7 +118,46 @@
 	<Container>
 		<h2>1.8.0</h2>
 		<ul>
-			<li>To be filled in...</li>
+			<li>
+				Added the ability to include markdown within posts (such as
+				headings, <b>bold</b>, <i>italics</i>, etc.)
+			</li>
+			<li>Added the ability to edit posts</li>
+			<li>Added custom themes</li>
+			<li>Added the ability to direct message users</li>
+			<li>
+				Added the ability for group chat owners to delete other members'
+				posts
+			</li>
+			<li>
+				Added the ability for group chat owners to change the nickname
+				of their chat
+			</li>
+			<li>
+				Added the ability for group chat owners to transfer ownership to
+				another member of their chat
+			</li>
+			<li>
+				Added the ability to favorite chats (this will push them to the
+				top of your chats list)
+			</li>
+			<li>
+				Added the ability to block users (along with being able to hide
+				posts made by blocked users)
+			</li>
+			<li>
+				Added the ability to leave a reason and comment when reporting a
+				post or user
+			</li>
+			<li>
+				Added the ability for moderators to issue feature restrictions
+				and temporary account bans in response to ToS violations
+			</li>
+			<li>
+				Added a 7-day delay when deleting an account, rather than it
+				being instant
+			</li>
+			<li>Fixed numerous bugs</li>
 		</ul>
 	</Container>
 	<Container>
@@ -154,17 +169,20 @@
 	<Container>
 		<h2>1.7.0</h2>
 		<ul>
-			<li>Routing (you can now share links to specific pages on Meower!)</li>
+			<li>
+				Routing (you can now share links to specific pages on Meower!)
+			</li>
 			<li>Better auto-reconnection</li>
 			<li>User config syncing across logged in clients</li>
 			<li>Fixed some bugs with background music randomly restarting</li>
 			<li>
-				Made it so if you change settings as a guest and then create a new
-				account, these settings will be carried across into your new account
+				Made it so if you change settings as a guest and then create a
+				new account, these settings will be carried across into your new
+				account
 			</li>
 			<li>
-				Removed option to not save your login (this is to support the better
-				auto-reconnection system)
+				Removed option to not save your login (this is to support the
+				better auto-reconnection system)
 			</li>
 			<li>Slightly different colors for dark mode themes</li>
 			<li>Some other minor optimizations and refinements</li>
@@ -184,8 +202,8 @@
 		<h2>1.6.1</h2>
 		<ul>
 			<li>
-				Fixed a bug where the profile dropdown menu wasn't able to be opened
-				on some iOS browsers and Safari for macOS
+				Fixed a bug where the profile dropdown menu wasn't able to be
+				opened on some iOS browsers and Safari for macOS
 			</li>
 			<li>no select the kitty >:/</li>
 		</ul>
@@ -198,22 +216,29 @@
 			<li>Moved some of the less-used sidebar buttons into a dropdown</li>
 			<li>Twemojis are now used for sent emojis</li>
 			<li>Added an actual moderator panel (for moderators)</li>
-			<li>Added an out-of-box experience screen when creating an account</li>
+			<li>
+				Added an out-of-box experience screen when creating an account
+			</li>
 			<li>
 				New "Add image" button next to the Post button (to make adding
 				images easier and more known)
 			</li>
 			<li>
-				Server auto-reconnection when a connection is unexpectedly dropped
+				Server auto-reconnection when a connection is unexpectedly
+				dropped
 			</li>
 			<li>Background music (disabled by default for new accounts)</li>
 			<li>Previews of themes while selecting a new theme</li>
-			<li>Ability to add users to group chats through their profile page</li>
 			<li>
-				New search option for adding users to group chats (no more having to
-				copy and paste usernames!)
+				Ability to add users to group chats through their profile page
 			</li>
-			<li>Fixed some problems with notification sounds playing at random</li>
+			<li>
+				New search option for adding users to group chats (no more
+				having to copy and paste usernames!)
+			</li>
+			<li>
+				Fixed some problems with notification sounds playing at random
+			</li>
 			<li>Crown icon on group chat owners</li>
 			<li>
 				Members list for group chats is now full-screen when toggled and
@@ -256,14 +281,14 @@
 		<h2>1.5</h2>
 		<ul>
 			<li>
-				Beta 4-style sidebar transition (except a bit less cooler due to the
-				logo not moving)
+				Beta 4-style sidebar transition (except a bit less cooler due to
+				the logo not moving)
 			</li>
 			<li>Work-in-progress search page</li>
 			<li>
-				Images now show up in posts (like [title: https://url]). There is an
-				image host whitelist of a few sites (Meower, Tenor, Scratch,
-				cubeupload, Discord and imgBB)
+				Images now show up in posts (like [title: https://url]). There
+				is an image host whitelist of a few sites (Meower, Tenor,
+				Scratch, cubeupload, Discord and imgBB)
 			</li>
 			<li>
 				New profile pictures from the <a href="https://bettermeower.app"
@@ -284,8 +309,8 @@
 			<h3>Hotfix</h3>
 			<ul>
 				<li>
-					Disable bot badges (they aren't officially supported, and the
-					CL4 port will add them)
+					Disable bot badges (they aren't officially supported, and
+					the CL4 port will add them)
 				</li>
 			</ul>
 
@@ -293,10 +318,14 @@
 			<ul>
 				<li>Banned status</li>
 				<li>Reallow reporting posts from verified bots</li>
-				<li>Made badges look nicer and put then next to the username</li>
+				<li>
+					Made badges look nicer and put then next to the username
+				</li>
 				<li>Fixes to buttons on touchscreens</li>
 				<li>Fixed the group chat page expanding with long messages</li>
-				<li>Adjusted date styling (no longer underlined, help cursor)</li>
+				<li>
+					Adjusted date styling (no longer underlined, help cursor)
+				</li>
 				<li>Disabled several features (rip)</li>
 				<li>Updates to images in posts</li>
 				<li>Some general polishing and bugfixes</li>
@@ -360,7 +389,9 @@
 		</ul>
 		(these changes were made before, but are considered part of 1.4.2:)
 		<ul>
-			<li>Fix an issue that caused posts to sometimes not show up in home</li>
+			<li>
+				Fix an issue that caused posts to sometimes not show up in home
+			</li>
 			<li>Add credentials when fetching home (to view pages past 1)</li>
 			<li>
 				Rename page title from "Meower Svelte" to "Meower" to reflect it
