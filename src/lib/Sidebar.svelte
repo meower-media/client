@@ -173,16 +173,6 @@
 		</button>
 		<button
 			on:click={() => {
-				$goto("/changelog");
-				popupShown = false;
-			}}
-			class="changelog-btn round"
-		>
-			<img src={changelog} alt="Changelog" draggable={false} />
-			<span class="label">Changelog</span>
-		</button>
-		<button
-			on:click={() => {
 				$goto("/about");
 				popupShown = false;
 			}}
