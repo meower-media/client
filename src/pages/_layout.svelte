@@ -77,6 +77,12 @@
 	id="main"
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
+	class:theme-green={$user.theme === "green"}
+	class:theme-magenta={$user.theme === "magenta"}
+	class:theme-red={$user.theme==="red"}
+	class:theme-pink={$user.theme==="pink"}
+	class:theme-gray={$user.theme==="gray"}
+	class:theme-purple={$user.theme==="purple"}
 	class:mode-light={!($user.mode === false)}
 	class:mode-dark={$user.mode === false}
 	class:layout-old={$user.layout === "old"}
@@ -269,6 +275,116 @@
 		--background: #181818;
 		--foreground: white;
 		--foreground-orange: white;
+	}
+	#main.theme-green {
+		/*--orange: #aa0000;
+		--orange-light: #aa0000;
+		--orange-dark: #aa0000;
+		--orange-scrollbar-back: #aa0000;*/
+		--orange: #57e389;
+		--orange-light: #8ff0a4;
+		--orange-dark: #26a269;
+		--orange-scrollbar-back: #26a269;
+		--background: white;
+		--foreground: black;
+		--foreground-orange: white;
+		scrollbar-color: unset;
+	}
+	#main.theme-green.mode-dark {
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: white;
+	}
+	#main.theme-magenta {
+		/*--orange: #aa0000;
+		--orange-light: #aa0000;
+		--orange-dark: #aa0000;
+		--orange-scrollbar-back: #aa0000;*/
+		--orange: #a85ff5;
+		--orange-light: #b97cfa;
+		--orange-dark: #9c59e4;
+		--orange-scrollbar-back: #9c59e4;
+		--background: white;
+		--foreground: black;
+		--foreground-orange: white;
+		scrollbar-color: unset;
+	}
+	#main.theme-magenta.mode-dark {
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: white;
+	}
+	#main.theme-red {
+		--orange: #ff3838;
+		--orange-light: #ff6f6f;
+		--orange-dark: #e03030;
+		--orange-scrollbar-back: #e03030;
+		--background: #ffffff;
+		--foreground: black;
+		--foreground-orange: #eef;
+	}
+	#main.theme-red.mode-dark {
+		--orange: #ff3838;
+		--orange-light: #ff6f6f;
+		--orange-dark: #e03030;
+		--orange-scrollbar-back: #e03030;
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: #eef;
+	}
+	#main.theme-pink {
+		--orange: #ff8af7;
+		--orange-light: #fcaef7;
+		--orange-dark: #df79d8;
+		--orange-scrollbar-back: #df79d8;
+		--background: #ffffff;
+		--foreground: black;
+		--foreground-orange: #eef;
+	}
+	#main.theme-pink.mode-dark {
+		--orange: #ff8af7;
+		--orange-light: #fcaef7;
+		--orange-dark: #df79d8;
+		--orange-scrollbar-back: #df79d8;
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: #eef;
+	}
+	#main.theme-gray {
+		--orange: #575656;
+		--orange-light: #a0a0a0;
+		--orange-dark: #3d3c3c;
+		--orange-scrollbar-back: #3d3c3c;
+		--background: #ffffff;
+		--foreground: black;
+		--foreground-orange: #eef;
+	}
+	#main.theme-gray.mode-dark {
+		--orange: #575656;
+		--orange-light: #a0a0a0;
+		--orange-dark: #3d3c3c;
+		--orange-scrollbar-back: #3d3c3c;
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: #eef;
+	}
+	#main.theme-purple {
+		--orange: #731bc4;
+		--orange-light: #9665c4;
+		--orange-dark: #6016a6;
+		--orange-scrollbar-back: #6016a6;
+		--background: #ffffff;
+		--foreground: black;
+		--foreground-orange: #eef;
+	}
+	#main.theme-purple.mode-dark {
+		--orange: #731bc4;
+		--orange-light: #9665c4;
+		--orange-dark: #6016a6;
+		--orange-scrollbar-back: #6016a6;
+		--background: #202020;
+		--foreground: #eef;
+		--foreground-orange: #eef;
 	}
 
 	.main-screen {

@@ -23,6 +23,7 @@
 	import profile from "../assets/profile.svg";
 	import settings from "../assets/settings.svg";
 	import logout from "../assets/logout.svg";
+	import about from "../assets/info.svg";
 	import changelog from "../assets/changelog.svg";
 
 	import {goto} from "@roxi/routify";
@@ -159,7 +160,7 @@
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
 		</button>
-		<button
+		<!-- <button
 			on:click={() => {
 				$goto("/changelog");
 				popupShown = false;
@@ -168,13 +169,17 @@
 		>
 			<img src={changelog} alt="Changelog" draggable={false} />
 			<span class="label">Changelog</span>
-		</button>
-		<!-- still WIP
-			<button on:click={() => goto("about")} class="about-btn round">
-				<img src={info} alt="About" draggable={false} />
-				<span class="label">About</span>
-			</button>
-		-->
+		</button> 
+		<button
+			on:click={() => {
+				$goto("/about");
+				popupShown = false;
+			}}
+			class="about-btn round"
+		>
+			<img src={about} alt="About" draggable={false} />
+			<span class="label">About</span>
+		</button> -->
 		<button
 			on:click={() => {
 				popupShown = true;
