@@ -278,6 +278,13 @@
 				<div>
 					<p class="small">Meower F client rewritten v{version}</p>
 					<img src={meowy} alt="" height="64" />
+					<b>
+						<p class="small">
+							<a href="https://beta-meower-f-client-wlodekm.vercel.app/">
+								Meower F client beta
+							</a>
+						</p>
+					</b>
 				</div>
 			</div>
 		</div>
