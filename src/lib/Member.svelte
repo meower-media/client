@@ -12,8 +12,6 @@
 
 	let pfp = 0;
 
-	// TODO: make bridged tag a setting
-
 	let error;
 
 	/**

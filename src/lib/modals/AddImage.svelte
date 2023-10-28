@@ -1,16 +1,17 @@
+<!--Adding images. not really-->
+
 <script>
 	import Modal from "../Modal.svelte";
-
-	import {postInput, user} from "../stores.js";
-
-	import * as modals from "../modals.js";
-
-	import LiText from "../LiText.svelte";
-
-	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
 	import Container from "../Container.svelte";
 	import FormattedDate from "../FormattedDate.svelte";
 	import PFP from "../PFP.svelte";
+	import LiText from "../LiText.svelte";
+
+	import {postInput, user} from "../stores.js";
+	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
+	import * as modals from "../modals.js";
+
+	import {focus} from "@roxi/routify";
 
 	let imgUrl;
 	let imgName;
@@ -18,14 +19,14 @@
 	let images = [];
 	let content = $postInput.value || "[: ]";
 	let post = {
+		post_id: "",
+		post_origin: "home",
 		user: $user.name,
 		content: content,
-		date: Date.now() / 1000,
-		post_origin: "home",
+		date: Math.floor(Date.now() / 1000),
 		isDeleted: false,
 	};
 
-	// TODO: make bridged tag a setting
 	import {default as loadProfile} from "../loadProfile.js";
 
 	/**
@@ -126,11 +127,7 @@
 	let postErrors = "The image must have a name!";
 </script>
 
-<Modal
-	on:close={() => {
-		modals.closeModal();
-	}}
->
+<Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Image to Post</h2>
 	<div slot="default">
 		<input
@@ -138,23 +135,23 @@
 			name="imageName"
 			class="long white"
 			placeholder="Image Name"
-			autocomplete="false"
+			autocomplete="off"
 			bind:this={imgName}
 			on:change={change}
+			use:focus
 		/>
 		<input
 			type="text"
 			name="ImageURL"
 			class="long white"
 			placeholder="Image URL"
-			autocomplete="false"
+			autocomplete="off"
 			bind:this={imgUrl}
 			on:change={change}
 		/>
 		<br /><br />
 		<h2>Preview</h2>
 		<div id="Preview">
-			<!--TODO: post preview-->
 			<Container>
 				<div class="post-header">
 					<button class="pfp">
@@ -164,7 +161,7 @@
 								alt="{post.user}'s profile picture"
 								online={true}
 							/>
-						{:then profile}
+						{:then}
 							<PFP
 								icon={noPFP}
 								alt="{post.user}'s profile picture"
@@ -188,7 +185,12 @@
 						<FormattedDate date={post.date} />
 					</div>
 				</div>
-				<p class="post-content">{post.content}</p>
+				<p class="post-content">
+					{post.content.replaceAll(
+						/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs,
+						""
+					)}
+				</p>
 				<div class="post-images">
 					{#each images as { title, url }}
 						<a href={url} target="_blank" rel="noreferrer"
@@ -203,19 +205,15 @@
 				</div>
 			</Container>
 		</div>
-		<p class="post-errors">{postErrors}</p>
+		<p>{postErrors}</p>
 		<div class="modal-buttons">
-			<button
-				on:click={() => {
-					modals.closeModal();
-				}}>Close</button
-			>
+			<button on:click={modals.closeLastModal}>Close</button>
 			<button
 				disabled={postErrors !== ""}
 				on:click={() => {
 					$postInput.value +=
 						" [" + imgName.value + ": " + imgUrl.value + "]";
-					modals.closeModal();
+					modals.closeLastModal();
 				}}
 			>
 				Add

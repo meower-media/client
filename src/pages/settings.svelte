@@ -2,6 +2,13 @@
 <script>
 	import Container from "../lib/Container.svelte";
 
+	import BasicModal from "../lib/modals/Basic.svelte";
+	import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
+	import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
+	import ChangePasswordModal from "../lib/modals/settings/ChangePassword.svelte";
+	import LogoutEverywhereModal from "../lib/modals/settings/LogoutEverywhere.svelte";
+	import DeleteAccountModal from "../lib/modals/settings/DeleteAccount.svelte";
+
 	import {user} from "../lib/stores.js";
 	import * as clm from "../lib/clmanager.js";
 	import * as modals from "../lib/modals.js";
@@ -17,13 +24,10 @@
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={() => {
-				const _user = $user;
-				_user.layout = _user.layout === "new" ? "old" : "new";
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
+			on:click={() =>
+				clm.updateProfile({
+					layout: $user.layout === "new" ? "old" : "new",
+				})}
 		/>
 	</div>
 
@@ -34,29 +38,25 @@
 	<div class="settings-controls">
 		<button
 			class="circle settings"
-			on:click={() => {
-				modals.showModal("switchTheme");
-			}}
+			on:click={() => modals.showModal(SwitchThemeModal)}
 		/>
 	</div>
 
 	<h2>Theme</h2>
-	The theme is currently set to {$user.theme} ({$user.mode
-		? "light"
-		: "dark"}).
+	{#if !$user.theme.startsWith("custom:")}
+		The theme is currently set to {$user.theme} ({$user.mode
+			? "light"
+			: "dark"}).
+	{:else}
+		You are currently using a custom theme! How cool is that!
+	{/if}
 </Container>
 <Container>
 	<div class="settings-controls">
 		<input
 			type="checkbox"
-			checked={$user.sfx}
-			on:change={() => {
-				const _user = $user;
-				_user.sfx = !_user.sfx;
-				user.set(_user);
-
-				clm.updateProfile();
-			}}
+			bind:checked={$user.sfx}
+			on:change={() => clm.updateProfile({sfx: $user.sfx})}
 		/>
 	</div>
 
@@ -70,22 +70,13 @@
 		{#if $user.bgm}
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("switchBGM");
-				}}
+				on:click={() => modals.showModal(SwitchBGMSFXModal)}
 			/>
 		{/if}
 		<input
 			type="checkbox"
-			checked={$user.bgm}
-			on:change={() => {
-				const _user = $user;
-				_user.bgm = !_user.bgm;
-				user.set(_user);
-				BGM.playBGM(_user.bgm_song);
-
-				clm.updateProfile();
-			}}
+			bind:checked={$user.bgm}
+			on:change={() => clm.updateProfile({bgm: $user.bgm})}
 		/>
 	</div>
 
@@ -98,11 +89,32 @@
 {#if $user.name}
 	<Container>
 		<div class="settings-controls">
+			<input
+				type="checkbox"
+				bind:checked={$user.hide_blocked_users}
+				on:change={() => {
+					if ($user.hide_blocked_users) {
+						modals.showModal(BasicModal, {
+							title: "Hide Blocked Users",
+							desc: "This setting can have undesirable consequences! We usually try to show 25 posts per page, but pages that include posts made by people you have blocked will have fewer posts. It may also make it harder to keep up with conversations without the context of posts made by people you have blocked.",
+						});
+					}
+					clm.updateProfile({
+						hide_blocked_users: $user.hide_blocked_users,
+					});
+				}}
+			/>
+		</div>
+
+		<h2>Hide Blocked Users</h2>
+		You {$user.hide_blocked_users ? "are" : "are not"} currently hiding posts
+		from people you have blocked.
+	</Container>
+	<Container>
+		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("changePassword");
-				}}
+				on:click={() => modals.showModal(ChangePasswordModal)}
 			/>
 		</div>
 
@@ -113,9 +125,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("logoutEverywhere");
-				}}
+				on:click={() => modals.showModal(LogoutEverywhereModal)}
 			/>
 		</div>
 
@@ -126,9 +136,7 @@
 		<div class="settings-controls">
 			<button
 				class="circle settings"
-				on:click={() => {
-					modals.showModal("deleteAccount");
-				}}
+				on:click={() => modals.showModal(DeleteAccountModal)}
 			/>
 		</div>
 
@@ -137,6 +145,10 @@
 		<b class="important">THIS CANNOT BE UNDONE!</b>
 	</Container>
 {/if}
+
+<!--
+	{"cmd": "direct", "val": {"cmd": "del_tokens", "val": ""}, "listener": "del_tokens"}
+-->
 
 <style>
 	.settings-controls {
