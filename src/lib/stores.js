@@ -4,7 +4,7 @@
 
 import {writable} from "svelte/store";
 import unloadedProfile from "./unloadedprofile.js";
-import {fallback as customThemeFallback} from "./CustomTheme.js";
+import {fallback as customThemeFallback, fallback2 as customThemeFallback2} from "./CustomTheme.js";
 
 // Used for setup screen
 export const screen = writable("setup");
@@ -67,6 +67,7 @@ export const groupCats = writable(100);
 // Custom theme
 export const useCustomTheme = writable(false);
 export const customTheme = writable(customThemeFallback);
+export const customThemeTint = writable(customThemeFallback2);
 
 // User moderation
 export const pendingBanState = writable(null);

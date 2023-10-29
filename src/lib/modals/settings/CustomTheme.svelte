@@ -1,7 +1,7 @@
 <script>
 	import Modal from "../../Modal.svelte";
 
-	import {user, customTheme} from "../../stores.js";
+	import {user, customThemeTint} from "../../stores.js";
 	import {
 		fallback,
 		stringToTheme,
@@ -14,7 +14,7 @@
 
 	let jsonInput, error;
 
-	let theme = $customTheme;
+	let theme = $customThemeTint;
 
 	$: {
 		try {
