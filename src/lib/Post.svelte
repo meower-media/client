@@ -196,12 +196,18 @@
 
 			if ($user.embeds_enabled) {
 				let youtubeMatches = [
-					...new Set(content.match(/watch\?v=(\S{11})/gm)),
+					...new Set(
+						content.match(
+							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
+						)
+					),
 				];
 				for (const watchURL of youtubeMatches) {
+					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
+						continue;
 					let response = await (
 						await fetch(
-							`https://youtube.com/oembed?url=https://youtube.com/${watchURL}`
+							`https://youtube.com/oembed?url=${watchURL}`
 						)
 					).json();
 					renderedContent += `<div class="youtube-container">
