@@ -67,6 +67,21 @@
 </Container>
 <Container>
 	<div class="settings-controls">
+		<input
+			type="checkbox"
+			bind:checked={$user.embeds_enabled}
+			on:change={() =>
+				clm.updateProfile({embeds_enabled: $user.embeds_enabled})}
+		/>
+	</div>
+
+	<h2>YouTube embeds</h2>
+	Displaying YouTube embeds from URLs is currently {!$user.embeds_enabled
+		? "disabled"
+		: "enabled"}.
+</Container>
+<Container>
+	<div class="settings-controls">
 		{#if $user.bgm}
 			<button
 				class="circle settings"
