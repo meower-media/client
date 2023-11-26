@@ -587,10 +587,8 @@
 				.replace("]", ""))}
 		/>
 		<p class="post-content">
-			{#await addFancyElements(post.content) then content}
-				{@html content
-					.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i)
-					.join(" ")}
+			{#await addFancyElements(post.content.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i).join(" ")) then content}
+				{@html content}
 			{/await}
 		</p>
 	{:else}

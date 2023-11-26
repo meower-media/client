@@ -367,6 +367,11 @@ button.reload {
 	background-size: 70%;
 }
 
+button.at, button.email, button.mention {
+	background-image: url("./mention.svg");
+	background-size: 50%;
+}
+
 main.input-hover input[type="checkbox"]:hover:not(:active),
 main.input-hover button.circle:not(:disabled):hover:not(:active),
 main.input-touch input[type="checkbox"]:active,
