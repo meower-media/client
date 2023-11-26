@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
+	import ReplyPost from "./ReplyPost.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -336,8 +337,9 @@
 							on:click={() => {
 								let existingText = input.value;
 
-								const mentionRegex = /^@\w+\s*/i;
-								const mention = "@" + post.user + " ";
+								const mentionRegex =
+								/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i;
+								const mention = `@${post.user} [${post.post_id}] `;
 
 								if (mentionRegex.test(existingText)) {
 									input.value = existingText
@@ -347,6 +349,25 @@
 									input.value = mention + existingText.trim();
 								}
 
+								input.focus();
+							}}
+						/>
+						<button
+							class="circle mention"
+							on:click={() => {
+								let existingText = input.value;
+	
+								const mentionRegex = /^@\w+\s*/i;
+								const mention = "@" + post.user + " ";
+	
+								if (mentionRegex.test(existingText)) {
+									input.value = existingText
+										.trim()
+										.replace(mentionRegex, mention);
+								} else {
+									input.value = mention + existingText.trim();
+								}
+	
 								input.focus();
 							}}
 						/>
@@ -556,6 +577,22 @@
 				}}>Save</button
 			>
 		</div>
+	{:else if (post.content.search(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i) != -1)}
+		<br />
+		<ReplyPost
+			post={(post.content
+				.split(" ")
+				.splice(1, 1)[0]
+				.replace("[", "")
+				.replace("]", ""))}
+		/>
+		<p class="post-content">
+			{#await addFancyElements(post.content) then content}
+				{@html content
+					.split(/^@\w+\s\[\w+-\w+-\w+-\w+-\w+\]\s*/i)
+					.join(" ")}
+			{/await}
+		</p>
 	{:else}
 		<p class="post-content" style="border-left-color: #4b5563;">
 			{#await addFancyElements(post.content) then content}
