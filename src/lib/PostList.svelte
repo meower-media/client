@@ -519,11 +519,25 @@
 							}}>+</button
 						>
 						<button
+							class="bolden"
+							name="Bolden"
+							title="Bolden Text"
+							on:click|preventDefault={() => {
+							}}><b>B</b></button
+						>
+						<button
+							class="italic"
+							name="Italizice"
+							title="Italizice Text"
+							on:click|preventDefault={() => {
+							}}><em>I</em></button
+						>
+						<button
 							bind:this={submitBtn}
 							name="submit"
 							disabled={!postInput}>Post</button
 						>
-				{/if}
+					{/if}
 				</div>
 			</form>
 		</Container>

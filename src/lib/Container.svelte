@@ -17,6 +17,7 @@
 		overflow-wrap: break-word;
 		position: relative;
 		overflow: auto;
+		box-shadow: 0px 2px 0px var(--orange-dark);
 	}
 
 	.warning {

@@ -82,6 +82,7 @@
 	}
 
 	.modal {
+		box-shadow: 0px 4px 0px var(--orange-dark);
 		z-index: 9999;
 		position: fixed;
 		left: 50%;

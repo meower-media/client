@@ -133,7 +133,7 @@
 	}
 
 	#main-wrap {
-		width: 70%;
+		width: 80%;
 		height: 100%;
 		margin: 0 auto;
 	}
@@ -202,7 +202,7 @@
 	.transition {
 		background-color: var(--orange);
 		height: 100%;
-		width: 70vw;
+		width: 80vw;
 		position: absolute;
 		animation-fill-mode: forwards;
 		animation-timing-function: ease;
@@ -221,7 +221,7 @@
 
 	@keyframes transition {
 		from {
-			width: 70vw;
+			width: 80vw;
 		}
 		to {
 			width: 3.5em;
@@ -250,11 +250,11 @@
 	}
 
 	.view {
-		padding: 0.33em;
+		padding: 0.6em;
 		box-sizing: border-box;
 		overflow: auto;
 
-		width: 50vw;
+		width: 60vw;
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
