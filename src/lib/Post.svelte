@@ -582,6 +582,7 @@
 		border: none;
 		background: none !important;
 		color: inherit;
+		box-shadow: none;
 	}
 	.post-header {
 		display: flex;

@@ -719,6 +719,7 @@
 		border: none;
 		background: none !important;
 		color: inherit;
+		box-shadow: none;
 	}
 	:global(main.input-hover) .clickable-pfp:hover:not(:active) :global(.pfp),
 	:global(main.input-touch) .clickable-pfp:active :global(.pfp),

@@ -94,8 +94,11 @@ input[type="datetime-local"],
 textarea,
 select {
 	border: solid 2px var(--foreground-orange);
-	border-radius: 5px;
+	border-width: 0;
+	border-radius: 50px;
 	outline: none;
+
+	box-shadow: 0px 4px 0px var(--orange-dark);
 
 	background-color: var(--orange);
 	color: var(--foreground-orange);
@@ -109,11 +112,20 @@ select {
 	font-size: inherit;
 }
 
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="datetime-local"],
+textarea,
+select {
+	border-width: 2px !important;
+}
+
 input[type="text"]:focus,
 input[type="search"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-	border-radius: 2px;
+	border-radius: 48px;
 }
 
 input[type="text"],
