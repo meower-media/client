@@ -22,22 +22,22 @@
 </script>
 
 {#if _typing.length > 0}
-	<Container>
-		<span class="loading">
-			<span class="circle circle1" />
-			<span class="circle circle2" />
-			<span class="circle circle3" />
-			{#if _typing.length === 1}
-				<span class="text"><b>{_typing[0]}</b> is typing...</span>
-			{:else if _typing.length === 2}
-				<span class="text"
-					><b>{_typing[0]}</b> and <b>{_typing[1]}</b> are typing...</span
-				>
-			{:else if _typing.length >= 3}
-				<span class="text">3 or more people are typing...</span>
-			{/if}
-		</span>
-	</Container>
+	<span class="loading">
+		<span class="circle circle1" />
+		<span class="circle circle2" />
+		<span class="circle circle3" />
+		{#if _typing.length === 1}
+			<span class="text"><b>{_typing[0]}</b> is typing...</span>
+		{:else if _typing.length === 2}
+			<span class="text"
+				><b>{_typing[0]}</b> and <b>{_typing[1]}</b> are typing...</span
+			>
+		{:else if _typing.length >= 3}
+			<span class="text">3 or more people are typing...</span>
+		{:else}
+			<span class="text">No one is typing, why can you see this</span>
+		{/if}
+	</span>
 {/if}
 
 <style>
@@ -45,6 +45,7 @@
 		align-items: center;
 		display: flex;
 		height: 20px;
+		padding-bottom: 0.4em;
 	}
 	.circle {
 		width: 10px;

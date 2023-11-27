@@ -25,6 +25,11 @@
 	import BlockUserModal from "./modals/safety/BlockUser.svelte";
 	import AddImageModal from "./modals/AddImage.svelte";
 
+	import PFP from "../lib/PFP.svelte";
+	import LiText from "../lib/LiText.svelte";
+
+	import {goto} from "@roxi/routify";
+
 	import {
 		relationships,
 		authHeader,
@@ -285,219 +290,240 @@
 	<!-- I think we discussed that guest posting will not be in
 		the official client, due to moderation reasons -->
 	{#if canPost && $user.name}
-		<form
-			class="createpost"
-			autocomplete="off"
-			on:submit|preventDefault={/** @type {SubmitEvent} */ e => {
-				postErrors = "";
+		<Container>
+			<div class="profile-header">
+				<button
+					class="clickable-pfp"
+					on:click={$goto(`/users/${$user._id}`)}
+				>
+					<PFP
+						online={true}
+						icon={$user.pfp_data}
+						alt="{$user._id}'s profile picture"
+						size={1.4}
+					/>
+				</button>
+				<div class="profile-header-info">
+					<h1 class="profile-username">
+						<LiText text={$user._id} />
+					</h1>
+				</div>
+			</div>
+			<br />
+			<form
+				class="createpost"
+				autocomplete="off"
+				on:submit|preventDefault={/** @type {SubmitEvent} */ e => {
+					postErrors = "";
 
-				// @ts-ignore
-				const input = e.target.elements.input;
-				// @ts-ignore
-				const content = e.target.elements.input.value;
+					// @ts-ignore
+					const input = e.target.elements.input;
+					// @ts-ignore
+					const content = e.target.elements.input.value;
 
-				if (!content.trim()) {
-					postErrors = "You cannot send an empty post!";
-					return false;
-				}
+					if (!content.trim()) {
+						postErrors = "You cannot send an empty post!";
+						return false;
+					}
 
-				// substitute command
-				if (content.match(/^s\/.+\//gs)) {
-					let toReplace = content.split("/")[1];
-					let replaceWith = content.replace(`s/${toReplace}/`, "");
+					// substitute command
+					if (content.match(/^s\/.+\//gs)) {
+						let toReplace = content.split("/")[1];
+						let replaceWith = content.replace(`s/${toReplace}/`, "");
 
-					let post = items.find(_post => _post.user === $user.name);
-					if (post) {
-						setTimeout(async () => {
-							let newContent = post.content.replace(
-								toReplace,
-								replaceWith
-							);
-							console.log(post);
-							if (post.unfiltered_content) {
-								newContent = post.unfiltered_content.replace(
+						let post = items.find(_post => _post.user === $user.name);
+						if (post) {
+							setTimeout(async () => {
+								let newContent = post.content.replace(
 									toReplace,
 									replaceWith
 								);
-							}
-							if (newContent.trim() === "") {
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "DELETE",
-											headers: $authHeader,
-										}
+								console.log(post);
+								if (post.unfiltered_content) {
+									newContent = post.unfiltered_content.replace(
+										toReplace,
+										replaceWith
 									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
+								}
+								if (newContent.trim() === "") {
+									try {
+										const resp = await fetch(
+											`${apiUrl}posts?id=${post.post_id}`,
+											{
+												method: "DELETE",
+												headers: $authHeader,
+											}
+										);
+										if (!resp.ok) {
+											if (resp.status === 429) {
+												throw new Error(
+													"Too many requests! Try again later."
+												);
+											}
 											throw new Error(
-												"Too many requests! Try again later."
+												"Response code is not OK; code is " +
+													resp.status
 											);
 										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
+									} catch (e) {
+										postErrors = `Error while deleting post: ${e}`;
 									}
-								} catch (e) {
-									postErrors = `Error while deleting post: ${e}`;
-								}
-							} else if (newContent !== post.content) {
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "PATCH",
-											headers: {
-												"Content-Type":
-													"application/json",
-												...$authHeader,
-											},
-											body: JSON.stringify({
-												content: newContent,
-											}),
-										}
-									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
+								} else if (newContent !== post.content) {
+									try {
+										const resp = await fetch(
+											`${apiUrl}posts?id=${post.post_id}`,
+											{
+												method: "PATCH",
+												headers: {
+													"Content-Type":
+														"application/json",
+													...$authHeader,
+												},
+												body: JSON.stringify({
+													content: newContent,
+												}),
+											}
+										);
+										if (!resp.ok) {
+											if (resp.status === 429) {
+												throw new Error(
+													"Too many requests! Try again later."
+												);
+											}
 											throw new Error(
-												"Too many requests! Try again later."
+												"Response code is not OK; code is " +
+													resp.status
 											);
 										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
+									} catch (e) {
+										postErrors = e;
 									}
-								} catch (e) {
-									postErrors = e;
 								}
-							}
-						}, 0);
-					}
+							}, 0);
+						}
 
-					input.value = "";
-					input.rows = "1";
-					input.style.height = "45px";
-					return;
-				}
-
-				spinner.set(true);
-
-				submitBtn.disabled = true;
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: postOrigin === "home" ? "post_home" : "post_chat",
-						val:
-							postOrigin === "home"
-								? content
-								: {
-										p: content,
-										chatid: postOrigin,
-								  },
-					},
-				})
-					.then(() => {
 						input.value = "";
 						input.rows = "1";
 						input.style.height = "45px";
-						submitBtn.disabled = false;
+						return;
+					}
+
+					spinner.set(true);
+
+					submitBtn.disabled = true;
+					clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: postOrigin === "home" ? "post_home" : "post_chat",
+							val:
+								postOrigin === "home"
+									? content
+									: {
+											p: content,
+											chatid: postOrigin,
+									},
+						},
 					})
-					.catch(code => {
-						submitBtn.disabled = false;
-						switch (code) {
-							case "E:106 | Too many requests":
-								postErrors = "You're posting too fast!";
-								break;
-							case "I:017 | Missing permissions":
-								postErrors =
-									"Someone’s privacy settings are preventing you from sending messages here.";
-								break;
-							default:
-								postErrors = "Unexpected " + code + " error!";
-						}
-					});
-				return false;
-			}}
-		>
-			<textarea
-				type="text"
-				class="white"
-				placeholder={userRestricted
-					? "Your account is currently restricted."
-					: $relationships[dmWith] === 2
-					? `You have blocked ${dmWith}.`
-					: "Write something..."}
-				name="input"
-				autocomplete="off"
-				maxlength="4000"
-				rows="1"
-				disabled={userRestricted || $relationships[dmWith] === 2}
-				use:autoresize
-				on:input={() => {
-					postErrors = "";
-					if ($lastTyped + 1500 < +new Date()) {
-						lastTyped.set(+new Date());
-						clm.link.send({
-							cmd: "direct",
-							val: {
-								cmd: "set_chat_state",
+						.then(() => {
+							input.value = "";
+							input.rows = "1";
+							input.style.height = "45px";
+							submitBtn.disabled = false;
+						})
+						.catch(code => {
+							submitBtn.disabled = false;
+							switch (code) {
+								case "E:106 | Too many requests":
+									postErrors = "You're posting too fast!";
+									break;
+								case "I:017 | Missing permissions":
+									postErrors =
+										"Someone’s privacy settings are preventing you from sending messages here.";
+									break;
+								default:
+									postErrors = "Unexpected " + code + " error!";
+							}
+						});
+					return false;
+				}}
+			>
+				<textarea
+					type="text"
+					class="white"
+					placeholder={userRestricted
+						? "Your account is currently restricted."
+						: $relationships[dmWith] === 2
+						? `You have blocked ${dmWith}.`
+						: "So, Whats been on your mind?"}
+					name="input"
+					autocomplete="off"
+					maxlength="4000"
+					rows="1"
+					disabled={userRestricted || $relationships[dmWith] === 2}
+					use:autoresize
+					on:input={() => {
+						postErrors = "";
+						if ($lastTyped + 1500 < +new Date()) {
+							lastTyped.set(+new Date());
+							clm.link.send({
+								cmd: "direct",
 								val: {
-									chatid:
-										postOrigin === "home"
-											? "livechat"
-											: postOrigin,
-									state: postOrigin === "home" ? 101 : 100,
+									cmd: "set_chat_state",
+									val: {
+										chatid:
+											postOrigin === "home"
+												? "livechat"
+												: postOrigin,
+										state: postOrigin === "home" ? 101 : 100,
+									},
 								},
-							},
-							listener: "typing_indicator",
-						});
-					}
-				}}
-				on:keydown={event => {
-					if (event.key == "Enter" && !shiftHeld) {
-						event.preventDefault();
-						if (!submitBtn.disabled) submitBtn.click();
-					}
-				}}
-				bind:this={postInput}
-			/>
-			{#if userRestricted}
-				<button
-					on:click|preventDefault={() => {
-						modals.showModal(AccountBannedModal, {
-							ban: $user.ban,
-							feature: `creating ${
-								postOrigin === "home" ? "home" : "group chat"
-							} posts`,
-						});
-					}}>View details</button
-				>
-			{:else if $relationships[dmWith] === 2}
-				<button
-					on:click|preventDefault={() =>
-						modals.showModal(BlockUserModal, {username: dmWith})}
-					>Unblock</button
-				>
-			{:else}
-				<button
-					class="upload-image"
-					name="addImage"
-					title="Add an image"
-					on:click|preventDefault={() => {
-						postInput_2.set(postInput);
-						modals.showModal(AddImageModal);
-					}}>+</button
-				>
-				<button
-					bind:this={submitBtn}
-					name="submit"
-					disabled={!postInput}>Post</button
-				>
-			{/if}
-		</form>
+								listener: "typing_indicator",
+							});
+						}
+					}}
+					on:keydown={event => {
+						if (event.key == "Enter" && !shiftHeld) {
+							event.preventDefault();
+							if (!submitBtn.disabled) submitBtn.click();
+						}
+					}}
+					bind:this={postInput}
+				/>
+				{#if userRestricted}
+					<button
+						on:click|preventDefault={() => {
+							modals.showModal(AccountBannedModal, {
+								ban: $user.ban,
+								feature: `creating ${
+									postOrigin === "home" ? "home" : "group chat"
+								} posts`,
+							});
+						}}>View details</button
+					>
+				{:else if $relationships[dmWith] === 2}
+					<button
+						on:click|preventDefault={() =>
+							modals.showModal(BlockUserModal, {username: dmWith})}
+						>Unblock</button
+					>
+				{:else}
+					<button
+						class="upload-image"
+						name="addImage"
+						title="Add an image"
+						on:click|preventDefault={() => {
+							postInput_2.set(postInput);
+							modals.showModal(AddImageModal);
+						}}>+</button
+					>
+					<button
+						bind:this={submitBtn}
+						name="submit"
+						disabled={!postInput}>Post</button
+					>
+				{/if}
+			</form>
+		</Container>
 	{/if}
 	<div class="post-errors">{postErrors}</div>
 	{#if postOrigin}
@@ -655,5 +681,39 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+	}
+
+	.profile-header-info {
+		display: flex;
+		flex-direction: column;
+		align-items: left;
+		justify-content: center;
+		margin-left: 1em;
+		height: 6em;
+	}
+
+	.profile-username {
+		margin: 0;
+		padding: 0;
+		display: inline-block;
+		max-width: 100%;
+		font-size: 3em;
+	}
+	.clickable-pfp {
+		padding: 0;
+		border: none;
+		background: none !important;
+		color: inherit;
+	}
+	:global(main.input-hover) .clickable-pfp:hover:not(:active) :global(.pfp),
+	:global(main.input-touch) .clickable-pfp:active :global(.pfp),
+	.clickable-pfp:focus-visible :global(.pfp) {
+		transform: scale(1.1);
+	}
+
+	.profile-header {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
 	}
 </style>

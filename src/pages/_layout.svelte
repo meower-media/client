@@ -144,7 +144,7 @@
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
 
-		background-color: var(--background);
+		background-color: var(--orange);
 		color: var(--foreground);
 		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
 		font-size: 15pt;
@@ -186,7 +186,8 @@
 		flex-direction: row;
 		gap: 0;
 
-		width: 100vw;
+		width: 70vw;
+		margin: 0 auto;
 		height: 100vh;
 		overflow: hidden;
 	}
