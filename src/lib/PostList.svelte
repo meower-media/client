@@ -454,7 +454,7 @@
 						? "Your account is currently restricted."
 						: $relationships[dmWith] === 2
 						? `You have blocked ${dmWith}.`
-						: "So, Whats been on your mind?"}
+						: "So, what's on your mind?"}
 					name="input"
 					autocomplete="off"
 					style="border-style: dashed;"
