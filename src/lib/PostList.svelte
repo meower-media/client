@@ -306,7 +306,7 @@
 				<div class="profile-header-info">
 					<h2 class="profile-username">
 						<LiText text={$user._id} />
-					</h1>
+					</h2>
 				</div>
 			</div>
 			<br />
