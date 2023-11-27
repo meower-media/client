@@ -187,8 +187,6 @@
 		flex-direction: row;
 		gap: 0;
 
-		width: 100vw;
-		margin: 0 auto;
 		height: 100vh;
 		overflow: hidden;
 	}
@@ -196,7 +194,7 @@
 	.transition {
 		background-color: var(--orange);
 		height: 100%;
-		width: 100%;
+		width: 55vw;
 		position: absolute;
 		animation-fill-mode: forwards;
 		animation-timing-function: ease;
@@ -215,13 +213,13 @@
 
 	@keyframes transition {
 		from {
-			width: 100%;
+			width: 55vw;
 		}
 		to {
 			width: 3.5em;
 		}
 	}
-
+	
 	@keyframes transitionOld {
 		from {
 			height: 100%;
