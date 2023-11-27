@@ -119,6 +119,7 @@ input[type="datetime-local"],
 textarea,
 select {
 	border-width: 2px !important;
+	box-shadow: none;
 }
 
 input[type="text"]:focus,
