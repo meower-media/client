@@ -417,6 +417,7 @@ hr {
 	background-color: var(--orange);
 	border: none;
 }
+
 .nojs {
 	text-align: center;
 	display: flex;
