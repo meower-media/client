@@ -268,7 +268,7 @@
 		align-items: left;
 		justify-content: center;
 		margin-left: 1em;
-		height: 6em;
+		/* height: 6em; */
 	}
 	.profile-header-info.small {
 		height: 4.5em;

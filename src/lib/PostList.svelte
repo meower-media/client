@@ -489,7 +489,7 @@
 						}
 					}}
 					bind:this={postInput}
-				/>
+				/><br>
 				<div class="buttons">
 					{#if userRestricted}
 						<button
