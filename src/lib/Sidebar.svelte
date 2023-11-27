@@ -287,7 +287,7 @@
 
 	:global(main.input-hover) .logo-inner:hover,
 	:global(main.input-touch) .logo-inner:active {
-		background-color: var(--orange-dark);
+		background-color: var(--background);
 	}
 
 	:global(main:not(.layout-old)) .padding,
@@ -323,6 +323,10 @@
 		padding: 0.1em;
 		background-color: var(--pfp-bg) !important;
 		overflow: hidden;
+	}
+
+	.sidebar button:hover { 
+		background-color: color-mix(in srgb, #fff 20%, var(--background));
 	}
 
 	:global(main.input-hover) button.toggle-popup:hover:not(:active),
