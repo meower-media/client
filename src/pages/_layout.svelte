@@ -15,12 +15,15 @@
 		spinner,
 		useCustomTheme,
 		customTheme,
+		ulist
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
 
 	import {afterPageLoad, params} from "@roxi/routify";
 	import {tick} from "svelte";
+	import Member from "../lib/Member.svelte";
+	import UlistMembers from "../lib/Ulist_Members.svelte";
 
 	let currentPage = "";
 	let currentParams = JSON.stringify($params);
@@ -109,7 +112,7 @@
 						<slot />
 					{/if}
 				</div>
-				users online here
+				<UlistMembers />
 			</div>
 		{/if}
 
