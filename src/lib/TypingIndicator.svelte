@@ -22,6 +22,7 @@
 </script>
 
 {#if _typing.length > 0}
+<Container>
 	<span class="loading">
 		<span class="circle circle1" />
 		<span class="circle circle2" />
@@ -38,6 +39,7 @@
 			<span class="text">No one is typing, why can you see this</span>
 		{/if}
 	</span>
+</Container>
 {/if}
 
 <style>

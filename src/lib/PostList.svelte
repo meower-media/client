@@ -300,7 +300,7 @@
 						online={true}
 						icon={$user.pfp_data}
 						alt="{$user._id}'s profile picture"
-						size={1}
+						size={0.75}
 					/>
 				</button>
 				<div class="profile-header-info">
@@ -457,6 +457,7 @@
 						: "So, Whats been on your mind?"}
 					name="input"
 					autocomplete="off"
+					style="border-style: dashed;"
 					maxlength="4000"
 					rows="1"
 					disabled={userRestricted || $relationships[dmWith] === 2}
@@ -488,40 +489,42 @@
 						}
 					}}
 					bind:this={postInput}
-				/>
-				{#if userRestricted}
-					<button
-						on:click|preventDefault={() => {
-							modals.showModal(AccountBannedModal, {
-								ban: $user.ban,
-								feature: `creating ${
-									postOrigin === "home" ? "home" : "group chat"
-								} posts`,
-							});
-						}}>View details</button
-					>
-				{:else if $relationships[dmWith] === 2}
-					<button
-						on:click|preventDefault={() =>
-							modals.showModal(BlockUserModal, {username: dmWith})}
-						>Unblock</button
-					>
-				{:else}
-					<button
-						class="upload-image"
-						name="addImage"
-						title="Add an image"
-						on:click|preventDefault={() => {
-							postInput_2.set(postInput);
-							modals.showModal(AddImageModal);
-						}}>+</button
-					>
-					<button
-						bind:this={submitBtn}
-						name="submit"
-						disabled={!postInput}>Post</button
-					>
+				/><br>
+				<div class="buttons">
+					{#if userRestricted}
+						<button
+							on:click|preventDefault={() => {
+								modals.showModal(AccountBannedModal, {
+									ban: $user.ban,
+									feature: `creating ${
+										postOrigin === "home" ? "home" : "group chat"
+									} posts`,
+								});
+							}}>View details</button
+						>
+					{:else if $relationships[dmWith] === 2}
+						<button
+							on:click|preventDefault={() =>
+								modals.showModal(BlockUserModal, {username: dmWith})}
+							>Unblock</button
+						>
+					{:else}
+						<button
+							class="upload-image"
+							name="addImage"
+							title="Add an image"
+							on:click|preventDefault={() => {
+								postInput_2.set(postInput);
+								modals.showModal(AddImageModal);
+							}}>+</button
+						>
+						<button
+							bind:this={submitBtn}
+							name="submit"
+							disabled={!postInput}>Post</button
+						>
 				{/if}
+				</div>
 			</form>
 		</Container>
 	{/if}
@@ -651,6 +654,14 @@
 		flex-grow: 1;
 		resize: none;
 		max-height: 300px;
+	}
+	.createpost .buttons {
+		display: flex;
+	}
+	.createpost button {
+		resize: vertical;
+		margin-top: 0.5rem;
+		margin-right: 0.5rem;
 	}
 
 	.post-errors {
