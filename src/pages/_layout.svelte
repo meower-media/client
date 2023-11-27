@@ -68,54 +68,57 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-	{#if $reconnecting}
-		<Modal>
-			<h2 slot="header">Reconnecting...</h2>
-			<div slot="default">
-				<p>
-					Looks like we're having some problems connecting you to
-					Meower. Give us a moment and we'll reconnect you as soon as
-					possible...
-				</p>
-			</div>
-		</Modal>
-	{:else if $modalStack.length > 0}
-		<svelte:component
-			this={$modalStack[0].modal}
-			modalData={$modalStack[0].data}
-		/>
-	{/if}
-
-	{#if $screen === "blank"}
-		<div id="blank" />
-	{:else if $screen === "setup"}
-		<Setup />
-	{:else}
-		<div class="main-screen">
-			<div class="transition" />
-			<div class="sidebar">
-				<Sidebar />
-			</div>
-			<div class="view">
-				<!-- banner (maybe for future use)
-				<div class="banner">
-					<span>This is a banner!</span>
+	<div id="main-wrap">
+		{#if $reconnecting}
+			<Modal>
+				<h2 slot="header">Reconnecting...</h2>
+				<div slot="default">
+					<p>
+						Looks like we're having some problems connecting you to
+						Meower. Give us a moment and we'll reconnect you as soon as
+						possible...
+					</p>
 				</div>
-				-->
-				{#if $OOBERunning}
-					<OOBE />
-				{:else if !remounting}
-					<slot />
-				{/if}
-			</div>
-		</div>
-	{/if}
+			</Modal>
+		{:else if $modalStack.length > 0}
+			<svelte:component
+				this={$modalStack[0].modal}
+				modalData={$modalStack[0].data}
+			/>
+		{/if}
 
-	{#if $spinner || $reconnecting}
-		<div class="spinner-container">
-			<Spinner />
-		</div>
-	{/if}
+		{#if $screen === "blank"}
+			<div id="blank" />
+		{:else if $screen === "setup"}
+			<Setup />
+		{:else}
+			<div class="main-screen">
+				<div class="transition" />
+				<div class="sidebar">
+					<Sidebar />
+				</div>
+				<div class="view">
+					<!-- banner (maybe for future use)
+					<div class="banner">
+						<span>This is a banner!</span>
+					</div>
+					-->
+					{#if $OOBERunning}
+						<OOBE />
+					{:else if !remounting}
+						<slot />
+					{/if}
+				</div>
+				users online here
+			</div>
+		{/if}
+
+		{#if $spinner || $reconnecting}
+			<div class="spinner-container">
+				<Spinner />
+			</div>
+		{/if}
+	</div>
 </main>
 
 <style>
@@ -126,11 +129,13 @@
 		z-index: 10000;
 	}
 
-	#main {
-		width: 50%;
+	#main-wrap {
+		width: 70%;
 		height: 100%;
 		margin: 0 auto;
+	}
 
+	#main {
 		font-family: Simvoni, sans-serif;
 
 		--orange: #f9a636;
@@ -194,7 +199,7 @@
 	.transition {
 		background-color: var(--orange);
 		height: 100%;
-		width: 55vw;
+		width: 70vw;
 		position: absolute;
 		animation-fill-mode: forwards;
 		animation-timing-function: ease;
@@ -213,13 +218,13 @@
 
 	@keyframes transition {
 		from {
-			width: 55vw;
+			width: 70vw;
 		}
 		to {
 			width: 3.5em;
 		}
 	}
-	
+
 	@keyframes transitionOld {
 		from {
 			height: 100%;
