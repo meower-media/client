@@ -326,7 +326,7 @@
 	}
 
 	.sidebar button:hover { 
-		background-color: color-mix(in srgb, #fff 20%, var(--background));
+		background-color: color-mix(in srgb, #fff 20%, var(--background)) !important;
 	}
 
 	:global(main.input-hover) button.toggle-popup:hover:not(:active),
