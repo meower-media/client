@@ -300,13 +300,13 @@
 						online={true}
 						icon={$user.pfp_data}
 						alt="{$user._id}'s profile picture"
-						size={1.4}
+						size={1}
 					/>
 				</button>
 				<div class="profile-header-info">
-					<h1 class="profile-username">
+					<h2 class="profile-username">
 						<LiText text={$user._id} />
-					</h1>
+					</h2>
 				</div>
 			</div>
 			<br />
@@ -689,7 +689,7 @@
 		align-items: left;
 		justify-content: center;
 		margin-left: 1em;
-		height: 6em;
+		height: 4em;
 	}
 
 	.profile-username {
@@ -699,6 +699,10 @@
 		max-width: 100%;
 		font-size: 3em;
 	}
+	h2.profile-username {
+		font-size: 300%;
+	}
+
 	.clickable-pfp {
 		padding: 0;
 		border: none;

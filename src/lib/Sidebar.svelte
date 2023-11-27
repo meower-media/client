@@ -210,7 +210,7 @@
 		flex-direction: column;
 		flex-wrap: nowrap;
 
-		gap: 0.5em;
+		gap: 0.7em;
 		padding-block-start: 0.5em;
 		padding-block-end: 0.5em;
 		box-sizing: border-box;
@@ -235,6 +235,7 @@
 		width: 90%;
 		height: 90%;
 		object-fit: contain;
+		filter: brightness(0) saturate(100%) invert(64%) sepia(45%) saturate(697%) hue-rotate(350deg) brightness(102%) contrast(95%)
 	}
 
 	.locked {

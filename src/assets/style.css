@@ -158,7 +158,8 @@ input[type="password"]:not(.white):focus-visible {
 
 button.round {
 	border-radius: 0.75em;
-	border-bottom-width: 5px;
+	background-color: var(--background);
+	box-shadow: 0px 5px 0px var(--orange-dark);
 	padding: 0.5em;
 	overflow-wrap: break-word;
 }

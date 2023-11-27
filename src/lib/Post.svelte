@@ -469,7 +469,7 @@
 				-->
 			</div>
 
-			<FormattedDate date={post.date} />
+			<!--<FormattedDate date={post.date} />-->
 			{#if post.edited_at}
 				<i
 					>(<FormattedDate
@@ -600,7 +600,7 @@
 		gap: 0.5em;
 	}
 	.creator h2 {
-		font-size: 200%;
+		font-size: 250%;
 		margin: 0;
 		overflow-wrap: anywhere;
 	}
