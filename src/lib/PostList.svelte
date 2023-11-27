@@ -710,11 +710,12 @@
 		max-width: 100%;
 		font-size: 3em;
 	}
-	.clickable-pfp {
-		padding: 0;
-		border: none;
-		background: none !important;
-		color: inherit;
+
+	.profile-header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 1rem;
+		/* flex-wrap: wrap; */
 	}
 	:global(main.input-hover) .clickable-pfp:hover:not(:active) :global(.pfp),
 	:global(main.input-touch) .clickable-pfp:active :global(.pfp),
