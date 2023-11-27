@@ -457,6 +457,7 @@
 						: "So, Whats been on your mind?"}
 					name="input"
 					autocomplete="off"
+					style="border-style: dashed;"
 					maxlength="4000"
 					rows="1"
 					disabled={userRestricted || $relationships[dmWith] === 2}
