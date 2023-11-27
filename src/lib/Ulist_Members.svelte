@@ -40,6 +40,7 @@
 
 		position: relative;
 		text-align: left;
+		box-shadow: none;
 	}
 
 	/* repetition because of CSS specificity */
