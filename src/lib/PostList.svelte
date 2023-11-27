@@ -489,7 +489,7 @@
 						}
 					}}
 					bind:this={postInput}
-				/><br>
+				/>
 				<div class="buttons">
 					{#if userRestricted}
 						<button
@@ -646,12 +646,11 @@
 <style>
 	.createpost {
 		top: 0;
-		display: flex;
 		margin-bottom: 0.5em;
 		gap: 0.25em;
 	}
 	.createpost textarea {
-		flex-grow: 1;
+		width: 100%;
 		resize: none;
 		max-height: 300px;
 	}
