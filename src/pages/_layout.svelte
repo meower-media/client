@@ -127,8 +127,9 @@
 	}
 
 	#main {
-		width: 100%;
+		width: 50%;
 		height: 100%;
+		margin: 0 auto;
 
 		font-family: Simvoni, sans-serif;
 
@@ -186,7 +187,7 @@
 		flex-direction: row;
 		gap: 0;
 
-		width: 70vw;
+		width: 100vw;
 		margin: 0 auto;
 		height: 100vh;
 		overflow: hidden;
@@ -243,13 +244,11 @@
 	}
 
 	.view {
-		flex-grow: 1;
-		flex-shrink: 1;
-
 		padding: 0.33em;
 		box-sizing: border-box;
 		overflow: auto;
 
+		width: 50vw;
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
