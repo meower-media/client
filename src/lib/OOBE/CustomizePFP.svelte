@@ -85,6 +85,7 @@
 		display: inline-block;
 		background: none;
 		border: none;
+		box-shadow: none;
 	}
 	:global(main.input-hover) .pfp:hover,
 	:global(main.input-touch) .pfp:active {
