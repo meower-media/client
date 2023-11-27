@@ -300,7 +300,7 @@
 						online={true}
 						icon={$user.pfp_data}
 						alt="{$user._id}'s profile picture"
-						size={0.75}
+						size={1}
 					/>
 				</button>
 				<div class="profile-header-info">
