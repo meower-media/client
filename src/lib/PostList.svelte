@@ -300,11 +300,11 @@
 						online={true}
 						icon={$user.pfp_data}
 						alt="{$user._id}'s profile picture"
-						size={1.4}
+						size={0.75}
 					/>
 				</button>
 				<div class="profile-header-info">
-					<h1 class="profile-username">
+					<h2 class="profile-username">
 						<LiText text={$user._id} />
 					</h1>
 				</div>
