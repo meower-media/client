@@ -251,7 +251,7 @@
 				: $params.admin
 				? `admin/chats/${$params.chatid}/posts`
 				: `posts/${$params.chatid}`}
-			postOrigin={$params.admin ? null : $params.chatid}
+			postOrigin={$params.admin ? "" : $params.chatid}
 			chatName={$chat.nickname}
 			canPost={$chat._id === "livechat" || !$params.admin}
 		/>

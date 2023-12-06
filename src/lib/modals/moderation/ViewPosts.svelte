@@ -70,7 +70,7 @@
 			><br />
 			<PostList
 				fetchUrl={`admin/users/${username}/posts`}
-				postOrigin={postOrigin === "chat" ? chatid : postOrigin}
+				postOrigin=""
 				canPost={false}
 				queryParams={postOrigin
 					? {origin: postOrigin === "chat" ? chatid : postOrigin}
