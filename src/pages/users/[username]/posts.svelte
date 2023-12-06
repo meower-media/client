@@ -15,7 +15,7 @@
 	</Container>
 	<PostList
 		fetchUrl="users/{$params.username}/posts"
-		postOrigin="home"
+		postOrigin=""
 		canPost={false}
 	>
 		<Container slot="empty">
