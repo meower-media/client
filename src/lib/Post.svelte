@@ -218,7 +218,9 @@
 				}
 			}
 		} catch (e) {
-			console.error(`Failed to load markdown on ${post.post_id}: ${e}`);
+			// this is to stop any possible XSS attacks by bypassing the markdown lib
+			// which is responsible for escaping HTML
+			return `Failed rendering post: ${e}`;
 		}
 
 		// twemoji
