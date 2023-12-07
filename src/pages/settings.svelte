@@ -47,8 +47,7 @@
                     on:mouseleave={() => hoveringTab = ""}
                     ><User
                         color={!$user.mode ||
-                        selectedTab == "profile" ||
-                        hoveringTab == "profile"
+                        selectedTab == "profile"
                             ? "#fff"
                             : "#000"}
                         strokeWidth="2.5"
@@ -63,8 +62,7 @@
                 on:mouseleave={() => hoveringTab = ""}
                 ><Paintbrush
                     color={!$user.mode ||
-                    selectedTab == "personalization" ||
-                    hoveringTab == "personalization"
+                    selectedTab == "personalization"
                         ? "#fff"
                         : "#000"}
                     strokeWidth="2.5"
@@ -82,8 +80,7 @@
                     on:mouseleave={() => hoveringTab = ""}
                     ><Lock
                         color={!$user.mode ||
-                        selectedTab == "security" ||
-                        hoveringTab == "security"
+                        selectedTab == "security"
                             ? "#fff"
                             : "#000"}
                         strokeWidth="2.5"
@@ -132,8 +129,7 @@
                     on:mouseleave={() => hoveringTab = ""}
                     ><ShieldBan
                         color={!$user.mode ||
-                        selectedTab == "blockedUsers" ||
-                        hoveringTab == "blockedUsers"
+                        selectedTab == "blockedUsers"
                             ? "#fff"
                             : "#000"}
                         strokeWidth="2.5"
@@ -147,8 +143,7 @@
                     on:mouseleave={() => hoveringTab = ""}
                     ><Flag
                         color={!$user.mode ||
-                        selectedTab == "reportHistory" ||
-                        hoveringTab == "reportHistory"
+                        selectedTab == "reportHistory"
                             ? "#fff"
                             : "#000"}
                         strokeWidth="2.5"
@@ -166,8 +161,7 @@
                 on:mouseleave={() => hoveringTab = ""}
                 ><Info
                     color={!$user.mode ||
-                    selectedTab == "about" ||
-                    hoveringTab == "about"
+                    selectedTab == "about"
                         ? "#fff"
                         : "#000"}
                     strokeWidth="2.5"
