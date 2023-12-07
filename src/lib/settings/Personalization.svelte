@@ -1,10 +1,10 @@
 <script>
-    import Container from "../Container.svelte";
-	
-    import SwitchThemeModal from "../modals/settings/SwitchTheme.svelte";
+	import Container from "../Container.svelte";
+
+	import SwitchThemeModal from "../modals/settings/SwitchTheme.svelte";
 	import SwitchBGMSFXModal from "../modals/settings/SwitchBGMSFX.svelte";
 
-    import {user} from "../stores.js";
+	import {user} from "../stores.js";
 	import * as clm from "../clmanager.js";
 	import * as modals from "../modals.js";
 </script>

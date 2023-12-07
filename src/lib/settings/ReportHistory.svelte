@@ -1,5 +1,5 @@
 <script>
-    import Container from "../Container.svelte";
+	import Container from "../Container.svelte";
 	import PagedList from "../PagedList.svelte";
 	import FormattedDate from "../FormattedDate.svelte";
 
@@ -15,12 +15,9 @@
 	let firstLoad = true;
 
 	async function loadReportsPage(page = 1) {
-		const resp = await fetch(
-			`${apiUrl}me/reports?autoget=1&page=${page}`,
-			{
-				headers: $authHeader,
-			}
-		);
+		const resp = await fetch(`${apiUrl}me/reports?autoget=1&page=${page}`, {
+			headers: $authHeader,
+		});
 		if (!resp.ok) {
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
@@ -40,7 +37,8 @@
 
 <Container>
 	<h1>Report History</h1>
-	Here are all of the reports you have made and their current review status. Thanks for your help with keeping Meower a safe & welcoming place!
+	Here are all of the reports you have made and their current review status. Thanks
+	for your help with keeping Meower a safe & welcoming place!
 </Container>
 
 <PagedList bind:items={reports} loadPage={loadReportsPage}>
@@ -65,7 +63,6 @@
 								>
 									{report.content.u}'s post
 								</a>
-								
 							{:else}
 								<i>Unknown post</i>
 							{/if}
@@ -91,10 +88,7 @@
 						<i>{report.comment}</i>
 					</td>
 					<td style="max-width: 5em;">
-						<FormattedDate
-							date={report.time}
-							relative={true}
-						/>
+						<FormattedDate date={report.time} relative={true} />
 					</td>
 					<td style="max-width: 5em;">
 						{#if report.status === "pending"}
@@ -118,9 +112,7 @@
 		</Container>
 	</slot>
 	<slot name="empty" slot="empty">
-		<Container>
-			Looks like you haven't made any reports yet.
-		</Container>
+		<Container>Looks like you haven't made any reports yet.</Container>
 	</slot>
 </PagedList>
 

@@ -419,11 +419,11 @@
 						? post.user === "Server"
 							? 102
 							: post.post_origin === "inbox" &&
-							    (post.user === "Announcement" ||
-										post.user === "Notification" ||
-										post.user.startsWith("Notification to"))
-							  ? 101
-							  : -2
+							  (post.user === "Announcement" ||
+									post.user === "Notification" ||
+									post.user.startsWith("Notification to"))
+							? 101
+							: -2
 						: profile.pfp_data}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
