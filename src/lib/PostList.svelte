@@ -487,8 +487,10 @@
 					name="addImage"
 					title="Add an image"
 					on:click|preventDefault={() => {
-						postInput_2.set(postInput);
-						modals.showModal(AddImageModal);
+						modals.showModal(BasicModal, {
+							title: "Subscription",
+							desc: "This requires Meower Plus.",
+						});
 					}}>+</button
 				>
 				<button
@@ -526,61 +528,10 @@
 										title="Add to chat"
 										disabled={addToChatLoading[post._id]}
 										on:click={async () => {
-											addToChatLoading[post._id] = true;
-											try {
-												const resp = await fetch(
-													`${apiUrl}${
-														$params.admin
-															? "admin/"
-															: ""
-													}chats/${
-														$chat._id
-													}/members/${post._id}`,
-													{
-														method: "PUT",
-														headers: $authHeader,
-													}
-												);
-												if (!resp.ok) {
-													switch (resp.status) {
-														case 403:
-															throw new Error(
-																`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
-															);
-														case 404:
-															throw new Error(
-																`${post._id} not found.`
-															);
-														case 409:
-															throw new Error(
-																`${post._id} is already a member of ${$chat.nickname}.`
-															);
-														case 429:
-															throw new Error(
-																"Too many requests! Try again later."
-															);
-														default:
-															throw new Error(
-																"Response code is not OK; code is " +
-																	resp.status
-															);
-													}
-												}
-												if ($params.admin) {
-													$chat = await resp.json();
-												}
-												delete addToChatLoading[
-													post._id
-												];
-											} catch (e) {
-												modals.showModal(BasicModal, {
-													title: `Failed to add ${post._id} to ${$chat.nickname}`,
-													desc: e,
-												});
-												delete addToChatLoading[
-													post._id
-												];
-											}
+											modals.showModal(BasicModal, {
+												title: "Subscription",
+												desc: "This requires Meower Orange.",
+											});
 										}}
 									/>
 								</div>

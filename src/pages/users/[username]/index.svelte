@@ -5,6 +5,7 @@
 	import Container from "../../../lib/Container.svelte";
 	import PFP from "../../../lib/PFP.svelte";
 
+	import BasicModal from "../../../lib/modals/Basic.svelte";
 	import AddMemberProfileModal from "../../../lib/modals/chats/AddMember_Profile.svelte";
 	import BlockUserModal from "../../../lib/modals/safety/BlockUser.svelte";
 
@@ -118,7 +119,12 @@
 			<button
 				class="long"
 				title="Change Profile Picture"
-				on:click={() => (pfpSwitcher = true)}
+				on:click={() => {
+					modals.showModal(BasicModal, {
+						title: "Subscription",
+						desc: "This requires Meower Plus.",
+					});
+				}}
 				>Change Profile Picture</button
 			>
 		{/if}
@@ -126,7 +132,12 @@
 		<button
 			class="long"
 			title="View Recent Posts"
-			on:click={() => $goto("./posts")}>View Recent Posts</button
+			on:click={() => {
+				modals.showModal(BasicModal, {
+					title: "Subscription",
+					desc: "This requires Meower Pro.",
+				});
+			}}>View Recent Posts</button
 		>
 
 		{#if $user.name && $user.name !== data._id}
@@ -134,16 +145,24 @@
 				<button
 					class="long"
 					on:click={() =>
-						modals.showModal(AddMemberProfileModal, {
-							username: data._id,
-						})}>Add to Chat</button
+						{
+							modals.showModal(BasicModal, {
+								title: "Subscription",
+								desc: "This requires Meower Orange.",
+							});
+						}}>Add to Chat</button
 				>
 			{/if}
 			<button
 				class="long"
 				title="{$relationships[data._id] === 2 ? 'Unb' : 'B'}lock User"
 				on:click={() =>
-					modals.showModal(BlockUserModal, {username: data._id})}
+					{
+						modals.showModal(BasicModal, {
+							title: "Subscription",
+							desc: "This requires Meower Premium.",
+						});
+					}}
 				>{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
 			>
 		{/if}

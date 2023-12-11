@@ -6,6 +6,7 @@
 	import DebugModal from "./modals/Debug.svelte";
 	import ModPanelModal from "./modals/moderation/ModPanel.svelte";
 	import LogoutModal from "./modals/Logout.svelte";
+	import BasicModal from "./modals/Basic.svelte";
 
 	import {user, OOBERunning} from "../lib/stores.js";
 	import {shiftHeld} from "./keyDetect.js";
@@ -40,7 +41,12 @@
 		<div class="locked" />
 	{/if}
 	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
+		<button class="logo-inner" title="Home" on:click={() => {
+			modals.showModal(BasicModal, {
+				title: "Subscription",
+				desc: "this Side/Topbar feature requires Meower Pro.",
+			});
+		}}>
 			<img
 				alt="Meower"
 				src={logo}
@@ -50,16 +56,20 @@
 			/>
 		</button>
 	</div>
-	<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
+	<button on:click={() => {
+		modals.showModal(BasicModal, {
+			title: "Subscription",
+			desc: "this Side/Topbar feature requires Meower Pro.",
+		});
+	}} title="Home" class="home-btn round">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
 	<button
 		on:click={() => {
-			if (!$user.name) {
-				modals.showModal(SignupModal);
-				return;
-			}
-			$goto("/inbox");
+			modals.showModal(BasicModal, {
+				title: "Subscription",
+				desc: "this Side/Topbar feature requires Meower Plus.",
+			});
 		}}
 		class="round"
 		title="Inbox"
@@ -69,15 +79,10 @@
 	</button>
 	<button
 		on:click={() => {
-			if (shiftHeld) {
-				$goto("/groupcat");
-			} else {
-				if (!$user.name) {
-					modals.showModal(SignupModal);
-					return;
-				}
-				$goto("/chats");
-			}
+			modals.showModal(BasicModal, {
+				title: "Subscription",
+				desc: "this Side/Topbar feature requires Meower Plus.",
+			});
 		}}
 		title="Group Chats"
 		class="gc-btn round"
@@ -85,7 +90,12 @@
 		<img src={gc} alt="Group chats" draggable={false} />
 	</button>
 	<button
-		on:click={() => $goto("/search")}
+		on:click={() => {
+			modals.showModal(BasicModal, {
+				title: "Subscription",
+				desc: "this Side/Topbar feature requires Meower Pro.",
+			});
+		}}
 		title="Search"
 		class="search-btn round"
 	>
@@ -148,12 +158,10 @@
 	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {
-				if (!$user.name) {
-					modals.showModal(SignupModal);
-					return;
-				}
-				$goto(`/users/${$user.name}`);
-				popupShown = false;
+				modals.showModal(BasicModal, {
+					title: "Subscription",
+					desc: "this Side/Topbar feature requires Meower Premium.",
+				});
 			}}
 			class="profile-btn round"
 			title="Profile"
@@ -163,8 +171,10 @@
 		</button>
 		<button
 			on:click={() => {
-				$goto("/settings");
-				popupShown = false;
+				modals.showModal(BasicModal, {
+					title: "Subscription",
+					desc: "this Side/Topbar feature requires Meower Plus.",
+				});
 			}}
 			class="settings-btn round"
 		>
@@ -183,8 +193,10 @@
 		</button>
 		<button
 			on:click={() => {
-				popupShown = true;
-				modals.showModal(LogoutModal);
+				modals.showModal(BasicModal, {
+					title: "Subscription",
+					desc: "this Side/Topbar feature requires Meower Orange.",
+				});
 			}}
 			class="logout-btn round"
 		>

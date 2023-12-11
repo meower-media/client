@@ -54,14 +54,10 @@
 			<button
 				class="circle plus"
 				on:click={() => {
-					if (isRestricted(userRestrictions.NEW_CHATS)) {
-						modals.showModal(AccountBannedModal, {
-							ban: $user.ban,
-							feature: "creating group chats",
-						});
-					} else {
-						modals.showModal(CreateChatModal);
-					}
+					modals.showModal(BasicModal, {
+						title: "Subscription",
+						desc: "This requires Meower Plus.",
+					});
 				}}
 			/>
 		</div>
@@ -71,7 +67,12 @@
 			<div class="settings-controls">
 				<button
 					class="circle join"
-					on:click={$goto("/chats/livechat")}
+					on:click={() => {
+						modals.showModal(BasicModal, {
+							title: "Subscription",
+							desc: "This requires Meower premium.",
+						});
+					}}
 				/>
 			</div>
 
@@ -94,60 +95,31 @@
 									chat._id
 								)}
 								on:click={() => {
-									if (
-										$user.favorited_chats.includes(chat._id)
-									) {
-										$user.favorited_chats.splice(
-											$user.favorited_chats.indexOf(
-												chat._id
-											),
-											1
-										);
-										clm.updateProfile({
-											favorited_chats:
-												$user.favorited_chats,
-										});
-									} else {
-										$user.favorited_chats =
-											$user.favorited_chats.filter(
-												chatId => {
-													return $chats.some(
-														_chat =>
-															_chat._id === chatId
-													);
-												}
-											);
-										if (
-											$user.favorited_chats.length >= 50
-										) {
-											modals.showModal(BasicModal, {
-												title: "Too many stars!",
-												desc: "Sorry, you can only have up to 50 favorited chats!",
-											});
-										} else {
-											$user.favorited_chats.push(
-												chat._id
-											);
-											clm.updateProfile({
-												favorited_chats:
-													$user.favorited_chats,
-											});
-										}
-									}
+									modals.showModal(BasicModal, {
+										title: "Subscription",
+										desc: "This requires Meower Orange.",
+									});
 								}}
 							/>
 							{#if !$user.favorited_chats.includes(chat._id)}
 								<button
 									class="circle close"
 									on:click={() =>
-										modals.showModal(LeaveChatModal, {
-											chat,
-										})}
+										modals.showModal(BasicModal, {
+											title: "Subscription",
+											desc: "This requires Meower Premium.",
+										})
+									}
 								/>
 							{/if}
 							<button
 								class="circle join"
-								on:click={$goto(`/chats/${chat._id}`)}
+								on:click={() =>
+									modals.showModal(BasicModal, {
+										title: "Subscription",
+										desc: "This requires Meower Pro.",
+									})
+								}
 							/>
 						</div>
 

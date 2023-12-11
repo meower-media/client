@@ -212,7 +212,12 @@
 					<br /><br />
 				</div>
 				<button
-					on:click={() => page.set("login")}
+					on:click={() => {
+						modals.showModal(BasicModal, {
+							title: "Subscription",
+							desc: "This requires Meower Orange.",
+						});
+					}}
 					on:mousedown={() => {
 						serverSelectorTimeout = setTimeout(() => {
 							modals.showModal(ServerSelectorModal);
@@ -220,18 +225,21 @@
 					}}>Log in</button
 				>
 				<br />
-				<button on:click={() => page.set("join")}
+				<button on:click={() => {
+					modals.showModal(BasicModal, {
+						title: "Subscription",
+						desc: "This requires Meower Orange.",
+					});
+				}}
 					>Create an account</button
 				> <br />
 				{#if localStorage.getItem("meower_savedusername")}
 					<button
 						on:click={() => {
-							doLogin(
-								localStorage.getItem("meower_savedusername"),
-								localStorage.getItem("meower_savedpassword"),
-								false,
-								true
-							);
+							modals.showModal(BasicModal, {
+								title: "Subscription",
+								desc: "This requires Meower Premium.",
+							});
 						}}
 						>Use saved login ({localStorage.getItem(
 							"meower_savedusername"

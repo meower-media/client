@@ -7,6 +7,7 @@
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
 
+	import BasicModal from "./modals/Basic.svelte";
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
 	import ReportPostModal from "./modals/safety/ReportPost.svelte";
@@ -292,33 +293,20 @@
 							<button
 								class="circle pen"
 								on:click={async () => {
-									editError = "";
-									editing = true;
-									await tick();
-									editContentInput.value =
-										post.unfiltered_content || post.content;
-									editContentInput.focus();
-									autoresize(editContentInput);
+									modals.showModal(BasicModal, {
+										title: "Subscription",
+										desc: "This requires Meower Plus.",
+									});
 								}}
 							/>
 						{/if}
 						<button
 							class="circle reply"
 							on:click={() => {
-								let existingText = input.value;
-
-								const mentionRegex = /^@\w+\s*/i;
-								const mention = "@" + post.user + " ";
-
-								if (mentionRegex.test(existingText)) {
-									input.value = existingText
-										.trim()
-										.replace(mentionRegex, mention);
-								} else {
-									input.value = mention + existingText.trim();
-								}
-
-								input.focus();
+								modals.showModal(BasicModal, {
+									title: "Subscription",
+									desc: "This requires Meower Pro.",
+								});
 							}}
 						/>
 						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
@@ -326,43 +314,23 @@
 								class="circle trash"
 								bind:this={deleteButton}
 								on:click={async () => {
-									if (shiftHeld) {
-										deleteButton.disabled = true;
-										try {
-											const resp = await fetch(
-												`${apiUrl}posts?id=${post.post_id}`,
-												{
-													method: "DELETE",
-													headers: $authHeader,
-												}
-											);
-											if (!resp.ok) {
-												if (resp.status === 429) {
-													throw new Error(
-														"Too many requests! Try again later."
-													);
-												}
-												throw new Error(
-													"Response code is not OK; code is " +
-														resp.status
-												);
-											}
-										} catch (e) {
-											editError = e;
-										}
-										deleteButton.disabled = false;
-									} else {
-										modals.showModal(DeletePostModal, {
-											post,
-										});
-									}
+									modals.showModal(BasicModal, {
+										title: "Subscription",
+										desc: "This requires Meower Premium.",
+									});
 								}}
 							/>
 						{:else}
 							<button
 								class="circle report"
 								on:click={() =>
-									modals.showModal(ReportPostModal, {post})}
+									{
+										modals.showModal(BasicModal, {
+											title: "Subscription",
+											desc: "This requires Meower Orange.",
+										});
+									}
+								}
 							/>
 						{/if}
 					{/if}
@@ -372,8 +340,10 @@
 		<button
 			class="pfp"
 			on:click={async () => {
-				if (noPFP) return;
-				$goto(`/users/${post.user}`);
+				modals.showModal(BasicModal, {
+					title: "Subscription",
+					desc: "This requires Meower Premium.",
+				});
 			}}
 		>
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}

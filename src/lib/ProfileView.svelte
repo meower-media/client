@@ -62,52 +62,31 @@
 							dmChat._id
 						)}
 						on:click={() => {
-							if ($user.favorited_chats.includes(dmChat._id)) {
-								$user.favorited_chats.splice(
-									$user.favorited_chats.indexOf(dmChat._id),
-									1
-								);
-								clm.updateProfile({
-									favorited_chats: $user.favorited_chats,
-								});
-							} else {
-								$user.favorited_chats =
-									$user.favorited_chats.filter(chatId => {
-										return $chats.some(
-											_chat => _chat._id === chatId
-										);
-									});
-								if ($user.favorited_chats.length >= 50) {
-									modals.showModal(BasicModal, {
-										title: "Too many stars!",
-										desc: "Sorry, you can only have up to 50 favorited chats!",
-									});
-								} else {
-									$user.favorited_chats.push(dmChat._id);
-									clm.updateProfile({
-										favorited_chats: $user.favorited_chats,
-									});
-								}
-							}
+							modals.showModal(BasicModal, {
+								title: "Subscription",
+								desc: "This requires Meower Pro.",
+							});
 						}}
 					/>
 					{#if !$user.favorited_chats.includes(dmChat._id)}
 						<button
 							class="circle close"
 							on:click={() => {
-								fetch(`${apiUrl}chats/${dmChat._id}`, {
-									method: "DELETE",
-									headers: $authHeader,
+								modals.showModal(BasicModal, {
+									title: "Subscription",
+									desc: "This requires Meower Pro.",
 								});
-								$chats.filter(
-									_chat => _chat._id !== dmChat._id
-								);
 							}}
 						/>
 					{/if}
 					<button
 						class="circle join"
-						on:click={$goto(`/chats/${dmChat._id}`)}
+						on:click={() => {
+							modals.showModal(BasicModal, {
+								title: "Subscription",
+								desc: "This requires Meower Pro.",
+							});
+						}}
 					/>
 				{:else if canDoActions && $user.name}
 					{#if $user.permissions}
@@ -125,67 +104,21 @@
 							title="Report {data._id}"
 							class="circle report"
 							on:click={() =>
-								modals.showModal(ReportUserModal, {user: data})}
+								{
+									modals.showModal(BasicModal, {
+										title: "Subscription",
+										desc: "This requires Meower plus.",
+									});
+								}}
 						/>
 						<button
 							title="Open DM with {data._id}"
 							class="circle join"
 							on:click={async () => {
-								let chat = $chats.find(
-									_chat =>
-										_chat.type === 1 &&
-										_chat.members.includes(data._id)
-								);
-								if (chat) {
-									$goto(`/chats/${chat._id}`);
-								} else {
-									try {
-										const resp = await fetch(
-											`${apiUrl}users/${data._id}/dm`,
-											{
-												method: "GET",
-												headers: $authHeader,
-											}
-										);
-										if (!resp.ok) {
-											switch (resp.status) {
-												case 403:
-													modals.showModal(
-														AccountBannedModal,
-														{
-															ban: $user.ban,
-															feature:
-																"starting direct message chats",
-														}
-													);
-													return;
-												case 429:
-													throw new Error(
-														"Too many requests! Try again later."
-													);
-												default:
-													throw new Error(
-														"Response code is not OK; code is " +
-															resp.status
-													);
-											}
-										}
-										const chat = await resp.json();
-										if (
-											$chats.findIndex(
-												_chat => _chat._id === chat._id
-											) === -1
-										) {
-											$chats.push(chat);
-										}
-										$goto(`/chats/${chat._id}`);
-									} catch (e) {
-										modals.showModal(BasicModal, {
-											title: "Failed to open DM",
-											desc: `Failed to open DM with ${data._id}. ${e}`,
-										});
-									}
-								}
+								modals.showModal(BasicModal, {
+									title: "Subscription",
+									desc: "This requires Meower Premium.",
+								});
 							}}
 						/>
 					{/if}
@@ -196,7 +129,12 @@
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={$goto(`/users/${data._id}`)}
+						on:click={() => {
+							modals.showModal(BasicModal, {
+								title: "Subscription",
+								desc: "This requires Meower Premium.",
+							});
+						}}
 					>
 						<PFP
 							online={$ulist.includes(data._id)}
