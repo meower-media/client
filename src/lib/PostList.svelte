@@ -528,7 +528,7 @@
 						<button
 							class="italic"
 							name="Italizice"
-							title="Italizice Text"
+							title="Italicize text."
 							on:click|preventDefault={() => {
 							}}><em>I</em></button
 						>
