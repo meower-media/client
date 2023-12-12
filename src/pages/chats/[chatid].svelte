@@ -27,6 +27,7 @@
 
 	import {params, goto} from "@roxi/routify";
 	import {onMount, onDestroy} from "svelte/internal";
+	import BannedMembers from "../../lib/modals/chats/BannedMembers.svelte";
 
 	let chatsStoreSubscription;
 
@@ -43,6 +44,7 @@
 				created: 0,
 				last_active: 0,
 				deleted: false,
+				banned_users: []
 			});
 
 			clm.link.send({
@@ -139,6 +141,7 @@
 			created: 0,
 			last_active: 0,
 			deleted: false,
+			banned_users: [],
 		});
 	});
 </script>
@@ -177,6 +180,11 @@
 							/>
 						{/if}
 						{#if $chat.owner === $user.name || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
+							<button class="circle" id="HoverOver-Members" on:click|preventDefault={() => (
+								modals.showModal(BannedMembers, {})
+							)}>
+								<b>B</b>
+							</button>
 							<button
 								class="circle settings"
 								on:click={() => {
@@ -274,6 +282,7 @@
 						/>
 					</button>
 				{/each}
+
 			</div>
 			<div class="top">
 				<h2 class="members-title">
@@ -301,6 +310,7 @@
 								} else {
 									modals.showModal(AddMemberModeModal);
 								}
+
 							}}
 						/>
 					{/if}
@@ -412,4 +422,10 @@
 	.small {
 		font-size: 75%;
 	}
+
+	#HoverOver-Members {
+		cursor: pointer;
+	}
+
+
 </style>
