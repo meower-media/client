@@ -167,7 +167,11 @@
 		--orange: #4d97ff;
 		--orange-light: rgb(140, 189, 245);
 		--orange-dark: #3888f1;
-		--orange-scrollbar-back: color-mix(in srgb, #000000 20%, var(--orange-dark));
+		--orange-scrollbar-back: color-mix(
+			in srgb,
+			#000000 20%,
+			var(--orange-dark)
+		);
 		--background: white;
 		--foreground: black;
 		--foreground-orange: white;

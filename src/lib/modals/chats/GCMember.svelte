@@ -1,5 +1,5 @@
 <script>
- 	import Modal from "../../Modal.svelte";
+	import Modal from "../../Modal.svelte";
 	import ProfileView from "../../ProfileView.svelte";
 
 	import RemoveMemberModal from "./RemoveMember.svelte";
@@ -49,7 +49,8 @@
 			>
 				Make owner of chat
 			</button>
-			<button class="long"
+			<button
+				class="long"
 				on:click={() => {
 					modals.replaceLastModal(BanMember, {
 						username,
@@ -59,8 +60,6 @@
 				Ban user from chat
 			</button>
 		{/if}
-
-
 	</div>
 </Modal>
 

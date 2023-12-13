@@ -40,7 +40,7 @@ export const chat = writable({
 	last_active: 0,
 	deleted: false,
 	banned_users: [],
-	invites: []
+	invites: [],
 });
 
 // User list

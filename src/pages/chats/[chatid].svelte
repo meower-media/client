@@ -2,7 +2,7 @@
 	Home but it's a group chat.
 -->
 <script>
-	import Invites from './../../lib/modals/chats/Invites.svelte';
+	import Invites from "./../../lib/modals/chats/Invites.svelte";
 	import BasicModal from "../../lib/modals/Basic.svelte";
 	import ChangeChatNicknameModal from "../../lib/modals/chats/ChangeChatNickname.svelte";
 	import GCMemberModal from "../../lib/modals/chats/GCMember.svelte";
@@ -46,7 +46,7 @@
 				last_active: 0,
 				deleted: false,
 				banned_users: [],
-				invites: []
+				invites: [],
 			});
 
 			clm.link.send({
@@ -144,7 +144,7 @@
 			last_active: 0,
 			deleted: false,
 			banned_users: [],
-			invites: []
+			invites: [],
 		});
 	});
 </script>
@@ -183,14 +183,20 @@
 							/>
 						{/if}
 						{#if $chat.owner === $user.name || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
-							<button class="circle" id="HoverOver-Members" on:click|preventDefault={() => (
-								modals.showModal(BannedMembers, {})
-							)}>
+							<button
+								class="circle"
+								id="HoverOver-Members"
+								on:click|preventDefault={() =>
+									modals.showModal(BannedMembers, {})}
+							>
 								<b>B</b>
 							</button>
-							<button class="circle" on:click|preventDefault={() => {
-								modals.showModal(Invites, {})
-							}}>
+							<button
+								class="circle"
+								on:click|preventDefault={() => {
+									modals.showModal(Invites, {});
+								}}
+							>
 								<b>I</b>
 							</button>
 							<button
@@ -290,7 +296,6 @@
 						/>
 					</button>
 				{/each}
-
 			</div>
 			<div class="top">
 				<h2 class="members-title">
@@ -318,7 +323,6 @@
 								} else {
 									modals.showModal(AddMemberModeModal);
 								}
-
 							}}
 						/>
 					{/if}
@@ -434,6 +438,4 @@
 	#HoverOver-Members {
 		cursor: pointer;
 	}
-
-
 </style>
