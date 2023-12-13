@@ -5,6 +5,7 @@
 	import Modal from "../../Modal.svelte";
     import * as modals from "../../modals"
 	import Spinner from '../../Spinner.svelte';
+	import Container from '../../Container.svelte';
 
     async function fetchBannedMembers() {
         const resp = await fetch(`${apiUrl}chats/${$chat._id}/bans`, {
@@ -33,18 +34,20 @@
 
     {#each $chat.banned_users as member}
 
-    <p>
+    <Container>
     <Member member={member.username} owner={false} />
-        Reason: {member.message}
+    <div class="inline">
+        <p> Reason: {member.message} </p>
 
-        <button on:click={() => {
+        <button class="delete" on:click={() => {
             fetch(`${apiUrl}chats/${$chat._id}/bans/${member.username}`, {
                 method: "DELETE",
                 headers: $authHeader
             })
             modals.closeLastModal()
         }} >Unban</button>
-    </p>
+    </div>
+    </Container>
         {/each}
         {/await}
     </div>
@@ -55,5 +58,24 @@
         display: flex;
         justify-content: center;
         text-align: center;
+    }
+
+    .delete {
+        justify-content: right;
+        flex: right;
+        height: 100%;
+    }
+
+    .inline {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: left;
+        vertical-align: middle;
+    }
+
+    .inline p {
+        justify-self: center;
+        align-self: center;
     }
 </style>
