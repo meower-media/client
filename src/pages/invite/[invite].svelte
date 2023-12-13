@@ -29,10 +29,12 @@
             let data = await response.json();
 
             // Cursed code because the server does not seem to want to send a packet
-            $chats.findLast(
+            let chat = $chats.findLast(
                 chat => chat._id === data.chat
-            ).members.push($user.name);
-            
+            )
+
+            if (chat.members.indexOf($user.name) === -1) chat.members.push($user.name);
+
 			$goto(`/chats/${data.chat}`);
 		})();
 	});
