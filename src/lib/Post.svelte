@@ -218,7 +218,9 @@
 				}
 			}
 		} catch (e) {
-			console.error(`Failed to load markdown on ${post.post_id}: ${e}`);
+			// this is to stop any possible XSS attacks by bypassing the markdown lib
+			// which is responsible for escaping HTML
+			return `Failed rendering post: ${e}`;
 		}
 
 		// twemoji
@@ -417,11 +419,11 @@
 						? post.user === "Server"
 							? 102
 							: post.post_origin === "inbox" &&
-							    (post.user === "Announcement" ||
-										post.user === "Notification" ||
-										post.user.startsWith("Notification to"))
-							  ? 101
-							  : -2
+							  (post.user === "Announcement" ||
+									post.user === "Notification" ||
+									post.user.startsWith("Notification to"))
+							? 101
+							: -2
 						: profile.pfp_data}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
