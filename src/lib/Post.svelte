@@ -104,7 +104,10 @@
 	}
 
 	function confirmLink(link) {
-		const url = new URL(link, location.href);
+		if (!link.startsWith("https:" && !link.startsWith("http:") && !link.startsWith("/") {
+			link = "https://" + link;
+		}
+		let url = new URL(link, location.href);
 		if (url.host === location.host) {
 			$goto(url.pathname);
 		} else {
