@@ -104,22 +104,11 @@
 	}
 
 	function confirmLink(link) {
-		if (
-			link.startsWith(
-				`${window.location.protocol}//${window.location.host}`
-			) ||
-			link.startsWith(window.location.host)
-		) {
-			$goto(
-				link
-					.replace(
-						`${window.location.protocol}//${window.location.host}`,
-						""
-					)
-					.replace(window.location.host, "")
-			);
+		const url = new URL(link, location.href);
+		if (url.host === location.host) {
+			$goto(url.pathname);
 		} else {
-			modals.showModal(ConfirmHyperlinkModal, {link});
+			modals.showModal(ConfirmHyperlinkModal, {link: url.href});
 		}
 		return false;
 	}
@@ -129,7 +118,7 @@
 	/** @param {string} content */
 	async function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
-		var renderedContent;
+		let renderedContent;
 
 		try {
 			const md = new MarkdownIt("default", {
@@ -139,7 +128,7 @@
 			});
 			md.linkify.add("@", {
 				validate: function (text, pos) {
-					var tail = text.slice(pos);
+					let tail = text.slice(pos);
 					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
 				},
 				normalize: function (match) {
