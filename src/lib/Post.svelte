@@ -104,7 +104,7 @@
 	}
 
 	function confirmLink(link) {
-		if (!link.startsWith("https:" && !link.startsWith("http:") && !link.startsWith("/")) {
+		if (!link.startsWith("https:") && !link.startsWith("http:") && !link.startsWith("/")) {
 			link = "https://" + link;
 		}
 		let url = new URL(link, location.href);
