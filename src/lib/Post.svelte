@@ -144,7 +144,6 @@
 				},
 				normalize: function (match) {
 					match.url =
-						window.location.host +
 						"/users/" +
 						match.url.replace(/^@/, "");
 				},
