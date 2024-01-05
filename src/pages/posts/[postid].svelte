@@ -5,8 +5,6 @@
 	import {params} from "@roxi/routify";
 </script>
 
-<!-- routify:options bundle=false -->
-
 <PostList
 	fetchUrl={"posts"}
 	postOrigin={null}

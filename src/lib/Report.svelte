@@ -8,6 +8,7 @@
 
 	import {authHeader} from "./stores.js";
 	import {apiUrl} from "./urls.js";
+	import { adminPermissions, hasPermission } from "./bitField.js";
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
@@ -175,33 +176,35 @@
 			on:click={() =>
 				modals.showModal(ReportNotesModal, {reportid: report._id})}
 		/>
-		{#if report.status === "pending"}
-			{#if !report.escalated}
+		{#if hasPermission(adminPermissions.EDIT_REPORTS)}
+			{#if report.status === "pending"}
+				{#if !report.escalated}
+					<button
+						class="circle siren"
+						title="Escalate"
+						disabled={loading}
+						on:click={escalate}
+					/>
+				{/if}
 				<button
-					class="circle siren"
-					title="Escalate"
+					class="circle close"
+					title="Mark as completed with no action taken"
 					disabled={loading}
-					on:click={escalate}
+					on:click={async () => await changeStatus("no_action_taken")}
+				/>
+				<button
+					class="circle check"
+					title="Mark as completed with action taken"
+					disabled={loading}
+					on:click={async () => await changeStatus("action_taken")}
+				/>
+			{:else}
+				<button
+					class="circle pen"
+					title="Change status"
+					on:click={() => (report.status = "pending")}
 				/>
 			{/if}
-			<button
-				class="circle close"
-				title="Mark as completed with no action taken"
-				disabled={loading}
-				on:click={async () => await changeStatus("no_action_taken")}
-			/>
-			<button
-				class="circle check"
-				title="Mark as completed with action taken"
-				disabled={loading}
-				on:click={async () => await changeStatus("action_taken")}
-			/>
-		{:else}
-			<button
-				class="circle pen"
-				title="Change status"
-				on:click={() => (report.status = "pending")}
-			/>
 		{/if}
 	</div>
 </Container>

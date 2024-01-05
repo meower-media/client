@@ -86,16 +86,16 @@ addEventListener("storage", event => {
 	if (event.key === "meower_savedusername") {
 		if (event.newValue !== _authHeader.username) {
 			authHeader.set({
-				username: event.newValue,
 				..._authHeader,
+				username: event.newValue,
 			});
 			link.disconnect(1000, "Intentional disconnect");
 		}
 	} else if (event.key === "meower_savedpassword") {
 		if (event.newValue !== _authHeader.token) {
 			authHeader.set({
-				token: event.newValue,
 				..._authHeader,
+				token: event.newValue,
 			});
 		}
 	}
@@ -430,7 +430,7 @@ export async function connect() {
 			}
 		});
 		chatMsgEvent = link.on("direct", async cmd => {
-			if (cmd.val.state === 2) {
+			if (cmd.val.state === 2 && cmd.val.post_origin !== "livechat") {
 				let chatIndex = _chats.findIndex(
 					chat => chat._id === cmd.val.post_origin
 				);
