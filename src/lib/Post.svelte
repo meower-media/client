@@ -126,6 +126,10 @@
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
+	function createEmote(name, id, isGif) {
+		return `​![${name}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`
+	}
+
 	function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
 		try {
@@ -146,8 +150,21 @@
 						match.url.replace(/^@/, "");
 				},
 			});
+
+			var emoteContent = content;
+            const discordEmotes = content.matchAll(/<a?:\w+:\d+>/g)
+            Array.from(discordEmotes).forEach(element => {
+				const isGif = element[0].startsWith("<a:")
+                const tok = element[0].replace("a", '').slice(0, -1).slice(1).split(":")
+
+                emoteContent = emoteContent.split(element).join(createEmote(tok[1], tok[2], isGif))
+            });
+
+
+
+
 			const tokens = md.parse(
-				content
+				emoteContent
 					.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")
 					.replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"),
 				{}
