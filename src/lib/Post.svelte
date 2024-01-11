@@ -126,8 +126,11 @@
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	function createEmote(name, id, isGif) {
-		return `​![${name}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`
+	function createEmote(original, id, isGif, size) {
+
+
+
+		return `​![${original}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`
 	}
 
 	function addFancyElements(content) {
@@ -152,12 +155,13 @@
 			});
 
 			var emoteContent = content;
-            const discordEmotes = content.matchAll(/<a?:\w+:\d+>/g)
-            Array.from(discordEmotes).forEach(element => {
+            const discordEmotes = Array.from(content.matchAll(/<a?:\w+:\d+>/g))
+
+            discordEmotes.forEach(element => {
 				const isGif = element[0].startsWith("<a:")
                 const tok = element[0].replace("a", '').slice(0, -1).slice(1).split(":")
 
-                emoteContent = emoteContent.split(element).join(createEmote(tok[1], tok[2], isGif))
+                emoteContent = emoteContent.split(element).join(createEmote(element, tok[2], isGif))
             });
 
 
