@@ -71,8 +71,6 @@
 				logoImg.height = 40;
 				logo.classList.add("top");
 
-				await sleep(700);
-				loginStatus = "Connecting...";
 				await connect();
 
 				if (
@@ -85,6 +83,7 @@
 						true
 					);
 				} else {
+					await sleep(100);
 					await mainSetup();
 				}
 			} else if (value === "reconnect") {
@@ -132,7 +131,10 @@
 		autoLogin = false,
 		savedLogin = false
 	) {
-		loginStatus = "Logging in...";
+		setTimeout(() => {
+			if ($user.name) return;
+			loginStatus = "Logging in...";
+		}, 500);
 
 		try {
 			await clm.meowerRequest({

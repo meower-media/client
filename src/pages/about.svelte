@@ -116,6 +116,20 @@
 <Container>
 	<h2>Changelog</h2>
 	<Container>
+		<h2>1.8.1</h2>
+		<ul>
+			<li>Made the initial logo animation a little shorter</li>
+			<li>
+				Fixed a bug that caused new home posts to appear while viewing a
+				user's recent posts
+			</li>
+			<li>
+				Fixed a bug that caused animations to lag when a user was logged
+				in on more than 1 tab
+			</li>
+		</ul>
+	</Container>
+	<Container>
 		<h2>1.8.0</h2>
 		<ul>
 			<li>
