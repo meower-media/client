@@ -126,8 +126,11 @@
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	function addFancyElements(content) {
+	/** @param {string} content */
+	async function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
+		var renderedContent;
+
 		try {
 			const md = new MarkdownIt("default", {
 				breaks: true,
@@ -182,13 +185,38 @@
 					}
 				}
 			}
-			content = md.renderer.render(tokens, md.options);
+
+			renderedContent = md.renderer.render(tokens, md.options);
 
 			// add quote containers to blockquotes (although, quotes are currently broken)
-			content = content.replaceAll(
+			renderedContent = renderedContent.replaceAll(
 				/<blockquote>(.+?)<\/blockquote>/gms,
 				'<div class="quote-container"><blockquote>$1</blockquote></div>'
 			);
+
+			if ($user.embeds_enabled) {
+				let youtubeMatches = [
+					...new Set(
+						content.match(
+							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
+						)
+					),
+				];
+				for (const watchURL of youtubeMatches) {
+					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
+						continue;
+					let response = await (
+						await fetch(
+							`https://youtube.com/oembed?url=${watchURL}`
+						)
+					).json();
+					renderedContent += `<div class="youtube-container">
+						<h4>${response.title}</h4>
+						<span style="color: #606060; font-size: 1.1rem">${response.author_name}</span><br><br>
+						<img src="${response.thumbnail_url}" height=180 width=240 loading="lazy" alt="Thumbnail for ${response.title}">
+					</div>`;
+				}
+			}
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
@@ -196,13 +224,13 @@
 		}
 
 		// twemoji
-		content = twemoji.parse(content, {
+		renderedContent = twemoji.parse(renderedContent, {
 			folder: "svg",
 			ext: ".svg",
 			size: 20,
 		});
 
-		return content;
+		return renderedContent;
 	}
 
 	async function adminDelete() {
@@ -532,7 +560,9 @@
 		</div>
 	{:else}
 		<p class="post-content" style="border-left-color: #4b5563;">
-			{@html addFancyElements(post.content)}
+			{#await addFancyElements(post.content) then content}
+				{@html content}
+			{/await}
 		</p>
 	{/if}
 	{#if editError}
@@ -602,5 +632,12 @@
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
 		width: 100%;
+	}
+
+	:global(.youtube-container) {
+		border: solid 2px var(--orange);
+		padding: 10px;
+		border-radius: 10px;
+		width: 50%;
 	}
 </style>
