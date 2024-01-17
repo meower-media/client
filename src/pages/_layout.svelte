@@ -22,6 +22,7 @@
 	import {afterPageLoad, params} from "@roxi/routify";
 	import {tick} from "svelte";
 	import LeftView from "../lib/LeftView.svelte";
+	import { fade } from "svelte/transition";
 
 	let currentPage = "";
 	let currentParams = JSON.stringify($params);

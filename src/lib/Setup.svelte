@@ -56,34 +56,28 @@
 			if (value === "logo") {
 				loginStatus = "";
 
+				loginStatus = "Please wait...";
 				await tick();
 				if (!logoImg) return;
-				setup.classList.add("white");
-				logoImg.height = 0;
-				logo.classList.remove("top");
-
-				await sleep(600);
-				// Directly changing image height instead
-				// of using transforms to prevent blur
-				logoImg.height = 80;
-				await sleep(300);
 				setup.classList.remove("white");
-				logoImg.height = 40;
 				logo.classList.add("top");
 
+				loginStatus = "Connecting...";
 				await connect();
 
 				if (
 					localStorage.getItem("meower_savedusername") &&
 					localStorage.getItem("meower_savedpassword")
 				) {
+					loginStatus = "Logging in...";
 					doLogin(
 						localStorage.getItem("meower_savedusername"),
 						localStorage.getItem("meower_savedpassword"),
 						true
 					);
 				} else {
-					await sleep(100);
+					loginStatus = "Please wait...";
+					await sleep(50);
 					await mainSetup();
 				}
 			} else if (value === "reconnect") {
@@ -183,7 +177,7 @@
 	}
 </script>
 
-<div bind:this={setup} out:fade={{duration: 500}} class="setup white">
+<div bind:this={setup} in:fade={{duration: 150}} out:fade={{duration: 200}} class="setup white">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
@@ -202,7 +196,7 @@
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
-		<div class="fullcenter">
+		<div in:fade={{duration: 100}} class="fullcenter">
 			<div class="column-ui">
 				<div>
 					<img
