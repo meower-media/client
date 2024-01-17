@@ -21,6 +21,7 @@
 
 	import {afterPageLoad, params} from "@roxi/routify";
 	import {tick} from "svelte";
+	import LeftView from "../lib/LeftView.svelte";
 
 	let currentPage = "";
 	let currentParams = JSON.stringify($params);
@@ -92,21 +93,25 @@
 		<Setup />
 	{:else}
 		<div class="main-screen">
-			<div class="transition" />
 			<div class="sidebar">
 				<Sidebar />
 			</div>
-			<div class="view">
-				<!-- banner (maybe for future use)
-				<div class="banner">
-					<span>This is a banner!</span>
+			<div class="views">
+				<div class="leftview">
+					<LeftView />
 				</div>
-				-->
-				{#if $OOBERunning}
-					<OOBE />
-				{:else if !remounting}
-					<slot />
-				{/if}
+				<div class="view">
+					<!-- banner (maybe for future use)
+					<div class="banner">
+						<span>This is a banner!</span>
+					</div>
+					-->
+					{#if $OOBERunning}
+						<OOBE />
+					{:else if !remounting}
+						<slot />
+					{/if}
+				</div>
 			</div>
 		</div>
 	{/if}
@@ -199,42 +204,11 @@
 		overflow: hidden;
 	}
 
-	.transition {
-		background-color: var(--orange);
-		height: 100%;
-		width: 100%;
-		position: absolute;
-		animation-fill-mode: forwards;
-		animation-timing-function: ease;
-		z-index: 2;
-	}
-
-	:global(main:not(layout-old)) .transition {
-		animation-name: transition;
-		animation-duration: 0.7s;
-	}
-
-	:global(main.layout-old) .transition {
-		animation-name: transitionOld;
-		animation-duration: 0.6s;
-	}
-
-	@keyframes transition {
-		from {
-			width: 100%;
-		}
-		to {
-			width: 3.5em;
-		}
-	}
-
-	@keyframes transitionOld {
-		from {
-			height: 100%;
-		}
-		to {
-			height: 2em;
-		}
+	.views {
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		overflow: hidden;
 	}
 
 	.sidebar {
@@ -247,6 +221,15 @@
 		flex-shrink: 0;
 		flex-grow: 0;
 		z-index: 3;
+	}
+
+	.leftview {
+		flex-grow: 1;
+		flex-shrink: 1;
+		box-sizing: border-box;
+		overflow: auto;
+
+		--view-height: calc(100vh - 0.66em);
 	}
 
 	.view {

@@ -198,6 +198,7 @@
 
 	.sidebar {
 		background-color: var(--background-bright);
+		border-radius: 0 0 0.5em 0.5em;
 
 		display: flex;
 		align-items: start;
