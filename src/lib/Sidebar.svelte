@@ -56,81 +56,83 @@
 		/>
 	</button>
 	<div class="padding" />
-	<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
-		<img src={home} alt="Home" draggable={false} />
-	</button>
-	<button
-		on:click={() => {
-			if (!$user.name) {
-				modals.showModal(SignupModal);
-				return;
-			}
-			$goto("/inbox");
-		}}
-		class="round"
-		title="Inbox"
-		class:new-msgs={$user.unread_inbox}
-	>
-		<img src={mail} alt="Inbox Messages" draggable={false} />
-	</button>
-	<button
-		on:click={() => {
-			if (shiftHeld) {
-				$goto("/groupcat");
-			} else {
+	<div id="buttons_sidebar">
+		<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
+			<img src={home} alt="Home" draggable={false} />
+		</button>
+		<button
+			on:click={() => {
 				if (!$user.name) {
 					modals.showModal(SignupModal);
 					return;
 				}
-				$goto("/chats");
-			}
-		}}
-		title="Group Chats"
-		class="gc-btn round"
-	>
-		<img src={gc} alt="Group chats" draggable={false} />
-	</button>
-	<button
-		on:click={() => $goto("/search")}
-		title="Search"
-		class="search-btn round"
-	>
-		<img
-			src={search}
-			alt="Search"
-			width="90%"
-			height="auto"
-			draggable={false}
-		/>
-	</button>
-	{#if $user.debug}
+				$goto("/inbox");
+			}}
+			class="round"
+			title="Inbox"
+			class:new-msgs={$user.unread_inbox}
+		>
+			<img src={mail} alt="Inbox Messages" draggable={false} />
+		</button>
 		<button
-			on:click={() => modals.showModal(DebugModal)}
-			class="debugpanel-btn round"
-			title="Debug Panel"
+			on:click={() => {
+				if (shiftHeld) {
+					$goto("/groupcat");
+				} else {
+					if (!$user.name) {
+						modals.showModal(SignupModal);
+						return;
+					}
+					$goto("/chats");
+				}
+			}}
+			title="Group Chats"
+			class="gc-btn round"
+		>
+			<img src={gc} alt="Group chats" draggable={false} />
+		</button>
+		<button
+			on:click={() => $goto("/search")}
+			title="Search"
+			class="search-btn round"
 		>
 			<img
-				src={terminal}
-				alt="Open debug panel"
+				src={search}
+				alt="Search"
+				width="90%"
 				height="auto"
 				draggable={false}
 			/>
 		</button>
-	{/if}
-	{#if $user.permissions}
-		<button
-			on:click={() => modals.showModal(ModPanelModal)}
-			class="modpanel-btn round"
-			title="Moderator Panel"
-		>
-			<img
-				src={shield}
-				alt="Open moderator panel"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-	{/if}
+		{#if $user.debug}
+			<button
+				on:click={() => modals.showModal(DebugModal)}
+				class="debugpanel-btn round"
+				title="Debug Panel"
+			>
+				<img
+					src={terminal}
+					alt="Open debug panel"
+					height="auto"
+					draggable={false}
+				/>
+			</button>
+		{/if}
+		{#if $user.permissions}
+			<button
+				on:click={() => modals.showModal(ModPanelModal)}
+				class="modpanel-btn round"
+				title="Moderator Panel"
+			>
+				<img
+					src={shield}
+					alt="Open moderator panel"
+					height="auto"
+					draggable={false}
+				/>
+			</button>
+		{/if}
+	</div>
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -194,8 +196,8 @@
 		background-color: var(--background-bright);
 
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		align-items: start;
+		justify-content: left;
 		flex-direction: column;
 		flex-wrap: nowrap;
 
@@ -214,6 +216,15 @@
 		height: 2em;
 		min-width: 0;
 		min-height: 0;
+		position: absolute;
+
+		border: none !important;
+	}
+	#buttons_sidebar > button {
+		width: 2em;
+		height: 2em;
+		min-width: 0;
+		min-height: 0;
 
 		border: none;
 		background: none;
@@ -223,7 +234,7 @@
 
 		padding: 0.5em;
 	}
-	.sidebar > button > img {
+	#buttons_sidebar > button > img {
 		width: 90%;
 		height: 90%;
 		object-fit: contain;
@@ -239,7 +250,7 @@
 	}
 
 	.padding {
-		flex-grow: 1;
+		flex-grow: 0.5;
 		display: block;
 	}
 
