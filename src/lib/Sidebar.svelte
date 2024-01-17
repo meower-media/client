@@ -39,22 +39,25 @@
 	{#if $OOBERunning}
 		<div class="locked" />
 	{/if}
-	<button
-		class="toggle-popup round"
-		on:click={() => {
-			if (popupDebounce) return;
-			popupShown = !popupShown;
-			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 150);
-		}}
-	>
-		<PFP
-			raw={true}
-			size={1}
-			alt="Open/close more options"
-			icon={$user.name ? $user.pfp_data : -3}
-		/>
-	</button>
+	<div id="profile-container">
+		<button
+			class="toggle-popup round"
+			on:click={() => {
+				if (popupDebounce) return;
+				popupShown = !popupShown;
+				popupDebounce = true;
+				setTimeout(() => (popupDebounce = false), 150);
+			}}
+		>
+			<PFP
+				raw={true}
+				size={1}
+				alt="Open/close more options"
+				icon={$user.name ? $user.pfp_data : -3}
+			/>
+		</button>
+		<p id="profile_username">@{"Usergoeshere"}</p>
+	</div>
 	<div class="padding" />
 	<div id="buttons_sidebar">
 		<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
@@ -137,6 +140,7 @@
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div on:click|stopPropagation class="popup">
+		<p>Gonna leave this be for now</p>
 		<button
 			on:click={() => {
 				if (!$user.name) {
@@ -211,18 +215,26 @@
 		width: 100%;
 		height: 100%;
 	}
-	.sidebar > button {
-		width: 2em;
-		height: 2em;
+	#profile-container {
+		position: absolute;
+		display: flex;
+		gap: 0.25em;
+		line-height: 0;
+		align-items: center;
+	}
+	#profile-container > button {
+		width: 1.5em;
+		height: 1.5em;
 		min-width: 0;
 		min-height: 0;
-		position: absolute;
 
 		border: none !important;
+		border-radius: 0.5em; /* https://www.youtube.com/watch?v=Xdb_dD26Dy0&t=6 */
 	}
+
 	#buttons_sidebar > button {
-		width: 2em;
-		height: 2em;
+		width: 2.1em;
+		height: 2.1em;
 		min-width: 0;
 		min-height: 0;
 
@@ -302,29 +314,24 @@
 		transform: scale(1.1);
 	}
 
+	#profile_username {
+		color: var(--orange);
+	}
+
 	.popup {
-		background: var(--orange);
+		background: var(--background-bright);
 		padding: 0.5em;
 		padding-top: 0.25em;
-		border-radius: 0 0 0 0.5em;
+		border-radius: 0 0 0.5em 0;
 
 		position: absolute;
-		right: 0;
+		left: 0;
 		z-index: -1;
 
 		display: inline-flex;
 		flex-direction: column;
 		align-items: stretch;
 		gap: 0.4em;
-	}
-	:global(main:not(.layout-old)) .popup {
-		right: unset;
-		left: 100%;
-		bottom: 0;
-
-		border-radius: 0 0.5em 0 0;
-		padding-top: 0.5em;
-		padding-left: 0.25em;
 	}
 	.popup > button {
 		text-align: left;
