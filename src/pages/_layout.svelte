@@ -209,6 +209,9 @@
 		display: flex;
 		flex-direction: row;
 		overflow: hidden;
+		padding-left: 0.5em;
+		padding-top: 0.1em;
+		gap: 0.5em;
 	}
 
 	.sidebar {
@@ -221,15 +224,6 @@
 		flex-shrink: 0;
 		flex-grow: 0;
 		z-index: 3;
-	}
-
-	.leftview {
-		flex-grow: 1;
-		flex-shrink: 1;
-		box-sizing: border-box;
-		overflow: auto;
-
-		--view-height: calc(100vh - 0.66em);
 	}
 
 	.view {
