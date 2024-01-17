@@ -14,6 +14,7 @@
 	Here you can change the look and feel of the Meower client.
 </Container>
 
+(Make sure to change your layout to old as new is a little broken for now)
 <Container>
 	<div class="settings-controls">
 		<button

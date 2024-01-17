@@ -39,17 +39,23 @@
 	{#if $OOBERunning}
 		<div class="locked" />
 	{/if}
-	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
-			<img
-				alt="Meower"
-				src={logo}
-				draggable={false}
-				height="100%"
-				width="auto"
-			/>
-		</button>
-	</div>
+	<button
+		class="toggle-popup round"
+		on:click={() => {
+			if (popupDebounce) return;
+			popupShown = !popupShown;
+			popupDebounce = true;
+			setTimeout(() => (popupDebounce = false), 150);
+		}}
+	>
+		<PFP
+			raw={true}
+			size={1}
+			alt="Open/close more options"
+			icon={$user.name ? $user.pfp_data : -3}
+		/>
+	</button>
+	<div class="padding" />
 	<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
@@ -125,23 +131,6 @@
 			/>
 		</button>
 	{/if}
-	<div class="padding" />
-	<button
-		class="toggle-popup round"
-		on:click={() => {
-			if (popupDebounce) return;
-			popupShown = !popupShown;
-			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 150);
-		}}
-	>
-		<PFP
-			raw={true}
-			size={1}
-			alt="Open/close more options"
-			icon={$user.name ? $user.pfp_data : -3}
-		/>
-	</button>
 </div>
 {#if popupShown}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -155,7 +144,7 @@
 				$goto(`/users/${$user.name}`);
 				popupShown = false;
 			}}
-			class="profile-btn round"
+			class="profile-btn"
 			title="Profile"
 		>
 			<img src={profile} alt="Profile" draggable={false} />
@@ -166,7 +155,7 @@
 				$goto("/settings");
 				popupShown = false;
 			}}
-			class="settings-btn round"
+			class="settings-btn"
 		>
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
@@ -176,7 +165,7 @@
 				$goto("/about");
 				popupShown = false;
 			}}
-			class="about-btn round"
+			class="about-btn"
 		>
 			<img src={info} alt="About" draggable={false} />
 			<span class="label">About</span>
@@ -186,7 +175,7 @@
 				popupShown = true;
 				modals.showModal(LogoutModal);
 			}}
-			class="logout-btn round"
+			class="logout-btn"
 		>
 			<img src={logout} alt="Log out" draggable={false} />
 			<span class="label">Log out</span>
@@ -202,7 +191,7 @@
 	}
 
 	.sidebar {
-		background-color: var(--orange);
+		background-color: var(--background-bright);
 
 		display: flex;
 		align-items: center;
@@ -221,10 +210,13 @@
 		height: 100%;
 	}
 	.sidebar > button {
-		width: 2.8em;
-		height: 2.8em;
+		width: 2em;
+		height: 2em;
 		min-width: 0;
 		min-height: 0;
+
+		border: none;
+		background: none;
 
 		margin: 0;
 		flex-shrink: 1;
@@ -246,27 +238,9 @@
 		opacity: 0.33;
 	}
 
-	.logo {
-		display: none;
-		flex-grow: 1;
-		height: 100%;
-	}
 	.padding {
 		flex-grow: 1;
-		display: none;
-	}
-	.logo img {
-		box-sizing: border-box;
-		padding: 0.75em;
-		filter: brightness(0) invert(1);
-	}
-	.logo-inner {
-		display: inline-block;
-		height: 100%;
-		background: none;
-		border: none;
-		padding: 0;
-		margin: 0;
+		display: block;
 	}
 
 	.new-msgs::after {
@@ -284,28 +258,13 @@
 		background: var(--foreground-orange);
 	}
 
-	:global(main.input-hover) .logo-inner:hover,
-	:global(main.input-touch) .logo-inner:active {
-		background-color: var(--orange-dark);
-	}
-
-	:global(main:not(.layout-old)) .padding,
-	:global(main.layout-mobile) .padding {
-		display: block;
-	}
-
 	:global(main.layout-old) .sidebar {
 		flex-direction: row;
 		padding: 0;
+		padding-inline-start: 0.5em;
 		padding-inline-end: 0.5em;
 	}
-	:global(main.layout-old:not(.layout-mobile)) .logo {
-		display: block;
-	}
-	:global(main.layout-old:not(.layout-mobile)) .home-btn {
-		display: none;
-	}
-
+	
 	:global(main.layout-mobile) .sidebar {
 		padding-inline-start: 0.5em;
 		padding-inline-end: 0.5em;

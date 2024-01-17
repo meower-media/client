@@ -24,11 +24,6 @@ npm run dev:routify (in a separate terminal)
 npm run dev
 ```
 
-Then in a separate shell:
-```
-npm run dev:routify
-```
-
 (Typically you usually also create a new branch for your work:)
 
 ```

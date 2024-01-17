@@ -138,6 +138,7 @@
 		--orange-dark: #b46d34;
 		--orange-scrollbar-back: #a15d04;
 		--background: white;
+		--background-bright: #1D1D1D;
 		--foreground: black;
 		--foreground-orange: white;
 
@@ -156,6 +157,7 @@
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #181818;
+		--background-bright: #1D1D1D;
 		--foreground: #eef;
 		--foreground-orange: #eef;
 	}
@@ -173,12 +175,14 @@
 			var(--orange-dark)
 		);
 		--background: white;
+		--background-bright: #1D1D1D;
 		--foreground: black;
 		--foreground-orange: white;
 		scrollbar-color: unset;
 	}
 	#main.theme-blue.mode-dark {
 		--background: #181818;
+		--background-bright: #1D1D1D;
 		--foreground: white;
 		--foreground-orange: white;
 	}
@@ -229,7 +233,7 @@
 			height: 100%;
 		}
 		to {
-			height: 3.5em;
+			height: 2em;
 		}
 	}
 
@@ -270,9 +274,9 @@
 	}
 	:global(main.layout-old) .sidebar {
 		width: auto;
-		height: 3.5em;
+		height: 2em;
 	}
 	:global(main.layout-old) .view {
-		--view-height: calc(100vh - 3.5em - 0.66em);
+		--view-height: calc(100vh - 2em - 0.66em);
 	}
 </style>
