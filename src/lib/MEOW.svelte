@@ -41,6 +41,7 @@
 	.cat {
 		position: absolute;
 		user-select: none;
+		z-index: 101;
 		animation: move 10s infinite ease-in-out;
 	}
 

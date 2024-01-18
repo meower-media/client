@@ -1,21 +1,37 @@
 <script>
+    import media_logo from "../assets/media_logo.svg";
+    import {goto} from "@roxi/routify";
 
+    let McVersioningEasterEggInitalRand = Math.random()
+    let SecretText = "(Meower Client)"
+
+    let McVersioningEasterEggRand = Math.ceil(McVersioningEasterEggInitalRand * 1000)
+
+    if (McVersioningEasterEggRand == 500) {
+        SecretText = "(MC Version Moment)"
+    }
 </script>
 
 <div class = "LeftView">
     <div class =" padding"></div>
     <p class = "text">
-        about | legal | github
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        <a on:click={() => {
+            $goto("/about");
+        }} href="">About</a> 
+        | 
+        <a href="https://meower.org/legal" target="_blank">Legal</a>
+        |
+        <a href="https://github.com/Meower-media-co/Meower-Svelte" target="_blank">Github</a>
         <br />
         <br />
-        We totally have rights to meower media
+        © Meower Media 2023
         <br />
-        Svelte V1.18.2
+        Svelte 1.10 
         <br />
-        <br />
-        <br />
-        (I would insert the meower logo here however i gtg to bed gn)
+        {SecretText}
     </p>
+    <img alt="Meower media logo" style="opacity: 0.5;" src={media_logo} height=60/>
     <hr />
 </div>
 

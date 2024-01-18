@@ -7,7 +7,7 @@
 	import ModPanelModal from "./modals/moderation/ModPanel.svelte";
 	import LogoutModal from "./modals/Logout.svelte";
 
-	import {user, OOBERunning} from "../lib/stores.js";
+	import {user, OOBERunning, Showkitties} from "../lib/stores.js";
 	import {shiftHeld} from "./keyDetect.js";
 	import * as modals from "./modals.js";
 
@@ -56,7 +56,7 @@
 				icon={$user.name ? $user.pfp_data : -3}
 			/>
 		</button>
-		<p id="profile_username">@{"Usergoeshere"}</p>
+		<p id="profile_username">@{$user.name || "Guest"}</p>
 	</div>
 	<div class="padding" />
 	<div id="buttons_sidebar">
@@ -80,6 +80,7 @@
 		<button
 			on:click={() => {
 				if (shiftHeld) {
+					Showkitties.set(true)
 					$goto("/groupcat");
 				} else {
 					if (!$user.name) {

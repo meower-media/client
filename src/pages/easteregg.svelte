@@ -15,10 +15,11 @@
 	import SwitchBGMSFXModal from "../lib/modals/settings/SwitchBGMSFX.svelte";
 	import SwitchThemeModal from "../lib/modals/settings/SwitchTheme.svelte";
 
-	import {OOBERunning, groupCats} from "../lib/stores.js";
+	import {OOBERunning, groupCats, Showkitties} from "../lib/stores.js";
 	import * as modals from "../lib/modals.js";
 
 	import version from "../lib/version.js";
+	import { tick } from "svelte";
 
 	const allModals = [
 		DebugModal,
@@ -79,6 +80,13 @@
 			placeholder="Enter a number"
 			bind:value={$groupCats}
 		/>
+		<button
+			on:click = {async () => {
+				Showkitties.set(false)
+				await tick();
+				Showkitties.set(true)
+			}}
+		>Click here to reload group cat</button>
 	</Container>
 	<Container>
 		<!--Posts, Profiles and Profile Views (Later on, maybe GC Member list and postlist)-->

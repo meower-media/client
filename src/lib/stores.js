@@ -66,6 +66,7 @@ export const spinner = writable(false);
 // What is this
 export const windowStyle = writable({});
 export const groupCats = writable(100);
+export const Showkitties = writable(false);
 
 // Custom theme
 export const useCustomTheme = writable(false);

@@ -5,6 +5,7 @@
 	import OOBE from "../lib/OOBE/Main.svelte";
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
+	import Cats from "../lib/MEOW.svelte";
 
 	import {
 		screen,
@@ -15,6 +16,7 @@
 		spinner,
 		useCustomTheme,
 		customTheme,
+		Showkitties
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
@@ -122,6 +124,16 @@
 			<Spinner />
 		</div>
 	{/if}
+
+	{#if $Showkitties}
+		<div class="kitties">
+			<div class="catdisable2">GROUP CAT 3.0!!!!</div>
+			<button class="catdisable"
+				on:click={() => {Showkitties.set(false)}}
+			>(Click here to disable cats)</button>
+			<Cats />
+		</div>
+	{/if}
 </main>
 
 <style>
@@ -190,6 +202,27 @@
 		--background-bright: #1D1D1D;
 		--foreground: white;
 		--foreground-orange: white;
+	}
+
+	.kitties {
+		position: absolute;
+		z-index: 101;
+	}
+
+	.catdisable {
+		bottom: 7em;
+		right: 0;
+		z-index: 102;
+		margin: 1em;
+		position: relative;
+	}
+
+	.catdisable2 {
+		bottom: 5em;
+		z-index: 102;
+		right: 0;
+		margin: 1em;
+		position: relative;
 	}
 
 	.main-screen {
