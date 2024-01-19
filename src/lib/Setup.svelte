@@ -174,7 +174,7 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setup">
+<div bind:this={setup} in:fade={{duration: 200}} out:fade={{duration: 500}} class="setup">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}}>
 			<img
