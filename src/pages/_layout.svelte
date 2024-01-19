@@ -144,7 +144,6 @@
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
 
-		background-color: var(--background);
 		color: var(--foreground);
 		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
 		font-size: 15pt;
@@ -193,6 +192,7 @@
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
+		background-color: var(--background);
 	}
 
 	.transition {

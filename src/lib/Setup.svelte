@@ -53,8 +53,8 @@
 			if (!setup) return;
 
 			if (value === "logo") {
+				loginStatus = ""
 				setup.classList.remove("setup");
-				loginStatus = "Please wait...";
 
 				await tick();
 				if (!logoImg) return;
@@ -63,7 +63,7 @@
 				setup.classList.remove("setupnobg");
 				setup.classList.add("setup");
 				logoImg.classList.remove("logo-img-color");
-				await sleep(75);
+				await sleep(50);
 
 				if (
 					localStorage.getItem("meower_savedusername") &&
@@ -79,6 +79,7 @@
 					await mainSetup();
 				}
 			} else if (value === "reconnect") {
+				setup.classList.remove("setupnobg");
 				loginStatus = "";
 				await connect();
 				await sleep(100);
@@ -177,7 +178,7 @@
 
 <div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setupnobg setup">
 	{#if $page === "logo"}
-		<div out:fade={{duration: 200}} class="fullcenter">
+		<div out:fade={{duration: 300}} class="fullcenter">
 			<div>
 				<div class="logo top" bind:this={logo}>
 					<img
@@ -489,8 +490,8 @@
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-		width: 20%;
-		height: 20%;
+		width: 15%;
+		height: 15%;
 	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
