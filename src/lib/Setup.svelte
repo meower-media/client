@@ -60,7 +60,6 @@
 				if (!logoImg) return;
 
 				await connect();
-				setup.classList.remove("setupnobg");
 				setup.classList.add("setup");
 				logoImg.classList.remove("logo-img-color");
 				await sleep(50);
@@ -175,7 +174,7 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setupnobg setup">
+<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setup">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}}>
 			<img
@@ -183,6 +182,7 @@
 				alt="Meower"
 				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
+				onload={document.getElementById("meower-logo").remove()}
 			/>
 		</div>
 	{:else if $page === "reconnect"}
@@ -196,7 +196,6 @@
 						src={meowerLogo}
 						class="logo-img-2"
 						height="70"
-						onload={document.getElementById("meower-logo").remove()}
 					/>
 					<br /><br />
 				</div>
@@ -439,20 +438,6 @@
 		width: 100%;
 		min-height: 100vh;
 		height: 100%;
-
-		display: table;
-	}
-	.setupnobg {
-		background-color: #0A0A0A;
-		color: #FFFFFF;
-		font-size: 150%;
-
-		text-align: center;
-
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1000;
 
 		display: table;
 	}
