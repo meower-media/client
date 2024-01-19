@@ -200,7 +200,7 @@
 					<img
 						alt="Meower"
 						src={meowerLogo}
-						class="logo-img"
+						class="logo-img-2"
 						height="70"
 					/>
 					<br /><br />
@@ -493,9 +493,17 @@
 		width: 15%;
 		height: 15%;
 	}
+	.logo-img-2 {
+		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
+	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
 	}
+
+	.setup:not(.white) .logo-img-2 {
+		filter: brightness(0) invert(1);
+	}
+
 
 	.logo-img-color {
 		filter: brightness(10) !important;
