@@ -430,8 +430,8 @@ hr {
 }
 
 .media-fullcenter {
-	width: 15%;
-	height: 15%;
+	width: 40vh;
+	height: 40vh;
 	filter: brightness(10);
 
 	box-sizing: border-box;

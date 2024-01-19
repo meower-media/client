@@ -60,6 +60,7 @@
 				if (!logoImg) return;
 
 				await connect();
+				setup.classList.remove("setupnobg");
 				setup.classList.add("setup");
 				logoImg.classList.remove("logo-img-color");
 				await sleep(50);
@@ -174,7 +175,7 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 200}} out:fade={{duration: 500}} class="setup">
+<div bind:this={setup} in:fade={{duration: 200}} out:fade={{duration: 500}} class="setup setupnobg">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}}>
 			<img
@@ -182,7 +183,10 @@
 				alt="Meower"
 				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
-				onload={document.getElementById("meower-logo").remove()}
+				onload={async () => {
+					await sleep(100);
+					document.getElementById("meower-logo").remove()
+				}}
 			/>
 		</div>
 	{:else if $page === "reconnect"}
@@ -441,6 +445,43 @@
 
 		display: table;
 	}
+	.setup {
+		background-color: var(--orange);
+		color: var(--foreground-orange);
+		font-size: 150%;
+		transition: 0.25s;
+
+		text-align: center;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1000;
+
+		width: 100%;
+		min-height: 100vh;
+		height: 100%;
+
+		display: table;
+	}
+	.setupnobg {
+		background-color: #0A0A0A;
+		color: #FFFFFF;
+		font-size: 150%;
+
+		text-align: center;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1000;
+
+		width: 100%;
+		min-height: 100vh;
+		height: 100%;
+
+		display: table;
+	}
 	.fullcenter {
 		width: 100%;
 		height: 100%;
@@ -476,8 +517,8 @@
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-		width: 15%;
-		height: 15%;
+		width: 42vh;
+		height: 41vh;
 	}
 	.logo-img-2 {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
