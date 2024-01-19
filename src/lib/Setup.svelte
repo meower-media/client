@@ -183,6 +183,7 @@
 				alt="Meower"
 				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
+				onload={() => document.getElementById("meower-logo").remove()}
 			/>
 		</div>
 	{:else if $page === "reconnect"}
