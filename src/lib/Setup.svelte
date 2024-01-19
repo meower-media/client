@@ -2,6 +2,7 @@
 <script>
 	import ServerSelectorModal from "./modals/ServerSelector.svelte";
 	import BasicModal from "./modals/Basic.svelte";
+	import StartupErrorModal from "./modals/StartupError.svelte";
 	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
 
 	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
@@ -53,38 +54,38 @@
 			if (!setup) return;
 
 			if (value === "logo") {
-				//try {
-				loginStatus = ""
-				setup.classList.remove("setup");
+				try {
+					loginStatus = ""
+					setup.classList.remove("setup");
 
-				await tick();
-				if (!logoImg) return;
+					await tick();
+					if (!logoImg) return;
 
-				await connect();
-				setup.classList.remove("setupnobg");
-				setup.classList.add("setup");
-				logoImg.classList.remove("logo-img-color");
-				await sleep(50);
-
-				document.getElementById("meower-logo").remove()
-
-				if (
-					localStorage.getItem("meower_savedusername") &&
-					localStorage.getItem("meower_savedpassword")
-				) {
-					doLogin(
-						localStorage.getItem("meower_savedusername"),
-						localStorage.getItem("meower_savedpassword"),
-						true
-					);
-				} else {
+					await connect();
+					setup.classList.remove("setupnobg");
+					setup.classList.add("setup");
+					logoImg.classList.remove("logo-img-color");
 					await sleep(50);
-					await mainSetup();
-				}
-				/*} catch (error) {
+
 					document.getElementById("meower-logo").remove()
-					modals.showModal(BasicModal, {title: "Startup error",desc: "We encountered an issue starting meower, Heres some info that may help: "+error})
-				}*/ // Possible Error modal
+
+					if (
+						localStorage.getItem("meower_savedusername") &&
+						localStorage.getItem("meower_savedpassword")
+					) {
+						doLogin(
+							localStorage.getItem("meower_savedusername"),
+							localStorage.getItem("meower_savedpassword"),
+							true
+						);
+					} else {
+						await sleep(50);
+						await mainSetup();
+					}
+				} catch (error) {
+					document.getElementById("meower-logo").remove()
+					modals.showModal(StartupErrorModal, {error: error})
+				}
 			} else if (value === "reconnect") {
 				if (document.getElementById("meower-logo")) { document.getElementById("meower-logo").remove() }
 				setup.classList.remove("setupnobg");
