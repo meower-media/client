@@ -65,6 +65,7 @@
 				logoImg.classList.remove("logo-img-color");
 				await sleep(50);
 
+				document.getElementById("meower-logo").remove()
 				if (
 					localStorage.getItem("meower_savedusername") &&
 					localStorage.getItem("meower_savedpassword")
@@ -79,6 +80,9 @@
 					await mainSetup();
 				}
 			} else if (value === "reconnect") {
+				if (document.getElementById("meower-logo")) {
+					document.getElementById("meower-logo").remove()
+				}
 				setup.classList.remove("setupnobg");
 				loginStatus = "";
 				await connect();
@@ -175,7 +179,7 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 200}} out:fade={{duration: 500}} class="setup setupnobg">
+<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setup setupnobg">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}}>
 			<img
@@ -183,10 +187,6 @@
 				alt="Meower"
 				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
-				onload={async () => {
-					await sleep(100);
-					document.getElementById("meower-logo").remove()
-				}}
 			/>
 		</div>
 	{:else if $page === "reconnect"}
