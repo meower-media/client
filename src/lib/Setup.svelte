@@ -178,18 +178,13 @@
 
 <div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setupnobg setup">
 	{#if $page === "logo"}
-		<div out:fade={{duration: 300}} class="fullcenter">
-			<div>
-				<div class="logo top" bind:this={logo}>
-					<img
-						bind:this={logoImg}
-						alt="Meower"
-						src={meowerLogo}
-						class="logo-img logo-img-color"
-					/>
-				</div>
-				<div class="connecting">{loginStatus}</div>
-			</div>
+		<div out:fade={{duration: 300}}>
+			<img
+				bind:this={logoImg}
+				alt="Meower"
+				src={meowerLogo}
+				class="logo-img logo-img-color presvl-fullcenter"
+			/>
 		</div>
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
@@ -477,16 +472,26 @@
 		vertical-align: middle;
 		padding: 0.5em;
 	}
+	.presvl-fullcenter {
+		box-sizing: border-box;
+		position: absolute; 
+		z-index: -2;
+
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+
+		margin: auto;
+		overflow: auto;
+
+		display: table-cell;
+		vertical-align: middle;
+		padding: 0.5em;
+	}
 
 	.setup.white {
 		background-color: var(--background);
 		color: var(--orange-button);
-	}
-
-	.logo {
-		position: relative;
-		bottom: 0px;
-		transition: bottom 0.3s cubic-bezier(0, 1, 1, 1);
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
@@ -511,11 +516,6 @@
 
 	.small {
 		font-size: 75%;
-	}
-
-	.connecting {
-		height: 0;
-		overflow: visible;
 	}
 
 	.column-ui {
