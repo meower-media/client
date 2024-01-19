@@ -62,7 +62,7 @@
 body {
 	margin: 0;
 	overflow: hidden;
-	background-color: black;
+	background-color: #0A0A0A;
 }
 
 #app,
@@ -412,11 +412,11 @@ hr {
 	width: 100vw;
 	height: 100vh;
 
-	position: fixed;
-	top: 0;
+	position: absolute;
+	top: 40%;
 	left: 0;
 	font-family: simvoni, sans-serif;
-	color: white;
+	color: lightgray;
 	font-weight: bold;
 }
 

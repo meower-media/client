@@ -52,26 +52,18 @@
 		page.subscribe(async value => {
 			if (!setup) return;
 
-			setup.classList.remove("white");
 			if (value === "logo") {
-				loginStatus = "";
+				setup.classList.remove("setup");
+				loginStatus = "Please wait...";
 
 				await tick();
 				if (!logoImg) return;
-				setup.classList.add("white");
-				logoImg.height = 0;
-				logo.classList.remove("top");
-
-				await sleep(600);
-				// Directly changing image height instead
-				// of using transforms to prevent blur
-				logoImg.height = 80;
-				await sleep(300);
-				setup.classList.remove("white");
-				logoImg.height = 40;
-				logo.classList.add("top");
 
 				await connect();
+				setup.classList.remove("setupnobg");
+				setup.classList.add("setup");
+				logoImg.classList.remove("logo-img-color");
+				await sleep(75);
 
 				if (
 					localStorage.getItem("meower_savedusername") &&
@@ -83,7 +75,7 @@
 						true
 					);
 				} else {
-					await sleep(100);
+					await sleep(50);
 					await mainSetup();
 				}
 			} else if (value === "reconnect") {
@@ -110,7 +102,7 @@
 		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
-		await sleep(500);
+		await sleep(300);
 		if (requireLogin || $isActive("./index")) {
 			page.set("welcome");
 		} else {
@@ -183,17 +175,16 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setup white">
+<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setupnobg setup">
 	{#if $page === "logo"}
-		<div out:fade={{duration: 300}} class="fullcenter">
+		<div out:fade={{duration: 200}} class="fullcenter">
 			<div>
 				<div class="logo top" bind:this={logo}>
 					<img
 						bind:this={logoImg}
 						alt="Meower"
 						src={meowerLogo}
-						class="logo-img"
-						height="40"
+						class="logo-img logo-img-color"
 					/>
 				</div>
 				<div class="connecting">{loginStatus}</div>
@@ -202,7 +193,7 @@
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
-		<div class="fullcenter">
+		<div in:fade={{duration: 100}} class="fullcenter">
 			<div class="column-ui">
 				<div>
 					<img
@@ -440,6 +431,25 @@
 		background-color: var(--orange);
 		color: var(--foreground-orange);
 		font-size: 150%;
+		transition: 0.25s;
+
+		text-align: center;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1000;
+
+		width: 100%;
+		min-height: 100vh;
+		height: 100%;
+
+		display: table;
+	}
+	.setupnobg {
+		background-color: #0A0A0A;
+		color: #FFFFFF;
+		font-size: 150%;
 
 		text-align: center;
 
@@ -479,12 +489,15 @@
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-	}
-	.logo.top {
-		bottom: 10px;
+		width: 20%;
+		height: 20%;
 	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
+	}
+
+	.logo-img-color {
+		filter: brightness(10) !important;
 	}
 
 	.small {
