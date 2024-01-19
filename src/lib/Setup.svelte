@@ -183,7 +183,6 @@
 				alt="Meower"
 				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
-				onload={() => document.getElementById("meower-logo").remove()}
 			/>
 		</div>
 	{:else if $page === "reconnect"}
@@ -197,6 +196,7 @@
 						src={meowerLogo}
 						class="logo-img-2"
 						height="70"
+						onload={document.getElementById("meower-logo").remove()}
 					/>
 					<br /><br />
 				</div>
@@ -453,10 +453,6 @@
 		top: 0;
 		left: 0;
 		z-index: 1000;
-
-		width: 100%;
-		min-height: 100vh;
-		height: 100%;
 
 		display: table;
 	}
