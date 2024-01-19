@@ -53,6 +53,7 @@
 			if (!setup) return;
 
 			if (value === "logo") {
+				//try {
 				loginStatus = ""
 				setup.classList.remove("setup");
 
@@ -66,6 +67,7 @@
 				await sleep(50);
 
 				document.getElementById("meower-logo").remove()
+
 				if (
 					localStorage.getItem("meower_savedusername") &&
 					localStorage.getItem("meower_savedpassword")
@@ -79,10 +81,12 @@
 					await sleep(50);
 					await mainSetup();
 				}
-			} else if (value === "reconnect") {
-				if (document.getElementById("meower-logo")) {
+				/*} catch (error) {
 					document.getElementById("meower-logo").remove()
-				}
+					modals.showModal(BasicModal, {title: "Startup error",desc: "We encountered an issue starting meower, Heres some info that may help: "+error})
+				}*/ // Possible Error modal
+			} else if (value === "reconnect") {
+				if (document.getElementById("meower-logo")) { document.getElementById("meower-logo").remove() }
 				setup.classList.remove("setupnobg");
 				loginStatus = "";
 				await connect();
