@@ -59,7 +59,7 @@
 	    role="dialog"
 	    aria-modal="true"
 	    bind:this={modal}
-	    transition:slide={{duration: 600, easing: expoOut}}
+	    transition:slide={{duration: 500, easing: expoOut}}
     >
         <div class="settings-controls">
             {#if showClose}
@@ -122,9 +122,10 @@
         z-index: 9999;
 		position: fixed;
 		left: 50%;
-		bottom: -25%;
+        top: 100%;
+		bottom: -100%;
 		width: 90vw;
-		max-height: calc(100vh - 4em);
+		max-height: 100vh /* calc(100vh - 4em) */;
 		overflow: auto;
 		transform: translate(-50%, -50%);
 		padding: 1em;
