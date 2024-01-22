@@ -52,6 +52,12 @@
 	gap: 0.25em;
 }
 
+.settings-controls.bottom-sheet {
+	top: 0.8em;
+	right: 1em;
+	gap: 0.25em;
+}
+
 .image_1 {
 	margin-top: 0.5em;
 	width: 20em;

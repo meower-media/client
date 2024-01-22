@@ -55,13 +55,13 @@
 
 {#if $mobile}
     <div
-	    class="bottom-sheet"
+	    class="modal bottom-sheet"
 	    role="dialog"
 	    aria-modal="true"
 	    bind:this={modal}
 	    transition:slide={{duration: 500, easing: expoOut}}
     >
-        <div class="settings-controls">
+        <div class="settings-controls bottom-sheet">
             {#if showClose}
                 <button class="circle close" title="Close modal" on:click={close} />
             {/if}
@@ -118,7 +118,7 @@
 		border-radius: 5px;
 	}
 
-    .bottom-sheet {
+    .modal.bottom-sheet {
         z-index: 9999;
 		position: fixed;
 		left: 50%;
