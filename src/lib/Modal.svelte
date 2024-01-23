@@ -55,7 +55,7 @@
 
 {#if $mobile}
     <div
-	    class="modal bottom-sheet"
+	    class="bottom-sheet"
 	    role="dialog"
 	    aria-modal="true"
 	    bind:this={modal}
@@ -93,7 +93,7 @@
 
 <style>
 	.modal-background {
-		z-index: 9999;
+		z-index: 9998;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -118,19 +118,19 @@
 		border-radius: 5px;
 	}
 
-    .modal.bottom-sheet {
+    .bottom-sheet {
         z-index: 9999;
-		position: fixed;
-		left: 50%;
-        top: 100%;
-		bottom: -100%;
-		width: 90vw;
-		max-height: 100vh /* calc(100vh - 4em) */;
-		overflow: auto;
-		transform: translate(-50%, -50%);
-		padding: 1em;
-		background-color: var(--background);
-		border: solid 2px var(--orange);
-		border-radius: 30px 30px 0px 0px;
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%);
+        width: 91vw;
+        max-height: calc(100vh - 4em);
+        overflow: auto;
+        margin: 0;
+        padding: 1em;
+        background-color: var(--background);
+        border: solid 0px var(--orange);
+        border-radius: 30px 30px 0px 0px;
     }
 </style>
