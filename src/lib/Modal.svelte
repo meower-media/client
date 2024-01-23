@@ -130,7 +130,6 @@
         margin: 0;
         padding: 1em;
         background-color: var(--background);
-        border: solid 0px var(--orange);
         border-radius: 30px 30px 0px 0px;
     }
 </style>
