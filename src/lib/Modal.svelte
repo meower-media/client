@@ -61,7 +61,7 @@
 	    bind:this={modal}
 	    transition:slide={{duration: 500, easing: expoOut}}
     >
-        <div class="settings-controls bottom-sheet">
+        <div class="settings-controls">
             {#if showClose}
                 <button class="circle close" title="Close modal" on:click={close} />
             {/if}
