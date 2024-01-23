@@ -132,4 +132,10 @@
         background-color: var(--background);
         border-radius: 30px 30px 0px 0px;
     }
+
+    .settings-controls {
+	    top: 0.8em;
+	    right: 1em;
+	    gap: 0.25em;
+    }
 </style>
