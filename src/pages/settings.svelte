@@ -236,9 +236,8 @@
 		gap: 0.4em;
 	}
 	#chat {
-		flex-shrink: 1;
+		flex-shrink: 2;
 		flex-grow: 1;
-		overflow: auto;
 	}
 	#tabs {
 		height: var(--view-height);
@@ -253,7 +252,7 @@
 		position: sticky;
 		top: 0;
 
-		flex-shrink: 0;
+		flex-shrink: 1;
 		flex-grow: 0;
 	}
 	:global(#main.layout-mobile) #tabs {
