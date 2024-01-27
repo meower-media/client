@@ -294,8 +294,8 @@ export async function connect() {
 					await link.connect(linkUrl);
 				} catch (e) {
 					link.error("manager", "connection error:", e);
-					link.off(onErrorEv);
 					modals.showModal(ConnectionFailedModal);
+					link.off(onErrorEv);
 				}
 			});
 			link.once("connected", async () => {
