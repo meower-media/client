@@ -13,7 +13,7 @@
 	{num}
 {:else if magnitude < 1_000_000}
 	{round(num / 1000, 2)}k
-{:else if magnitude < 1_000_000}
+{:else if magnitude < 1_000_000_000}
 	{round(num / 1_000_000, 2)}M
 {:else}
 	<!-- how -->
