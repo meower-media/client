@@ -60,7 +60,7 @@
 			if ($user.theme.includes("custom:")) {
 				theme = stringToTheme($user.theme)
 			}
-		}}>Reset to saved theme</button>
+		}} disabled = {!$user.theme.includes("custom:")}>Reset to saved theme</button>
 		<br /><br />
 		{#if error}
 			<label for="json" style="color: crimson;"
