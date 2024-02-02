@@ -1,7 +1,7 @@
 // Custom themes.
 
 export let fallback = {
-	v: 1.1,
+	v: 2,
 	orange: "#f9a636",
 	orangeLight: "#ffce8c",
 	orangeDark: "#b46d34",
