@@ -94,7 +94,7 @@ export function applyTheme(theme) {
 	if (!theme.style)
 		throw new Error("required field 'style' is not defined or is null");
 
-	if (![1].includes(theme.v))
+	if (![2].includes(theme.v))
 		throw new Error(`invalid theme version (${theme.v})`);
 
 	theme.orangeLight =
