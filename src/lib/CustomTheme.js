@@ -1,7 +1,7 @@
 // Custom themes.
 
 export let fallback = {
-	v: 1,
+	v: 1.1,
 	orange: "#f9a636",
 	orangeLight: "#ffce8c",
 	orangeDark: "#b46d34",
@@ -9,6 +9,7 @@ export let fallback = {
 	foreground: "#000000",
 	foregroundOrange: "#ffffff",
 	tinting: "#252525",
+	style: "large",
 };
 
 import {useCustomTheme, customTheme as currentCustomTheme} from "./stores.js";
@@ -28,6 +29,7 @@ export function stringToTheme(string) {
 			foregroundOrange:
 				json.foregroundOrange || fallback.foregroundOrange,
 			tinting: json.tinting || fallback.tinting,
+			style: json.style || fallback.style,
 		};
 	} catch (e) {
 		console.error("Error loading custom theme: " + e);
@@ -89,6 +91,8 @@ export function applyTheme(theme) {
 		);
 	if (!theme.tinting)
 		throw new Error("required field 'tinting' is not defined or is null");
+	if (!theme.style)
+		throw new Error("required field 'style' is not defined or is null");
 
 	if (![1].includes(theme.v))
 		throw new Error(`invalid theme version (${theme.v})`);
