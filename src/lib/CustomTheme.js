@@ -70,13 +70,11 @@ export function removeHexColor(c1, c2) {
 		.join("");
 }
 
-export function checkTheme(theme) {
-
-
+export function applyTheme(theme) {
 	if (!theme.v)
 		throw new Error("required field 'v' is not defined or is null");
 	if (!theme.orange)
-	throw new Error("required field 'orange' is not defined or is null");
+		throw new Error("required field 'orange' is not defined or is null");
 	if (!theme.background)
 		throw new Error(
 			"required field 'background' is not defined or is null"
@@ -94,14 +92,7 @@ export function checkTheme(theme) {
 
 	if (![1].includes(theme.v))
 		throw new Error(`invalid theme version (${theme.v})`);
-	}
-export function applyTheme(theme) {
-	try {
-		checkTheme(theme);
-	} catch (e) {
-		console.error("Error loading custom theme: " + e);
-		theme = JSON.parse(JSON.stringify(fallback));
-	}
+
 	theme.orangeLight =
 		"#" + addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
 	theme.orangeDark =
