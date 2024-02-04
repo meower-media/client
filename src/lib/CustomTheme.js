@@ -40,7 +40,7 @@ export function removeHexColor(c1, c2) {
 // Actual code
 
 export let fallback = {
-	v: 2,
+	v: 1,
 	orange: "#f9a636",
 	background: "#ffffff",
 	foreground: "#000000",
@@ -49,7 +49,7 @@ export let fallback = {
 };
 
 export let fallback_fallback = {
-	v: 2,
+	v: 1,
 	orange: "#f9a636",
 	background: "#ffffff",
 	foreground: "#000000",
@@ -102,33 +102,18 @@ export function applyTheme(theme) {
 	if (!theme.tinting)
 		throw new Error("required field 'tinting' is not defined or is null");
 
-	if (![1,2].includes(theme.v))
+	if (![1].includes(theme.v))
 		throw new Error(`invalid theme version (${theme.v})`);
-
-	if (theme.v == 1) {
-		theme.orangeLight =
-			"#" + addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
-		theme.orangeDark =
-			"#" + removeHexColor(theme.orange.slice(1), theme.tinting.slice(1));
-	}
 
 	currentCustomTheme.set(theme);
 	useCustomTheme.set(true);
 }
 
 export function getTintColor(dark,theme) {
-	if (theme.v > 1) {
-		if (dark) {
-			return "#" + addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
-		} else {
-			return "#" + removeHexColor(theme.orange.slice(1), theme.tinting.slice(1));
-		}
+	if (dark) {
+		return "#" + addHexColor(theme.orange.slice(1), theme.tinting.slice(1));
 	} else {
-		if (dark) {
-			return theme.orangeLight
-		} else {
-			return theme.orangeDark
-		}
+		return "#" + removeHexColor(theme.orange.slice(1), theme.tinting.slice(1));
 	}
 }
 
