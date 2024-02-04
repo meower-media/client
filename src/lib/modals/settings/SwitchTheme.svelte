@@ -155,11 +155,13 @@
 	}
 
 	.theme-preview {
-		height: 11em;
+		height: 20vw;
+		max-height: 11em;
 		width: auto;
 	}
 
 	.theme-name {
+		padding-bottom: 0.25em;
 		font-size: 3rem;
 		font-weight: bold;
 	}

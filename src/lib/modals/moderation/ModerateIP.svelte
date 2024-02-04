@@ -100,7 +100,7 @@
 			<button
 				class="long"
 				on:click={() =>
-					modals.showModal(CreateNetblockModal, {cidr: ip + "/32"})}
+					modals.showModal(CreateNetblockModal, {cidr: ip})}
 				>Create Netblock</button
 			>
 			<table>

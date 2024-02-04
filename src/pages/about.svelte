@@ -62,7 +62,7 @@
 		<Contributor username="CST1229" pfp={-1} isMeower={true}>
 			Frontend developer
 		</Contributor>
-		<Contributor username="zedthehedgehog" pfp={22} isMeower={true}>
+		<Contributor username="zed" pfp={22} isMeower={true}>
 			Designer
 		</Contributor>
 		<Contributor username="DaCatBlock" pfp={23} isMeower={true}>
