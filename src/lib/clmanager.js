@@ -46,7 +46,7 @@ user.subscribe(v => {
 			try {
 				applyTheme(stringToTheme(_user.theme));
 			} catch (e) {
-				console.error(`Failed to load custom theme: ${e}`);
+				console.error(`Failed to apply custom theme: ${e}`);
 				removeTheme();
 			}
 		} else {
