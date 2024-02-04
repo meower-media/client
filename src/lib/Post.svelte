@@ -320,18 +320,26 @@
 					{/if}
 					{#if input && !input.disabled && !noPFP && !editing}
 						{#if post.user === $user.name}
-							<button
-								class="circle pen"
-								on:click={async () => {
-									editError = "";
-									editing = true;
-									await tick();
-									editContentInput.value =
-										post.unfiltered_content || post.content;
-									editContentInput.focus();
-									autoresize(editContentInput);
-								}}
-							/>
+							{#if !bridged}
+								<button
+									class="circle pen"
+									on:click={async () => {
+										editError = "";
+										editing = true;
+										await tick();
+										editContentInput.value =
+											post.unfiltered_content || post.content;
+										editContentInput.focus();
+										autoresize(editContentInput);
+									}}
+								/>
+							{:else}
+								<button
+									class="circle pen"
+									disabled
+									title="You cannot edit bridged messages."
+								/>
+							{/if}
 						{/if}
 						<button
 							class="circle reply"
