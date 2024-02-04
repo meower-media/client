@@ -31,7 +31,12 @@
 <Modal
 	on:close={() => {
 		if ($user.theme.includes("custom:")) {
-			applyTheme(stringToTheme($user.theme));
+			try {
+				applyTheme(stringToTheme($user.theme));
+			} catch (e) {
+				console.error(`Failed to apply custom theme: ${e}`);
+				removeTheme();
+			}
 		} else {
 			removeTheme();
 		}
@@ -88,7 +93,12 @@
 			<button
 				on:click={() => {
 					if ($user.theme.includes("custom:")) {
-						applyTheme(stringToTheme($user.theme));
+						try {
+							applyTheme(stringToTheme($user.theme));
+						} catch (e) {
+							console.error(`Failed to apply custom theme: ${e}`);
+							removeTheme();
+						}
 					} else {
 						removeTheme();
 					}

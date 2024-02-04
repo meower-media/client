@@ -43,7 +43,12 @@ user.subscribe(v => {
 	if (_userLoaded) {
 		_user = v;
 		if (_user.theme.startsWith("custom:")) {
-			applyTheme(stringToTheme(_user.theme));
+			try {
+				applyTheme(stringToTheme(_user.theme));
+			} catch (e) {
+				console.error(`Failed to apply custom theme: ${e}`);
+				removeTheme();
+			}
 		} else {
 			removeTheme();
 		}
