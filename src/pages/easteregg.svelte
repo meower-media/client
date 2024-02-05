@@ -54,7 +54,7 @@
 	let profilePfp = 1;
 	let profileQuoteEnabled = true;
 
-	let EastereggUnlocked = false;
+	let EastereggUnlocked = true;
 
 	let keys = new Audio(
 		new URL(
@@ -71,7 +71,7 @@
 		keys.remove()
 	})
 
-	onMount(async () => {
+	async function LimboGame() {
 		canvas = document.getElementById("keyscanvas")
 		ctx = canvas.getContext("2d")
 
@@ -222,7 +222,7 @@
 		function draw() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-			if (t < 32) {
+			if (t < 31) {
 				if (lerpt < 1) {
 					lerpt += 1 / 18
 					for (let index = 0; index < 8; index++) {
@@ -246,7 +246,7 @@
 		}
 
 		window.requestAnimationFrame(draw);
-	})
+	}
 </script>
 
 <div>
@@ -416,6 +416,18 @@
 			<br /><br />
 
 			<button on:click={() => ($OOBERunning = true)}>Click me</button>
+		</Container>
+		<Container>
+			<h1>Limbo keys</h1>
+			Funny game
+
+			<br /><br />
+
+			<button on:click={async () => {
+				EastereggUnlocked = false
+				await sleep(100)
+				await LimboGame()
+			}}>Click me</button>
 		</Container>
 		<!--<Container>
 			<h1>Internal/Debug Info</h1>
