@@ -222,9 +222,9 @@
 		function draw() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-			if (t < 31) {
+			if (t < 36) {
 				if (lerpt < 1) {
-					lerpt += 1 / 18
+					lerpt += 1 / 16
 					for (let index = 0; index < 8; index++) {
 						DrawMeowy(Lerp(GetMeowyPos(Meowies[index]), GetMeowyPos(OldMeowies[index]), lerpt))
 					}
