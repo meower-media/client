@@ -237,6 +237,10 @@
 					lerpt = 0
 				}
 			} else {
+				ShowCorrectMeowy(Meowies[correct])
+				ctx.font = "32px serif";
+				ctx.fillStyle = "white";
+				ctx.fillText("I will probably never add the guessing part.", 0, 50);
 				for (let index = 0; index < 8; index++) {
 					DrawMeowy(GetMeowyPos(Meowies[index]))
 				}
