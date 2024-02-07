@@ -7,17 +7,20 @@
 	import PFP from "../PFP.svelte";
 	import LiText from "../LiText.svelte";
 
-	import {postInput, user} from "../stores.js";
+	import {user} from "../stores.js";
 	import {IMAGE_HOST_WHITELIST} from "../hostWhitelist.js";
 	import * as modals from "../modals.js";
 
 	import {focus} from "@roxi/routify";
 
+	export let modalData;
+	let {postInput} = modalData;
+
 	let imgUrl;
 	let imgName;
 
 	let images = [];
-	let content = $postInput.value || "[: ]";
+	let content = postInput.value + `${postInput.value ? " " : ""}[: ]`;
 	let post = {
 		post_id: "",
 		post_origin: "home",
@@ -83,7 +86,7 @@
 
 	function change() {
 		const full =
-			$postInput.value + " [" + imgName.value + ": " + imgUrl.value + "]";
+			postInput.value + " [" + imgName.value + ": " + imgUrl.value + "]";
 		post.content = full;
 		initPostUser();
 
@@ -211,7 +214,7 @@
 			<button
 				disabled={postErrors !== ""}
 				on:click={() => {
-					$postInput.value +=
+					postInput.value +=
 						" [" + imgName.value + ": " + imgUrl.value + "]";
 					modals.closeLastModal();
 				}}

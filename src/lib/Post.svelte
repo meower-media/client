@@ -29,10 +29,16 @@
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
-	export let post = {};
+	/**
+	 * @type {import('src/lib/types.js').ListPost}
+	 */
+	export let post;
 	export let buttons = true;
 	export let input = null;
 	export let adminView = false;
+	export let error = "";
+	export let retryPost;
+	export let removePost;
 
 	let bridged = false;
 	let webhook = false;
@@ -40,7 +46,6 @@
 	let images = [];
 
 	let editing = false;
-	let editError = "";
 	let editContentInput, editSaveButton;
 
 	let deleteButton;
@@ -64,6 +69,11 @@
 		}
 
 		if (bridged || webhook) {
+			if (webhook) {
+				post.content = post.content.slice(
+					post.content.indexOf(": ") + 2
+				);
+			}
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
@@ -249,7 +259,7 @@
 			post.mod_deleted = true;
 			post.deleted_at = Math.floor(Date.now() / 1000);
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminDeleteButton.disabled = false;
 	}
@@ -273,12 +283,14 @@
 			post.mod_deleted = null;
 			post.deleted_at = null;
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminRestoreButton.disabled = false;
 	}
 
-	onMount(initPostUser);
+	onMount(async () => {
+		initPostUser();
+	});
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -292,7 +304,20 @@
 	<div class="post-header">
 		{#if buttons}
 			<div class="settings-controls">
-				{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
+				{#if post.pending}
+					{#if error}
+						<button
+							class="circle restore"
+							title="Retry"
+							on:click={retryPost}
+						/>
+						<button
+							class="circle trash"
+							title="Delete"
+							on:click={removePost}
+						/>
+					{/if}
+				{:else if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
 					{#if post.isDeleted}
 						<button
 							class="circle restore"
@@ -324,11 +349,12 @@
 								<button
 									class="circle pen"
 									on:click={async () => {
-										editError = "";
+										error = "";
 										editing = true;
 										await tick();
 										editContentInput.value =
-											post.unfiltered_content || post.content;
+											post.unfiltered_content ||
+											post.content;
 										editContentInput.focus();
 										autoresize(editContentInput);
 									}}
@@ -388,7 +414,7 @@
 													);
 												}
 											} catch (e) {
-												editError = e;
+												error = e;
 											}
 											deleteButton.disabled = false;
 										} else {
@@ -569,20 +595,25 @@
 							);
 						}
 					} catch (e) {
-						editError = e;
+						error = e;
 					}
 				}}>Save</button
 			>
 		</div>
 	{:else}
-		<p class="post-content" style="border-left-color: #4b5563;">
+		<p
+			class="post-content"
+			style="border-left-color: #4b5563; {post.pending
+				? 'color: #A9A9A9'
+				: 'color: #ffffff'}"
+		>
 			{#await addFancyElements(post.content) then content}
 				{@html content}
 			{/await}
 		</p>
 	{/if}
-	{#if editError}
-		<p style="color: crimson;">{editError}</p>
+	{#if error}
+		<p style="color: crimson;">{error}</p>
 	{/if}
 	{#if !editing}
 		<div class="post-images">

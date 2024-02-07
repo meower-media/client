@@ -116,6 +116,22 @@
 <Container>
 	<h2>Changelog</h2>
 	<Container>
+		<h2>1.8.2</h2>
+		<ul>
+			<li>
+				Moved from using CL3 to the REST API for creating posts,
+				emitting typing events, and updating user config
+			</li>
+			<li>Improved and optimized the posts list</li>
+			<li>Added support for webhooks v2</li>
+			<li>
+				Fixed a bug that would cause the client to crash if the logged
+				in user had an invalid theme saved
+			</li>
+			<li>Fixed a few other bugs</li>
+		</ul>
+	</Container>
+	<Container>
 		<h2>1.8.1</h2>
 		<ul>
 			<li>Made the initial logo animation a little shorter</li>
