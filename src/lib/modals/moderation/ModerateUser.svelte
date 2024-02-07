@@ -126,13 +126,11 @@
 		}
 	}
 
-	async function kick(force = false) {
+	async function kick() {
 		kickStatus = "Kicking...";
 		try {
 			const resp = await fetch(
-				`${apiUrl}admin/users/${user._id}/kick${
-					force ? "?force=1" : ""
-				}`,
+				`${apiUrl}admin/users/${user._id}/kick`,
 				{
 					method: "POST",
 					headers: $authHeader,
@@ -508,11 +506,8 @@
 					</button>
 				{/if}
 				{#if !system && !deleted && hasPermission(adminPermissions.KICK_USERS)}
-					<button class="action-button" on:click={() => kick(false)}>
+					<button class="action-button" on:click={kick}>
 						Kick
-					</button>
-					<button class="action-button" on:click={() => kick(true)}>
-						Force kick
 					</button>
 				{/if}
 				{#if !system && !deleted && hasPermission(adminPermissions.CLEAR_USER_QUOTES)}
