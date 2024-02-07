@@ -134,7 +134,7 @@
 		setTimeout(() => {
 			if ($user.name) return;
 			loginStatus = "Logging in...";
-		}, 500);
+		}, (autoLogin ? 500 : 0));
 
 		try {
 			await clm.meowerRequest({
