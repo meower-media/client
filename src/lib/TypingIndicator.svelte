@@ -34,7 +34,7 @@
 					><b>{_typing[0]}</b> and <b>{_typing[1]}</b> are typing...</span
 				>
 			{:else if _typing.length >= 3}
-				<span class="text">3 or more people are typing...</span>
+				<span class="text">{_typing.length} people are typing...</span>
 			{/if}
 		</span>
 	</Container>
