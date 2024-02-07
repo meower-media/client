@@ -132,6 +132,12 @@
 		</ul>
 	</Container>
 	<Container>
+<Container>
+		<h2>1.8.3</h2>
+		<ul>
+			<li>Fixed Search</li>
+		</ul>
+	</Container>
 		<h2>1.8.1</h2>
 		<ul>
 			<li>Made the initial logo animation a little shorter</li>
