@@ -390,8 +390,7 @@ export async function connect() {
 	});
 	relationshipUpdateEvent = link.on("direct", cmd => {
 		if (cmd.val.mode === "update_relationship") {
-			_relationships[cmd.val.payload.username] =
-				cmd.val.payload.state;
+			_relationships[cmd.val.payload.username] = cmd.val.payload.state;
 			relationships.set(_relationships);
 		}
 	});
@@ -449,8 +448,7 @@ export async function connect() {
 					);
 					if (!resp.ok) {
 						throw new Error(
-							"Response code is not OK; code is " +
-								resp.status
+							"Response code is not OK; code is " + resp.status
 						);
 					}
 					const chat = await resp.json();
@@ -564,8 +562,8 @@ export async function updateProfile(updatedValues) {
 		method: "PATCH",
 		headers: {
 			"Content-Type": "application/json",
-			..._authHeader
+			..._authHeader,
 		},
-		body: JSON.stringify(updatedValues)
+		body: JSON.stringify(updatedValues),
 	});
 }

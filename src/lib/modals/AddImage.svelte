@@ -14,13 +14,13 @@
 	import {focus} from "@roxi/routify";
 
 	export let modalData;
-	let { postInput } = modalData;
+	let {postInput} = modalData;
 
 	let imgUrl;
 	let imgName;
 
 	let images = [];
-	let content = postInput.value + `${postInput.value ? ' ' : ''}[: ]`;
+	let content = postInput.value + `${postInput.value ? " " : ""}[: ]`;
 	let post = {
 		post_id: "",
 		post_origin: "home",
