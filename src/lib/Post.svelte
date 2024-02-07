@@ -29,10 +29,16 @@
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
-	export let post = {};
+	/**
+	 * @type {import('src/lib/types.js').ListPost}
+	 */
+	export let post;
 	export let buttons = true;
 	export let input = null;
 	export let adminView = false;
+	export let error = "";
+	export let retryPost;
+	export let removePost;
 
 	let bridged = false;
 	let webhook = false;
@@ -40,7 +46,6 @@
 	let images = [];
 
 	let editing = false;
-	let editError = "";
 	let editContentInput, editSaveButton;
 
 	let deleteButton;
@@ -64,6 +69,9 @@
 		}
 
 		if (bridged || webhook) {
+			if (webhook) {
+				post.content = post.content.slice(post.content.indexOf(": ") + 2);
+			}
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
@@ -221,7 +229,7 @@
 			post.mod_deleted = true;
 			post.deleted_at = Math.floor(Date.now() / 1000);
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminDeleteButton.disabled = false;
 	}
@@ -245,12 +253,16 @@
 			post.mod_deleted = null;
 			post.deleted_at = null;
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminRestoreButton.disabled = false;
 	}
 
-	onMount(initPostUser);
+	onMount(async () => {
+		initPostUser();
+
+
+	});
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -264,109 +276,140 @@
 	<div class="post-header">
 		{#if buttons}
 			<div class="settings-controls">
-				{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
-					{#if post.isDeleted}
+				{#if post.pending}
+					{#if error}
 						<button
 							class="circle restore"
-							title="Restore post"
-							bind:this={adminRestoreButton}
-							on:click={adminRestore}
+							title="Retry"
+							on:click={retryPost}
 						/>
-					{:else}
 						<button
 							class="circle trash"
-							title="Delete post"
-							bind:this={adminDeleteButton}
-							on:click={adminDelete}
+							title="Delete"
+							on:click={removePost}
 						/>
 					{/if}
-				{:else if !adminView}
-					{#if !editing && hasPermission(adminPermissions.VIEW_POSTS)}
-						<button
-							class="circle admin"
-							on:click={() =>
-								modals.showModal(ModeratePostModal, {
-									postid: post.post_id,
-								})}
-						/>
-					{/if}
-					{#if input && !input.disabled && !noPFP && !editing}
-						{#if post.user === $user.name}
+				{:else}
+					{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
+						{#if post.isDeleted}
 							<button
-								class="circle pen"
-								on:click={async () => {
-									editError = "";
-									editing = true;
-									await tick();
-									editContentInput.value =
-										post.unfiltered_content || post.content;
-									editContentInput.focus();
-									autoresize(editContentInput);
-								}}
-							/>
-						{/if}
-						<button
-							class="circle reply"
-							on:click={() => {
-								let existingText = input.value;
-
-								const mentionRegex = /^@\w+\s*/i;
-								const mention = "@" + post.user + " ";
-
-								if (mentionRegex.test(existingText)) {
-									input.value = existingText
-										.trim()
-										.replace(mentionRegex, mention);
-								} else {
-									input.value = mention + existingText.trim();
-								}
-
-								input.focus();
-							}}
-						/>
-						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
-							<button
-								class="circle trash"
-								bind:this={deleteButton}
-								on:click={async () => {
-									if (shiftHeld) {
-										deleteButton.disabled = true;
-										try {
-											const resp = await fetch(
-												`${apiUrl}posts?id=${post.post_id}`,
-												{
-													method: "DELETE",
-													headers: $authHeader,
-												}
-											);
-											if (!resp.ok) {
-												if (resp.status === 429) {
-													throw new Error(
-														"Too many requests! Try again later."
-													);
-												}
-												throw new Error(
-													"Response code is not OK; code is " +
-														resp.status
-												);
-											}
-										} catch (e) {
-											editError = e;
-										}
-										deleteButton.disabled = false;
-									} else {
-										modals.showModal(DeletePostModal, {
-											post,
-										});
-									}
-								}}
+								class="circle restore"
+								title="Restore post"
+								bind:this={adminRestoreButton}
+								on:click={adminRestore}
 							/>
 						{:else}
 							<button
-								class="circle report"
-								on:click={() =>
-									modals.showModal(ReportPostModal, {post})}
+								class="circle trash"
+								title="Delete post"
+								bind:this={adminDeleteButton}
+								on:click={adminDelete}
 							/>
+						{/if}
+					{:else if !adminView}
+						{#if !editing && hasPermission(adminPermissions.VIEW_POSTS)}
+							<button
+								class="circle admin"
+								on:click={() =>
+									modals.showModal(ModeratePostModal, {
+										postid: post.post_id,
+									})}
+							/>
+						{/if}
+						{#if input && !input.disabled && !noPFP && !editing}
+							{#if post.user === $user.name}
+								{#if !bridged}
+									<button
+										class="circle pen"
+										on:click={async () => {
+											error = "";
+											editing = true;
+											await tick();
+											editContentInput.value =
+												post.unfiltered_content || post.content;
+											editContentInput.focus();
+											autoresize(editContentInput);
+										}}
+									/>
+								{:else}
+									<button
+										class="circle pen"
+										disabled
+										title="You cannot edit bridged messages."
+									/>
+								{/if}
+							{/if}
+							<button
+								class="circle reply"
+								on:click={() => {
+									let existingText = input.value;
+
+									const mentionRegex = /^@\w+\s*/i;
+									const mention = "@" + post.user + " ";
+
+									if (mentionRegex.test(existingText)) {
+										input.value = existingText
+											.trim()
+											.replace(mentionRegex, mention);
+									} else {
+										input.value = mention + existingText.trim();
+									}
+
+									input.focus();
+								}}
+							/>
+							{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
+								{#if !bridged}
+									<button
+										class="circle trash"
+										bind:this={deleteButton}
+										on:click={async () => {
+											if (shiftHeld) {
+												deleteButton.disabled = true;
+												try {
+													const resp = await fetch(
+														`${apiUrl}posts?id=${post.post_id}`,
+														{
+															method: "DELETE",
+															headers: $authHeader,
+														}
+													);
+													if (!resp.ok) {
+														if (resp.status === 429) {
+															throw new Error(
+																"Too many requests! Try again later."
+															);
+														}
+														throw new Error(
+															"Response code is not OK; code is " +
+																resp.status
+														);
+													}
+												} catch (e) {
+													error = e;
+												}
+												deleteButton.disabled = false;
+											} else {
+												modals.showModal(DeletePostModal, {
+													post,
+												});
+											}
+										}}
+									/>
+								{:else}
+									<button
+										class="circle trash"
+										disabled
+										title="You cannot delete bridged messages."
+									/>
+								{/if}
+							{:else}
+								<button
+									class="circle report"
+									on:click={() =>
+										modals.showModal(ReportPostModal, {post})}
+								/>
+							{/if}
 						{/if}
 					{/if}
 				{/if}
@@ -525,18 +568,20 @@
 							);
 						}
 					} catch (e) {
-						editError = e;
+						error = e;
 					}
 				}}>Save</button
 			>
 		</div>
 	{:else}
-		<p class="post-content" style="border-left-color: #4b5563;">
-			{@html addFancyElements(post.content)}
+		<p class="post-content" style="border-left-color: #4b5563; {post.pending ? 'color: #A9A9A9' : 'color: #ffffff'}">
+			{#await addFancyElements(post.content) then content}
+				{@html content}
+			{/await}
 		</p>
 	{/if}
-	{#if editError}
-		<p style="color: crimson;">{editError}</p>
+	{#if error}
+		<p style="color: crimson;">{error}</p>
 	{/if}
 	{#if !editing}
 		<div class="post-images">
