@@ -60,8 +60,6 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 
-	import {fly} from "svelte/transition";
-	import {flip} from "svelte/animate";
 	import {params} from "@roxi/routify";
 	import {onMount, onDestroy} from "svelte";
 
@@ -388,25 +386,17 @@
 				submitBtn.disabled = true;
 				let req;
 
-				if (postOrigin === "home") {
-					req = fetch(`${apiUrl}home`, {
+				req = fetch(
+					`${apiUrl}${postOrigin === "home" ? "home" : `/posts/${$chat._id}`}`,
+					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							...$authHeader,
 						},
 						body: JSON.stringify({content}),
-					});
-				} else {
-					req = fetch(`${apiUrl}posts/${$chat._id}/`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-							...$authHeader,
-						},
-						body: JSON.stringify({content}),
-					});
-				}
+					}
+				);
 
 				req.then(req => {
 					input.value = "";
@@ -518,8 +508,6 @@
 			{#each [...new Set(_items)] as post (post.id)}
 				<div
 					class="item"
-					transition:fly|local={{y: -50, duration: 250}}
-					animate:flip={{duration: 250}}
 				>
 					{#if "lower_username" in post}
 						{#if !$user.hide_blocked_users || $relationships[post._id] !== 2}
