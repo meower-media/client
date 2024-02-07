@@ -45,9 +45,6 @@ export const ulist = writable([]);
 export const OOBERunning = writable(false);
 export const OOBEPage = writable(0);
 
-// Image adding stuff
-export const postInput = writable("");
-
 // Current auth header
 export const authHeader = writable({
 	username: null,

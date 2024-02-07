@@ -1,7 +1,7 @@
 /**
  * @typedef {{
  * 	id: number,
- * 	post_id: string,
+ * 	post_id?: string,
  *  post_origin: string,
  * 	user: string,
  * 	content: string,
@@ -11,13 +11,18 @@
  *  isDeleted: boolean,
  *  mod_deleted?: boolean,
  *  deleted_at?: number,
+ *  pending?: boolean,
+ *  error?: string
  * }} ListPost
  */
 
 /**
  * @typedef {{
  * 	_id: string,
+ *  edited_at?: number,
  * 	isDeleted: boolean,
+ *  mod_deleted?: boolean,
+ *  deleted_at: number,
  * 	p: string,
  * 	post_id: string,
  * 	post_origin: string,

@@ -12,7 +12,6 @@
 	import RecentNetblocksModal from "./RecentNetblocks.svelte";
 	import SendAnnouncementModal from "./SendAnnouncement.svelte";
 	import KickAllUsersModal from "./KickAllUsers.svelte";
-	import RestartServerModal from "./RestartServer.svelte";
 	import EnableRepairModeModal from "./EnableRepairMode.svelte";
 
 	import {authHeader} from "../../stores.js";
@@ -255,11 +254,6 @@
 					style="margin-right: 0.25em; margin-bottom: 0.25em;"
 					on:click={() => modals.showModal(KickAllUsersModal)}
 					>Kick all users</button
-				>
-				<button
-					style="margin-right: 0.25em; margin-bottom: 0.25em;"
-					on:click={() => modals.showModal(RestartServerModal)}
-					>Restart server</button
 				>
 				<button
 					style="margin-right: 0.25em; margin-bottom: 0.25em;"
