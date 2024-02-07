@@ -604,8 +604,8 @@
 		<p
 			class="post-content"
 			style="border-left-color: #4b5563; {post.pending
-				? 'color: #A9A9A9'
-				: 'color: #ffffff'}"
+				? 'opacity: 0.5;'
+				: ''}"
 		>
 			{#await addFancyElements(post.content) then content}
 				{@html content}
