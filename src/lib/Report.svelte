@@ -8,7 +8,7 @@
 
 	import {authHeader} from "./stores.js";
 	import {apiUrl} from "./urls.js";
-	import { adminPermissions, hasPermission } from "./bitField.js";
+	import {adminPermissions, hasPermission} from "./bitField.js";
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
