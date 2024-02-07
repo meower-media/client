@@ -15,7 +15,7 @@
 	Slots:
 	- error and empty: These slots unction the same as PagedList (see its comment).
 		There are no "loaded" or "item" slots.
-	
+
 	Events:
 	- loaded: Fired when the list loads for the first time.
 -->
@@ -288,7 +288,7 @@
 		<form
 			class="createpost"
 			autocomplete="off"
-			on:submit|preventDefault={/** @type {SubmitEvent} */ e => {
+			on:submit|preventDefault={/** @type {SubmitEvent} */  (e) => {
 				postErrors = "";
 
 				// @ts-ignore
@@ -386,41 +386,56 @@
 				spinner.set(true);
 
 				submitBtn.disabled = true;
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: postOrigin === "home" ? "post_home" : "post_chat",
-						val:
-							postOrigin === "home"
-								? content
-								: {
-										p: content,
-										chatid: postOrigin,
-								  },
-					},
-				})
-					.then(() => {
-						input.value = "";
-						input.rows = "1";
-						input.style.height = "45px";
-						submitBtn.disabled = false;
-					})
-					.catch(code => {
-						submitBtn.disabled = false;
-						switch (code) {
-							case "E:106 | Too many requests":
+				let req;
+
+				if (postOrigin === "home") {
+					req = fetch(`${apiUrl}home`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							...$authHeader,
+						},
+						body: JSON.stringify({content}),
+					});
+				} else {
+					req = fetch(
+						`${apiUrl}posts/${$chat._id}/`,
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+								...$authHeader,
+							},
+							body: JSON.stringify({content}),
+						}
+					);
+				}
+
+				req.then((req) => {
+
+					input.value = "";
+					input.rows = "1";
+					input.style.height = "45px";
+					submitBtn.disabled = false;
+					spinner.set(false);
+					if (!req.ok) {
+						switch (req.status) {
+							case 429:
 								postErrors = "You're posting too fast!";
 								break;
-							case "I:017 | Missing permissions":
+							case 403:
 								postErrors =
 									"Someone’s privacy settings are preventing you from sending messages here.";
-								break;
-							default:
-								postErrors = "Unexpected " + code + " error!";
+									break;
+								default:
+									postErrors = "Unexpected " + req.status + " error!";
+									break;
+
 						}
-					});
-				return false;
-			}}
+					}
+				});
+				}
+			}
 		>
 			<textarea
 				type="text"
