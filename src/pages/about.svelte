@@ -115,6 +115,12 @@
 </Container>
 <Container>
 	<h2>Changelog</h2>
+<Container>
+		<h2>1.8.3</h2>
+		<ul>
+			<li>Fixed Search</li>
+		</ul>
+	</Container>
 	<Container>
 		<h2>1.8.2</h2>
 		<ul>
