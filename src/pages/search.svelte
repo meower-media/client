@@ -43,7 +43,7 @@
 	<div class="Search">
 		<Container>
 			<h1>Search</h1>
-			<i>meower search, statistics and more</i>
+			<i>Meower search, statistics and more</i>
 		</Container>
 		<Container>
 			<h1>Search Home</h1>
