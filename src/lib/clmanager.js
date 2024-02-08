@@ -43,7 +43,12 @@ user.subscribe(v => {
 	if (_userLoaded) {
 		_user = v;
 		if (_user.theme.startsWith("custom:")) {
-			applyTheme(stringToTheme(_user.theme));
+			try {
+				applyTheme(stringToTheme(_user.theme));
+			} catch (e) {
+				console.error(`Failed to apply custom theme: ${e}`);
+				removeTheme();
+			}
 		} else {
 			removeTheme();
 		}
@@ -258,79 +263,38 @@ export async function connect() {
 	disconnected.set(false);
 	disconnectReason.set("");
 
-	link.once("connectionstart", () => {
-		connectEvent = link.on("connected", () => {
-			disconnected.set(false);
-			pingInterval = setInterval(() => {
-				link.send({cmd: "ping", val: ""});
-			}, 10000);
+	connectEvent = link.on("connected", () => {
+		disconnected.set(false);
+		pingInterval = setInterval(() => {
+			link.send({cmd: "ping", val: ""});
+		}, 10000);
+	});
+	disconnectEvent = link.on("disconnected", async e => {
+		// make sure connection was started (we can know by checking if pingInterval is set)
+		if (!pingInterval) return;
+
+		// clear ping interval
+		clearInterval(pingInterval);
+		pingInterval = null;
+
+		// show disconnected modal if disconnect reason is set
+		disconnectReason.subscribe(v => {
+			if (v) {
+				disconnected.set(true);
+				return;
+			}
 		});
-		disconnectEvent = link.on("disconnected", async e => {
-			// make sure connection was started (we can know by checking if pingInterval is set)
-			if (!pingInterval) return;
 
-			// clear ping interval
-			clearInterval(pingInterval);
-			pingInterval = null;
+		let _intentionalDisconnect;
+		intentionalDisconnect.subscribe(v => {
+			_intentionalDisconnect = v;
+		});
+		if (_intentionalDisconnect) return;
 
-			// show disconnected modal if disconnect reason is set
-			disconnectReason.subscribe(v => {
-				if (v) {
-					disconnected.set(true);
-					return;
-				}
-			});
-
-			let _intentionalDisconnect;
-			intentionalDisconnect.subscribe(v => {
-				_intentionalDisconnect = v;
-			});
-			if (_intentionalDisconnect) return;
-
-			const onErrorEv = link.on("error", async e => {
-				link.error("manager", "auto-reconnection failed:", e);
-				reconnecting.set(true);
-				try {
-					await link.connect(linkUrl);
-				} catch (e) {
-					link.error("manager", "connection error:", e);
-					link.off(onErrorEv);
-					modals.showModal(ConnectionFailedModal);
-				}
-			});
-			link.once("connected", async () => {
-				link.log("manager", "connection restored");
-				link.off(onErrorEv);
-
-				// re-authenticate
-				if (_authHeader.username && _authHeader.token) {
-					try {
-						await meowerRequest({
-							cmd: "direct",
-							val: {
-								cmd: "authpswd",
-								val: {
-									username: _authHeader.username,
-									pswd: _authHeader.token,
-								},
-							},
-						});
-					} catch (e) {
-						console.error(e);
-						modals.showModal(LoggedOutModal);
-					}
-				}
-
-				// refresh screen
-				screen.set("blank");
-				await tick();
-				screen.set("main");
-
-				// hide modal
-				reconnecting.set(false);
-			});
+		const onErrorEv = link.on("error", async e => {
+			link.error("manager", "auto-reconnection failed:", e);
+			reconnecting.set(true);
 			try {
-				link.warn("manager", "connection lost with error:", e.code);
 				await link.connect(linkUrl);
 			} catch (e) {
 				link.error("manager", "connection error:", e);
@@ -338,138 +302,175 @@ export async function connect() {
 				modals.showModal(ConnectionFailedModal);
 			}
 		});
-		ulistEvent = link.on("ulist", cmd => {
-			const _ulist = cmd.val.split(";");
-			if (_ulist[_ulist.length - 1] === "") {
-				_ulist.pop();
-			}
-			ulist.set(_ulist);
-		});
-		authEvent = link.on("direct", async cmd => {
-			if (cmd.val.mode === "auth") {
-				// set user, auth header, and relationships
-				user.update(v =>
-					Object.assign(v, {
-						...cmd.val.payload.account,
-						name: cmd.val.payload.username,
-					})
-				);
-				authHeader.set({
-					username: cmd.val.payload.username,
-					token: cmd.val.payload.token,
-				});
-				_relationships = {};
-				for (let relationship of cmd.val.payload.relationships) {
-					_relationships[relationship.username] = relationship.state;
-				}
-				relationships.set(_relationships);
+		link.once("connected", async () => {
+			link.log("manager", "connection restored");
+			link.off(onErrorEv);
 
-				// get and set chats
-				await tick();
-				const resp = await fetch(`${apiUrl}chats?autoget=1`, {
-					headers: _authHeader,
-				});
-				const json = await resp.json();
-				chats.set(json.autoget);
+			// re-authenticate
+			if (_authHeader.username && _authHeader.token) {
+				try {
+					await meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "authpswd",
+							val: {
+								username: _authHeader.username,
+								pswd: _authHeader.token,
+							},
+						},
+					});
+				} catch (e) {
+					console.error(e);
+					modals.showModal(LoggedOutModal);
+				}
 			}
+
+			// refresh screen
+			screen.set("blank");
+			await tick();
+			screen.set("main");
+
+			// hide modal
+			reconnecting.set(false);
 		});
-		bannedEvent = link.on("direct", async cmd => {
-			if (cmd.val.mode === "banned") {
-				modals.showModal(AccountBannedModal, {ban: cmd.val.payload});
+		try {
+			link.warn("manager", "connection lost with error:", e.code);
+			await link.connect(linkUrl);
+		} catch (e) {
+			link.error("manager", "connection error:", e);
+			link.off(onErrorEv);
+			modals.showModal(ConnectionFailedModal);
+		}
+	});
+	ulistEvent = link.on("ulist", cmd => {
+		const _ulist = cmd.val.split(";");
+		if (_ulist[_ulist.length - 1] === "") {
+			_ulist.pop();
+		}
+		ulist.set(_ulist);
+	});
+	authEvent = link.on("direct", async cmd => {
+		if (cmd.val.mode === "auth") {
+			// set user, auth header, and relationships
+			user.update(v =>
+				Object.assign(v, {
+					...cmd.val.payload.account,
+					name: cmd.val.payload.username,
+				})
+			);
+			authHeader.set({
+				username: cmd.val.payload.username,
+				token: cmd.val.payload.token,
+			});
+			_relationships = {};
+			for (let relationship of cmd.val.payload.relationships) {
+				_relationships[relationship.username] = relationship.state;
 			}
-		});
-		inboxMessageEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "inbox_message") {
-				_user.unread_inbox = true;
-				user.set(_user);
-			}
-		});
-		relationshipUpdateEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "update_relationship") {
-				_relationships[cmd.val.payload.username] =
-					cmd.val.payload.state;
-				relationships.set(_relationships);
-			}
-		});
-		configUpdateEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "update_config") {
-				_user = {
-					..._user,
-					...cmd.val.payload,
-				};
-				user.set(_user);
-			}
-		});
-		chatCreateEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "create_chat") {
-				let itemIndex = _chats.findIndex(
-					chat => chat._id === cmd.val.payload._id
-				);
-				if (itemIndex !== -1) return;
-				_chats.push(cmd.val.payload);
-				chats.set(_chats);
-			}
-		});
-		chatUpdateEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "update_chat") {
-				let itemIndex = _chats.findIndex(
-					chat => chat._id === cmd.val.payload._id
-				);
-				if (itemIndex === -1) return;
-				_chats[itemIndex] = Object.assign(
-					_chats[itemIndex],
-					cmd.val.payload
-				);
-				chats.set(_chats);
-			}
-		});
-		chatDeleteEvent = link.on("direct", cmd => {
-			if (cmd.val.mode === "delete") {
-				_chats = _chats.filter(chat => chat._id !== cmd.val.id);
-				chats.set(_chats);
-			}
-		});
-		chatMsgEvent = link.on("direct", async cmd => {
-			if (cmd.val.state === 2 && cmd.val.post_origin !== "livechat") {
-				let chatIndex = _chats.findIndex(
-					chat => chat._id === cmd.val.post_origin
-				);
-				if (chatIndex === -1) {
-					try {
-						const resp = await fetch(
-							`${apiUrl}chats/${cmd.val.post_origin}`,
-							{
-								method: "GET",
-								headers: _authHeader,
-							}
-						);
-						if (!resp.ok) {
-							throw new Error(
-								"Response code is not OK; code is " +
-									resp.status
-							);
+			relationships.set(_relationships);
+
+			// get and set chats
+			await tick();
+			const resp = await fetch(`${apiUrl}chats?autoget=1`, {
+				headers: _authHeader,
+			});
+			const json = await resp.json();
+			chats.set(json.autoget);
+		}
+	});
+	bannedEvent = link.on("direct", async cmd => {
+		if (cmd.val.mode === "banned") {
+			modals.showModal(AccountBannedModal, {ban: cmd.val.payload});
+		}
+	});
+	inboxMessageEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "inbox_message") {
+			_user.unread_inbox = true;
+			user.set(_user);
+		}
+	});
+	relationshipUpdateEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "update_relationship") {
+			_relationships[cmd.val.payload.username] = cmd.val.payload.state;
+			relationships.set(_relationships);
+		}
+	});
+	configUpdateEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "update_config") {
+			_user = {
+				..._user,
+				...cmd.val.payload,
+			};
+			user.set(_user);
+		}
+	});
+	chatCreateEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "create_chat") {
+			let itemIndex = _chats.findIndex(
+				chat => chat._id === cmd.val.payload._id
+			);
+			if (itemIndex !== -1) return;
+			_chats.push(cmd.val.payload);
+			chats.set(_chats);
+		}
+	});
+	chatUpdateEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "update_chat") {
+			let itemIndex = _chats.findIndex(
+				chat => chat._id === cmd.val.payload._id
+			);
+			if (itemIndex === -1) return;
+			_chats[itemIndex] = Object.assign(
+				_chats[itemIndex],
+				cmd.val.payload
+			);
+			chats.set(_chats);
+		}
+	});
+	chatDeleteEvent = link.on("direct", cmd => {
+		if (cmd.val.mode === "delete") {
+			_chats = _chats.filter(chat => chat._id !== cmd.val.id);
+			chats.set(_chats);
+		}
+	});
+	chatMsgEvent = link.on("direct", async cmd => {
+		if (cmd.val.state === 2 && cmd.val.post_origin !== "livechat") {
+			let chatIndex = _chats.findIndex(
+				chat => chat._id === cmd.val.post_origin
+			);
+			if (chatIndex === -1) {
+				try {
+					const resp = await fetch(
+						`${apiUrl}chats/${cmd.val.post_origin}`,
+						{
+							method: "GET",
+							headers: _authHeader,
 						}
-						const chat = await resp.json();
-						_chats.push(chat);
-						chats.set(_chats);
-					} catch (e) {
-						console.error(
-							`Failed getting chat ${cmd.val.post_origin}: ${e}`
+					);
+					if (!resp.ok) {
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
 						);
 					}
-				} else {
-					_chats[chatIndex].last_active = cmd.val.t.e;
+					const chat = await resp.json();
+					_chats.push(chat);
 					chats.set(_chats);
+				} catch (e) {
+					console.error(
+						`Failed getting chat ${cmd.val.post_origin}: ${e}`
+					);
 				}
+			} else {
+				_chats[chatIndex].last_active = cmd.val.t.e;
+				chats.set(_chats);
 			}
-		});
-		disconnectRequest = link.on("direct", async cmd => {
-			if (disconnectCodes.includes(cmd.val)) {
-				link.log("manager", "Requested disconnect:", cmd.val);
-				modals.showModal(LoggedOutModal);
-				await disconnect();
-			}
-		});
+		}
+	});
+	disconnectRequest = link.on("direct", async cmd => {
+		if (disconnectCodes.includes(cmd.val)) {
+			link.log("manager", "Requested disconnect:", cmd.val);
+			modals.showModal(LoggedOutModal);
+			await disconnect();
+		}
 	});
 
 	disconnected.set(false);
@@ -557,24 +558,12 @@ export async function updateProfile(updatedValues) {
 	if (!_user.name) return;
 	Object.assign(_user, updatedValues);
 	user.set(_user);
-	return meowerRequest({
-		cmd: "direct",
-		val: {
-			cmd: "update_config",
-			val: updatedValues,
-			/*{
-				unread_inbox: profile.unread_inbox,
-				theme: profile.theme,
-				mode: profile.mode,
-				sfx: profile.sfx,
-				bgm: profile.bgm,
-				bgm_song: profile.bgm_song,
-				layout: profile.layout,
-				hide_blocked_users: profile.hide_blocked_users,
-				favorited_chats: profile.favorited_chats,
-				pfp_data: profile.pfp_data,
-				quote: profile.quote,
-			},*/
+	return fetch(`${apiUrl}me/config`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			..._authHeader,
 		},
+		body: JSON.stringify(updatedValues),
 	});
 }

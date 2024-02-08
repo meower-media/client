@@ -42,7 +42,7 @@ function startTyping(chat, user) {
 
 	setTimeout(function () {
 		checkIfStillTyping(chat, user, typingStart);
-	}, 3000);
+	}, 4000);
 }
 
 function checkIfStillTyping(chat, user, typingStart) {

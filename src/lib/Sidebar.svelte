@@ -340,7 +340,7 @@
 
 		position: absolute;
 		right: 0;
-		z-index: -1;
+		z-index: 1;
 
 		display: inline-flex;
 		flex-direction: column;
