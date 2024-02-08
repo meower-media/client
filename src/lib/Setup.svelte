@@ -133,9 +133,13 @@
 		autoLogin = false,
 		savedLogin = false
 	) {
-		if (!autoLogin) {
-			loginStatus = "Logging in...";
-		}
+		setTimeout(
+			() => {
+				if ($user.name) return;
+				loginStatus = "Logging in...";
+			},
+			autoLogin ? 500 : 0
+		);
 
 		try {
 			await clm.meowerRequest({

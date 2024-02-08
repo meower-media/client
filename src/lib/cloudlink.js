@@ -119,51 +119,7 @@ export default class Cloudlink {
 				}
 
 				this.ws = new WebSocket(server);
-				this.ws.addEventListener("open", async () => {
-					try {
-						this.emit("connectionstart");
-						this.log("connection", "connected to websocket");
-
-						await sleep(100);
-
-						this.send({
-							cmd: "direct",
-							val: {cmd: "type", val: "js"},
-							listener: "send_type",
-						});
-						const tkeyEv = this.sendListener(
-							{
-								cmd: "direct",
-								val: "meower",
-								listener: "send_tkey",
-							},
-							cmd => {
-								if (cmd.cmd === "statuscode") {
-									this.off(tkeyEv);
-
-									if (cmd.val === "I:100 | OK") {
-										resolve();
-										this.log(
-											"connection",
-											"successfully connected"
-										);
-									} else {
-										reject(cmd.val);
-										this.error(
-											"connection",
-											"error connecting; code:",
-											cmd.val
-										);
-									}
-								}
-							}
-						);
-						this.emit("connected");
-					} catch (e) {
-						this.error("connection", "error connecting:", e);
-						reject(e);
-					}
-				});
+				this.ws.addEventListener("open", () => this.emit("connected"));
 				this.ws.addEventListener("message", socketdata => {
 					const data = JSON.parse(socketdata.data);
 
