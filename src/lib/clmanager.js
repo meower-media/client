@@ -81,6 +81,9 @@ authHeader.subscribe(v => {
 let _relationships = null;
 relationships.subscribe(v => (_relationships = v));
 
+let _ulistsub = null;
+ulist.subscribe(v => (_ulistsub = v));
+
 let _chats = null;
 chats.subscribe(v => (_chats = v));
 
@@ -196,6 +199,20 @@ let disconnectRequest = null;
  * @type any
  */
 let pingInterval = null;
+
+/**
+ * Rids the ulist of blocked users
+ */
+export function fix_ulist_blocked_users() {
+	let _ulist = _ulistsub
+	if (_user.hide_blocked_users) {
+		_ulist = _ulist.filter(
+			theuser => _relationships[theuser] !== 2
+		);
+	}
+	_ulist = _ulist
+	ulist.set(_ulist)
+}
 
 /**
  * Connect to the server, initializing some other things such as pinging.
@@ -342,12 +359,14 @@ export async function connect() {
 			modals.showModal(ConnectionFailedModal);
 		}
 	});
-	ulistEvent = link.on("ulist", cmd => {
+	ulistEvent = link.on("ulist", async cmd => {
 		const _ulist = cmd.val.split(";");
 		if (_ulist[_ulist.length - 1] === "") {
 			_ulist.pop();
 		}
 		ulist.set(_ulist);
+		await tick()
+		fix_ulist_blocked_users()
 	});
 	authEvent = link.on("direct", async cmd => {
 		if (cmd.val.mode === "auth") {
@@ -370,6 +389,7 @@ export async function connect() {
 
 			// get and set chats
 			await tick();
+			fix_ulist_blocked_users()
 			const resp = await fetch(`${apiUrl}chats?autoget=1`, {
 				headers: _authHeader,
 			});
@@ -390,6 +410,7 @@ export async function connect() {
 	});
 	relationshipUpdateEvent = link.on("direct", cmd => {
 		if (cmd.val.mode === "update_relationship") {
+			fix_ulist_blocked_users()
 			_relationships[cmd.val.payload.username] = cmd.val.payload.state;
 			relationships.set(_relationships);
 		}
@@ -477,7 +498,7 @@ export async function connect() {
 	try {
 		return await link.connect(linkUrl);
 	} catch (e) {
-		link.error("manager", "conenction error:", e);
+		link.error("manager", "connection error:", e);
 		modals.showModal(ConnectionFailedModal);
 		return e;
 	}
@@ -558,6 +579,7 @@ export async function updateProfile(updatedValues) {
 	if (!_user.name) return;
 	Object.assign(_user, updatedValues);
 	user.set(_user);
+	fix_ulist_blocked_users()
 	return fetch(`${apiUrl}me/config`, {
 		method: "PATCH",
 		headers: {
