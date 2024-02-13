@@ -587,7 +587,7 @@
 						Fix only being able to log in once per session
 					</li>
 					<li>
-						Add TOS/PP confirmation when creating an account
+						Add TOS/Privacy Policy confirmation when creating an account
 					</li>
 					<li>
 						Fix "Let's Go!" text in setup
