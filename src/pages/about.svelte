@@ -451,38 +451,15 @@
 			<details>
 				<summary>Earlier Versions</summary>
 
-1.1.1:
-fix background color on white inputs and fix dates being over-italic on firefox
-1.1.2:
-group cat
-censor eggplant
-change pfp to button
-remove account deletion
-try and fail to add quotes
-1.1.3:
-rework checkboxes
-fix pfps with invalid values
-1.1.4:
-dark mode toggle hell
-remove start screen
-setup improvements
-1.2.0:
-store tokens instead of passwords
-basic no js screen
-add text to group cat
-other user profiles
-add report user and recent posts but not
-1.3.0:
-bridged posts
-change passwords
-pwa shit we no longer have
-post linebreaks only in posts
-reporting/deleting posts
-inbox
-group chats and chat list
-sfx
-shift-click group chats to access group cat
-1.4.0:
+				<li>Setup: The screen where login, sign up and stuff are</li>
+				<br />
+
+				<h3>1.4.0</h3>
+				<ul>
+					<li>
+						Quotes
+					</li>
+reporting users
 bridged posts rework a little
 linebreak support for posting
 Fix spam by holding down enter while ratelimited
@@ -491,6 +468,94 @@ typing indicator
 group chat members, add members via name and removing members
 replies
 alot of other stuff
+				</ul>
+
+				<h3>1.3.0</h3>
+				<ul>
+					<li>
+						Bridged posts
+					</li>
+					<li>
+						Change passwords
+					</li>
+					<li>
+						Linebreaks (only in posts until 1.4)
+					</li>
+					<li>
+						Reporting/Deleting posts
+					</li>
+					<li>
+						Inbox
+					</li>
+					<li>
+						Group chats / Chat list
+					</li>
+					<li>
+						SFX
+					</li>
+					<li>
+						Shift-click group chats to access group cat
+					</li>
+				</ul>
+
+				<h3>1.2.0</h3>
+				<ul>
+					<li>
+						Store tokens instead of passwords
+					</li>
+					<li>
+						Basic NoJS screen
+					</li>
+					<li>
+						Add text to group cat (Yes very important to tell you this)
+					</li>
+					<li>
+						View other user Profiles
+					</li>
+					<li>
+						Add buttons to report a user, view recent posts, and add to chats
+					</li>
+				</ul>
+
+				<h3>1.1.4</h3>
+				<ul>
+					<li>
+						Dark mode toggle hell
+					</li>
+					<li>
+						Remove start screen
+					</li>
+					<li>
+						More setup improvements
+					</li>
+				</ul>
+
+				<h3>1.1.3</h3>
+				<ul>
+					<li>
+						Rework checkboxes
+					</li>
+					<li>
+						Fix broken PFPs
+					</li>
+				</ul>
+
+				<h3>1.1.2</h3>
+				<ul>
+					<li>
+						Group cat
+					</li>
+				</ul>
+
+				<h3>1.1.1</h3>
+				<ul>
+					<li>
+						Fix background color on white inputs
+					</li>
+					<li>
+						Fix dates being over-italic on firefox
+					</li>
+				</ul>
 
 				<h3>1.1</h3>
 				<ul>
