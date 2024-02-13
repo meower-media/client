@@ -29,6 +29,8 @@
 		}
 		return shuffled;
 	}
+
+	let hidechangelog = true
 </script>
 
 <h1 class="logo center">
@@ -113,372 +115,431 @@
 		</Contributor>
 	</div>
 </Container>
-<Container>
-	<h2>Changelog</h2>
+{#if hidechangelog}
+	<button id="long"
+		on:click={() => {hidechangelog = false}}
+	>Show Changelog</button>
+{:else}
 	<Container>
-		<h2>1.8.2</h2>
-		<ul>
-			<li>
-				Moved from using CL3 to the REST API for creating posts,
-				emitting typing events, and updating user config
-			</li>
-			<li>Improved and optimized the posts list</li>
-			<li>Added support for webhooks v2</li>
-			<li>
-				Fixed a bug that would cause the client to crash if the logged
-				in user had an invalid theme saved
-			</li>
-			<li>Fixed a few other bugs</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.8.1</h2>
-		<ul>
-			<li>Made the initial logo animation a little shorter</li>
-			<li>
-				Fixed a bug that caused new home posts to appear while viewing a
-				user's recent posts
-			</li>
-			<li>
-				Fixed a bug that caused animations to lag when a user was logged
-				in on more than 1 tab
-			</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.8.0</h2>
-		<ul>
-			<li>
-				Added the ability to include markdown within posts (such as
-				headings, <b>bold</b>, <i>italics</i>, etc.)
-			</li>
-			<li>Added the ability to edit posts</li>
-			<li>Added custom themes</li>
-			<li>Added the ability to direct message users</li>
-			<li>
-				Added the ability for group chat owners to delete other members'
-				posts
-			</li>
-			<li>
-				Added the ability for group chat owners to change the nickname
-				of their chat
-			</li>
-			<li>
-				Added the ability for group chat owners to transfer ownership to
-				another member of their chat
-			</li>
-			<li>
-				Added the ability to favorite chats (this will push them to the
-				top of your chats list)
-			</li>
-			<li>
-				Added the ability to block users (along with being able to hide
-				posts made by blocked users)
-			</li>
-			<li>
-				Added the ability to leave a reason and comment when reporting a
-				post or user
-			</li>
-			<li>
-				Added the ability for moderators to issue feature restrictions
-				and temporary account bans in response to ToS violations
-			</li>
-			<li>
-				Added a 7-day delay when deleting an account, rather than it
-				being instant
-			</li>
-			<li>Fixed numerous bugs</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.7.1</h2>
-		<ul>
-			<li>Fixed repair mode check on connection failed modal</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.7.0</h2>
-		<ul>
-			<li>
-				Routing (you can now share links to specific pages on Meower!)
-			</li>
-			<li>Better auto-reconnection</li>
-			<li>User config syncing across logged in clients</li>
-			<li>Fixed some bugs with background music randomly restarting</li>
-			<li>
-				Made it so if you change settings as a guest and then create a
-				new account, these settings will be carried across into your new
-				account
-			</li>
-			<li>
-				Removed option to not save your login (this is to support the
-				better auto-reconnection system)
-			</li>
-			<li>Slightly different colors for dark mode themes</li>
-			<li>Some other minor optimizations and refinements</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.6.2</h2>
-		<ul>
-			<li>
-				Fixed the group chats list going blank when leaving a group chat
-			</li>
-			<li>Made everything else rounded instead of just containers</li>
-			<li>Added an updated logo</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.6.1</h2>
-		<ul>
-			<li>
-				Fixed a bug where the profile dropdown menu wasn't able to be
-				opened on some iOS browsers and Safari for macOS
-			</li>
-			<li>no select the kitty >:/</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.6.0</h2>
-		Way too many minor changes to list, so here are some of the highlights:
-		<ul>
-			<li>Added post and user searching</li>
-			<li>Moved some of the less-used sidebar buttons into a dropdown</li>
-			<li>Twemojis are now used for sent emojis</li>
-			<li>Added an actual moderator panel (for moderators)</li>
-			<li>
-				Added an out-of-box experience screen when creating an account
-			</li>
-			<li>
-				New "Add image" button next to the Post button (to make adding
-				images easier and more known)
-			</li>
-			<li>
-				Server auto-reconnection when a connection is unexpectedly
-				dropped
-			</li>
-			<li>Background music (disabled by default for new accounts)</li>
-			<li>Previews of themes while selecting a new theme</li>
-			<li>
-				Ability to add users to group chats through their profile page
-			</li>
-			<li>
-				New search option for adding users to group chats (no more
-				having to copy and paste usernames!)
-			</li>
-			<li>
-				Fixed some problems with notification sounds playing at random
-			</li>
-			<li>Crown icon on group chat owners</li>
-			<li>
-				Members list for group chats is now full-screen when toggled and
-				completely hidden when not toggled on mobile
-			</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.5.4</h2>
-		<ul>
-			<li>Require password confirmation for changing account password</li>
-			<li>Require password confirmation for deleting account</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.5.3</h2>
-		<ul>
-			<li>
-				Replace the grey cat profile picture per request of the original
-				artist
-			</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.5.2</h2>
-		<ul>
-			<li>Fix the image host whitelist not working</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.5.1</h2>
-		<ul>
-			<li>
-				Fix the dango profile picture appearing twice when you have it
-				selected
-			</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.5</h2>
-		<ul>
-			<li>
-				Beta 4-style sidebar transition (except a bit less cooler due to
-				the logo not moving)
-			</li>
-			<li>Work-in-progress search page</li>
-			<li>
-				Images now show up in posts (like [title: https://url]). There
-				is an image host whitelist of a few sites (Meower, Tenor,
-				Scratch, cubeupload, Discord and imgBB)
-			</li>
-			<li>
-				New profile pictures from the <a href="https://bettermeower.app"
-					>BetterMeower</a
-				> project
-			</li>
-			<li>Badges now also look nicer and are next to the username now</li>
-			<li>Adjusted date styling (no longer underlined, help cursor)</li>
-			<li>Fixes to buttons on touchscreens</li>
-			<li>Fixed the group chat page expanding with long messages</li>
-			<li>Some minor polishing and bugfixes</li>
-		</ul>
-
-		<br />
-
-		<details>
-			<summary>Betas</summary>
-			<h3>Hotfix</h3>
+		<h2>Changelog</h2>
+		<Container>
+			<h2>1.8.2</h2>
 			<ul>
 				<li>
-					Disable bot badges (they aren't officially supported, and
-					the CL4 port will add them)
+					Moved from using CL3 to the REST API for creating posts,
+					emitting typing events, and updating user config
+				</li>
+				<li>Improved and optimized the posts list</li>
+				<li>Added support for webhooks v2</li>
+				<li>
+					Fixed a bug that would cause the client to crash if the logged
+					in user had an invalid theme saved
+				</li>
+				<li>Fixed a few other bugs</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.8.1</h2>
+			<ul>
+				<li>Made the initial logo animation a little shorter</li>
+				<li>
+					Fixed a bug that caused new home posts to appear while viewing a
+					user's recent posts
+				</li>
+				<li>
+					Fixed a bug that caused animations to lag when a user was logged
+					in on more than 1 tab
 				</li>
 			</ul>
-
-			<h3>Release</h3>
+		</Container>
+		<Container>
+			<h2>1.8.0</h2>
 			<ul>
-				<li>Banned status</li>
-				<li>Reallow reporting posts from verified bots</li>
 				<li>
-					Made badges look nicer and put then next to the username
+					Added the ability to include markdown within posts (such as
+					headings, <b>bold</b>, <i>italics</i>, etc.)
 				</li>
+				<li>Added the ability to edit posts</li>
+				<li>Added custom themes</li>
+				<li>Added the ability to direct message users</li>
+				<li>
+					Added the ability for group chat owners to delete other members'
+					posts
+				</li>
+				<li>
+					Added the ability for group chat owners to change the nickname
+					of their chat
+				</li>
+				<li>
+					Added the ability for group chat owners to transfer ownership to
+					another member of their chat
+				</li>
+				<li>
+					Added the ability to favorite chats (this will push them to the
+					top of your chats list)
+				</li>
+				<li>
+					Added the ability to block users (along with being able to hide
+					posts made by blocked users)
+				</li>
+				<li>
+					Added the ability to leave a reason and comment when reporting a
+					post or user
+				</li>
+				<li>
+					Added the ability for moderators to issue feature restrictions
+					and temporary account bans in response to ToS violations
+				</li>
+				<li>
+					Added a 7-day delay when deleting an account, rather than it
+					being instant
+				</li>
+				<li>Fixed numerous bugs</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.7.1</h2>
+			<ul>
+				<li>Fixed repair mode check on connection failed modal</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.7.0</h2>
+			<ul>
+				<li>
+					Routing (you can now share links to specific pages on Meower!)
+				</li>
+				<li>Better auto-reconnection</li>
+				<li>User config syncing across logged in clients</li>
+				<li>Fixed some bugs with background music randomly restarting</li>
+				<li>
+					Made it so if you change settings as a guest and then create a
+					new account, these settings will be carried across into your new
+					account
+				</li>
+				<li>
+					Removed option to not save your login (this is to support the
+					better auto-reconnection system)
+				</li>
+				<li>Slightly different colors for dark mode themes</li>
+				<li>Some other minor optimizations and refinements</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.6.2</h2>
+			<ul>
+				<li>
+					Fixed the group chats list going blank when leaving a group chat
+				</li>
+				<li>Made everything else rounded instead of just containers</li>
+				<li>Added an updated logo</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.6.1</h2>
+			<ul>
+				<li>
+					Fixed a bug where the profile dropdown menu wasn't able to be
+					opened on some iOS browsers and Safari for macOS
+				</li>
+				<li>no select the kitty >:/</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.6.0</h2>
+			Way too many minor changes to list, so here are some of the highlights:
+			<ul>
+				<li>Added post and user searching</li>
+				<li>Moved some of the less-used sidebar buttons into a dropdown</li>
+				<li>Twemojis are now used for sent emojis</li>
+				<li>Added an actual moderator panel (for moderators)</li>
+				<li>
+					Added an out-of-box experience screen when creating an account
+				</li>
+				<li>
+					New "Add image" button next to the Post button (to make adding
+					images easier and more known)
+				</li>
+				<li>
+					Server auto-reconnection when a connection is unexpectedly
+					dropped
+				</li>
+				<li>Background music (disabled by default for new accounts)</li>
+				<li>Previews of themes while selecting a new theme</li>
+				<li>
+					Ability to add users to group chats through their profile page
+				</li>
+				<li>
+					New search option for adding users to group chats (no more
+					having to copy and paste usernames!)
+				</li>
+				<li>
+					Fixed some problems with notification sounds playing at random
+				</li>
+				<li>Crown icon on group chat owners</li>
+				<li>
+					Members list for group chats is now full-screen when toggled and
+					completely hidden when not toggled on mobile
+				</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.5.4</h2>
+			<ul>
+				<li>Require password confirmation for changing account password</li>
+				<li>Require password confirmation for deleting account</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.5.3</h2>
+			<ul>
+				<li>
+					Replace the grey cat profile picture per request of the original
+					artist
+				</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.5.2</h2>
+			<ul>
+				<li>Fix the image host whitelist not working</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.5.1</h2>
+			<ul>
+				<li>
+					Fix the dango profile picture appearing twice when you have it
+					selected
+				</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.5</h2>
+			<ul>
+				<li>
+					Beta 4-style sidebar transition (except a bit less cooler due to
+					the logo not moving)
+				</li>
+				<li>Work-in-progress search page</li>
+				<li>
+					Images now show up in posts (like [title: https://url]). There
+					is an image host whitelist of a few sites (Meower, Tenor,
+					Scratch, cubeupload, Discord and imgBB)
+				</li>
+				<li>
+					New profile pictures from the <a href="https://bettermeower.app"
+						>BetterMeower</a
+					> project
+				</li>
+				<li>Badges now also look nicer and are next to the username now</li>
+				<li>Adjusted date styling (no longer underlined, help cursor)</li>
 				<li>Fixes to buttons on touchscreens</li>
 				<li>Fixed the group chat page expanding with long messages</li>
-				<li>
-					Adjusted date styling (no longer underlined, help cursor)
-				</li>
-				<li>Disabled several features (rip)</li>
-				<li>Updates to images in posts</li>
-				<li>Some general polishing and bugfixes</li>
+				<li>Some minor polishing and bugfixes</li>
 			</ul>
 
-			<h3>Dev Preview 3</h3>
-			<ul>
-				<li>I don't really know</li>
-				<li>Sidebar transition</li>
-			</ul>
+			<br />
 
-			<h3>Preview 2.5</h3>
-			<ul>
-				<li>Added http.meower.org as an allowed image hosting site</li>
-				<li>
-					Fixed an issue where images will break if they aren't on an
-					allowed image hosting site
-				</li>
-			</ul>
-
-			<h3>Preview 2</h3>
-			<ul>
-				<li>Added going to a profile by username</li>
-				<li>Crash bug fix (hopefully)</li>
-				<li>Unfinished mod panel</li>
-				<li>Changelog page (this one!)</li>
-				<!--
-					it's roblox kid
+			<details>
+				<summary>Betas</summary>
+				<h3>Hotfix</h3>
+				<ul>
 					<li>
-						Added "Badge" to Roblox888i for 200th chat (please dont beg for
-						badges)
+						Disable bot badges (they aren't officially supported, and
+						the CL4 port will add them)
 					</li>
-				-->
-				<li>Search bar only when logged in fix</li>
-			</ul>
+				</ul>
 
-			<h3>Dev Preview 1</h3>
+				<h3>Release</h3>
+				<ul>
+					<li>Banned status</li>
+					<li>Reallow reporting posts from verified bots</li>
+					<li>
+						Made badges look nicer and put then next to the username
+					</li>
+					<li>Fixes to buttons on touchscreens</li>
+					<li>Fixed the group chat page expanding with long messages</li>
+					<li>
+						Adjusted date styling (no longer underlined, help cursor)
+					</li>
+					<li>Disabled several features (rip)</li>
+					<li>Updates to images in posts</li>
+					<li>Some general polishing and bugfixes</li>
+				</ul>
+
+				<h3>Dev Preview 3</h3>
+				<ul>
+					<li>I don't really know</li>
+					<li>Sidebar transition</li>
+				</ul>
+
+				<h3>Preview 2.5</h3>
+				<ul>
+					<li>Added http.meower.org as an allowed image hosting site</li>
+					<li>
+						Fixed an issue where images will break if they aren't on an
+						allowed image hosting site
+					</li>
+				</ul>
+
+				<h3>Preview 2</h3>
+				<ul>
+					<li>Added going to a profile by username</li>
+					<li>Crash bug fix (hopefully)</li>
+					<li>Unfinished mod panel</li>
+					<li>Changelog page (this one!)</li>
+					<!--
+						it's roblox kid
+						<li>
+							Added "Badge" to Roblox888i for 200th chat (please dont beg for
+							badges)
+						</li>
+					-->
+					<li>Search bar only when logged in fix</li>
+				</ul>
+
+				<h3>Dev Preview 1</h3>
+				<ul>
+					<li>Search page</li>
+					<li>BetterMeower profile picture support</li>
+					<li>Statisics</li>
+					<li>Bot tags (verified, unverified, bot owner)</li>
+					<li>Don't allow verified bot posts to be reported</li>
+					<li>Image links showing as images</li>
+				</ul>
+			</details>
+		</Container>
+		<Container>
+			<h2>1.4.2</h2>
 			<ul>
-				<li>Search page</li>
-				<li>BetterMeower profile picture support</li>
-				<li>Statisics</li>
-				<li>Bot tags (verified, unverified, bot owner)</li>
-				<li>Don't allow verified bot posts to be reported</li>
-				<li>Image links showing as images</li>
+				<li>Support webhook posts from @Webhooks bot</li>
 			</ul>
-		</details>
+		</Container>
+		<Container>
+			<h2>1.4.2</h2>
+			<ul>
+				<li>
+					Allow the sidebar to show on mobile (you can restore the old
+					behavior by switching to old layout)
+				</li>
+			</ul>
+			(these changes were made before, but are considered part of 1.4.2:)
+			<ul>
+				<li>
+					Fix an issue that caused posts to sometimes not show up in home
+				</li>
+				<li>Add credentials when fetching home (to view pages past 1)</li>
+				<li>
+					Rename page title from "Meower Svelte" to "Meower" to reflect it
+					becoming the official main client
+				</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>1.4.1</h2>
+			<ul>
+				<li>Fixed posts sometimes not showing up in home</li>
+			</ul>
+		</Container>
+		<Container>
+			<h2>Notice</h2>
+			<ul><li>Versions earlier then this may not be 100% accurate, as these are based off commit history</li></ul>
+
+			<br />
+
+			<details>
+				<summary>Earlier Versions</summary>
+
+1.1.1:
+fix background color on white inputs and fix dates being over-italic on firefox
+1.1.2:
+group cat
+censor eggplant
+change pfp to button
+remove account deletion
+try and fail to add quotes
+1.1.3:
+rework checkboxes
+fix pfps with invalid values
+1.1.4:
+dark mode toggle hell
+remove start screen
+setup improvements
+1.2.0:
+store tokens instead of passwords
+basic no js screen
+add text to group cat
+other user profiles
+add report user and recent posts but not
+1.3.0:
+bridged posts
+change passwords
+pwa shit we no longer have
+post linebreaks only in posts
+reporting/deleting posts
+inbox
+group chats and chat list
+sfx
+shift-click group chats to access group cat
+1.4.0:
+bridged posts rework a little
+linebreak support for posting
+Fix spam by holding down enter while ratelimited
+modals
+typing indicator
+group chat members, add members via name and removing members
+replies
+alot of other stuff
+
+				<h3>1.1</h3>
+				<ul>
+					<li>
+						Account deletion
+					</li>
+					<li>
+						Login saving 
+					</li>
+					<li>
+						Fix only being able to log in once per session
+					</li>
+					<li>
+						Add TOS/PP confirmation when creating an account
+					</li>
+					<li>
+						Fix "Let's Go!" text in setup
+					</li>
+					<li>
+						Reworked setup
+					</li>
+				</ul>
+
+				<h3>1.0.1</h3>
+				<ul>
+					<li>
+						Center setup
+					</li>
+					<li>
+						Add limits to how many characters the username and password have
+					</li>
+				</ul>
+
+				<h3>1.0</h3>
+				<ul>
+					<li>
+						Inital Release
+					</li>
+					<li>
+						PFP Hotfix
+					</li>
+					<li>
+						"How can lastpass fill passwords into a PLAIN TEXTBOX"
+					</li>
+				</ul>
+			</details>
+		</Container>
 	</Container>
-	<Container>
-		<h2>1.4.2</h2>
-		<ul>
-			<li>Support webhook posts from @Webhooks bot</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.4.2</h2>
-		<ul>
-			<li>
-				Allow the sidebar to show on mobile (you can restore the old
-				behavior by switching to old layout)
-			</li>
-		</ul>
-		(these changes were made before, but are considered part of 1.4.2:)
-		<ul>
-			<li>
-				Fix an issue that caused posts to sometimes not show up in home
-			</li>
-			<li>Add credentials when fetching home (to view pages past 1)</li>
-			<li>
-				Rename page title from "Meower Svelte" to "Meower" to reflect it
-				becoming the official main client
-			</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.4.1</h2>
-		<ul>
-			<li>Fixed posts sometimes not showing up in home</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.4</h2>
-		<ul>
-			<li>Typing indicators, quotes, and line breaks</li>
-			<li>Fixed spam by holding down enter while ratelimited</li>
-			<li>Group chat members, adding and removing</li>
-			<li>Modals, replies and a bunch of other stuff</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.3</h2>
-		<ul>
-			<li>Group chats</li>
-			<li>Inbox</li>
-			<li>Discord Support</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.2</h2>
-		<ul><li>Mainly profiles</li></ul>
-	</Container>
-	<Container>
-		<h2>1.1.2</h2>
-		<ul><li>Group cat</li></ul>
-	</Container>
-	<Container>
-		<h2>1.1</h2>
-		<ul>
-			<li>Account deletion</li>
-			<li>Login saving</li>
-			<li>Fixed only being able to log in once per session</li>
-			<li>Add TOS/PP confirmation when creating an account</li>
-			<li>Fix "Let's go!" text in setup</li>
-		</ul>
-	</Container>
-	<Container>
-		<h2>1.0.1</h2>
-		<ul><li>Center login screen</li></ul>
-	</Container>
-	<Container>
-		<h2>1.0</h2>
-		<ul><li>Inital release</li></ul>
-	</Container>
-</Container>
+{/if}
 
 <style>
 	.center {
@@ -494,6 +555,10 @@
 
 	.links {
 		margin-bottom: 1em;
+	}
+
+	#long {
+		width: 100%;
 	}
 
 	.contributors-list {
