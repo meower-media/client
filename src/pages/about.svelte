@@ -411,7 +411,7 @@
 			</details>
 		</Container>
 		<Container>
-			<h2>1.4.2</h2>
+			<h2>1.4.3</h2>
 			<ul>
 				<li>Support webhook posts from @Webhooks bot</li>
 			</ul>
@@ -459,15 +459,33 @@
 					<li>
 						Quotes
 					</li>
-reporting users
-bridged posts rework a little
-linebreak support for posting
-Fix spam by holding down enter while ratelimited
-modals
-typing indicator
-group chat members, add members via name and removing members
-replies
-alot of other stuff
+					<li>
+						Reporting users
+					</li>
+					<li>
+						Bridged posts rework a little
+					</li>
+					<li>
+						Linebreak support for posting
+					</li>
+					<li>
+						Fix spam by holding down enter while ratelimited
+					</li>
+					<li>
+						Modals
+					</li>
+					<li>
+						Typing indicator
+					</li>
+					<li>
+						Group chat members, add members via name and removing members
+					</li>
+					<li>
+						Replies
+					</li>
+					<li>
+						Alot of fixes and other things
+					</li>
 				</ul>
 
 				<h3>1.3.0</h3>
