@@ -221,6 +221,7 @@
 		};
 		list.addItem(pendingPost);
 
+		// eslint-disable-next-line no-async-promise-executor
 		const postProm = new Promise(async (resolve, reject) => {
 			try {
 				const resp = await fetch(
