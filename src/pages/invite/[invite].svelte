@@ -63,7 +63,7 @@
 			} else if (response.status === 403) {
 				errorText = "You are not allowed to join this chat";
 			} else if (!response.ok) {
-				errorText = "An error occurred";
+				errorText = `An unexpected error occurred: ${response.status}`;
 			}
 
 			let data = await response.json();
