@@ -11,11 +11,11 @@
 
 {#if isNaN(num) || num === Infinity || num === -Infinity || magnitude < 1000}
 	{num}
-{:else if magnitude < 1000000}
+{:else if magnitude < 1_000_000}
 	{round(num / 1000, 2)}k
-{:else if magnitude < 1000000000}
-	{round(num / 1000, 2)}M
+{:else if magnitude < 1_000_000_000}
+	{round(num / 1_000_000, 2)}M
 {:else}
 	<!-- how -->
-	{round(num / 1000, 2)}B
+	{round(num / 1_000_000_000, 2)}B
 {/if}

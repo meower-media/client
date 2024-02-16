@@ -320,18 +320,26 @@
 					{/if}
 					{#if input && !input.disabled && !noPFP && !editing}
 						{#if post.user === $user.name}
-							<button
-								class="circle pen"
-								on:click={async () => {
-									editError = "";
-									editing = true;
-									await tick();
-									editContentInput.value =
-										post.unfiltered_content || post.content;
-									editContentInput.focus();
-									autoresize(editContentInput);
-								}}
-							/>
+							{#if !bridged}
+								<button
+									class="circle pen"
+									on:click={async () => {
+										editError = "";
+										editing = true;
+										await tick();
+										editContentInput.value =
+											post.unfiltered_content || post.content;
+										editContentInput.focus();
+										autoresize(editContentInput);
+									}}
+								/>
+							{:else}
+								<button
+									class="circle pen"
+									disabled
+									title="You cannot edit bridged messages."
+								/>
+							{/if}
 						{/if}
 						<button
 							class="circle reply"
@@ -353,42 +361,50 @@
 							}}
 						/>
 						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
-							<button
-								class="circle trash"
-								bind:this={deleteButton}
-								on:click={async () => {
-									if (shiftHeld) {
-										deleteButton.disabled = true;
-										try {
-											const resp = await fetch(
-												`${apiUrl}posts?id=${post.post_id}`,
-												{
-													method: "DELETE",
-													headers: $authHeader,
-												}
-											);
-											if (!resp.ok) {
-												if (resp.status === 429) {
+							{#if !bridged}
+								<button
+									class="circle trash"
+									bind:this={deleteButton}
+									on:click={async () => {
+										if (shiftHeld) {
+											deleteButton.disabled = true;
+											try {
+												const resp = await fetch(
+													`${apiUrl}posts?id=${post.post_id}`,
+													{
+														method: "DELETE",
+														headers: $authHeader,
+													}
+												);
+												if (!resp.ok) {
+													if (resp.status === 429) {
+														throw new Error(
+															"Too many requests! Try again later."
+														);
+													}
 													throw new Error(
-														"Too many requests! Try again later."
+														"Response code is not OK; code is " +
+															resp.status
 													);
 												}
-												throw new Error(
-													"Response code is not OK; code is " +
-														resp.status
-												);
+											} catch (e) {
+												editError = e;
 											}
-										} catch (e) {
-											editError = e;
+											deleteButton.disabled = false;
+										} else {
+											modals.showModal(DeletePostModal, {
+												post,
+											});
 										}
-										deleteButton.disabled = false;
-									} else {
-										modals.showModal(DeletePostModal, {
-											post,
-										});
-									}
-								}}
-							/>
+									}}
+								/>
+							{:else}
+								<button
+									class="circle trash"
+									disabled
+									title="You cannot delete bridged messages."
+								/>
+							{/if}
 						{:else}
 							<button
 								class="circle report"
