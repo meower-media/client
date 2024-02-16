@@ -9,11 +9,10 @@
 		img.classList.add("rescaleble-image");
 		img.style.backgroundImage = `url(${src})`;
 		img.title = alt;
-	})
-
+	});
 </script>
 
-<div id="img" bind:this={img} {...$$restProps}></div>
+<div id="img" bind:this={img} {...$$restProps} />
 
 <style>
 	.rescaleble-image {

@@ -11,4 +11,7 @@
 	>
 </Container>
 
-<RescalebleImage src="https://meower.org/assets/cat_disks.jpg" alt="Cat Disks" />
+<RescalebleImage
+	src="https://meower.org/assets/cat_disks.jpg"
+	alt="Cat Disks"
+/>

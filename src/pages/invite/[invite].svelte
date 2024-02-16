@@ -88,7 +88,10 @@
 			<h1>Uh Oh, somthing went wrong</h1>
 			<span>{errorText}</span><br /><br />
 			Maybe you wanted a cat picture instead? <br /><br />
-			<RescalebleImage src="https://meower.org/assets/nova.png" alt="Nova the cat"/>
+			<RescalebleImage
+				src="https://meower.org/assets/nova.png"
+				alt="Nova the cat"
+			/>
 		{/if}
 	</Container>
 </div>
