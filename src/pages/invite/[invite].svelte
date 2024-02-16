@@ -79,7 +79,7 @@
 	});
 </script>
 
-<div class="center">
+<div class="invite-center">
 	<Container>
 		{#if ok}
 			<h1>Joining Invite...</h1>
@@ -103,7 +103,7 @@
 		position: relative;
 		margin: 5px;
 	}
-	:global(.center *) {
+	:global(.invite-center *) {
 		position: relative;
 		width: 100%;
 		height: 100%;
