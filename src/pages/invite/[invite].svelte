@@ -94,7 +94,7 @@
 </div>
 
 <style>
-	.center {
+	.invite-center {
 		display: flex;
 		justify-content: center;
 		align-items: center;
