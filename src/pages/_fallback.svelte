@@ -1,4 +1,5 @@
 <script>
+	import RescalebleImage from "../lib/RescalebleImage.svelte";
 	import Container from "../lib/Container.svelte";
 </script>
 
@@ -10,8 +11,4 @@
 	>
 </Container>
 
-<img
-	src="https://meower.org/assets/cat_disks.jpg"
-	alt="cat disks"
-	style="max-width: 25%;"
-/>
+<RescalebleImage src="https://meower.org/assets/cat_disks.jpg" alt="Cat Disks" />
