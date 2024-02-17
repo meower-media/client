@@ -328,7 +328,8 @@
 										editing = true;
 										await tick();
 										editContentInput.value =
-											post.unfiltered_content || post.content;
+											post.unfiltered_content ||
+											post.content;
 										editContentInput.focus();
 										autoresize(editContentInput);
 									}}

@@ -2,7 +2,7 @@
 	Home but it's a group chat.
 -->
 <script>
-	import Invites from "./../../lib/modals/chats/Invites.svelte";
+	import Invites from "../../lib/settings/chats/Invites.svelte";
 	import BasicModal from "../../lib/modals/Basic.svelte";
 	import ChangeChatNicknameModal from "../../lib/modals/chats/ChangeChatNickname.svelte";
 	import GCMemberModal from "../../lib/modals/chats/GCMember.svelte";

@@ -1,7 +1,6 @@
 <script>
-	import Invites from "./Invites.svelte";
-	import {chat, authHeader} from "./../../stores.js";
-	import Spinner from "./../../Spinner.svelte";
+	import {chat, authHeader} from "../../stores.js";
+	import Spinner from "../../Spinner.svelte";
 	import {apiUrl} from "../../urls";
 	import Modal from "../../Modal.svelte";
 	import * as modals from "../../modals";
@@ -23,22 +22,21 @@
 	}
 </script>
 
-<Modal on:close={modals.closeLastModal}>
-	<h1 slot="header">Chat Invites</h1>
+<Container>
+	<h1>Invites</h1>
 
-	<div slot="default">
 		{#await fetchInvites()}
 			<Spinner />
 		{/await}
+		<hr />
 
 		{#each $chat.invites as invite}
-			<Container>
 				<div class="inline">
 					<a
-						href="https://app.meower.org/invite/{invite._id}"
+						href="{window.location.protocol}://{window.location.host}/invite/{invite._id}"
 						target="_blank"
 					>
-						https://app.meower.org/invite/{invite._id}
+						{window.location.protocol}//{window.location.host}/invite/{invite._id}
 					</a>
 					<div class="delete">
 						<button
@@ -54,7 +52,6 @@
 						</button>
 					</div>
 				</div>
-			</Container>
 		{/each}
 		<hr />
 		<button
@@ -72,8 +69,7 @@
 				];
 			}}>Create Invite</button
 		>
-	</div>
-</Modal>
+</Container>
 
 <style>
 	.right_align {
@@ -83,6 +79,7 @@
 	.delete {
 		justify-content: right;
 		flex: right;
+		margin-top: 1rem;
 	}
 
 	.inline {
