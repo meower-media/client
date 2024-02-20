@@ -1,4 +1,7 @@
 <script>
+// @ts-nocheck
+
+	// @ts-ignore
 	import Members from '../../../lib/settings/chats/Members.svelte';
 	import {adminPermissions} from "./../../../lib/bitField.js";
 	import {params, goto} from "@roxi/routify";
@@ -24,12 +27,13 @@
 	import {hasPermission} from "../../../lib/bitField.js";
 	import Invites from "../../../lib/settings/chats/Invites.svelte";
 	import Banned from "../../../lib/settings/chats/Banned.svelte";
+	import Overview from '../../../lib/settings/chats/Overview.svelte';
 
 	let showTabs = !$mobile;
 	let hoveringTab = "";
 	let selectedTab = $user.name ? "overview" : "appearance";
 
-	export let chatid = $params;
+	export let chatid = $params.chatid;
 	let resp;
 	onMount(async () => {
 		if (chatid === "livechat") {
@@ -91,7 +95,7 @@
 					on:click={() => (selectedTab = "overview")}
 					on:mouseenter={() => (hoveringTab = "overview")}
 					on:mouseleave={() => (hoveringTab = "")}
-					><img src={Chat} />Overview</button
+					><img src={Chat} alt="Chat Icon"/>Overview</button
 				>
 			{/if}
 
@@ -150,7 +154,8 @@
 			<Banned />
 		{:else if selectedTab == "members"}
 			<Members />
-
+		{:else if selectedTab == "overview"}
+			<Overview />
 		{/if}
 	</div>
 </div>

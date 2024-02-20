@@ -2,9 +2,9 @@
 	import {authHeader} from "../../stores.js";
 	import {chat} from "../../stores.js";
 	import {apiUrl} from "../../urls.js";
-	import Container from "../../Container.svelte.js";
-	import ProfileView from "../../ProfileView.svelte.js";
-	import Member from "../../Member.svelte.js";
+	import Container from "../../Container.svelte";
+	import ProfileView from "../../ProfileView.svelte";
+	import Member from "../../Member.svelte";
 
 	let bans = [];
 	async function fetchBans() {

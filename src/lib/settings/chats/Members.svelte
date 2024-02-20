@@ -38,8 +38,8 @@
 
 <style>
 
+
 	#members {
-		height: var(--view-height);
 
 
 		position: sticky;
@@ -48,6 +48,9 @@
 		flex-shrink: 0;
 		flex-grow: 0;
 		width: 100%;
+		overflow-y: hidden !important;
+		overflow-x: hidden;
+		overscroll-behavior: none;
 	}
 	#members-inner {
 		position: relative;

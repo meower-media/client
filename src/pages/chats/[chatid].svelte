@@ -184,40 +184,9 @@
 						{/if}
 						{#if $chat.owner === $user.name || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
 							<button
-								class="circle"
-								id="HoverOver-Members"
-								on:click|preventDefault={() =>
-									modals.showModal(BannedMembers, {})}
-							>
-								<b>B</b>
-							</button>
-							<button
-								class="circle"
-								on:click|preventDefault={() => {
-									modals.showModal(Invites, {});
-								}}
-							>
-								<b>I</b>
-							</button>
-							<button
 								class="circle settings"
 								on:click={() => {
-									if (
-										isRestricted(
-											userRestrictions.EDITING_CHAT_NICKNAMES
-										) &&
-										!$params.admin
-									) {
-										modals.showModal(AccountBannedModal, {
-											ban: $user.ban,
-											feature:
-												"editing group chat nicknames",
-										});
-									} else {
-										modals.showModal(
-											ChangeChatNicknameModal
-										);
-									}
+									$goto(`/chats/${$params.chatid}/settings`);
 								}}
 							/>
 						{/if}
