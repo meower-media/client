@@ -454,25 +454,6 @@
 
 		display: table;
 	}
-	.setup {
-		background-color: var(--orange);
-		color: var(--foreground-orange);
-		font-size: 150%;
-		transition: 0.25s;
-
-		text-align: center;
-
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1000;
-
-		width: 100%;
-		min-height: 100vh;
-		height: 100%;
-
-		display: table;
-	}
 	.setupnobg {
 		background-color: #0A0A0A;
 		color: #FFFFFF;
@@ -504,6 +485,8 @@
 		padding: 0.5em;
 	}
 	.presvl-fullcenter {
+		width: 40vh;
+		height: 40vh;
 		box-sizing: border-box;
 		position: absolute; 
 		z-index: -2;
@@ -526,8 +509,6 @@
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-		width: 42vh;
-		height: 41vh;
 	}
 	.logo-img-2 {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);

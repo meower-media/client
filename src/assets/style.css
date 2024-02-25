@@ -434,6 +434,8 @@ hr {
 	height: 40vh;
 	filter: brightness(10);
 
+	font-size: 22.5pt;
+
 	box-sizing: border-box;
 	position: absolute; 
 	z-index: -2;
