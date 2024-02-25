@@ -5,6 +5,7 @@
 import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
 import LoggedOutModal from "./modals/LoggedOut.svelte";
 import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
+import MeowerDownModal from "./modals/MeowerDown.svelte";
 
 import Cloudlink from "./cloudlink.js";
 import {
@@ -271,7 +272,10 @@ export async function connect() {
 	});
 	disconnectEvent = link.on("disconnected", async e => {
 		// make sure connection was started (we can know by checking if pingInterval is set)
-		if (!pingInterval) return;
+		if (!pingInterval) { 
+			modals.showModal(MeowerDownModal); // Prevents deadlock
+			return
+		}
 
 		// clear ping interval
 		clearInterval(pingInterval);
