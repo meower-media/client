@@ -66,7 +66,7 @@
 					setup.classList.add("setup");
 					logoImg.classList.remove("logo-img-color");
 					await sleep(50);
-
+					
 					document.getElementById("meower-logo").remove()
 
 					if (
@@ -207,7 +207,7 @@
 					<img
 						alt="Meower"
 						src={meowerLogo}
-						class="logo-img-2"
+						class="logo-img"
 						height="70"
 					/>
 					<br /><br />
@@ -509,15 +509,9 @@
 	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-	}
-	.logo-img-2 {
-		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
+		user-select: none;
 	}
 	.setup:not(.white) .logo-img {
-		filter: brightness(0) invert(1);
-	}
-
-	.setup:not(.white) .logo-img-2 {
 		filter: brightness(0) invert(1);
 	}
 

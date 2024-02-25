@@ -412,6 +412,8 @@ hr {
 	width: 100vw;
 	height: 100vh;
 
+	user-select: none;
+
 	position: absolute;
 	top: 40%;
 	left: 0;
@@ -446,6 +448,8 @@ hr {
 
 	margin: auto;
 	overflow: auto;
+
+	user-select: none;
 
 	display: table-cell;
 	vertical-align: middle;
