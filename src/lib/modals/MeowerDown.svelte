@@ -9,7 +9,7 @@
 <Modal>
 	<h2 slot="header">Connection error</h2>
 	<div slot="default">
-		<p>Sorry, But we couldnt connect to Meower or You arent connected to the internet</p>
+		<p>Sorry, but we couldn't connect to Meower. The server might be down, or you might not be connected to the internet.</p>
 		<div class="modal-buttons">
 			<button on:click={() => {
                 if (key.shiftHeld) {
