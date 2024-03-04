@@ -90,6 +90,7 @@
 			} else if (value === "reconnect") {
 				if (document.getElementById("meower-logo")) { document.getElementById("meower-logo").remove() }
 				setup.classList.remove("setupnobg");
+				setup.classList.add("setup");
 				loginStatus = "";
 				await connect();
 				await sleep(100);
