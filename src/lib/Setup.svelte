@@ -66,7 +66,7 @@
 					setup.classList.add("setup");
 					logoImg.classList.remove("logo-img-color");
 					await sleep(50);
-					
+
 					document.getElementById("meower-logo").remove()
 
 					if (

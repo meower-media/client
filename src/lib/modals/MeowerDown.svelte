@@ -1,6 +1,9 @@
 <script>
 	import Modal from "../Modal.svelte";
     import ServerSelectorModal from "./ServerSelector.svelte";
+	import {
+		showMeowerDown
+	} from "../stores.js"
 
 	import * as modals from "../modals.js";
     import * as key from "../keyDetect.js";
@@ -18,6 +21,17 @@
                     window.location.reload()
                 }
             }}>Reload</button>
+			<!--<button on:click={async () => {
+				const link = clm.link;
+
+				showMeowerDown.set(false)
+
+				modals.closeAllModals()
+				await clm.disconnect();
+				clm.connect();
+
+				await new Promise(resolve => link.once("connected", resolve));
+			}}>Try again</button> I dont think this is prod safe--> 
 		</div>
 	</div>
 </Modal>

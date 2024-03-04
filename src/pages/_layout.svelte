@@ -5,6 +5,7 @@
 	import OOBE from "../lib/OOBE/Main.svelte";
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
+	import MeowerDownModal from "../lib/modals/MeowerDown.svelte";
 
 	import {
 		screen,
@@ -15,6 +16,7 @@
 		spinner,
 		useCustomTheme,
 		customTheme,
+		showMeowerDown
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
@@ -68,6 +70,10 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
+	{#if $showMeowerDown && !$reconnecting}
+		<MeowerDownModal />
+	{/if}
+
 	{#if $reconnecting}
 		<Modal>
 			<h2 slot="header">Reconnecting...</h2>

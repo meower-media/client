@@ -5,7 +5,6 @@
 import ConnectionFailedModal from "./modals/ConnectionFailed.svelte";
 import LoggedOutModal from "./modals/LoggedOut.svelte";
 import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
-import MeowerDownModal from "./modals/MeowerDown.svelte";
 
 import Cloudlink from "./cloudlink.js";
 import {
@@ -20,6 +19,7 @@ import {
 	reconnecting,
 	disconnected,
 	disconnectReason,
+	showMeowerDown
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
@@ -273,7 +273,7 @@ export async function connect() {
 	disconnectEvent = link.on("disconnected", async e => {
 		// make sure connection was started (we can know by checking if pingInterval is set)
 		if (!pingInterval) { 
-			modals.showModal(MeowerDownModal); // Prevents deadlock
+			showMeowerDown.set(true)
 			return
 		}
 
@@ -335,6 +335,7 @@ export async function connect() {
 			screen.set("main");
 
 			// hide modal
+			showMeowerDown.set(false);
 			reconnecting.set(false);
 		});
 		try {
