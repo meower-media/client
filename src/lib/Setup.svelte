@@ -190,7 +190,7 @@
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 500}} class="setup setupnobg">
+<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 250}} class="setup setupnobg">
 	{#if $page === "logo"}
 		<div out:fade={{duration: 300}}>
 			<img
@@ -203,7 +203,7 @@
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
-		<div in:fade={{duration: 100}} class="fullcenter">
+		<div class="fullcenter">
 			<div class="column-ui">
 				<div>
 					<img

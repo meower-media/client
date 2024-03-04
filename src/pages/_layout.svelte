@@ -208,6 +208,7 @@
 		position: absolute;
 		animation-fill-mode: forwards;
 		animation-timing-function: ease;
+		transition: 0.5s;
 		z-index: 2;
 	}
 
