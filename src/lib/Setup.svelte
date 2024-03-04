@@ -5,7 +5,7 @@
 	import StartupErrorModal from "./modals/StartupError.svelte";
 	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
 
-	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
+	import {screen, setupPage as page, OOBERunning, user, showMeowerDown} from "./stores.js";
 	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -32,6 +32,7 @@
 
 	async function connect() {
 		await clm.disconnect();
+		showMeowerDown.set(false)
 		clm.connect();
 
 		await new Promise(resolve => link.once("connected", resolve));
