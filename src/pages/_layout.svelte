@@ -141,8 +141,8 @@
 		--foreground: black;
 		--foreground-orange: white;
 
-		--pfp-bg: white;
-		--pfp-outline: #d9d9d9;
+		--pfp-bg: red;
+		--pfp-outline: red;
 
 		background-color: var(--background);
 		color: var(--foreground);

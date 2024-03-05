@@ -319,9 +319,9 @@
 	}
 
 	button.toggle-popup {
-		padding: 0.1em;
+		padding: 0;
 		background-color: var(--pfp-bg) !important;
-		border: solid 1.5px var(--pfp-outline);
+		border: solid 1.5px;
 		border-bottom-width: 5px;
 		overflow: hidden;
 	}

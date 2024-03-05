@@ -32,8 +32,9 @@
 		<img
 			{alt}
 			title={alt}
-			src={icons[
-				`../assets/avatars/icon_${
+			src={
+				'https://cdn.discordapp.com/avatars/797570703419244594/8800bda3b5abd0d92f0060deb7c32e1d.webp'
+				/*`../assets/avatars/icon_${
 					id === -1
 						? 21
 						: id === -2
@@ -41,8 +42,8 @@
 						: id === -3
 						? "guest"
 						: id - 1
-				}.svg`
-			] || errorIcon}
+				}.svg`*/
+			|| errorIcon}
 			on:error={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}
@@ -67,9 +68,8 @@
 		box-sizing: border-box;
 
 		background-color: var(--pfp-bg);
-		border: solid 1.5px var(--pfp-outline);
-		border-bottom-width: 5px;
-		border-radius: calc(var(--size) * 1.25em);
+		border: solid calc(var(--size) * 0.15em) var(--pfp-outline);
+		border-radius: 25%;
 
 		display: flex;
 		align-items: center;
@@ -78,6 +78,9 @@
 
 		/* Always make fallback text visible */
 		color: black;
+	}
+	.pfp img, .raw-pfp img {
+		border-radius: 25%;
 	}
 
 	.loading {
