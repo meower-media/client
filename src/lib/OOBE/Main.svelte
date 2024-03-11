@@ -1,14 +1,16 @@
 <script>
 	import OOBECustomizePFP from "./CustomizePFP.svelte";
 	import OOBECustomizeTheme from "./CustomizeTheme.svelte";
+	import OOBEIntroduction from "./Introduction.svelte";
 
 	import {OOBERunning, OOBEPage} from "../stores.js";
 	import * as clm from "../clmanager.js";
 
 	import {onMount} from "svelte";
+	import Introduction from "./Introduction.svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
-	$: allowNext = $OOBEPage < 2;
+	$: allowNext = $OOBEPage < 3;
 
 	onMount(() => {
 		clm.updateProfile({});
@@ -21,10 +23,12 @@
 		<div class="setup">
 			<div class="fullcenter">
 				{#if $OOBEPage == 0}
-					<OOBECustomizePFP />
+					<Introduction />
 				{:else if $OOBEPage == 1}
-					<OOBECustomizeTheme />
+					<OOBECustomizePFP />
 				{:else if $OOBEPage == 2}
+					<OOBECustomizeTheme />
+				{:else if $OOBEPage == 3}
 					<h1>That's it!</h1>
 					<button
 						on:click={() => {
@@ -40,7 +44,6 @@
 	</div>
 	<div class="footer">
 		<button
-			class="full"
 			disabled={!allowPrevious}
 			on:click={() => {
 				OOBEPage.set($OOBEPage - 1);
@@ -49,13 +52,11 @@
 			&lt;- Back
 		</button>
 		<button
-			class="center full"
 			on:click={() => {
 				OOBERunning.set(false);
 			}}>Skip</button
 		>
 		<button
-			class="right full"
 			disabled={!allowNext}
 			on:click={() => {
 				OOBEPage.set($OOBEPage + 1);
@@ -68,6 +69,7 @@
 
 <style>
 	.wrapper {
+		margin: 0;
 		width: 100%;
 		height: 100%;
 	}
@@ -82,10 +84,19 @@
 	}
 
 	.footer {
+		padding-left: 1em;
+		padding-right: 1em;
 		height: 3em;
 		display: flex;
 		align-items: stretch;
 		justify-content: space-between;
+		background-color: var(--orange-dark);
+	}
+
+	.footer button {
+		height: 80%;
+		align-self: center;
+		border: 0;
 	}
 
 	.fullcenter {
@@ -94,7 +105,7 @@
 		box-sizing: border-box;
 
 		margin: auto;
-		overflow: auto;
+		overflow: none;
 
 		display: table-cell;
 		vertical-align: middle;

@@ -8,10 +8,7 @@
 
 <div class="content">
 	<h1>Set your theme</h1>
-	<button on:click={() => modals.showModal(SwitchThemeModal)}
-		>Change Theme</button
-	>
-	<br /><br />
+	<SwitchThemeModal fromoobe={true} />
 	Click Next when done.
 </div>
 

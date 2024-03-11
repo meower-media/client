@@ -8,6 +8,8 @@
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
+	export let fromoobe = false;
+
 	import defaultPreview from "../../../assets/themePreviews/OrangeLight.png";
 
 	const themePreviews = import.meta.glob(
@@ -87,63 +89,118 @@
 	}
 </script>
 
-<Modal on:close={modals.closeLastModal}>
-	<h2 slot="header">Select a Theme</h2>
-	<div slot="default">
-		<div class="theme-select">
-			<button
-				on:click={() => {
-					selection -= 1;
-					changeTheme();
-				}}>{"<"}</button
-			>
-			<div class="theme-middle">
-				{#if theme === "custom"}
-					<div class="theme-name">Custom Theme</div>
-					<button on:click={() => modals.showModal(CustomThemeModal)}
-						>Edit theme</button
-					>
-				{:else}
-					<div class="theme-name">
-						{themeCaps + " (" + darkModeStr + ")"}
-					</div>
-					<img
-						src={currentPreviewImage}
-						class="theme-preview"
-						alt={themeName}
-					/>
-				{/if}
+{#if !fromoobe}
+	<Modal on:close={modals.closeLastModal}>
+		<h2 slot="header">Select a Theme</h2>
+		<div slot="default">
+			<div class="theme-select">
+				<button
+					on:click={() => {
+						selection -= 1;
+						changeTheme();
+					}}>{"<"}</button
+				>
+				<div class="theme-middle">
+					{#if theme === "custom"}
+						<div class="theme-name">Custom Theme</div>
+						<button on:click={() => modals.showModal(CustomThemeModal)}
+							>Edit theme</button
+						>
+					{:else}
+						<div class="theme-name">
+							{themeCaps + " (" + darkModeStr + ")"}
+						</div>
+						<img
+							src={currentPreviewImage}
+							class="theme-preview"
+							alt={themeName}
+						/>
+					{/if}
+				</div>
+				<button
+					on:click={() => {
+						selection += 1;
+						changeTheme();
+					}}>{">"}</button
+				>
 			</div>
-			<button
-				on:click={() => {
-					selection += 1;
-					changeTheme();
-				}}>{">"}</button
-			>
+			{#if error}
+				<p class="theme-invalid">
+					Your previous theme was invalid, so it was reset to orange.
+				</p>
+			{/if}
+			<p class="layout-text">(Change the layout in the settings.)</p>
+			<div class="modal-buttons">
+				<button on:click={modals.closeLastModal}>Close</button>
+				<button
+					disabled={theme === "custom"}
+					on:click={() => {
+						removeTheme();
+						const _user = $user;
+						_user.theme = theme;
+						_user.mode = !darkMode;
+						user.set(_user);
+						clm.updateProfile({theme: theme, mode: !darkMode});
+						modals.closeLastModal();
+					}}>Save</button
+				>
+			</div>
 		</div>
-		{#if error}
-			<p class="theme-invalid">
-				Your previous theme was invalid, so it was reset to orange.
-			</p>
-		{/if}
-		<p class="layout-text">(Change the layout in the settings.)</p>
-		<div class="modal-buttons">
-			<button on:click={modals.closeLastModal}>Close</button>
-			<button
-				disabled={theme === "custom"}
-				on:click={() => {
-					removeTheme();
-					const _user = $user;
-					_user.theme = theme;
-					_user.mode = !darkMode;
-					user.set(_user);
-					clm.updateProfile({theme: theme, mode: !darkMode});
-					modals.closeLastModal();
-				}}>Save</button
-			>
+	</Modal>
+{:else}
+	<div class="theme-select">
+		<button
+			on:click={() => {
+				selection -= 1;
+				changeTheme();
+			}}>{"<"}</button
+		>
+		<div class="theme-middle">
+			{#if theme === "custom"}
+				<div class="theme-name">Custom Theme</div>
+				<button on:click={() => modals.showModal(CustomThemeModal)}
+					>Edit theme</button
+				>
+			{:else}
+				<div class="theme-name">
+					{themeCaps + " (" + darkModeStr + ")"}
+				</div>
+				<img
+					src={currentPreviewImage}
+					class="theme-preview"
+					alt={themeName}
+				/>
+			{/if}
 		</div>
+		<button
+			on:click={() => {
+				selection += 1;
+				changeTheme();
+			}}>{">"}</button
+		>
 	</div>
-</Modal>
+	{#if error}
+		<p class="theme-invalid">
+			Your previous theme was invalid, so it was reset to orange.
+		</p>
+	{/if}
+	<p class="layout-text">(Change the layout in the settings.)</p>
+	<div class="modal-buttons">
+		<button on:click={modals.closeLastModal}>Close</button>
+		<button
+			disabled={theme === "custom"}
+			on:click={() => {
+				removeTheme();
+				const _user = $user;
+				_user.theme = theme;
+				_user.mode = !darkMode;
+				user.set(_user);
+				clm.updateProfile({theme: theme, mode: !darkMode});
+				modals.closeLastModal();
+			}}>Save</button
+		>
+	</div>
+{/if}
 
 <style>
 	.theme-select {

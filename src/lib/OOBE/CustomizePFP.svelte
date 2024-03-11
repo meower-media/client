@@ -18,7 +18,7 @@
 </script>
 
 <div class="pfps">
-	<h1>Set your profile picture</h1>
+	<h1>Select a profile picture</h1>
 	<div class="pfp-outer">
 		<div class="pfp-list">
 			{#if pfpOverflow && $user.pfp_data < 0}
