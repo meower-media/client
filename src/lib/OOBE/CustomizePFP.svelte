@@ -19,6 +19,7 @@
 
 <div class="pfps">
 	<h1>Select a profile picture</h1>
+	<p>Select a profile picture to make yourself stand out.</p>
 	<div class="pfp-outer">
 		<div class="pfp-list">
 			{#if pfpOverflow && $user.pfp_data < 0}

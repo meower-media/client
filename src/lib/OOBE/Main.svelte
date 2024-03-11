@@ -1,17 +1,18 @@
 <script>
 	import OOBECustomizePFP from "./CustomizePFP.svelte";
 	import OOBECustomizeTheme from "./CustomizeTheme.svelte";
-	import OOBECustomizeLayout from "./CustomizeLayout.svelte";
 	import OOBEIntroduction from "./Introduction.svelte";
+	import OOBEEnd from "./End.svelte";
 
 	import {OOBERunning, OOBEPage} from "../stores.js";
 	import * as clm from "../clmanager.js";
 
+	import {goto} from "@roxi/routify";
+
 	import {onMount} from "svelte";
-	import Introduction from "./Introduction.svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
-	$: allowNext = $OOBEPage < 5;
+	$: allowNext = $OOBEPage < 3;
 
 	onMount(() => {
 		clm.updateProfile({});
@@ -30,14 +31,7 @@
 				{:else if $OOBEPage == 2}
 					<OOBECustomizeTheme />
 				{:else if $OOBEPage == 3}
-					<OOBECustomizeLayout />
-				{:else if $OOBEPage == 4}
-					<h1>That's it!</h1>
-					<button
-						on:click={() => {
-							OOBERunning.set(false);
-						}}>Let's go!</button
-					>
+					<OOBEEnd />
 				{:else}
 					<p>You aren't supposed to be here.</p>
 					<p>Current Page: {$OOBEPage}</p>
