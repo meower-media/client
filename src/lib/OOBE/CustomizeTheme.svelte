@@ -7,7 +7,7 @@
 
 <div class="content">
 	<h1>Personalization</h1>
-	<p>Here you personalize your layout and theme</p>
+	<p>Personalize your layout and theme</p>
 	<SwitchThemeModal fromoobe={true} />
 	<p>Hit the gear icon below to select a layout</p>
 	<button
