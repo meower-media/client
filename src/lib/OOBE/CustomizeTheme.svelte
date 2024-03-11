@@ -13,7 +13,7 @@
 <style>
 	.content {
 		text-align: center;
-		width: 50%;
+		width: 60%;
 		left: 50%;
         transform: translate(-50%,0);
         position: relative;

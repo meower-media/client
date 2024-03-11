@@ -7,7 +7,7 @@
 
 <div class="content">
 	<h1>Select your layout</h1>
-	<br />
+	<p>Hit the gear icon below to select a layout</p>
 	<button
 		class="circle settings"
 		on:click={() =>
@@ -15,8 +15,7 @@
 				layout: $user.layout === "new" ? "old" : "new",
 			})}
 	/>
-	<br />
-	The layout is currently set to {$user.layout}.
+	<p>You are currently using the "{$user.layout}" layout.</p>
 </div>
 
 <style>
