@@ -3,7 +3,7 @@
 
 	import CustomThemeModal from "./CustomTheme.svelte";
 
-	import {user} from "../../stores.js";
+	import {user, OOBERunning} from "../../stores.js";
 	import {removeTheme} from "../../CustomTheme.js";
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
@@ -86,6 +86,15 @@
 			themePreviews[
 				"../../../assets/themePreviews/" + themeName + ".png"
 			] || defaultPreview;
+
+		if ($OOBERunning) {
+			removeTheme();
+			const _user = $user;
+			_user.theme = theme;
+			_user.mode = !darkMode;
+			user.set(_user);
+			clm.updateProfile({theme: theme, mode: !darkMode});
+		}
 	}
 </script>
 
@@ -184,22 +193,6 @@
 			Your previous theme was invalid, so it was reset to orange.
 		</p>
 	{/if}
-	<p class="layout-text">(Change the layout in the settings.)</p>
-	<div class="modal-buttons">
-		<button on:click={modals.closeLastModal}>Close</button>
-		<button
-			disabled={theme === "custom"}
-			on:click={() => {
-				removeTheme();
-				const _user = $user;
-				_user.theme = theme;
-				_user.mode = !darkMode;
-				user.set(_user);
-				clm.updateProfile({theme: theme, mode: !darkMode});
-				modals.closeLastModal();
-			}}>Save</button
-		>
-	</div>
 {/if}
 
 <style>

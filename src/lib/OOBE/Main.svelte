@@ -1,6 +1,7 @@
 <script>
 	import OOBECustomizePFP from "./CustomizePFP.svelte";
 	import OOBECustomizeTheme from "./CustomizeTheme.svelte";
+	import OOBECustomizeLayout from "./CustomizeLayout.svelte";
 	import OOBEIntroduction from "./Introduction.svelte";
 
 	import {OOBERunning, OOBEPage} from "../stores.js";
@@ -10,7 +11,7 @@
 	import Introduction from "./Introduction.svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
-	$: allowNext = $OOBEPage < 3;
+	$: allowNext = $OOBEPage < 5;
 
 	onMount(() => {
 		clm.updateProfile({});
@@ -23,12 +24,14 @@
 		<div class="setup">
 			<div class="fullcenter">
 				{#if $OOBEPage == 0}
-					<Introduction />
+					<OOBEIntroduction />
 				{:else if $OOBEPage == 1}
 					<OOBECustomizePFP />
 				{:else if $OOBEPage == 2}
 					<OOBECustomizeTheme />
 				{:else if $OOBEPage == 3}
+					<OOBECustomizeLayout />
+				{:else if $OOBEPage == 4}
 					<h1>That's it!</h1>
 					<button
 						on:click={() => {

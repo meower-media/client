@@ -1,19 +1,21 @@
 <script>
 	import SwitchThemeModal from "../modals/settings/SwitchTheme.svelte";
-
-	import * as modals from "../modals.js";
-
-	modals.showModal(SwitchThemeModal);
 </script>
 
 <div class="content">
-	<h1>Set your theme</h1>
+	<h1>Select a theme</h1>
+	<br />
 	<SwitchThemeModal fromoobe={true} />
+	<br />
 	Click Next when done.
 </div>
 
 <style>
 	.content {
 		text-align: center;
+		width: 50%;
+		left: 50%;
+        transform: translate(-50%,0);
+        position: relative;
 	}
 </style>
