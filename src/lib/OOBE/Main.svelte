@@ -4,6 +4,7 @@
 	import OOBEIntroduction from "./Introduction.svelte";
 	import OOBEEnd from "./End.svelte";
 	import OOBEEasterEgg from "./EasterEgg.svelte"
+	import OOBEQuote from "./Quote.svelte"
 
 	import {OOBERunning, OOBEPage} from "../stores.js";
 	import * as clm from "../clmanager.js";
@@ -11,7 +12,7 @@
 	import {onMount} from "svelte";
 
 	$: allowPrevious = $OOBEPage > 0;
-	$: allowNext = $OOBEPage < 3;
+	$: allowNext = $OOBEPage < 4;
 
 	onMount(() => {
 		clm.updateProfile({});
@@ -28,10 +29,12 @@
 				{:else if $OOBEPage == 1}
 					<OOBECustomizePFP />
 				{:else if $OOBEPage == 2}
-					<OOBECustomizeTheme />
+					<OOBEQuote />
 				{:else if $OOBEPage == 3}
+					<OOBECustomizeTheme />
+				{:else if $OOBEPage == 4}
 					<OOBEEnd />
-				{:else if $OOBEPage == 6}
+				{:else if $OOBEPage == 8}
 					<OOBEEasterEgg />
 				{:else}
 					<p>You aren't supposed to be here.</p>
