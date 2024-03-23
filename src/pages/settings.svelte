@@ -33,6 +33,17 @@
 
 <div class="settings">
 	<div id="tabs">
+	<span class="text">
+		<div class="top">
+			<h2 class="tabs-title">
+				Settings <Badge
+					text="BETA"
+					title="The new settings experience is currently in beta."
+					small={true}
+				/>
+			</h2>
+		</div>
+		</span>
 
 		<div id="tabs-inner">
 			{#if $user.name}
@@ -47,7 +58,7 @@
 							? "#fff"
 							: "#000"}
 						strokeWidth="2.5"
-					/></button
+					/><span class="text">Profile</span></button
 				>
 			{/if}
 			<button
@@ -61,7 +72,7 @@
 						? "#fff"
 						: "#000"}
 					strokeWidth="2.5"
-				/></button
+				/><span class="text">Personalization</span></button
 			>
 
 			{#if $user.name}
@@ -78,7 +89,7 @@
 							? "#fff"
 							: "#000"}
 						strokeWidth="2.5"
-					/></button
+					/><span class="text">Security & Privacy</span></button
 				>
 				<!-- this is for once we have the auth server ready
                 <button
@@ -126,7 +137,7 @@
 							? "#fff"
 							: "#000"}
 						strokeWidth="2.5"
-					/></button
+					/><span class="text">Blocked Users</span></button
 				>
 				<button
 					class="tab-button"
@@ -139,7 +150,7 @@
 							? "#fff"
 							: "#000"}
 						strokeWidth="2.5"
-					/></button
+					/><span class="text">Report History</span></button
 				>
 			{/if}
 
@@ -156,7 +167,7 @@
 						? "#fff"
 						: "#000"}
 					strokeWidth="2.5"
-				/></button
+				/><span class="text">About</span></button
 			>
 		</div>
 	</div>
@@ -233,7 +244,7 @@
 	}
 	#tabs {
 		height: var(--view-height);
-		width: 80px;
+		width: min(45%, 12em);
 
 		background-color: var(--background);
 		background-color: var(--background);
@@ -246,6 +257,12 @@
 
 		flex-shrink: 0;
 		flex-grow: 0;
+	}
+	:global(#main.layout-mobile) #tabs {
+		width: 80px;
+	}
+	:global(#main.layout-mobile) .text {
+		display: none;
 	}
 	#tabs-inner {
 		position: relative;
@@ -260,4 +277,13 @@
 		padding-inline: 5px;
 	}
 
+	.top {
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	.tabs-title {
+		margin: 0.25em;
+	}
 </style>
