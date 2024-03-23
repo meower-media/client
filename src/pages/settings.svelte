@@ -54,9 +54,7 @@
 					on:mouseenter={() => (hoveringTab = "profile")}
 					on:mouseleave={() => (hoveringTab = "")}
 					><User
-						color={!$user.mode || selectedTab == "profile"
-							? "#fff"
-							: "#000"}
+						color="#fff"
 						strokeWidth="2.5"
 					/><span class="text">Profile</span></button
 				>
@@ -68,9 +66,7 @@
 				on:mouseenter={() => (hoveringTab = "personalization")}
 				on:mouseleave={() => (hoveringTab = "")}
 				><Paintbrush
-					color={!$user.mode || selectedTab == "personalization"
-						? "#fff"
-						: "#000"}
+					color="#fff"
 					strokeWidth="2.5"
 				/><span class="text">Personalization</span></button
 			>
@@ -85,9 +81,7 @@
 					on:mouseenter={() => (hoveringTab = "security")}
 					on:mouseleave={() => (hoveringTab = "")}
 					><Lock
-						color={!$user.mode || selectedTab == "security"
-							? "#fff"
-							: "#000"}
+						color="#fff"
 						strokeWidth="2.5"
 					/><span class="text">Security & Privacy</span></button
 				>
@@ -133,9 +127,7 @@
 					on:mouseenter={() => (hoveringTab = "blockedUsers")}
 					on:mouseleave={() => (hoveringTab = "")}
 					><ShieldBan
-						color={!$user.mode || selectedTab == "blockedUsers"
-							? "#fff"
-							: "#000"}
+						color="#fff"
 						strokeWidth="2.5"
 					/><span class="text">Blocked Users</span></button
 				>
@@ -146,9 +138,7 @@
 					on:mouseenter={() => (hoveringTab = "reportHistory")}
 					on:mouseleave={() => (hoveringTab = "")}
 					><Flag
-						color={!$user.mode || selectedTab == "reportHistory"
-							? "#fff"
-							: "#000"}
+						color="#fff"
 						strokeWidth="2.5"
 					/><span class="text">Report History</span></button
 				>
@@ -163,9 +153,7 @@
 				on:mouseenter={() => (hoveringTab = "about")}
 				on:mouseleave={() => (hoveringTab = "")}
 				><Info
-					color={!$user.mode || selectedTab == "about"
-						? "#fff"
-						: "#000"}
+					color="#fff"
 					strokeWidth="2.5"
 				/><span class="text">About</span></button
 			>
@@ -246,7 +234,6 @@
 		height: var(--view-height);
 		width: min(45%, 12em);
 
-		background-color: var(--background);
 		background-color: var(--background);
 		border: solid 2px var(--orange);
 		border-radius: 5px;

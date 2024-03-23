@@ -105,7 +105,7 @@
 				on:click={() => {
 					applyTheme(theme);
 					$user.theme = themeToString(theme);
-					clm.updateProfile({theme: $user.theme, mode: $user.mode});
+					clm.updateProfile({theme: $user.theme});
 					modals.closeLastModal();
 				}}>Save</button
 			>

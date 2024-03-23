@@ -57,7 +57,6 @@ user.subscribe(v => {
 			"meower_savedconfig",
 			JSON.stringify({
 				theme: _user.theme,
-				mode: _user.mode,
 				sfx: _user.sfx,
 				bgm: _user.bgm,
 				bgm_song: _user.bgm_song,
@@ -111,7 +110,6 @@ addEventListener("storage", event => {
 if (localStorage.getItem("meower_savedconfig")) {
 	const savedConfig = JSON.parse(localStorage.getItem("meower_savedconfig"));
 	_user.theme = savedConfig.theme;
-	_user.mode = savedConfig.mode;
 	_user.sfx = savedConfig.sfx;
 	_user.bgm = savedConfig.bgm;
 	_user.bgm_song = savedConfig.bgm_song;
