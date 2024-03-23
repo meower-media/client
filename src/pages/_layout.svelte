@@ -16,7 +16,7 @@
 		spinner,
 		useCustomTheme,
 		customTheme,
-		showMeowerDown
+		showMeowerDown,
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
@@ -160,7 +160,7 @@
 		--orange-light: #f9a535;
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
-		--background: #1D1D1D;
+		--background: #1d1d1d;
 		--foreground: #eef;
 		--foreground-orange: #eef;
 	}

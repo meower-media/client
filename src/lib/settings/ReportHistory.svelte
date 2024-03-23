@@ -118,11 +118,11 @@
 
 <style>
 	table {
+		min-width: 500px;
 		width: 100%;
-		max-width: 100%;
 		text-align: center;
 		border-collapse: collapse;
-		overflow: hidden;
+		overflow: scroll;
 	}
 
 	th,
