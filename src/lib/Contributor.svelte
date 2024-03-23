@@ -23,7 +23,7 @@
 >
 	{#if isMeower && pfp != null}
 		<div class="contrib-pfp">
-			<PFP icon={Number(pfp)} alt={username} size={3 / 3.75} />
+			<PFP icon={Number(pfp)} alt={username} size={1.5} />
 		</div>
 	{:else if pfp}
 		<img class="contrib-pfp" src={pfp} alt={username} />
