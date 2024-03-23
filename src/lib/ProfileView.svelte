@@ -279,10 +279,7 @@
 		padding: 0;
 		display: inline-block;
 		max-width: 100%;
-		font-size: 3em;
-	}
-	h2.profile-username {
-		font-size: 200%;
+		font-size: 2em;
 	}
 
 	.profile-active {

@@ -59,13 +59,13 @@
 	}
 
 	.pfp {
-		width: calc(var(--size) * 3em);
-		height: calc(var(--size) * 3em);
+		width: calc(var(--size) * 2em);
+		height: calc(var(--size) * 2em);
 		box-sizing: border-box;
 
 		background-color: var(--pfp-bg);
 		border: solid 1.5px var(--pfp-outline);
-		border-radius: calc(var(--size) * 1em);
+		border-radius: calc(var(--size) * 0.6em);
 
 		display: flex;
 		align-items: center;
@@ -92,8 +92,8 @@
 	.online {
 		display: inline-block;
 
-		width: calc(var(--size) * 1em);
-		height: calc(var(--size) * 1em);
+		width: calc(var(--size) * 0.5em);
+		height: calc(var(--size) * 0.5em);
 		border-radius: 100%;
 
 		background-color: limegreen;

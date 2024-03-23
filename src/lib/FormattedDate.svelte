@@ -78,5 +78,7 @@ ISO: ${_date.toISOString()}`;
 	.date {
 		font-style: italic;
 		cursor: help;
+		font-size: 15px;
+		color: var(--date);
 	}
 </style>

@@ -649,7 +649,7 @@
 		gap: 0.5em;
 	}
 	.creator h2 {
-		font-size: 150%;
+		font-size: 120%;
 		margin: 0;
 		overflow-wrap: anywhere;
 	}

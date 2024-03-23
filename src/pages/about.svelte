@@ -502,6 +502,11 @@
 		grid-gap: 0.5em;
 	}
 
+	.contributors-list img {
+		width: calc(var(--size) * 3em);
+		height: calc(var(--size) * 3em);
+	}
+
 	.inline-meowy {
 		vertical-align: middle;
 	}
