@@ -203,7 +203,7 @@
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
 	{:else if $page === "welcome"}
-		<div class="fullcenter">
+		<div class="fullcenter" in:fade={{duration: 300}}>
 			<div class="column-ui">
 				<div>
 					<img
@@ -438,7 +438,7 @@
 
 <style>
 	.setup {
-		background-color: var(--orange);
+		background-color: #1D1D1D;
 		color: var(--foreground-orange);
 		font-size: 150%;
 		transition: 0.25s;

@@ -202,7 +202,7 @@
 	}
 
 	.transition {
-		background-color: var(--orange);
+		background-color: #1D1D1D;
 		height: 100%;
 		width: 100%;
 		position: absolute;
