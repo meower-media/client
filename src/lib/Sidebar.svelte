@@ -300,6 +300,8 @@
 		flex-direction: row;
 		padding: 0;
 		padding-inline-end: 0.5em;
+		border-bottom: 2px;
+		border-color: #fff;
 	}
 	:global(main.layout-old:not(.layout-mobile)) .logo {
 		display: block;

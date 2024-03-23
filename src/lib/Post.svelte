@@ -114,7 +114,11 @@
 	}
 
 	function confirmLink(link) {
-		if (!link.startsWith("https:") && !link.startsWith("http:") && !link.startsWith("/")) {
+		if (
+			!link.startsWith("https:") &&
+			!link.startsWith("http:") &&
+			!link.startsWith("/")
+		) {
 			link = "https://" + link;
 		}
 		let url = new URL(link, location.href);
@@ -145,9 +149,7 @@
 					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
 				},
 				normalize: function (match) {
-					match.url =
-						"/users/" +
-						match.url.replace(/^@/, "");
+					match.url = "/users/" + match.url.replace(/^@/, "");
 				},
 			});
 			const tokens = md.parse(
@@ -426,7 +428,9 @@
 							<button
 								class="circle report"
 								on:click={() =>
-									modals.showModal(ReportPostModal, {post})}
+									modals.showModal(ReportPostModal, {
+										post,
+									})}
 							/>
 						{/if}
 					{/if}
@@ -613,9 +617,14 @@
 			{/each}
 		</div>
 	{/if}
+	<div class="border"></div>
 </Container>
 
 <style>
+	.border {
+		border-bottom: 2px solid var(--orange);
+	}
+	
 	.pfp {
 		margin-right: 0.2em;
 		padding: 0;
@@ -658,6 +667,7 @@
 		border: none;
 		margin: 0;
 		margin-left: 0.125em;
+		transition: transform 0.3s ease;
 	}
 
 	.post-images {

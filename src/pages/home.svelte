@@ -17,12 +17,30 @@
 			{:else if $ulist.length == 0}
 				Nobody is online.
 			{:else}
-				There are currently {$ulist.length} users online ({$ulist.join(
-					", "
-				)}).
+				<span class="caret" onclick="toggleUserList()" style="cursor: pointer; user-select: none;">There are currently {$ulist.length} users online &#9660;</span>
+				<div id="userList" style="display: none;">
+					<ul>
+						{#each $ulist as user}
+							<li>{user}</li>
+						{/each}
+					</ul>
+				</div>
 			{/if}
 		</div>
 	</Container>
+	
+	<script>
+		function toggleUserList() {
+			var userList = document.getElementById('userList');
+			if (userList.style.display === 'none') {
+				userList.style.display = 'block';
+			} else {
+				userList.style.display = 'none';
+			}
+		}
+	</script>
+	
+	
 	<PostList fetchUrl="home" postOrigin="home" canPost={true} />
 </div>
 
