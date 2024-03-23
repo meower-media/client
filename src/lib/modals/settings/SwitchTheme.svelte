@@ -8,7 +8,7 @@
 	import * as modals from "../../modals.js";
 	import * as clm from "../../clmanager.js";
 
-	import defaultPreview from "../../../assets/themePreviews/OrangeLight.png";
+	import defaultPreview from "../../../assets/themePreviews/Orange.png";
 
 	const themePreviews = import.meta.glob(
 		"../../../assets/themePreviews/*.png",
@@ -18,11 +18,10 @@
 		}
 	);
 
-	let selections = ["orange", "dark-orange", "blue", "dark-blue", "custom"];
+	let selections = ["orange", "blue", "custom"];
 
 	let error = false;
 
-	let darkMode = !$user.mode;
 	let theme = $user.theme;
 
 	if (!selections.includes(theme)) {
@@ -31,15 +30,12 @@
 			error = true;
 		} else {
 			theme = "custom";
-			darkMode = false;
 		}
 	}
 
-	let selection = selections.indexOf((darkMode ? "dark-" : "") + theme);
+	let selection = selections.indexOf(theme);
 
-	let darkModeStr = (!darkMode && "Light") || "Dark";
-	let themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
-	let themeName = themeCaps + darkModeStr;
+	let themeName = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 
 	/**
 	 * @type {string}
@@ -58,15 +54,7 @@
 		theme = selections[selection];
 
 		if (theme != "custom") {
-			darkMode = false;
-			if (theme.startsWith("dark-")) {
-				darkMode = true;
-				theme = theme.substring(5);
-			}
-
-			darkModeStr = darkMode ? "Dark" : "Light";
-			themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
-			themeName = themeCaps + darkModeStr; // Change vars
+			themeName = theme.slice(0, 1).toUpperCase() + theme.slice(1);
 
 			// @ts-ignore
 			currentPreviewImage =
@@ -75,9 +63,7 @@
 				] || defaultPreview;
 		}
 
-		darkModeStr = darkMode ? "Dark" : "Light";
-		themeCaps = theme.slice(0, 1).toUpperCase() + theme.slice(1);
-		themeName = themeCaps + darkModeStr; // Change vars
+		themeName = theme.slice(0, 1).toUpperCase() + theme.slice(1); // Change vars
 
 		// @ts-ignore
 		currentPreviewImage =
@@ -105,7 +91,7 @@
 					>
 				{:else}
 					<div class="theme-name">
-						{themeCaps + " (" + darkModeStr + ")"}
+						{themeName}
 					</div>
 					<img
 						src={currentPreviewImage}
@@ -135,9 +121,8 @@
 					removeTheme();
 					const _user = $user;
 					_user.theme = theme;
-					_user.mode = !darkMode;
 					user.set(_user);
-					clm.updateProfile({theme: theme, mode: !darkMode});
+					clm.updateProfile({theme: theme});
 					modals.closeLastModal();
 				}}>Save</button
 			>

@@ -61,8 +61,7 @@
 		: null}
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
-	class:mode-light={!($user.mode === false)}
-	class:mode-dark={$user.mode === false}
+	class:mode-dark={true}
 	class:layout-old={$user.layout === "old"}
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
@@ -138,25 +137,11 @@
 
 		font-family: Simvoni, sans-serif;
 
-		--orange: #f9a636;
 		--orange-button: var(--orange);
-		--orange-light: #ffce8c;
-		--orange-dark: #b46d34;
-		--orange-scrollbar-back: #a15d04;
-		--background: white;
-		--date: #303030;
-		--foreground: black;
-		--foreground-orange: black;
 
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
 
-		color: var(--foreground);
-		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
-		font-size: 14pt;
-	}
-
-	#main.theme-orange.mode-dark {
 		--orange: #e48b26;
 		--orange-light: #f9a535;
 		--orange-dark: #ac5b18;
@@ -165,6 +150,10 @@
 		--date: #bdbdbd;
 		--foreground: #eef;
 		--foreground-orange: #eef;
+
+		color: var(--foreground);
+		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
+		font-size: 14pt;
 	}
 	#main.theme-blue {
 		--orange: #4d97ff;
@@ -175,17 +164,11 @@
 			#000000 20%,
 			var(--orange-dark)
 		);
-		--background: white;
-		--date: #303030;
-		--foreground: black;
-		--foreground-orange: white;
-		scrollbar-color: unset;
-	}
-	#main.theme-blue.mode-dark {
 		--background: #181818;
 		--foreground: white;
 		--date: #bdbdbd;
 		--foreground-orange: white;
+		scrollbar-color: unset;
 	}
 
 	.main-screen {
