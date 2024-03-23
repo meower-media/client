@@ -10,8 +10,7 @@
 <style>
 	div {
 		background-color: var(--background);
-		border: solid 2px var(--orange);
-		border-radius: 5px;
+		border-bottom: solid 2px var(--orange);
 		padding: 0.6em;
 		margin-bottom: 0.4em;
 		overflow-wrap: break-word;

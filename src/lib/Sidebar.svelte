@@ -202,7 +202,7 @@
 	}
 
 	.sidebar {
-		background-color: var(--orange);
+		background-color: #1D1D1D;
 
 		display: flex;
 		align-items: center;
@@ -230,6 +230,8 @@
 		flex-shrink: 1;
 
 		padding: 0.5em;
+		background-color: #1D1D1D;
+		border: none;
 	}
 	.sidebar > button > img {
 		width: 90%;
@@ -332,7 +334,7 @@
 	}
 
 	.popup {
-		background: var(--orange);
+		background: #1D1D1D;
 		padding: 0.5em;
 		padding-top: 0.25em;
 		border-radius: 0 0 0 0.5em;
@@ -366,6 +368,10 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5em;
+		border: none;
+		background-color: #1D1D1D;
+		color: #fff;
+
 	}
 	.popup > button > img {
 		width: 1.5em;

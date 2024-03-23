@@ -139,7 +139,7 @@
 		--orange-scrollbar-back: #a15d04;
 		--background: white;
 		--foreground: black;
-		--foreground-orange: white;
+		--foreground-orange: black;
 
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
@@ -155,7 +155,7 @@
 		--orange-light: #f9a535;
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
-		--background: #181818;
+		--background: #1D1D1D;
 		--foreground: #eef;
 		--foreground-orange: #eef;
 	}

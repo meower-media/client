@@ -640,7 +640,7 @@
 		gap: 0.5em;
 	}
 	.creator h2 {
-		font-size: 200%;
+		font-size: 150%;
 		margin: 0;
 		overflow-wrap: anywhere;
 	}
@@ -673,7 +673,7 @@
 	}
 
 	:global(.youtube-container) {
-		border: solid 2px var(--orange);
+		border: solid 1px var(--orange);
 		padding: 10px;
 		border-radius: 10px;
 		width: 50%;

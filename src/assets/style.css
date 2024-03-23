@@ -62,7 +62,7 @@
 body {
 	margin: 0;
 	overflow: hidden;
-	background-color: black;
+	background-color: #101010;
 }
 
 #app,
@@ -93,8 +93,8 @@ input[type="password"],
 input[type="datetime-local"],
 textarea,
 select {
-	border: solid 1px var(--foreground-orange);
-	border-radius: 5px;
+	border: solid 2px var(--foreground-orange);
+	border-radius: 10px;
 	outline: none;
 
 	background-color: var(--orange);
