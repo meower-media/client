@@ -57,19 +57,15 @@
 		display: inline-block;
 		position: relative;
 	}
-	.raw-pfp {
-		width: calc(var(--size) * 3.75em);
-		height: calc(var(--size) * 3.75em);
-	}
+
 	.pfp {
-		width: calc(var(--size) * 3.75em);
-		height: calc(var(--size) * 3.75em);
+		width: calc(var(--size) * 3em);
+		height: calc(var(--size) * 3em);
 		box-sizing: border-box;
 
 		background-color: var(--pfp-bg);
 		border: solid 1.5px var(--pfp-outline);
-		border-bottom-width: 5px;
-		border-radius: calc(var(--size) * 1.25em);
+		border-radius: calc(var(--size) * 1em);
 
 		display: flex;
 		align-items: center;

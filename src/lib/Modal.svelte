@@ -93,7 +93,11 @@
 		transform: translate(-50%, -50%);
 		padding: 1em;
 		background-color: var(--background);
-		border: solid 2px var(--orange);
 		border-radius: 5px;
+	}
+
+	/* Hide the scrollbar for WebKit browsers */
+	.modal::-webkit-scrollbar {
+		display: none;
 	}
 </style>

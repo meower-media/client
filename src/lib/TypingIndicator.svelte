@@ -47,8 +47,8 @@
 		height: 20px;
 	}
 	.circle {
-		width: 10px;
-		height: 10px;
+		width: 5px;
+		height: 5px;
 		border-radius: 100%;
 
 		display: inline-block;

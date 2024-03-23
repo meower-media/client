@@ -93,7 +93,6 @@ input[type="password"],
 input[type="datetime-local"],
 textarea,
 select {
-	border: solid 2px var(--foreground-orange);
 	border-radius: 10px;
 	outline: none;
 
@@ -109,11 +108,15 @@ select {
 	font-size: inherit;
 }
 
+button {
+	border: none;
+}
+
 input[type="text"]:focus,
 input[type="search"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-	border-radius: 2px;
+	border: 2px solid;
 }
 
 input[type="text"],
@@ -121,10 +124,11 @@ input[type="search"],
 input[type="password"],
 textarea {
 	min-width: 5em;
+	border: 2px dashed var(--orange);
 }
 
 button + button {
-	margin-left: -0.15rem;
+	margin-left: 0.05rem;
 }
 
 input:not(.white)::placeholder {
@@ -379,6 +383,7 @@ input[type="checkbox"]:checked {
 
 a {
 	color: var(--orange-dark);
+	text-decoration: none;
 }
 
 :disabled {
