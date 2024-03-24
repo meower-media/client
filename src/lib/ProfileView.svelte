@@ -217,6 +217,7 @@
 							icon={data._id === $user.name
 								? $user.pfp_data
 								: data.pfp_data}
+							avatar = {data.pfp_data == -4 && data.avatar || null}
 							alt="{data._id}'s profile picture"
 							size={small ? 1 : 1.4}
 						/>
@@ -227,6 +228,7 @@
 						icon={data._id === $user.name
 							? $user.pfp_data
 							: data.pfp_data}
+						avatar = {data.pfp_data == -4 && data.avatar || null}
 						alt="{data._id}'s profile picture"
 						size={small ? 1 : 1.4}
 					/>

@@ -140,6 +140,7 @@
 			raw={true}
 			size={1}
 			alt="Open/close more options"
+			avatar = {$user.pfp_data == -4 && $user.avatar || null}
 			icon={$user.name ? $user.pfp_data : -3}
 		/>
 	</button>
