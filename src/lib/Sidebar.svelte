@@ -192,6 +192,7 @@
 	}
 
 	.sidebar {
+		transition: 0.15s;
 		background-color: #1D1D1D;
 
 		display: flex;

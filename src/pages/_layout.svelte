@@ -201,7 +201,12 @@
 		position: relative;
 		width: 80%;
 		left: 50%;
+		transition: 0.15s;
 		transform: translate(-50%,0);
+	}
+
+	:global(main.layout-mobile) .wrapper {
+		width: 100%;
 	}
 
 	:global(main:not(layout-old)) .transition {
