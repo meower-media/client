@@ -61,6 +61,7 @@
 	export let queryParams = {};
 	export let addToChat = false;
 	export let adminView = false;
+	export let canclickPFP = true;
 
 	let id = 0;
 	let postErrors = {};
@@ -568,6 +569,7 @@
 						<Post
 							{post}
 							{adminView}
+							cantclick={!canclickPFP}
 							input={postInput}
 							error={postErrors[post.id]}
 							retryPost={() => {

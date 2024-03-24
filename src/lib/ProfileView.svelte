@@ -22,6 +22,7 @@
 	import ModerateUserModal from "./modals/moderation/ModerateUser.svelte";
 	import ReportUserModal from "./modals/safety/ReportUser.svelte";
 	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
+	import UserProfile from "./modals/UserProfile.svelte";
 
 	import {authHeader, chats, ulist, user} from "./stores.js";
 	import {apiUrl} from "./urls.js";
@@ -38,6 +39,7 @@
 	export let canClick = false;
 	export let canDoActions = false;
 	export let dmChat = null;
+	export let Showedit = false;
 
 	function load() {
 		if (profile) {
@@ -55,6 +57,16 @@
 	{:then data}
 		<Container>
 			<div class="settings-controls">
+				{#if Showedit && data._id == $user.name}
+					<button
+						class="circle pen"
+						title="Edit profile"
+						on:click={() => {
+							modals.closeLastModal()
+							$goto("/settings")
+						}}
+					/>
+				{/if}
 				{#if dmChat}
 					<button
 						class="circle star"
@@ -196,7 +208,7 @@
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={$goto(`/users/${data._id}`)}
+						on:click={() => {modals.showModal(UserProfile, data._id)}}
 					>
 						<PFP
 							online={$ulist.includes(data._id)}

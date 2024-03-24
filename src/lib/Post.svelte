@@ -11,6 +11,7 @@
 	import DeletePostModal from "./modals/DeletePost.svelte";
 	import ReportPostModal from "./modals/safety/ReportPost.svelte";
 	import ModeratePostModal from "./modals/moderation/ModeratePost.svelte";
+	import UserProfile from "./modals/UserProfile.svelte";
 
 	import {authHeader, user, chat, ulist} from "../lib/stores.js";
 	import {adminPermissions, hasPermission} from "../lib/bitField.js";
@@ -39,6 +40,7 @@
 	export let error = "";
 	export let retryPost;
 	export let removePost;
+	export let cantclick = true;
 
 	let bridged = false;
 	let webhook = false;
@@ -441,7 +443,8 @@
 			class="pfp"
 			on:click={async () => {
 				if (noPFP) return;
-				$goto(`/users/${post.user}`);
+				if (cantclick) return;
+				modals.showModal(UserProfile, post.user)
 			}}
 		>
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}

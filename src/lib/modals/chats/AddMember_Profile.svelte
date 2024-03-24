@@ -17,49 +17,46 @@
 <Modal showClose={true} on:close={modals.closeLastModal}>
 	<h2 slot="header">Add Member</h2>
 	<div slot="default">
-		{#each $chats.filter(_chat => _chat.type === 0) as chat (chat._id)}
+		{#each $chats.filter(_chat => _chat.type === 0 && _chat.members.length <= 256 && !_chat.members.includes(username)) as chat (chat._id)}
 			<Container>
 				<div class="settings-controls">
-					{#if !chat.members.includes(username)}
-						<button
-							class="circle add"
-							disabled={loading[chat._id] ||
-								chat.members.length >= 256}
-							on:click={async () => {
-								errors[chat._id] = "";
-								loading[chat._id] = true;
-								try {
-									const resp = await fetch(
-										`${apiUrl}chats/${chat._id}/members/${username}`,
-										{
-											method: "PUT",
-											headers: $authHeader,
-										}
-									);
-									if (!resp.ok) {
-										switch (resp.status) {
-											case 403:
-												throw new Error(
-													`Someone's privacy settings are preventing you from adding ${username} to ${chat.nickname}.`
-												);
-											case 429:
-												throw new Error(
-													"Too many requests! Try again later."
-												);
-											default:
-												throw new Error(
-													"Response code is not OK; code is " +
-														resp.status
-												);
-										}
+					<button
+						class="circle add"
+						disabled={loading[chat._id]}
+						on:click={async () => {
+							errors[chat._id] = "";
+							loading[chat._id] = true;
+							try {
+								const resp = await fetch(
+									`${apiUrl}chats/${chat._id}/members/${username}`,
+									{
+										method: "PUT",
+										headers: $authHeader,
 									}
-								} catch (e) {
-									loading[chat._id] = false;
-									errors[chat._id] = e;
+								);
+								if (!resp.ok) {
+									switch (resp.status) {
+										case 403:
+											throw new Error(
+												`Someone's privacy settings are preventing you from adding ${username} to ${chat.nickname}.`
+											);
+										case 429:
+											throw new Error(
+												"Too many requests! Try again later."
+											);
+										default:
+											throw new Error(
+												"Response code is not OK; code is " +
+													resp.status
+											);
+									}
 								}
-							}}
-						/>
-					{/if}
+							} catch (e) {
+								loading[chat._id] = false;
+								errors[chat._id] = e;
+							}
+						}}
+					/>
 				</div>
 
 				<h1>{chat.nickname}</h1>

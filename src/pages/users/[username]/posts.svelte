@@ -2,30 +2,10 @@
 	Home but it's a user's posts.
 -->
 <script>
-	import Container from "../../../lib/Container.svelte";
-	import PostList from "../../../lib/PostList.svelte";
+	import * as modals from "../../../lib/modals.js";
+	import UserPosts from "../../../lib/modals/UserPosts.svelte";
 
 	import {params} from "@roxi/routify";
+
+	modals.showModal(UserPosts, $params.username)
 </script>
-
-<div class="posts">
-	<Container>
-		<h1>{$params.username}'s Recent Posts</h1>
-		Here are {$params.username}'s recent posts.
-	</Container>
-	<PostList
-		fetchUrl="users/{$params.username}/posts"
-		postOrigin=""
-		canPost={false}
-	>
-		<Container slot="empty">
-			{$params.username} hasn't made any posts yet.
-		</Container>
-	</PostList>
-</div>
-
-<style>
-	.posts {
-		height: 100%;
-	}
-</style>

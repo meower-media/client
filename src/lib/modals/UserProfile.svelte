@@ -1,5 +1,6 @@
 <script>
 	import Modal from "../Modal.svelte";
+    import UserPosts from "./UserPosts.svelte";
 
 	import * as modals from "../modals.js";
 
@@ -15,8 +16,6 @@
 
 	import {relationships, user} from "../stores.js";
 	import {apiUrl, encodeApiURLParams} from "../urls.js";
-
-	import {goto} from "@roxi/routify";
 
 	async function loadProfile() {
 		let path = `users/${username}`;
@@ -34,21 +33,19 @@
 	<h2 slot="header">Profile of {username}</h2>
 	<div slot="default">
 		{#await loadProfile()}
-            <div class="fullcenter">
-                <Loading />
-            </div>
+            <Loading />
         {:then data}
-            <ProfileView profile={data} canDoActions={true} />
+            <ProfileView profile={data} Showedit={true} canDoActions={true} />
 
             <Container>
                 <h3>Quote</h3>
-                <p>"<i>{data.quote}</i>"</p>
+                <p>"{data.quote}"</p>
             </Container>
 
             <button
                 class="long"
                 title="View Recent Posts"
-                on:click={() => $goto("./posts")}>View Recent Posts</button
+                on:click={() => modals.showModal(UserPosts, username)}>View Recent Posts</button
             >
 
             {#if $user.name && $user.name !== data._id}
@@ -76,20 +73,6 @@
 </Modal>
 
 <style>
-	.fullcenter {
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		width: 100vw;
-		height: 100vh;
-
-		position: fixed;
-		top: 0;
-		left: 0;
-	}
-
 	.long {
 		width: 100%;
 		margin: 0;
