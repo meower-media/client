@@ -5,5 +5,5 @@
 
 	import {params} from "@roxi/routify";
 
-	modals.showModal(UserProfile, $params.username)
+	modals.showModal(UserProfile, {username: $params.username, gc: false})
 </script>

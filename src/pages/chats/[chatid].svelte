@@ -4,7 +4,7 @@
 <script>
 	import BasicModal from "../../lib/modals/Basic.svelte";
 	import ChangeChatNicknameModal from "../../lib/modals/chats/ChangeChatNickname.svelte";
-	import GCMemberModal from "../../lib/modals/chats/GCMember.svelte";
+	import UserProfile from "../../lib/modals/UserProfile.svelte";
 	import AddMemberModeModal from "../../lib/modals/chats/AddMember_Mode.svelte";
 	import AccountBannedModal from "../../lib/modals/safety/AccountBanned.svelte";
 	import ModerateChatModal from "../../lib/modals/moderation/ModerateChat.svelte";
@@ -263,8 +263,9 @@
 					<button
 						class="member-button"
 						on:click={() => {
-							modals.showModal(GCMemberModal, {
+							modals.showModal(UserProfile, {
 								username: chatmember,
+								gc: true
 							});
 						}}
 					>

@@ -4,6 +4,7 @@
 
 	import RemoveMemberModal from "./RemoveMember.svelte";
 	import TransferChatOwnershipModal from "./TransferChatOwnership.svelte";
+	import UserProfile from "../UserProfile.svelte";
 
 	import {user, chat} from "../../stores.js";
 	import {adminPermissions, hasPermission} from "../../bitField.js";
@@ -28,7 +29,7 @@
 			class="long"
 			on:click={() => {
 				modals.closeLastModal();
-				$goto(`/users/${username}`);
+				modals.showModal(UserProfile, {username: username, gc:false})
 			}}>View full profile</button
 		>
 		{#if ($chat.owner == $user.name && username != $user.name) || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}

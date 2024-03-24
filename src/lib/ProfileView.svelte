@@ -32,6 +32,7 @@
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
+	import Modal from "./Modal.svelte";
 
 	export let username = "";
 	export let profile = null;
@@ -148,6 +149,7 @@
 										_chat.type === 1 &&
 										_chat.members.includes(data._id)
 								);
+								modals.closeLastModal()
 								if (chat) {
 									$goto(`/chats/${chat._id}`);
 								} else {
@@ -208,7 +210,7 @@
 				{#if canClick}
 					<button
 						class="clickable-pfp"
-						on:click={() => {modals.showModal(UserProfile, data._id)}}
+						on:click={() => {modals.showModal(UserProfile, {username: data._id, gc:false})}}
 					>
 						<PFP
 							online={$ulist.includes(data._id)}

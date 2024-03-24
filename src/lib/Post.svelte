@@ -444,7 +444,7 @@
 			on:click={async () => {
 				if (noPFP) return;
 				if (cantclick) return;
-				modals.showModal(UserProfile, post.user)
+				modals.showModal(UserProfile, {username: post.user, gc:false})
 			}}
 		>
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}

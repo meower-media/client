@@ -6,16 +6,19 @@
 
 	export let modalData;
 
-	let username = modalData;
+	let {username,gc} = modalData;
     import ProfileView from "../ProfileView.svelte";
 	import Loading from "../Loading.svelte";
 	import Container from "../Container.svelte";
 
 	import AddMemberProfileModal from "./chats/AddMember_Profile.svelte";
+    import RemoveMemberModal from "./chats/RemoveMember.svelte";
+    import TransferChatOwnershipModal from "./chats/TransferChatOwnership.svelte";
 	import BlockUserModal from "./safety/BlockUser.svelte";
 
-	import {relationships, user} from "../stores.js";
+	import {relationships, user, chat} from "../stores.js";
 	import {apiUrl, encodeApiURLParams} from "../urls.js";
+    import {adminPermissions, hasPermission} from "../bitField.js";
 
 	async function loadProfile() {
 		let path = `users/${username}`;
@@ -65,6 +68,24 @@
                         modals.showModal(BlockUserModal, {username: data._id})}
                     >{$relationships[data._id] === 2 ? "Unb" : "B"}lock User</button
                 >
+            {/if}
+            {#if gc && (($chat.owner == $user.name && username != $user.name) || hasPermission(adminPermissions.EDIT_CHATS))}
+                <button
+                    class="long"
+                    on:click={() =>
+                        modals.showModal(RemoveMemberModal, {username})}
+                >
+                    Remove from chat
+                </button>
+                <button
+                    class="long"
+                    on:click={() =>
+                        modals.showModal(TransferChatOwnershipModal, {
+                            username,
+                        })}
+                >
+                    Make owner of chat
+                </button>
             {/if}
         {:catch}
             <ProfileView username={username} />

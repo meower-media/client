@@ -42,11 +42,6 @@ export const audioData = [
 		file: "2c0293c58590d4d0ff3a0636f197d9ca.mp3",
 	},
 	{
-		name: "Meower is (not) dead",
-		author: "Voxalice",
-		file: "c25441be9d4f5547baf85cc444253259.mp3",
-	},
-	{
 		name: "The elevator of time",
 		author: "Voxalice",
 		file: "d56dc789ac58918b555c666935e56392.wav",
@@ -55,6 +50,16 @@ export const audioData = [
 		name: "Meower is (not) dead Instrumental",
 		author: "Voxalice",
 		file: "8437988a9f23bb09fd6a50b280e5bed9.wav",
+	},
+	{
+		name: "Orbit",
+		author: "Voxel",
+		file: "Orbit.mp3",
+	},
+	{
+		name: "Orbit (Acoustic)",
+		author: "Voxel",
+		file: "OrbitAutistic.mp3",
 	},
 ];
 
