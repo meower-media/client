@@ -27,6 +27,7 @@
 
 	import {fade} from "svelte/transition";
 	import {goto} from "@roxi/routify";
+	import UserProfile from "./modals/UserProfile.svelte";
 
 	let popupShown = false;
 	let popupDebounce = false;
@@ -152,7 +153,7 @@
 					modals.showModal(SignupModal);
 					return;
 				}
-				$goto(`/users/${$user.name}`);
+				modals.showModal(UserProfile, $user.name)
 				popupShown = false;
 			}}
 			class="profile-btn round"
