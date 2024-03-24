@@ -173,16 +173,6 @@
 		</button>
 		<button
 			on:click={() => {
-				$goto("/about");
-				popupShown = false;
-			}}
-			class="about-btn round"
-		>
-			<img src={info} alt="About" draggable={false} />
-			<span class="label">About</span>
-		</button>
-		<button
-			on:click={() => {
 				popupShown = true;
 				modals.showModal(LogoutModal);
 			}}

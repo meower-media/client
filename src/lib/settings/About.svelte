@@ -1,11 +1,11 @@
 <script>
-	import Container from "../lib/Container.svelte";
-	import Loading from "../lib/Loading.svelte";
-	import version from "../lib/version.js";
-	import logo from "../assets/logo.svg";
-	import meowy from "../assets/meowy.svg";
+	import Container from "../Container.svelte";
+	import Loading from "../Loading.svelte";
+	import version from "../version.js";
+	import logo from "../../assets/logo.svg";
+	import meowy from "../../assets/meowy.svg";
 
-	import Contributor from "../lib/Contributor.svelte";
+	import Contributor from "../Contributor.svelte";
 
 	const REPO_OWNER = "meower-media-co";
 	const REPO_NAME = "Meower-Svelte";

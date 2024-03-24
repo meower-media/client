@@ -24,7 +24,7 @@
 	import ParentalControls from "../lib/settings/ParentalControls.svelte";
 	import BlockedUsers from "../lib/settings/BlockedUsers.svelte";
 	import ReportHistory from "../lib/settings/ReportHistory.svelte";
-	import About from "./about.svelte";
+	import About from "../lib/settings/About.svelte";
 
 	let showTabs = !$mobile;
 	let hoveringTab = "";
