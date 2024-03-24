@@ -61,6 +61,7 @@
 		: null}
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
+	class:theme-fire={$user.theme === "fire"}
 	class:mode-dark={true}
 	class:layout-old={$user.layout === "old"}
 	class:layout-mobile={$mobile}
@@ -167,6 +168,22 @@
 			var(--orange-dark)
 		);
 		--background: #181818;
+		--foreground: white;
+		--date: #bdbdbd;
+		--foreground-orange: white;
+		scrollbar-color: unset;
+	}
+
+	#main.theme-fire {
+		--orange: #181818;
+		--orange-light: rgb(255, 255, 255);
+		--orange-dark: #ff00ea;
+		--orange-scrollbar-back: color-mix(
+			in srgb,
+			#000000 20%,
+			var(--orange-dark)
+		);
+		--background: #f50505;
 		--foreground: white;
 		--date: #bdbdbd;
 		--foreground-orange: white;

@@ -18,7 +18,7 @@
 		}
 	);
 
-	let selections = ["orange", "blue", "custom"];
+	let selections = ["orange", "blue", "fire", "custom"];
 
 	let error = false;
 
