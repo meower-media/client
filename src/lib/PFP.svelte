@@ -5,6 +5,7 @@
 	export let online = false;
 	export let size = 1;
 	export let raw = false;
+	export let avatar = null;
 
 	import errorIcon from "../assets/avatars/icon_err.svg";
 
@@ -15,6 +16,13 @@
 		import: "default",
 		eager: true,
 	});
+
+	let usingcustom = false;
+
+	if (icon == -4 && avatar !== null) {
+		usingcustom = true
+		avatar = "https://uploads.meower.org/icons/"+avatar
+	}
 
 	// only respond to `icon` changing
 	let id;
@@ -32,7 +40,7 @@
 		<img
 			{alt}
 			title={alt}
-			src={icons[
+			src={icon == -4 && avatar || (icons[
 				`../assets/avatars/icon_${
 					id === -1
 						? 21
@@ -42,7 +50,7 @@
 						? "guest"
 						: id - 1
 				}.svg`
-			] || errorIcon}
+			] || errorIcon)}
 			on:error={() => (id = -2)}
 			class:loading={icon === -1}
 			draggable={false}

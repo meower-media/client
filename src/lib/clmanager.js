@@ -355,6 +355,9 @@ export async function connect() {
 	authEvent = link.on("direct", async cmd => {
 		if (cmd.val.mode === "auth") {
 			// set user, auth header, and relationships
+			if (cmd.val.payload.account.avatar) {
+				cmd.val.payload.account.pfp_data = -4
+			}
 			user.update(v =>
 				Object.assign(v, {
 					...cmd.val.payload.account,

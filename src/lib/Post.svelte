@@ -465,6 +465,7 @@
 							? 101
 							: -2
 						: profile.pfp_data}
+					avatar = {profile.pfp_data == -4 && profile.avatar || null}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>

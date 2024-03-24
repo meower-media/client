@@ -28,6 +28,9 @@
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
 		const json = await resp.json();
+        if (json.avatar) {
+			json["pfp_data"] = -4
+		}
 		return json;
 	}
 </script>

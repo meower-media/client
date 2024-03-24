@@ -50,7 +50,11 @@ export default async function loadProfile(username, ignoreSpecialUsers) {
 			throw new Error("response code not OK; code " + resp.status);
 		}
 
-		const json = await resp.json();
+		var json = await resp.json();
+		if (json.avatar) {
+			json["pfp_data"] = -4
+		}
+		json = json
 		_profileCache[username] = json;
 		profileCache.set(_profileCache);
 	} catch (e) {
