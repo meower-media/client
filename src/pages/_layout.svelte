@@ -107,11 +107,13 @@
 					<span>This is a banner!</span>
 				</div>
 				-->
-				{#if $OOBERunning}
-					<OOBE />
-				{:else if !remounting}
-					<slot />
-				{/if}
+				<div class="wrapper">
+					{#if $OOBERunning}
+						<OOBE />
+					{:else if !remounting}
+						<slot />
+					{/if}
+				</div>
 			</div>
 		</div>
 	{/if}
@@ -193,6 +195,13 @@
 		animation-timing-function: ease;
 		transition: 0.5s;
 		z-index: 2;
+	}
+
+	.wrapper {
+		position: relative;
+		width: 80%;
+		left: 50%;
+		transform: translate(-50%,0);
 	}
 
 	:global(main:not(layout-old)) .transition {
