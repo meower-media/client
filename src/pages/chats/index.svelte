@@ -66,7 +66,7 @@
 			/>
 		</div>
 	</Container>
-	<Container>
+	<Container hasborder>
 		<div class="chat">
 			<div class="settings-controls">
 				<button
@@ -85,7 +85,7 @@
 			animate:flip={{duration: 250}}
 		>
 			{#if chat.type === 0}
-				<Container>
+				<Container hasborder>
 					<div class="chat">
 						<div class="settings-controls">
 							<button

@@ -10,7 +10,7 @@
 </script>
 
 <div class="messages">
-	<Container>
+	<Container hasborder = {false}>
 		<h1>Inbox Messages</h1>
 		Here are your latest inbox messages. We will send announcements and important
 		messages to here!

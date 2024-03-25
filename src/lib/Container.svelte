@@ -3,9 +3,15 @@
 -->
 <script>
 	export let warning = false;
+	export let hasborder = false;
 </script>
 
-<div class={warning ? "warning" : ""}><slot /></div>
+<div class={warning ? "warning" : ""}>
+	<slot />
+	{#if hasborder}
+		<div class="border"></div>
+	{/if}
+</div>
 
 <style>
 	div {
@@ -15,6 +21,10 @@
 		overflow-wrap: break-word;
 		position: relative;
 		overflow: auto;
+	}
+
+	.border {
+		border-bottom: 2px solid var(--orange);
 	}
 
 	.warning {

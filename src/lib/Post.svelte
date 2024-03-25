@@ -295,7 +295,7 @@
 		webhook;
 </script>
 
-<Container>
+<Container hasborder>
 	<div class="post-header">
 		{#if buttons}
 			<div class="settings-controls">
@@ -621,14 +621,9 @@
 			{/each}
 		</div>
 	{/if}
-	<div class="border"></div>
 </Container>
 
 <style>
-	.border {
-		border-bottom: 2px solid var(--orange);
-	}
-	
 	.pfp {
 		margin-right: 0.2em;
 		padding: 0;
