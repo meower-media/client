@@ -22,6 +22,7 @@ import {
 	showMeowerDown
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
+import {updateProfile as LP_updateProfile} from "./loadProfile.js";
 import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
 import {linkUrl, apiUrl} from "./urls.js";
 import * as modals from "./modals.js";
@@ -195,6 +196,11 @@ let disconnectRequest = null;
  * @type any
  */
 let pingInterval = null;
+/**
+ * A variable used to keep track of if a users profile was updated.
+ * @type any
+ */
+let updateProfileEvent = null;
 
 /**
  * Connect to the server, initializing some other things such as pinging.
@@ -249,6 +255,10 @@ export async function connect() {
 	if (chatMsgEvent) {
 		link.off(chatMsgEvent);
 		chatMsgEvent = null;
+	}
+	if (updateProfileEvent) {
+		link.off(updateProfileEvent);
+		updateProfileEvent = null;
 	}
 	if (disconnectRequest) {
 		link.off(disconnectRequest);
@@ -352,6 +362,12 @@ export async function connect() {
 		}
 		ulist.set(_ulist);
 	});
+	updateProfileEvent = link.on("direct", async cmd => {
+		if (cmd.val.mode == "update_profile") {
+			alert("Update profile")
+			LP_updateProfile(cmd.val.payload._id,cmd.val.payload)
+		}
+	})
 	authEvent = link.on("direct", async cmd => {
 		if (cmd.val.mode === "auth") {
 			// set user, auth header, and relationships

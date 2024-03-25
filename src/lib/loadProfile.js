@@ -23,6 +23,11 @@ function getCache(username, ignoreSpecialUsers) {
 	return _profileCache[username];
 }
 
+export async function updateProfile(username, payload) { // Ignorespecialusers is removed considering we will NEVER get a update_profile event from those users
+	payload = Object.assign(payload, _profileCache[username])
+	profileCache.set(_profileCache);
+}
+
 export default async function loadProfile(username, ignoreSpecialUsers) {
 	if (
 		["Server", "Deleted", "Notification", "Announcement"].includes(username)

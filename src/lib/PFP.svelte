@@ -5,7 +5,7 @@
 	export let online = false;
 	export let size = 1;
 	export let raw = false;
-	export let avatar = null;
+	export let userdata = {};
 
 	import errorIcon from "../assets/avatars/icon_err.svg";
 
@@ -17,11 +17,15 @@
 		eager: true,
 	});
 
-	let usingcustom = false;
+	icon = userdata.pfp_data
 
-	if (icon == -4 && avatar !== null) {
+	let usingcustom = false;
+	let avatar = null;
+	let noPFP;
+
+	if (userdata.avatar) {
 		usingcustom = true
-		avatar = "https://uploads.meower.org/icons/"+avatar
+		avatar = "https://uploads.meower.org/icons/"+userdata.avatar
 	}
 
 	// only respond to `icon` changing
@@ -29,7 +33,14 @@
 	function setId(val) {
 		id = val;
 	}
-	$: setId(icon);
+	$: setId(icon); 
+	noPFP =
+		userdata.user &&
+		(userdata.user === "Notification" ||
+		userdata.user.startsWith("Notification to ") ||
+		userdata.user === "Announcement" ||
+		userdata.user === "Server" ||
+		userdata.user == "Webhooks");
 </script>
 
 <span class:pfp-container={!raw} style:--size={size}>
@@ -40,15 +51,32 @@
 		<img
 			{alt}
 			title={alt}
-			src={icon == -4 && avatar || (icons[
+			src={avatar || (icons[
 				`../assets/avatars/icon_${
-					id === -1
-						? 21
-						: id === -2
-						? "err"
-						: id === -3
-						? "guest"
-						: id - 1
+					id === -1 ? 21
+
+					: 
+					
+					id === -2 ? "err"
+
+					: 
+					
+					id === -3 ? "guest" 
+
+					:
+
+					noPFP ? 
+						userdata.user === "Server" ? 102
+						: userdata.post_origin === "inbox" &&
+							(userdata.user === "Announcement" ||
+								userdata.user === "Notification" ||
+								userdata.user.startsWith("Notification to"))
+						? 101
+						: -2
+
+					: 
+					
+					id - 1
 				}.svg`
 			] || errorIcon)}
 			on:error={() => (id = -2)}

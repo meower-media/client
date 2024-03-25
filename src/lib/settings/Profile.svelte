@@ -48,50 +48,54 @@
 	/>
 </Container>
 
-<Container>
-	<h2>Profile Picture</h2>
-	<div id="pfp-list">
-		{#if pfpOverflow && $user.pfp_data < 0}
-			<button
-				on:click={() => (pfpSwitcher = false)}
-				class="pfp selected"
-				><PFP
-					online={false}
-					icon={$user.pfp_data}
-					alt="Profile picture {$user.pfp_data}"
-				/></button
-			>
-		{/if}
-		{#each pfps as pfp}
-			<button
-				on:click={() => {
-					if ($profileCache[$user.name])
-						delete $profileCache[$user.name];
-					clm.updateProfile({pfp_data: pfp});
-					pfpSwitcher = false;
-				}}
-				class="pfp"
-				class:selected={$user.pfp_data === pfp}
-				><PFP
-					online={false}
-					icon={pfp}
-					alt="Profile picture {pfp}"
-				/></button
-			>
-		{/each}
-		{#if pfpOverflow && $user.pfp_data > 0}
-			<button
-				on:click={() => (pfpSwitcher = false)}
-				class="pfp selected"
-				><PFP
-					online={false}
-					icon={$user.pfp_data}
-					alt="Profile picture {$user.pfp_data}"
-				/></button
-			>
-		{/if}
-	</div>
-</Container>
+{#if !$user.avatar}
+	<Container>
+		<h2>Profile Picture</h2>
+		<div id="pfp-list">
+			{#if pfpOverflow && $user.pfp_data < 0}
+				<button
+					on:click={() => (pfpSwitcher = false)}
+					class="pfp selected"
+					><PFP
+						online={false}
+						icon={$user.pfp_data}
+						alt="Profile picture {$user.pfp_data}"
+					/></button
+				>
+			{/if}
+			{#each pfps as pfp}
+				<button
+					on:click={() => {
+						if ($profileCache[$user.name])
+							delete $profileCache[$user.name];
+						clm.updateProfile({pfp_data: pfp});
+						pfpSwitcher = false;
+					}}
+					class="pfp"
+					class:selected={$user.pfp_data === pfp}
+					><PFP
+						online={false}
+						icon={pfp}
+						alt="Profile picture {pfp}"
+					/></button
+				>
+			{/each}
+			{#if pfpOverflow && $user.pfp_data > 0}
+				<button
+					on:click={() => (pfpSwitcher = false)}
+					class="pfp selected"
+					><PFP
+						online={false}
+						icon={$user.pfp_data}
+						alt="Profile picture {$user.pfp_data}"
+					/></button
+				>
+			{/if}
+		</div>
+	</Container>
+{:else}
+	<p>(You cannot edit your PFP right now, as you have a custom one and the svelte codebase is too terrible to fix everything wrong with PFPS)</p>
+{/if}
 
 <style>
 		.pfp {
