@@ -90,6 +90,7 @@ button,
 input[type="text"],
 input[type="search"],
 input[type="password"],
+input[type="new-password"],
 input[type="datetime-local"],
 textarea,
 select {
@@ -115,6 +116,7 @@ button {
 input[type="text"]:focus,
 input[type="search"]:focus,
 input[type="password"]:focus,
+input[type="new-password"]:focus,
 textarea:focus {
 	border: 2px solid;
 }
@@ -122,6 +124,7 @@ textarea:focus {
 input[type="text"],
 input[type="search"],
 input[type="password"],
+input[type="new-password"],
 textarea {
 	min-width: 5em;
 	border: 2px dashed var(--orange);
@@ -149,6 +152,7 @@ input[type="text"]:not(.white):focus-visible,
 main.input-hover input[type="search"]:not(.white):not(:disabled):hover,
 input[type="search"]:not(.white):focus-visible,
 main.input-hover input[type="password"]:not(.white):not(:disabled):hover,
+input[type="new-password"]:not(.white):focus-visible,
 input[type="password"]:not(.white):focus-visible {
 	background-color: var(--orange-light);
 }
@@ -156,6 +160,7 @@ input[type="password"]:not(.white):focus-visible {
 #main button:not(.circle):not(.white):not(:disabled):active,
 #main input[type="text"]:not(.white):not(:disabled):focus,
 #main input[type="search"]:not(.white):not(:disabled):focus,
+#main input[type="new-password"]:not(.white):not(:disabled):focus,
 #main input[type="password"]:not(.white):not(:disabled):focus {
 	background-color: var(--orange-dark);
 }
@@ -169,6 +174,7 @@ button.round {
 input[type="text"].white,
 input[type="search"].white,
 input[type="password"].white,
+input[type="new-password"].white,
 textarea,
 select.white {
 	background-color: var(--background);
@@ -197,6 +203,7 @@ main.input-hover button:not(.circle).white:not(:disabled):hover,
 input[type="text"].white:focus-visible,
 input[type="number"].white:focus-visible,
 input[type="password"].white:focus-visible,
+input[type="new-password"].white:focus-visible,
 input[type="search"].white:focus-visible,
 #main textarea:focus-visible,
 #main textarea:focus-visible,
@@ -206,6 +213,7 @@ button:not(.circle).white:focus-visible {
 
 #main input[type="text"].white:not(:disabled):focus,
 #main input[type="password"].white:not(:disabled):focus,
+#main input[type="new-password"].white:not(:disabled):focus,
 #main input[type="search"].white:not(:disabled):focus,
 #main textarea:focus,
 button:not(.circle).white:active {

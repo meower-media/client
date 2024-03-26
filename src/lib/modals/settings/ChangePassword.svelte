@@ -77,7 +77,7 @@
 			>
 			<input
 				id="new-password"
-				type="password"
+				type="new-password"
 				class="modal-input white"
 				placeholder="New Password..."
 				minlength="8"
@@ -93,7 +93,7 @@
 			>
 			<input
 				id="new-password-confirmation"
-				type="password"
+				type="new-password"
 				class="modal-input white"
 				placeholder="New Password Confirmation..."
 				minlength="8"
@@ -121,7 +121,8 @@
 </Modal>
 
 <style>
-	input[type="password"] {
+	input[type="password"],
+	input[type="new-password"] {
 		margin-bottom: 0.5em;
 	}
 </style>

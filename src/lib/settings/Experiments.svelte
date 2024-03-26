@@ -27,5 +27,5 @@
 	<h2>Hello world!</h2>
 	An example experiment to text out this new system of ours!
     <br />
-    This experiment replaces the search page with "Hello world!"
+    This experiment adds "Hello world!" to the search page!
 </Container>

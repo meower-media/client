@@ -364,7 +364,7 @@ export async function connect() {
 	});
 	updateProfileEvent = link.on("direct", async cmd => {
 		if (cmd.val.mode == "update_profile") {
-			alert("Update profile")
+			//alert("Update profile")
 			LP_updateProfile(cmd.val.payload._id,cmd.val.payload)
 		}
 	})

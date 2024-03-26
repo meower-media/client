@@ -1,9 +1,15 @@
-import {user} from "./stores.js";
+import {user, experiments} from "./stores.js";
 
 let _user = null;
 user.subscribe(v => {
 	_user = v;
 });
+
+let _experiments = null;
+experiments.subscribe(v => {
+	_experiments = v;
+});
+
 
 export const userFlags = {
 	SYSTEM: 1,
@@ -54,13 +60,33 @@ export const userRestrictions = {
 	EDITING_QUOTE: 16,
 };
 
-export const experiments = {
+export const bexperiments = {
 	HELLO_WORLD: 1,
 	NEW_CHAT: 2,
 	NEW_STYLE: 4,
-	NEW_PROFILES: 4,
-	//CUSTOM_PFPS: 8 // No idea, gonna keep commented out for now
+	NEW_PROFILES: 8,
+	//CUSTOM_PFPS: 16 // No idea, gonna keep commented out for now
 };
+
+export function hasExperiment(experiment) {
+	return (_experiments & experiment) === experiment;
+}
+
+export function setExperiment(experiment, on) {
+	if (on) {
+		if (!hasExperiment(experiment)) {
+			_experiments += experiment
+			_experiments = _experiments
+			experiments.set(_experiments)
+		}
+	} else {
+		if (hasExperiment(experiment)) {
+			_experiments -= experiment
+			_experiments = _experiments
+			experiments.set(_experiments)
+		}
+	}
+}
 
 export function hasPermission(permission) {
 	if (

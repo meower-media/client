@@ -140,8 +140,7 @@
 			raw={true}
 			size={1}
 			alt="Open/close more options"
-			avatar = {$user.pfp_data == -4 && $user.avatar || null}
-			icon={$user.name ? $user.pfp_data : -3}
+			userdata = {$user}
 		/>
 	</button>
 </div>
@@ -154,7 +153,7 @@
 					modals.showModal(SignupModal);
 					return;
 				}
-				modals.showModal(UserProfile, $user.name)
+				modals.showModal(UserProfile, {username: $user.name, gc: false})
 				popupShown = false;
 			}}
 			class="profile-btn round"

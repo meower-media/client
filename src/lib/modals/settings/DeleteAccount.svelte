@@ -78,6 +78,9 @@
 			>
 			<input
 				id="password"
+     			onfocus="this.removeAttribute('readonly');"
+     			onblur="this.setAttribute('readonly', true);"
+				readonly
 				type="password"
 				class="modal-input white"
 				placeholder="Password..."

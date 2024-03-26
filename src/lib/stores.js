@@ -64,6 +64,7 @@ export const spinner = writable(false);
 // What is this
 export const windowStyle = writable({});
 export const groupCats = writable(100);
+export const experiments = writable(2 + 4 + 8);
 
 // Custom theme
 export const useCustomTheme = writable(false);
@@ -71,3 +72,4 @@ export const customTheme = writable(customThemeFallback);
 
 // User moderation
 export const pendingBanState = writable(null);
+
