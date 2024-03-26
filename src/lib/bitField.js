@@ -54,6 +54,14 @@ export const userRestrictions = {
 	EDITING_QUOTE: 16,
 };
 
+export const experiments = {
+	HELLO_WORLD: 1,
+	NEW_CHAT: 2,
+	NEW_STYLE: 4,
+	NEW_PROFILES: 4,
+	//CUSTOM_PFPS: 8 // No idea, gonna keep commented out for now
+};
+
 export function hasPermission(permission) {
 	if (
 		(_user.permissions & adminPermissions.SYSADMIN) ===

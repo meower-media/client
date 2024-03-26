@@ -15,6 +15,7 @@
 		ShieldBan,
 		Flag,
 		Info,
+		FlaskConical
 	} from "lucide-svelte";
 
 	import Profile from "../lib/settings/Profile.svelte";
@@ -25,6 +26,7 @@
 	import BlockedUsers from "../lib/settings/BlockedUsers.svelte";
 	import ReportHistory from "../lib/settings/ReportHistory.svelte";
 	import About from "../lib/settings/About.svelte";
+	import Experiments from "../lib/settings/Experiments.svelte";
 
 	let showTabs = !$mobile;
 	let hoveringTab = "";
@@ -145,7 +147,20 @@
 			{/if}
 
 			<hr style="width: 88%;" />
-
+			
+			{#if $user.name}
+				<button
+					class="tab-button"
+					class:selected={selectedTab == "experiments"}
+					on:click={() => (selectedTab = "experiments")}
+					on:mouseenter={() => (hoveringTab = "experiments")}
+					on:mouseleave={() => (hoveringTab = "")}
+					><FlaskConical
+						color="#fff"
+						strokeWidth="2.5"
+					/><span class="text">Experiments</span>
+				</button>
+			{/if}
 			<button
 				class="tab-button"
 				class:selected={selectedTab == "about"}
@@ -177,6 +192,8 @@
 			<ReportHistory />
 		{:else if selectedTab == "about"}
 			<About />
+		{:else if selectedTab == "experiments"}
+			<Experiments />
 		{/if}
 	</div>
 </div>

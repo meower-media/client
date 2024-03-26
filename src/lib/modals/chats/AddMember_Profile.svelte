@@ -15,7 +15,7 @@
 </script>
 
 <Modal showClose={true} on:close={modals.closeLastModal}>
-	<h2 slot="header">Add Member</h2>
+	<h2 slot="header">Add '{username}' to what chat?</h2>
 	<div slot="default">
 		{#each $chats.filter(_chat => _chat.type === 0 && _chat.members.length <= 256 && !_chat.members.includes(username)) as chat (chat._id)}
 			<Container>

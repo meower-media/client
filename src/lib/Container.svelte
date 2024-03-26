@@ -23,6 +23,12 @@
 		overflow: auto;
 	}
 
+	.settings-controls {
+		position: absolute;
+		top: 0.25em;
+		right: 0.25em;
+	}
+
 	.border {
 		border-bottom: 2px solid var(--orange);
 	}
