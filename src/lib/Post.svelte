@@ -148,7 +148,11 @@
 			md.linkify.add("@", {
 				validate: function (text, pos) {
 					let tail = text.slice(pos);
-					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					if (tail.match(/[a-zA-Z0-9-_]{1,20}/gs)) {
+						return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					} else {
+						return null;
+					}
 				},
 				normalize: function (match) {
 					match.url = "/users/" + match.url.replace(/^@/, "");
@@ -225,7 +229,7 @@
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
-			return `Failed rendering post: ${e}`;
+			return content.replace(">", "").replace("<", "")+"\n(This post failed to render properly, for your safety on meower, certain characters have been removed)";
 		}
 
 		// twemoji

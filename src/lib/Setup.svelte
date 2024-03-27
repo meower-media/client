@@ -56,6 +56,7 @@
 
 			if (value === "logo") {
 				try {
+					console.log("Starting Meower")
 					loginStatus = ""
 					setup.classList.remove("setup");
 
@@ -63,13 +64,15 @@
 					if (!logoImg) return;
 
 					await connect();
+					console.log("Connected")
 					setup.classList.remove("setupnobg");
 					setup.classList.add("setup");
 					logoImg.classList.remove("logo-img-color");
 					await sleep(50);
 
-					document.getElementById("meower-logo").remove()
+					document.getElementById("meower-logo").style = "opacity: 0.1;"
 
+					console.log("Auth step start")
 					if (
 						localStorage.getItem("meower_savedusername") &&
 						localStorage.getItem("meower_savedpassword")
@@ -84,11 +87,9 @@
 						await mainSetup();
 					}
 				} catch (error) {
-					document.getElementById("meower-logo").remove()
 					modals.showModal(StartupErrorModal, {error: error})
 				}
 			} else if (value === "reconnect") {
-				if (document.getElementById("meower-logo")) { document.getElementById("meower-logo").remove() }
 				setup.classList.remove("setupnobg");
 				setup.classList.add("setup");
 				loginStatus = "";

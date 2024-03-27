@@ -53,12 +53,12 @@ export const audioData = [
 	},
 	{
 		name: "Orbit",
-		author: "Voxel",
+		author: "Velocity",
 		file: "Orbit.mp3",
 	},
 	{
 		name: "Orbit (Acoustic)",
-		author: "Voxel",
+		author: "Velocity",
 		file: "OrbitAutistic.mp3",
 	},
 ];

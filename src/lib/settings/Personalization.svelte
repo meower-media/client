@@ -3,6 +3,7 @@
 
 	import SwitchThemeModal from "../modals/settings/SwitchTheme.svelte";
 	import SwitchBGMSFXModal from "../modals/settings/SwitchBGMSFX.svelte";
+	import {stopBGM, playBGM} from "../BGM.js"
 
 	import {user} from "../stores.js";
 	import * as clm from "../clmanager.js";
@@ -60,6 +61,14 @@
 <Container>
 	<div class="settings-controls">
 		{#if $user.bgm}
+			<button
+				class="circle reload"
+				title="If BGM isnt playing, press here"
+				on:click={() => {
+					stopBGM();
+					playBGM($user.bgm_song);
+				}}
+			/>
 			<button
 				class="circle settings"
 				on:click={() => modals.showModal(SwitchBGMSFXModal)}

@@ -1,7 +1,5 @@
 <!-- Meower Svelte, the app itself. -->
 <script>
-	console.log("Starting meower")
-
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
 	import OOBE from "../lib/OOBE/Main.svelte";
@@ -26,6 +24,7 @@
 
 	import {afterPageLoad, params} from "@roxi/routify";
 	import {tick} from "svelte";
+	import ChatsList from "../lib/ChatsList.svelte";
 
 	let currentPage = "";
 	let currentParams = JSON.stringify($params);
@@ -65,14 +64,17 @@
 	class:theme-orange={$user.theme === "orange"}
 	class:theme-blue={$user.theme === "blue"}
 	class:theme-fire={$user.theme === "fire"}
-	class:mode-dark={true}
-	class:layout-old={$user.layout === "old"}
+	class:layout-old={true}
 	class:layout-mobile={$mobile}
 	class:input-touch={$touch}
 	class:input-hover={!$touch}
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
+	<!--<div class="banner">
+		<span>This is a banner!</span>
+	</div>-->
+
 	{#if $showMeowerDown && !$reconnecting}
 		<MeowerDownModal />
 	{/if}
@@ -110,25 +112,22 @@
 			<div class="sidebar">
 				<Sidebar />
 			</div>
-			<div class="view">
-				<!-- banner (maybe for future use)
-				<div class="banner">
-					<span>This is a banner!</span>
+			<div class="views">
+				<div class="view">
+					<div class="wrapper">
+						{#if hasExperiment(1)}
+							<p>Hello world!</p>
+						{/if}
+						{#if $OOBERunning}
+							<OOBE />
+						{:else if !remounting}
+							<slot />
+						{/if}
+					</div>
 				</div>
-				-->
-				<div class="wrapper">
-					{#if hasExperiment(1)}
-						<p>Hello world!</p>
-					{/if}
-					{#if $OOBERunning}
-						<OOBE />
-					{:else if !remounting}
-						<slot />
-					{/if}
+				<div class="chats">
+					<ChatsList />
 				</div>
-			</div>
-			<div class="chats">
-
 			</div>
 		</div>
 	{/if}
@@ -223,6 +222,8 @@
 
 	.chats {
 		width: 30vw;
+		background-color: #000000;
+		height: 100%;
 	}
 
 	.transition {
@@ -244,6 +245,12 @@
 		transform: translate(-50%,0);
 	}
 
+	.views {
+		display: flex;
+		overflow: hidden;
+		height: 100%;
+	}
+
 	:global(main.layout-mobile) .wrapper {
 		width: 100%;
 	}
@@ -253,29 +260,16 @@
 		animation-duration: 0.7s;
 	}
 
-	:global(main.layout-old) .transition {
-		animation-name: transitionOld;
-		animation-duration: 0.6s;
-	}
-
 	@keyframes transition {
-		from {
-			width: 100%;
-			opacity: 1;
-		}
-		to {
-			width: 14em;
-			opacity: 0;
-		}
-	}
-
-	@keyframes transitionOld {
 		from {
 			height: 100%;
 			opacity: 1;
 		}
+		80% {
+			opacity: 1;
+		}
 		to {
-			height: 14em;
+			height: 4em;
 			opacity: 0;
 		}
 	}
@@ -299,6 +293,11 @@
 		padding: 0.33em;
 		box-sizing: border-box;
 		overflow: auto;
+
+		display: flex;
+		flex-direction: row;
+
+		width: 70vw;
 
 		--view-height: calc(100vh - 0.66em);
 

@@ -1,6 +1,6 @@
-import App from "./App.svelte";
+console.log("Main script successfully loaded")
 
-console.log("Script loaded")
+import App from "./App.svelte";
 
 try {
 	if (navigator.serviceWorker) {

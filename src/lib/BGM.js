@@ -41,6 +41,8 @@ export async function playBGM(id) {
 			).href
 		);
 		// @ts-ignore
+		window.meower_audio = null;
+		// @ts-ignore
 		window.meower_audio = audio;
 		audio.loop = true;
 		await audio.play();

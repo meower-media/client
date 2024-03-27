@@ -57,7 +57,7 @@
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />
 	</button>
-	<button
+	<!--<button
 		on:click={() => {
 			if (shiftHeld) {
 				$goto("/groupcat");
@@ -71,8 +71,7 @@
 		}}
 		title="Group Chats"
 		class="gc-btn round"
-	>
-	</button>
+	></button>-->
 	<button
 		on:click={() => $goto("/search")}
 		title="Search"
@@ -206,6 +205,7 @@
 		height: 80%;
 		left: 50%;
 		top: 50%;
+		-webkit-transform: translate(-50%,-50%); /* will this work, probably not */
 		position: relative;
 		transform: translate(-50%,-50%);
 	}
