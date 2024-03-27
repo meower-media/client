@@ -208,13 +208,17 @@
 		box-sizing: border-box;
 
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		gap: 0;
 
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
 		background-color: var(--background);
+	}
+
+	:global(main.layout-mobile) .main-screen {
+		flex-direction: column-reverse;
 	}
 
 	.chats {
