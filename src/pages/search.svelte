@@ -14,7 +14,6 @@
 	let showResults = $params.type && $params.q; // causes duplicate requests without this due to remounting when page params change
 	let errors = "";
 </script>
-
 {#if showResults}
 	<div class="search-results">
 		<Container>

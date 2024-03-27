@@ -81,16 +81,11 @@
 					type="button"
 					disabled={loading}
 					on:click={() => {
-						if (key.shiftHeld) {
-							localStorage.removeItem("meower_linkurl");
-							localStorage.removeItem("meower_apiurl");
+						localStorage.removeItem("meower_linkurl");
+						localStorage.removeItem("meower_apiurl");
 
-							window.location.reload();
-						} else {
-							clUrl = "";
-							apiUrl = "";
-						}
-					}}>Reset</button
+						window.location.reload();
+					}}>Reset and Reload</button
 				>
 				<button type="submit" disabled={loading}>Save & Reload</button>
 			</div>

@@ -1,5 +1,7 @@
 <!-- Meower Svelte, the app itself. -->
 <script>
+	console.log("Starting meower")
+
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
 	import OOBE from "../lib/OOBE/Main.svelte";
@@ -20,6 +22,7 @@
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
+	import {hasExperiment} from "../lib/bitField.js";
 
 	import {afterPageLoad, params} from "@roxi/routify";
 	import {tick} from "svelte";
@@ -94,6 +97,11 @@
 
 	{#if $screen === "blank"}
 		<div id="blank" />
+		If your stuck here, click the button below
+		<br>
+		<button
+			on:click = {() => {screen.set("main")}}
+		>Me</button>
 	{:else if $screen === "setup"}
 		<Setup />
 	{:else}
@@ -109,12 +117,18 @@
 				</div>
 				-->
 				<div class="wrapper">
+					{#if hasExperiment(1)}
+						<p>Hello world!</p>
+					{/if}
 					{#if $OOBERunning}
 						<OOBE />
 					{:else if !remounting}
 						<slot />
 					{/if}
 				</div>
+			</div>
+			<div class="chats">
+
 			</div>
 		</div>
 	{/if}
@@ -203,6 +217,10 @@
 		background-color: var(--background);
 	}
 
+	.chats {
+		width: 30vw;
+	}
+
 	.transition {
 		background-color: #1D1D1D;
 		height: 100%;
@@ -216,7 +234,7 @@
 
 	.wrapper {
 		position: relative;
-		width: 80%;
+		width: 90%;
 		left: 50%;
 		transition: 0.15s;
 		transform: translate(-50%,0);
@@ -239,23 +257,27 @@
 	@keyframes transition {
 		from {
 			width: 100%;
+			opacity: 1;
 		}
 		to {
-			width: 3.5em;
+			width: 14em;
+			opacity: 0;
 		}
 	}
 
 	@keyframes transitionOld {
 		from {
 			height: 100%;
+			opacity: 1;
 		}
 		to {
-			height: 3.5em;
+			height: 14em;
+			opacity: 0;
 		}
 	}
 
 	.sidebar {
-		width: 3.5em;
+		width: 14em;
 		height: auto;
 
 		z-index: 100;

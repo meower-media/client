@@ -40,20 +40,10 @@
 	{#if $OOBERunning}
 		<div class="locked" />
 	{/if}
-	<div class="logo">
-		<button class="logo-inner" title="Home" on:click={() => $goto("/home")}>
-			<img
-				alt="Meower"
-				src={logo}
-				draggable={false}
-				height="100%"
-				width="auto"
-			/>
-		</button>
-	</div>
-	<button on:click={() => $goto("/home")} title="Home" class="home-btn round">
+	<button on:click={() => $goto("/home")} title="Home" class="home-btn">
 		<img src={home} alt="Home" draggable={false} />
 	</button>
+	<div class="padding" />
 	<button
 		on:click={() => {
 			if (!$user.name) {
@@ -67,6 +57,7 @@
 		class:new-msgs={$user.unread_inbox}
 	>
 		<img src={mail} alt="Inbox Messages" draggable={false} />
+		<span class="label">Inbox</span>
 	</button>
 	<button
 		on:click={() => {
@@ -97,6 +88,7 @@
 			height="auto"
 			draggable={false}
 		/>
+		<span class="label">Search</span>
 	</button>
 	{#if $user.debug}
 		<button
@@ -110,6 +102,7 @@
 				height="auto"
 				draggable={false}
 			/>
+			<span class="label">Debug Panel</span>
 		</button>
 	{/if}
 	{#if $user.permissions}
@@ -124,77 +117,87 @@
 				height="auto"
 				draggable={false}
 			/>
+			<span class="label">Moderator Panel</span>
 		</button>
 	{/if}
-	<div class="padding" />
 	<button
-		class="toggle-popup round"
 		on:click={() => {
-			if (popupDebounce) return;
-			popupShown = !popupShown;
-			popupDebounce = true;
-			setTimeout(() => (popupDebounce = false), 150);
+			if (!$user.name) {
+				modals.showModal(SignupModal);
+				return;
+			}
+			modals.showModal(UserProfile, {username: $user.name, gc: false})
+			popupShown = false;
 		}}
+		class="profile-btn round"
+		title="Profile"
 	>
-		<PFP
-			raw={true}
-			size={1}
-			alt="Open/close more options"
-			userdata = {$user}
-		/>
+		<img src={profile} alt="Profile" draggable={false} />
+		<span class="label">Profile</span>
+	</button>
+	<button
+		on:click={() => {
+			$goto("/settings");
+			popupShown = false;
+		}}
+		class="settings-btn round"
+	>
+		<img src={settings} alt="Settings" draggable={false} />
+		<span class="label">Settings</span>
+	</button>
+	<button
+		on:click={() => {
+			popupShown = true;
+			modals.showModal(LogoutModal);
+		}}
+		class="logout-btn round"
+	>
+		<img src={logout} alt="Log out" draggable={false} />
+		<span class="label">Log out</span>
 	</button>
 </div>
-{#if popupShown}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div on:click|stopPropagation class="popup">
-		<button
-			on:click={() => {
-				if (!$user.name) {
-					modals.showModal(SignupModal);
-					return;
-				}
-				modals.showModal(UserProfile, {username: $user.name, gc: false})
-				popupShown = false;
-			}}
-			class="profile-btn round"
-			title="Profile"
-		>
-			<img src={profile} alt="Profile" draggable={false} />
-			<span class="label">Profile</span>
-		</button>
-		<button
-			on:click={() => {
-				$goto("/settings");
-				popupShown = false;
-			}}
-			class="settings-btn round"
-		>
-			<img src={settings} alt="Settings" draggable={false} />
-			<span class="label">Settings</span>
-		</button>
-		<button
-			on:click={() => {
-				popupShown = true;
-				modals.showModal(LogoutModal);
-			}}
-			class="logout-btn round"
-		>
-			<img src={logout} alt="Log out" draggable={false} />
-			<span class="label">Log out</span>
-		</button>
-	</div>
-{/if}
 
 <style>
 	button {
 		position: relative;
 		/* Hack to center icons */
-		line-height: 0;
+	}
+
+	.label {
+		text-align: center;
+		height: 100%;
+		flex-grow: 1;
+		line-height: 1.5em;
+	}
+
+	.home-btn {
+		background: none !important;
+		width: 3em !important;
+		border-radius: 100%;
+		transition: 0.1s;
+	}
+
+	.home-btn > img {
+		width: 80% !important;
+		height: 80% !important;
+		left: 50%;
+		top: 50%;
+		position: relative;
+		transform: translate(-50%,-50%);
+	}
+
+	.home-btn:hover {
+		background-color: #252525 !important;
+		transition: 0.1s;
+	}
+
+	.home-btn:active {
+		background-color: #151515 !important;
+		transition: 0.1s;
 	}
 
 	.sidebar {
 		transition: 0.15s;
-		background-color: #1D1D1D;
 
 		display: flex;
 		align-items: center;
@@ -213,10 +216,11 @@
 		height: 100%;
 	}
 	.sidebar > button {
-		width: 2.8em;
+		width: 13em;
 		height: 2.8em;
-		min-width: 0;
-		min-height: 0;
+
+		display: flex;
+		flex-direction: row;
 
 		margin: 0;
 		flex-shrink: 1;
@@ -226,7 +230,7 @@
 		border: none;
 	}
 	.sidebar > button > img {
-		width: 90%;
+		width: 20%;
 		height: 90%;
 		object-fit: contain;
 	}
@@ -240,27 +244,13 @@
 		opacity: 0.33;
 	}
 
-	.logo {
-		display: none;
-		flex-grow: 1;
-		height: 100%;
+	.home-btn {
+		
 	}
+
 	.padding {
 		flex-grow: 1;
 		display: none;
-	}
-	.logo img {
-		box-sizing: border-box;
-		padding: 0.75em;
-		filter: brightness(0) invert(1);
-	}
-	.logo-inner {
-		display: inline-block;
-		height: 100%;
-		background: none;
-		border: none;
-		padding: 0;
-		margin: 0;
 	}
 
 	.new-msgs::after {
@@ -278,98 +268,8 @@
 		background: var(--foreground-orange);
 	}
 
-	:global(main.input-hover) .logo-inner:hover,
-	:global(main.input-touch) .logo-inner:active {
-		background-color: var(--orange-dark);
-	}
-
 	:global(main:not(.layout-old)) .padding,
 	:global(main.layout-mobile) .padding {
 		display: block;
-	}
-
-	:global(main.layout-old) .sidebar {
-		flex-direction: row;
-		padding: 0;
-		padding-inline-end: 0.5em;
-		border-bottom: 2px;
-		border-color: #fff;
-	}
-	:global(main.layout-old:not(.layout-mobile)) .logo {
-		display: block;
-	}
-	:global(main.layout-old:not(.layout-mobile)) .home-btn {
-		display: none;
-	}
-
-	:global(main.layout-mobile) .sidebar {
-		padding-inline-start: 0.5em;
-		padding-inline-end: 0.5em;
-		gap: 0.25em;
-	}
-	:global(main.layout-mobile:not(.layout-old)) .sidebar {
-		padding: 0;
-		padding-block-start: 0.5em;
-		padding-block-end: 0.5em;
-		gap: 0.25em;
-	}
-
-	button.toggle-popup {
-		padding: 0.1em;
-		background-color: var(--pfp-bg) !important;
-		border: solid 1.5px var(--pfp-outline);
-		overflow: hidden;
-	}
-
-	:global(main.input-hover) button.toggle-popup:hover:not(:active),
-	:global(main.input-touch) button.toggle-popup:active,
-	button.toggle-popup:focus-visible {
-		transform: scale(1.1);
-	}
-
-	.popup {
-		background: #1D1D1D;
-		padding: 0.5em;
-		padding-top: 0.25em;
-		border-radius: 0 0 0 0.5em;
-
-		position: absolute;
-		right: 0;
-		z-index: 1;
-
-		display: inline-flex;
-		flex-direction: column;
-		align-items: stretch;
-		gap: 0.4em;
-	}
-	:global(main:not(.layout-old)) .popup {
-		right: unset;
-		left: 100%;
-		bottom: 0;
-
-		border-radius: 0 0.5em 0 0;
-		padding-top: 0.5em;
-		padding-left: 0.25em;
-	}
-	.popup > button {
-		text-align: left;
-		line-height: normal;
-
-		padding: 0.3em 0.5em;
-		margin: 0;
-		box-sizing: border-box;
-
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5em;
-		border: none;
-		background-color: #1D1D1D;
-		color: #fff;
-
-	}
-	.popup > button > img {
-		width: 1.5em;
-		height: 1.5em;
-		object-fit: contain;
 	}
 </style>

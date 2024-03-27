@@ -1,5 +1,7 @@
 import App from "./App.svelte";
 
+console.log("Script loaded")
+
 try {
 	if (navigator.serviceWorker) {
 		navigator.serviceWorker.getRegistration().then(registration => {
