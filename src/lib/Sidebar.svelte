@@ -154,12 +154,12 @@
 	}
 
 	.sidebar > button:hover {
-		background-color: #252525 !important;
+		background-color: var(--sidebar-hover) !important;
 		transition: 0.1s;
 	}
 
 	.sidebar > button:active {
-		background-color: #151515 !important;
+		background-color: var(--sidebar-active) !important;
 		transition: 0.075s;
 	}
 

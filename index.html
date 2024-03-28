@@ -80,6 +80,8 @@
 		<img id="meower-logo" src="/src/assets/logo.svg" class="media-fullcenter"></img>
 		<div id="app"></div>
 		<script>
+			console.log("loaded UA check")
+
 			var UA = navigator.userAgent.split(" ")
 			// @ts-ignore
 			UA = UA[UA.length-1]
@@ -107,6 +109,8 @@
 					}
 				}
 			}			
+
+			console.log("UA check done")
 		</script>
 		<script type="module" src="/src/main.js"></script>
 	</body>

@@ -163,6 +163,8 @@
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #181818;
+		--sidebar-hover: #252525;
+		--sidebar-active: #151515;
 		--date: #bdbdbd;
 		--foreground: #eef;
 		--foreground-orange: #eef;
