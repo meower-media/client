@@ -112,21 +112,23 @@
 			<div class="sidebar">
 				<Sidebar />
 			</div>
-			<div class="views">
-				<div class="view">
-					<div class="wrapper">
-						{#if hasExperiment(1)}
-							<p>Hello world!</p>
-						{/if}
-						{#if $OOBERunning}
-							<OOBE />
-						{:else if !remounting}
-							<slot />
-						{/if}
+			<div class="views-outer">
+				<div class="views">
+					<div class="view">
+						<div class="wrapper">
+							{#if hasExperiment(1)}
+								<p>Hello world!</p>
+							{/if}
+							{#if $OOBERunning}
+								<OOBE />
+							{:else if !remounting}
+								<slot />
+							{/if}
+						</div>
 					</div>
-				</div>
-				<div class="chats">
-					<ChatsList />
+					<div class="chats">
+						<ChatsList />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -219,10 +221,11 @@
 	}
 
 	:global(main.layout-mobile) .main-screen {
-		flex-direction: column-reverse;
+		flex-direction: column-reverse !important;
 	}
 
 	.chats {
+		scroll-snap-align: center;
 		width: 30vw;
 		background-color: #000000;
 		height: 100%;
@@ -253,8 +256,25 @@
 		height: 100%;
 	}
 
+	.views-outer {
+		overflow: hidden;
+		height: 100%;
+	}
+
 	:global(main.layout-mobile) .wrapper {
 		width: 100%;
+	}
+
+	:global(main.layout-mobile) .views {
+		width: 200%;
+	}
+
+	:global(main.layout-mobile) .views-outer {
+		overflow-x: visible;
+	}
+
+	:global(main.layout-mobile) .chats, .view {
+		width: 100vw;
 	}
 
 	:global(main:not(layout-old)) .transition {
@@ -291,6 +311,7 @@
 	.view {
 		flex-grow: 1;
 		flex-shrink: 1;
+		scroll-snap-align: center;
 
 		padding: 0.33em;
 		box-sizing: border-box;

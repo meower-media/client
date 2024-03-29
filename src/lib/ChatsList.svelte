@@ -57,7 +57,6 @@
         background: none !important;
         border-radius: 0;
         margin: 0;
-        font-size: 125%;
     }
 
     .selection > button:hover {
@@ -69,7 +68,7 @@
     }
 
     .main {
-        padding: 1em;
+        padding: 1.5em;
         background-color: var(--background);
         height: 100%;
     }
