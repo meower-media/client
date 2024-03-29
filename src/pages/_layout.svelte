@@ -2,7 +2,7 @@
 <script>
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
-	import OOBE from "../lib/OOBE/Main.svelte";
+	import View from "../lib/View.svelte"
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
 	import MeowerDownModal from "../lib/modals/MeowerDown.svelte";
@@ -11,7 +11,6 @@
 		screen,
 		modalStack,
 		reconnecting,
-		OOBERunning,
 		user,
 		spinner,
 		useCustomTheme,
@@ -20,32 +19,6 @@
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
-	import {hasExperiment} from "../lib/bitField.js";
-
-	import {afterPageLoad, params} from "@roxi/routify";
-	import {tick} from "svelte";
-	import ChatsList from "../lib/ChatsList.svelte";
-
-	let currentPage = "";
-	let currentParams = JSON.stringify($params);
-	let remounting = false;
-	$afterPageLoad(async page => {
-		if (remounting) return;
-
-		if (page.title === currentPage) {
-			if (currentParams !== JSON.stringify($params)) {
-				currentPage = page.title;
-				currentParams = JSON.stringify($params);
-
-				remounting = true;
-				await tick();
-				remounting = false;
-			}
-		} else {
-			currentPage = page.title;
-			currentParams = JSON.stringify($params);
-		}
-	});
 </script>
 
 <!-- routify:options bundle=true -->
@@ -112,25 +85,9 @@
 			<div class="sidebar">
 				<Sidebar />
 			</div>
-			<div class="views-outer">
-				<div class="views">
-					<div class="view">
-						<div class="wrapper">
-							{#if hasExperiment(1)}
-								<p>Hello world!</p>
-							{/if}
-							{#if $OOBERunning}
-								<OOBE />
-							{:else if !remounting}
-								<slot />
-							{/if}
-						</div>
-					</div>
-					<div class="chats">
-						<ChatsList />
-					</div>
-				</div>
-			</div>
+			<View>
+				<slot />
+			</View>
 		</div>
 	{/if}
 
@@ -224,13 +181,6 @@
 		flex-direction: column-reverse !important;
 	}
 
-	.chats {
-		scroll-snap-align: center;
-		width: 30vw;
-		background-color: #000000;
-		height: 100%;
-	}
-
 	.transition {
 		background-color: #1D1D1D;
 		height: 100%;
@@ -240,41 +190,6 @@
 		animation-timing-function: ease;
 		transition: 0.5s;
 		z-index: 2;
-	}
-
-	.wrapper {
-		position: relative;
-		width: 90%;
-		left: 50%;
-		transition: 0.15s;
-		transform: translate(-50%,0);
-	}
-
-	.views {
-		display: flex;
-		overflow: hidden;
-		height: 100%;
-	}
-
-	.views-outer {
-		overflow: hidden;
-		height: 100%;
-	}
-
-	:global(main.layout-mobile) .wrapper {
-		width: 100%;
-	}
-
-	:global(main.layout-mobile) .views {
-		width: 200%;
-	}
-
-	:global(main.layout-mobile) .views-outer {
-		overflow-x: visible;
-	}
-
-	:global(main.layout-mobile) .chats, .view {
-		width: 100vw;
 	}
 
 	:global(main:not(layout-old)) .transition {
@@ -308,40 +223,11 @@
 		z-index: 3;
 	}
 
-	.view {
-		flex-grow: 1;
-		flex-shrink: 1;
-		scroll-snap-align: center;
-
-		padding: 0.33em;
-		box-sizing: border-box;
-		overflow: auto;
-
-		display: flex;
-		flex-direction: row;
-
-		width: 70vw;
-
-		--view-height: calc(100vh - 0.66em);
-
-		background-color: var(--background);
-	}
-
-	.banner {
-		background-color: crimson;
-		margin: 0;
-		padding: 0.5em;
-		text-align: center;
-	}
-
 	:global(main.layout-old) .main-screen {
 		flex-direction: column;
 	}
 	:global(main.layout-old) .sidebar {
 		width: auto;
 		height: 3.5em;
-	}
-	:global(main.layout-old) .view {
-		--view-height: calc(100vh - 3.5em - 0.66em);
 	}
 </style>
