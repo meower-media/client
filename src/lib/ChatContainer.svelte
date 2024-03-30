@@ -1,14 +1,16 @@
+<!--
+	Stripped down Member.svelte for Chat lists
+-->
 <script>
-	import PFP from "../lib/PFP.svelte";
+	import PFP from "./PFP.svelte";
 
-	import {ulist} from "../lib/stores.js";
+	import {ulist} from "./stores.js";
 
 	import {onMount} from "svelte";
 	import loadProfile from "./loadProfile.js";
-	import crown from "../assets/crown.svg";
 
-	export let member = "";
-	export let owner = false;
+	export let user = "";
+	export let IsDM = true;
 
 	let userdata = {};
 
@@ -19,10 +21,10 @@
 	 */
 	async function initPostUser() {
 		try {
-			userdata = (await loadProfile(member));
+			userdata = (await loadProfile(user));
 		} catch (e) {
 			error = e;
-			userdata = {pfp_data: -2, _id: member};
+			userdata = {pfp_data: -2, _id: user};
 		}
 	}
 	onMount(initPostUser);
@@ -32,36 +34,19 @@
 	<div class="member">
 		<div class="member-pfp">
 			<PFP
-				userdata={userdata}
-				alt="{member}'s profile picture"
-				online={$ulist.includes(member)}
+				userdata = {userdata}
+				alt = "{user}'s profile picture"
+				online = {$ulist.includes(user)}
 				size={0.5}
 			/>
 		</div>
-		<p class="member-name">{member}</p>
-
-		{#if owner}
-			<img
-				src={crown}
-				alt="Owner"
-				class="owner-icon"
-				title="Owns this chat"
-			/>
-		{/if}
+		<p class="member-name">{user}</p>
 	</div>
 {:else}
-	<div class="error">error loading member {member}: {error}</div>
+	<div class="error">error loading member {user}: {error}</div>
 {/if}
 
 <style>
-	.owner-icon {
-		height: 40%;
-	}
-
-	:global(#main.mode-dark) .owner-icon {
-		filter: invert(1);
-	}
-
 	.member {
 		display: flex;
 		flex-wrap: nowrap;

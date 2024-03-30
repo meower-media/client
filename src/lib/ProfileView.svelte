@@ -8,7 +8,9 @@
 		Profile: Custom profile JSON, Optional
 		Small: If True, the View will be shorter
 		CanClick: If True, when you click the PFP, it will go to their profile
-		CloseCurrentModal (Defaults to true): If false, the current Modal wont close when Clicking the PFP 
+		CanDoActions: If true, you can do actions such as reporting or dming
+		dmChat: If contains id, this profile view will be treated like a DM
+		Showedit: If true and the current user is the current profile, then show an edit button
 -->
 
 <script>

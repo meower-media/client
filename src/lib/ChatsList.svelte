@@ -1,4 +1,6 @@
 <script>
+    import PFP from "./PFP.svelte"
+
     let selected = 1
 </script>
 
@@ -38,10 +40,18 @@
     <div class="chats">
         <br />
         <h2>This is currently a BIG work in progress!</h2>
+        <div class="chat-container">
+            <PFP />
+            a
+        </div>
     </div>
 </div>
 
 <style>
+    .chat-container {
+        border-bottom: 2px solid var(--orange);
+    }
+
     .line {
         height: 0.1em;
         width: 100%;

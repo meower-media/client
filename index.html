@@ -80,8 +80,6 @@
 		<img id="meower-logo" src="/src/assets/logo.svg" class="media-fullcenter"></img>
 		<div id="app"></div>
 		<script>
-			console.log("loaded UA check")
-
 			var UA = navigator.userAgent.split(" ")
 			// @ts-ignore
 			UA = UA[UA.length-1]
@@ -110,7 +108,7 @@
 				}
 			}			
 
-			console.log("UA check done")
+			console.log("UA check done, this is only a client side check and IS NOT shared to any external (including meower) Servers")
 		</script>
 		<script type="module" src="/src/main.js"></script>
 	</body>

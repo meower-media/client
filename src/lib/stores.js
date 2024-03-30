@@ -61,10 +61,7 @@ export const user = writable(unloadedProfile());
 // Spinner thing
 export const spinner = writable(false);
 
-// What is this
-export const windowStyle = writable({});
-export const groupCats = writable(100);
-export const experiments = writable(0);
+export const windowStyle = writable({}); // What is this
 
 // Custom theme
 export const useCustomTheme = writable(false);
@@ -73,3 +70,6 @@ export const customTheme = writable(customThemeFallback);
 // User moderation
 export const pendingBanState = writable(null);
 
+// Etc
+export const groupCats = writable(100);
+export const experiments = writable(0);

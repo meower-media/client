@@ -1,6 +1,5 @@
 <!-- To nobody's surprise, a profile picture! -->
 <script>
-	export let icon = -1;
 	export let alt = "Profile picture";
 	export let online = false;
 	export let size = 1;
@@ -17,7 +16,7 @@
 		eager: true,
 	});
 
-	icon = userdata.pfp_data
+	let icon = userdata.pfp_data
 
 	let usingcustom = false;
 	let avatar = null;

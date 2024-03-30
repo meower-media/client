@@ -24,6 +24,6 @@
 	<Container>Looks like you haven't blocked anyone yet.</Container>
 {:else}
 	{#each blockedUsers as username}
-		<ProfileView {username} small={true} canClick={true} />
+		<ProfileView {username} canClick={true} />
 	{/each}
 {/if}

@@ -29,9 +29,30 @@
 		}
 	});
 
+    /*  
+        May I credit half of this code to https://medium.com/@zhuyingsong0825/controller-for-swiping-using-pure-javascript-bd604669b22a
+        and the other half to https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+
+        I will also give a fuck you to medium for putting a paywall after the first site visit
+        - Bloctans
+    */
+
     let touchstartX = 0;
+    let touchstartY = 0;
     let touchendX = 0;
-    let touching = false;
+    let touchendY = 0;
+    
+    window.addEventListener('touchstart', function (event) {
+        touchstartX = event.changedTouches[0].screenX;
+        touchstartY = event.changedTouches[0].screenY;
+    }, false);
+
+    window.addEventListener('touchend', function (event) {
+        touchendX = event.changedTouches[0].screenX;
+        touchendY = event.changedTouches[0].screenY;
+        handleGesture();
+    }, false);
+
     let chats = false;
 
     var keys = {37: 1, 38: 1, 39: 1, 40: 1};
@@ -73,37 +94,32 @@
         window.removeEventListener('touchmove', preventDefault, wheelOpt);
         window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
     }
-    
-    window.addEventListener('touchstart', function (event) {
-        touching = true
-        touchstartX = event.changedTouches[0].screenX;
-        disableScroll()
-    }, false);
-
-    window.addEventListener('touchend', async function (event) {
-        touching = false
-        touchendX = event.changedTouches[0].screenX;
-        await handleGesture();
-    }, false);
 
     async function handleGesture() {
+        let up = touchstartY - touchendY
         let right = touchendX - touchstartX
+        let y = Math.abs(up)
         let x = Math.abs(right)
-        if (x > 5){
+        if (y < x) {
+            disableScroll()
             //swipe in left right directions
             if (right <= 0){
                 //swipe right
-                chats = true
-                document.getElementById("views-outer").scrollTo({left: document.getElementById("views-outer").scrollWidth, behavior: "smooth"})
-                await sleep(1000)
+                if (document.getElementById("views-outer").scrollLeft > 0) {
+                    chats = true
+                    document.getElementById("views-outer").scrollTo({left: document.getElementById("views-outer").scrollWidth, behavior: "smooth"})
+                    await sleep(1000)
+                }
             }
-            else{
-                //swipe left 
-                chats = false
-                document.getElementById("views-outer").scrollTo({left: 0, behavior: "smooth"})
-                await sleep(1000)
+            else {
+                if (document.getElementById("views-outer").scrollLeft <= document.getElementById("views-outer").scrollWidth / 2) {
+                    //swipe left 
+                    chats = false
+                    document.getElementById("views-outer").scrollTo({left: 0, behavior: "smooth"})
+                    await sleep(1000)
+                }
             }
-        }  
+        }   
         enableScroll()
     } 
 </script>
