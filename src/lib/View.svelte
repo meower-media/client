@@ -197,6 +197,9 @@
 	:global(main.layout-mobile) #views-outer {
 		scrollbar-width: none;
 		overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-behavior: auto;
 	}
 
 	:global(main.layout-mobile) .chats, .view {
