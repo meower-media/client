@@ -219,10 +219,6 @@
 		opacity: 0.33;
 	}
 
-	.home-btn {
-		
-	}
-
 	.sidebar {
 		flex-direction: row;
 		padding: 0;

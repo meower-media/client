@@ -74,9 +74,7 @@
 		<div id="blank" />
 		If your stuck here, click the button below
 		<br>
-		<button
-			on:click = {() => {screen.set("main")}}
-		>Me</button>
+		<button on:click = {() => {screen.set("main")}}>Me</button>
 	{:else if $screen === "setup"}
 		<Setup />
 	{:else}
@@ -85,9 +83,7 @@
 			<div class="sidebar">
 				<Sidebar />
 			</div>
-			<View>
-				<slot />
-			</View>
+			<View><slot /></View>
 		</div>
 	{/if}
 
