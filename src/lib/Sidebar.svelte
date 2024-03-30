@@ -181,6 +181,7 @@
 
 		width: 100vw;
 		height: 100%;
+		background-color: var(--sidebar-active);
 	}
 	.sidebar > button {
 		height: 3em;

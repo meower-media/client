@@ -2,7 +2,7 @@
 <script>
 	import Setup from "../lib/Setup.svelte";
 	import Modal from "../lib/Modal.svelte";
-	import View from "../lib/View.svelte"
+	import View from "../lib/View.svelte";
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
 	import MeowerDownModal from "../lib/modals/MeowerDown.svelte";
@@ -73,8 +73,12 @@
 	{#if $screen === "blank"}
 		<div id="blank" />
 		If your stuck here, click the button below
-		<br>
-		<button on:click = {() => {screen.set("main")}}>Me</button>
+		<br />
+		<button
+			on:click={() => {
+				screen.set("main");
+			}}>Me</button
+		>
 	{:else if $screen === "setup"}
 		<Setup />
 	{:else}
@@ -178,7 +182,7 @@
 	}
 
 	.transition {
-		background-color: #1D1D1D;
+		background-color: #1d1d1d;
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -217,6 +221,7 @@
 		flex-shrink: 0;
 		flex-grow: 0;
 		z-index: 3;
+		border-bottom: 1px solid #0e0e0e;
 	}
 
 	:global(main.layout-old) .main-screen {
@@ -225,5 +230,25 @@
 	:global(main.layout-old) .sidebar {
 		width: auto;
 		height: 3.5em;
+	}
+
+	/* General scrollbar styling - works across most browsers */
+	* {
+		scrollbar-width: thin; /* Make scrollbars thinner */
+		scrollbar-color: #454545 #202020; /* Dark thumb on slightly lighter track */
+	}
+
+	/* WebKit-specific styling for more granular control */
+	::-webkit-scrollbar {
+		width: 8px; /* Adjust width as needed */
+	}
+
+	::-webkit-scrollbar-track {
+		background: #202020;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: #454545;
+		border-radius: 4px; /* Optional: Rounded scrollbar thumb */
 	}
 </style>

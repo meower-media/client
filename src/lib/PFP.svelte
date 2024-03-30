@@ -94,7 +94,7 @@
 		position: relative;
 	}
 
-	.pfp {
+	.pfp, img {
 		width: calc(var(--size) * 2em);
 		height: calc(var(--size) * 2em);
 		box-sizing: border-box;
