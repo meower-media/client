@@ -105,16 +105,21 @@
             //swipe in left right directions
             if (right <= 0){
                 //swipe right
-                if (document.getElementById("views-outer").scrollLeft > 50) {
+                /*if (document.getElementById("views-outer").scrollLeft > 50) {
                     chats = true
                     document.getElementById("views-outer").scrollTo({left: document.getElementById("views-outer").scrollWidth, behavior: "smooth"})
                     await sleep(500)
                 } else {
                     document.getElementById("views-outer").scrollTo({left: 0, behavior: "smooth"})
                     await sleep(500)
-                }  
+                } */
+                if (document.getElementById("views-outer").scrollLeft > 0) {
+                    chats = true
+                    document.getElementById("views-outer").scrollTo({left: document.getElementById("views-outer").scrollWidth, behavior: "smooth"})
+                    await sleep(500)
+                }
             } else {
-                if (document.getElementById("views-outer").scrollLeft <= document.getElementById("views-outer").scrollWidth / 2 - 50) {
+                /*if (document.getElementById("views-outer").scrollLeft <= document.getElementById("views-outer").scrollWidth / 2 - 50) {
                     //swipe left 
                     chats = false
                     document.getElementById("views-outer").scrollTo({left: 0, behavior: "smooth"})
@@ -122,7 +127,13 @@
                 } else {
                     document.getElementById("views-outer").scrollTo({left: document.getElementById("views-outer").scrollWidth, behavior: "smooth"})
                     await sleep(500)
-                }  
+                } */
+                if (document.getElementById("views-outer").scrollLeft <= document.getElementById("views-outer").scrollWidth / 2) {
+                    //swipe left 
+                    chats = false
+                    document.getElementById("views-outer").scrollTo({left: 0, behavior: "smooth"})
+                    await sleep(500)
+                }
             }
         }   
         enableScroll()

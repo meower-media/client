@@ -14,6 +14,7 @@
 	window.clm = clm;
 
 	import meowerLogo from "../assets/logo.svg";
+	import silhouette from "../assets/Meowy-V2-S.svg";
 	import meowy from "../assets/meowy.svg";
 
 	import {tick, onMount, onDestroy} from "svelte";
@@ -197,7 +198,8 @@
 			<img
 				bind:this={logoImg}
 				alt="Meower"
-				src={meowerLogo}
+				src={silhouette}
+				style="height: 4em;"
 				class="logo-img logo-img-color presvl-fullcenter"
 			/>
 		</div>
