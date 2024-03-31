@@ -1,4 +1,6 @@
-console.log('%cStop!', 'color: #F00; font-size: 30px; -webkit-text-stroke: 1px black; font-weight:bold');
+// The main js file responsible for initalization stuff
+
+console.log('%cStop! (You violated the law)', 'color: #F00; font-size: 30px; -webkit-text-stroke: 1px black; font-weight:bold');
 console.log(
 	'This is part of your browser intended for developers. ' +
 	'If someone told you to copy-and-paste something here, ' +
@@ -9,6 +11,11 @@ console.log(
 	'If you accidentally do end up running a harmful script,' +
 	' Go to Settings > Security and Then hit "Logout Everywhere"'
 );
+
+// @ts-ignore
+window.sleep = function (ms) {
+	return new Promise(r => setTimeout(r, ms));
+}
 
 import App from "./App.svelte";
 

@@ -198,8 +198,7 @@
 			<img
 				bind:this={logoImg}
 				alt="Meower"
-				src={silhouette}
-				style="height: 4em;"
+				src={meowerLogo}
 				class="logo-img logo-img-color presvl-fullcenter"
 			/>
 		</div>

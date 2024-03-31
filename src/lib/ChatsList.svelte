@@ -1,5 +1,5 @@
 <script>
-    import PFP from "./PFP.svelte"
+    import ChatContainer from "./ChatContainer.svelte";
 
     let selected = 1
 </script>
@@ -40,10 +40,15 @@
     <div class="chats">
         <br />
         <h2>This is currently a BIG work in progress!</h2>
-        <div class="chat-container">
-            <PFP />
-            a
-        </div>
+        <ChatContainer
+            user="MikeDEV"
+            id=0
+            IsDM
+        />
+        <ChatContainer
+            user="A GC"
+            id=0
+        />
     </div>
 </div>
 

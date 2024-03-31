@@ -10,7 +10,12 @@
 	import loadProfile from "./loadProfile.js";
 
 	export let user = "";
-	export let IsDM = true;
+	export let id = null;
+	export let IsDM = false;
+
+	if (id == null) {
+		console.error("Invalid chat ID: null, please specify a chat id")
+	}
 
 	let userdata = {};
 
@@ -27,7 +32,11 @@
 			userdata = {pfp_data: -2, _id: user};
 		}
 	}
-	onMount(initPostUser);
+	if (IsDM) {
+		onMount(initPostUser);
+	} else {
+		userdata = {pfp_data: 103, _id: user}
+	}
 </script>
 
 {#if !error}
@@ -37,7 +46,7 @@
 				userdata = {userdata}
 				alt = "{user}'s profile picture"
 				online = {$ulist.includes(user)}
-				size={0.5}
+				size={1}
 			/>
 		</div>
 		<p class="member-name">{user}</p>

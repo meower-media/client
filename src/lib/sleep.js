@@ -8,5 +8,5 @@
  * @returns {Promise}
  */
 export default function (ms) {
-	return new Promise(r => setTimeout(r, ms));
+	return sleep(ms)
 }

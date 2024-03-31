@@ -122,8 +122,10 @@
 		--orange-dark: #ac5b18;
 		--orange-scrollbar-back: rgb(131, 45, 5);
 		--background: #181818;
-		--sidebar-hover: #252525;
-		--sidebar-active: #151515;
+		--sidebar-hover: #272727;
+		--sidebar-active: #202020;
+		--sidebar-bg: #232323;
+		--sidebar: #151515;
 		--date: #bdbdbd;
 		--foreground: #eef;
 		--foreground-orange: #eef;
@@ -177,12 +179,12 @@
 		background-color: var(--background);
 	}
 
-	:global(main.layout-mobile) .main-screen {
+	/*:global(main.layout-mobile) .main-screen {
 		flex-direction: column-reverse !important;
-	}
+	}*/
 
 	.transition {
-		background-color: #1d1d1d;
+		background-color: var(--sidebar);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -221,7 +223,6 @@
 		flex-shrink: 0;
 		flex-grow: 0;
 		z-index: 3;
-		border-bottom: 1px solid #0e0e0e;
 	}
 
 	:global(main.layout-old) .main-screen {
