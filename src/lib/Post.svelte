@@ -116,6 +116,7 @@
 	}
 
 	function confirmLink(link) {
+		link = atob(encodeURIComponent(link)); // we now base64 encode the link to prevent XSS
 		if (
 			!link.startsWith("https:") &&
 			!link.startsWith("http:") &&
@@ -134,10 +135,18 @@
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	/** @param {string} content */
+	/**
+	 * @param {string} content
+	 * @returns {Promise<{
+	 * 	html?: string,
+	 * 	error?: Error,
+	 * 	youtubeEmbeds?: Array<{title: string, author: string, thumbnail: string, id: number, url: string}>
+	 * }>}
+	 */
 	async function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
 		let renderedContent;
+		const youtubeEmbeds = [];
 
 		try {
 			const md = new MarkdownIt("default", {
@@ -179,16 +188,16 @@
 								)
 							) {
 								childToken.attrs[srcPos][1] = "about:blank";
-								console.log(childToken);
 							}
 						}
 						if (childToken.type === "link_open") {
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
+							const b64href = decodeURIComponent(btoa(href));
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${href}')`,
+								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
@@ -204,7 +213,7 @@
 			);
 
 			if ($user.embeds_enabled) {
-				let youtubeMatches = [
+				const youtubeMatches = [
 					...new Set(
 						content.match(
 							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
@@ -214,22 +223,24 @@
 				for (const watchURL of youtubeMatches) {
 					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
 						continue;
-					let response = await (
+					const response = await (
 						await fetch(
 							`https://youtube.com/oembed?url=${watchURL}`
 						)
 					).json();
-					renderedContent += `<div class="youtube-container">
-						<h4>${response.title}</h4>
-						<span style="color: #606060; font-size: 1.1rem">${response.author_name}</span><br><br>
-						<img src="${response.thumbnail_url}" height=180 width=240 loading="lazy" alt="Thumbnail for ${response.title}">
-					</div>`;
+					youtubeEmbeds.push({
+						title: response.title,
+						author: response.author_name,
+						thumbnail: response.thumbnail_url,
+						id: youtubeEmbeds.length,
+						url: watchURL
+					});
 				}
 			}
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
-			return content.replace(">", "").replace("<", "")+"\n(This post failed to render properly, for your safety on meower, certain characters have been removed)";
+			return {html: content, error: e}; // Html is used in this context, however the error existing prevents this from using the @html tag
 		}
 
 		// twemoji
@@ -239,7 +250,10 @@
 			size: 20,
 		});
 
-		return renderedContent;
+		return {
+			html: renderedContent,
+			youtubeEmbeds,
+		};
 	}
 
 	async function adminDelete() {
@@ -601,7 +615,31 @@
 				: ''}"
 		>
 			{#await addFancyElements(post.content) then content}
-				{@html content}
+				{#if content.error}
+					{content.html}
+				{:else}
+					{#if content.html}
+						{@html content.html}
+					{/if}
+					{#if content.youtubeEmbeds}
+						{#each content.youtubeEmbeds as embed (embed.id)}
+							<div class="youtube-container">
+								<h4>{embed.title}</h4>
+								<span style="color: #606060; font-size: 1.1rem"
+									>{embed.author}</span
+								><br /><br />
+								<a href={embed.url} target="_blank" rel="noreferrer">
+									<img
+										src={embed.thumbnail}
+										height="180"
+										loading="lazy"
+										alt="Thumbnail for {embed.title}"
+									/>
+								</a>
+							</div>
+						{/each}
+					{/if}
+				{/if}
 			{/await}
 		</p>
 	{/if}

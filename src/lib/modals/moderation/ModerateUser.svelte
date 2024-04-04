@@ -129,13 +129,10 @@
 	async function kick() {
 		kickStatus = "Kicking...";
 		try {
-			const resp = await fetch(
-				`${apiUrl}admin/users/${user._id}/kick`,
-				{
-					method: "POST",
-					headers: $authHeader,
-				}
-			);
+			const resp = await fetch(`${apiUrl}admin/users/${user._id}/kick`, {
+				method: "POST",
+				headers: $authHeader,
+			});
 			if (!resp.ok) {
 				throw new Error(
 					"Response code is not OK; code is " + resp.status
@@ -441,11 +438,14 @@
 						) ||
 							(userProtected &&
 								!hasPermission(adminPermissions.SYSADMIN))}
-						bind:value={formattedBanExpires}
+						value={formattedBanExpires}
 						on:change={() => {
-							banState.expires = Math.floor(
-								new Date(formattedBanExpires).getTime() / 1000
-							);
+							banState = Object.assign(banState, {
+								expires: Math.floor(
+									new Date(formattedBanExpires).getTime() /
+										1000
+								),
+							});
 						}}
 					/>
 				{/if}
