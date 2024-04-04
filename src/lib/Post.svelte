@@ -114,20 +114,13 @@
 	}
 
 	function confirmLink(link) {
-		if (
-			link.startsWith(
-				`${window.location.protocol}//${window.location.host}`
-			) ||
-			link.startsWith(window.location.host)
-		) {
-			$goto(
-				link
-					.replace(
-						`${window.location.protocol}//${window.location.host}`,
-						""
-					)
-					.replace(window.location.host, "")
-			);
+		link = atob(link); // we now base64 encode the link to prevent XSS
+		if (!link.startsWith("https:") && !link.startsWith("http:") && !link.startsWith("/")) {
+			link = "https://" + link;
+		}
+		let url = new URL(link, location.href);
+		if (url.host === location.host) {
+			$goto(url.pathname);
 		} else {
 			modals.showModal(ConfirmHyperlinkModal, {link});
 		}
@@ -184,9 +177,10 @@
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
+							const b64href = btoa(href);
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${href}')`,
+								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
