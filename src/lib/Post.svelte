@@ -114,6 +114,7 @@
 	}
 
 	function confirmLink(link) {
+		link = atob(link); // we now base64 encode the link to prevent XSS
 		if (!link.startsWith("https:") && !link.startsWith("http:") && !link.startsWith("/")) {
 			link = "https://" + link;
 		}
@@ -178,9 +179,10 @@
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
+							const b64href = btoa(href);
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${href}')`,
+								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
