@@ -6,7 +6,7 @@
 </script>
 
 <div>
-	<div class="message">GROUP CAT 2.0!!!!</div>
+	<div class="message">GROUP CAT 2.1!!!!</div>
 	{#if !hide}
 		<Cats />
 		<button class="help" on:click={() => (hide = true)}

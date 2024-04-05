@@ -15,6 +15,8 @@
 <Modal on:close={modals.closeLastModal}>
 	<h2 slot="header">Delete Account</h2>
 	<div slot="default">
+		<!-- svelte-ignore a11y-media-has-caption -->
+		<video src="/src/assets/video.mp4" style="width: 100%;" autoplay controls />
 		<form
 			on:change={() => (error = "")}
 			on:submit|preventDefault={async () => {

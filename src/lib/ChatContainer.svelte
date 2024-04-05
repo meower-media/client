@@ -4,18 +4,16 @@
 <script>
 	import PFP from "./PFP.svelte";
 
-	import {ulist} from "./stores.js";
+	import {ulist, chats, authHeader, user} from "./stores.js";
 
 	import {onMount} from "svelte";
 	import loadProfile from "./loadProfile.js";
+	import * as clm from "./clmanager.js";
+	import {apiUrl} from "./urls.js";
 
-	export let user = "";
-	export let id = null;
+	export let cuser;
 	export let IsDM = false;
-
-	if (id == null) {
-		console.error("Invalid chat ID: null, please specify a chat id")
-	}
+	export let ID;
 
 	let userdata = {};
 
@@ -26,36 +24,101 @@
 	 */
 	async function initPostUser() {
 		try {
-			userdata = (await loadProfile(user));
+			userdata = (await loadProfile(cuser));
 		} catch (e) {
 			error = e;
-			userdata = {pfp_data: -2, _id: user};
+			userdata = {pfp_data: -2, _id: cuser};
 		}
 	}
 	if (IsDM) {
 		onMount(initPostUser);
 	} else {
-		userdata = {pfp_data: 103, _id: user}
+		userdata = {pfp_data: 103, _id: cuser}
 	}
 </script>
 
 {#if !error}
-	<div class="member">
-		<div class="member-pfp">
-			<PFP
-				userdata = {userdata}
-				alt = "{user}'s profile picture"
-				online = {$ulist.includes(user)}
-				size={1}
-			/>
+	<div class="mainwrapper">
+		<div class="member">
+			<div class="member-pfp">
+				<PFP
+					userdata = {userdata}
+					alt = "{user}'s profile picture"
+					online = {$ulist.includes(user)}
+					size={1}
+				/>
+			</div>
+			<div class="side">
+				<p class="member-name">{user}</p>
+				{#if !IsDM}
+					<p class="members">Bloctans, Joe and 15 others</p>
+				{/if}
+			</div>
 		</div>
-		<p class="member-name">{user}</p>
+		<div class="settings-controls">
+			<button
+				class="circle star"
+				class:filled={$user.favorited_chats.includes(
+					ID
+				)}
+				on:click={() => {
+					if ($user.favorited_chats.includes(ID)) {
+						$user.favorited_chats.splice(
+							$user.favorited_chats.indexOf(ID),
+							1
+						);
+						clm.updateProfile({
+							favorited_chats: $user.favorited_chats,
+						});
+					} else {
+						$user.favorited_chats =
+							$user.favorited_chats.filter(chatId => {
+								return $chats.some(
+									_chat => _chat._id === chatId
+								);
+							});
+						if ($user.favorited_chats.length >= 50) {
+							modals.showModal(BasicModal, {
+								title: "Too many stars!",
+								desc: "Sorry, you can only have up to 50 favorited chats!",
+							});
+						} else {
+							$user.favorited_chats.push(ID);
+							clm.updateProfile({
+								favorited_chats: $user.favorited_chats,
+							});
+						}
+					}
+				}}
+			/>
+			{#if !$user.favorited_chats.includes(ID)}
+				<button
+					class="circle close"
+					on:click={() => {
+						fetch(`${apiUrl}chats/${ID}`, {
+							method: "DELETE",
+							headers: $authHeader,
+						});
+						$chats.filter(
+							_chat => _chat._id !== ID
+						);
+					}}
+				/>
+			{/if}
+		</div>
 	</div>
 {:else}
 	<div class="error">error loading member {user}: {error}</div>
 {/if}
 
 <style>
+	.mainwrapper {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		align-items: center;
+	}
+
 	.member {
 		display: flex;
 		flex-wrap: nowrap;
@@ -69,13 +132,34 @@
 		box-sizing: border-box;
 	}
 
-	.member-name {
-		flex-grow: 1;
-		flex-shrink: 1;
+	.settings-controls {
+		margin-right: 0.3em;
+		position: relative;
+		right: 0;
+		top: 0;
+		display: flex;
+		gap: 0 !important;
+		flex-direction: column;
+	}
 
-		text-align: left;
-		text-overflow: clip;
-		overflow: hidden;
+	.settings-controls > button {
+		background-color: transparent;
+		margin: -0.1em;
+	}
+
+	.side > p {
+		width: 100%;
+		margin: 0;
+	}
+
+	.side {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+	}
+
+	.members {
+		color: var(--date);
 	}
 
 	.error {

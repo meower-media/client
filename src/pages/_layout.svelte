@@ -19,6 +19,42 @@
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
+
+	// https://stackoverflow.com/questions/5598743/finding-elements-position-relative-to-the-document
+	function getCoords(elem) { // crossbrowser version
+		var box = elem.getBoundingClientRect();
+
+		var body = document.body;
+		var docEl = document.documentElement;
+
+		var scrollTop = window.scrollY || docEl.scrollTop || body.scrollTop;
+		var scrollLeft = window.scrollX || docEl.scrollLeft || body.scrollLeft;
+
+		var clientTop = docEl.clientTop || body.clientTop || 0;
+		var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+		var top  = box.top +  scrollTop - clientTop;
+		var left = box.left + scrollLeft - clientLeft;
+
+		return { top: Math.round(top), left: Math.round(left) };
+	}
+
+	window.addEventListener("mouseover", (event) => {
+		const {
+			clientX: x,
+			clientY: y
+		} = event
+		const elementMouseIsOver = document.elementFromPoint(x, y);
+		const tags = [elementMouseIsOver, elementMouseIsOver.parentElement, elementMouseIsOver.parentElement.parentElement, elementMouseIsOver.parentElement.parentElement.parentElement]
+		var elementpos = null
+		for (let i = 0; i < tags.length; i++) {
+			const element = tags[i];
+			if (element.tagName == "BUTTON") {
+				elementpos = getCoords(element)
+				return
+			}
+		}
+	})
 </script>
 
 <!-- routify:options bundle=true -->
