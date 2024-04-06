@@ -109,7 +109,7 @@ select {
 	font-size: inherit;
 }
 
-button,
+/*button,
 input,
 textarea {
 	background-color: rgba(40, 40, 40, .15);  
@@ -118,7 +118,7 @@ textarea {
 
 input, textarea {
 	background-color: rgba(40, 40, 40, .15) !important; 
-}
+}*/
 
 button {
 	border: none;

@@ -181,8 +181,8 @@
 	}
 
 	#views-outer {
-        background-image: url("/src/assets/meowtain.svg");
-        background-size: cover;
+        /*background-image: url("/src/assets/meowtain.svg");
+        background-size: cover;*/
 		overflow: hidden;
 		height: 100%;
 	}

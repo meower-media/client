@@ -22,8 +22,8 @@
 		position: relative;
 		overflow: auto;
 		border-radius: 0.4em;
-		background-color: rgba(40, 40, 40, .15);  
- 		backdrop-filter: blur(5px);
+		/*background-color: rgba(40, 40, 40, .15);  
+ 		backdrop-filter: blur(5px);*/
 	}
 
 	.settings-controls {
