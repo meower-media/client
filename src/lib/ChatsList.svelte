@@ -42,10 +42,18 @@
         <div class="chats">
             <br />
             <h2>This is currently a BIG work in progress!</h2>
-            <ChatContainer
-                user="MikeDEV"
-                IsDM
-            />
+            <button
+                class="member-button"
+                on:click={() => {
+                    
+                }}
+            >
+                <ChatContainer
+                    user="MikeDEV"
+                    IsDM
+                    ID = 2
+                />
+            </button>
             <button
                 class="member-button"
                 on:click={() => {
@@ -54,6 +62,7 @@
             >
                 <ChatContainer
                     user="A GC"
+                    ID = 2
                 />
             </button>
         </div>

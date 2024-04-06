@@ -49,7 +49,7 @@
 				/>
 			</div>
 			<div class="side">
-				<p class="member-name">{user}</p>
+				<p class="member-name">{userdata._id}</p>
 				{#if !IsDM}
 					<p class="members">Bloctans, Joe and 15 others</p>
 				{/if}
@@ -108,7 +108,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="error">error loading member {user}: {error}</div>
+	<div class="error">error loading member {userdata._id}: {error}</div>
 {/if}
 
 <style>
