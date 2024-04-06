@@ -21,6 +21,9 @@
 		overflow-wrap: break-word;
 		position: relative;
 		overflow: auto;
+		border-radius: 0.4em;
+		background-color: rgba(40, 40, 40, .15);  
+ 		backdrop-filter: blur(5px);
 	}
 
 	.settings-controls {
@@ -31,6 +34,7 @@
 
 	.border {
 		border-bottom: 2px solid var(--orange);
+		border-radius: 0;
 	}
 
 	.warning {

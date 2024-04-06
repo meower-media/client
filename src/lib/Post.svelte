@@ -468,18 +468,21 @@
 			{#await noPFP ? Promise.resolve(true) : loadProfile(post.user)}
 				<PFP
 					icon={-2}
+					size={0.9}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
 			{:then profile}
 				<PFP
 					userdata = {profile}
+					size={0.9}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
 			{:catch}
 				<PFP
 					icon={-2}
+					size={0.9}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
 				/>
@@ -671,7 +674,11 @@
 	}
 
 	.creatordate {
+		display: flex;
 		margin-left: 0.5em;
+		flex-direction: row;
+		gap: 0.5em;
+		align-items: center;
 	}
 	.creator {
 		display: flex;

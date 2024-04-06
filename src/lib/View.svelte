@@ -163,7 +163,6 @@
 <style>
     .chats {
 		width: 30vw;
-		background-color: #000000;
 		height: 100%;
 	}
 
@@ -182,6 +181,8 @@
 	}
 
 	#views-outer {
+        background-image: url("/src/assets/meowtain.svg");
+        background-size: cover;
 		overflow: hidden;
 		height: 100%;
 	}
@@ -235,8 +236,6 @@
 		width: 70vw;
 
 		--view-height: calc(100vh - 0.66em);
-
-		background-color: var(--background);
 	}
 
 	:global(main.layout-old) .view {

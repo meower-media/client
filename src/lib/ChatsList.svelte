@@ -114,7 +114,6 @@
 
     .main {
         padding: 1.5em;
-        background-color: var(--background);
         height: 100%;
     }
 </style>

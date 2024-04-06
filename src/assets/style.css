@@ -109,6 +109,17 @@ select {
 	font-size: inherit;
 }
 
+button,
+input,
+textarea {
+	background-color: rgba(40, 40, 40, .15);  
+ 	backdrop-filter: blur(5px);
+}
+
+input, textarea {
+	background-color: rgba(40, 40, 40, .15) !important; 
+}
+
 button {
 	border: none;
 }
