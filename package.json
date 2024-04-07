@@ -1,29 +1,19 @@
 {
 	"name": "meower-svelte",
-	"private": true,
-	"version": "1.8.2",
-	"type": "module",
+	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite",
-		"dev-host": "vite --host",
-		"dev:routify": "routify",
-		"build": "routify -b && vite build",
-		"preview": "vite preview",
-		"format": "prettier -w ."
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"@roxi/routify": "^2.18.12",
-		"@sveltejs/vite-plugin-svelte": "^2.0.0",
-		"markdown-it": "^13.0.2",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^2.8.1",
-		"prettier-plugin-svelte": "^2.9.0",
-		"svelte": "^3.49.0",
-		"svelte-textarea-autoresize": "^1.0.0",
-		"twemoji": "^14.0.2",
-		"vite": "^4.5.2"
+		"@fontsource/fira-mono": "^4.5.10",
+		"@neoconfetti/svelte": "^1.0.0",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"svelte": "^4.2.7",
+		"vite": "^5.0.3"
 	},
-	"dependencies": {
-		"lucide-svelte": "^0.294.0"
-	}
+	"type": "module"
 }
