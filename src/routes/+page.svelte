@@ -1,4 +1,5 @@
 <script>
+	export let data;
 </script>
 
 <svelte:head>
@@ -6,7 +7,11 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-man idk
+{#if data.isclient}
+	Client sided
+{:else}
+	Server sided
+{/if}
 
 <style>
 	
