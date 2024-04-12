@@ -1,4 +1,3 @@
-// since there's no dynamic data here, we can prerender
 
 import { browser } from '$app/environment';
 

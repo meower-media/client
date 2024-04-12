@@ -1,0 +1,1 @@
+// CLM controled things: Ping

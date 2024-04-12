@@ -1,18 +1,25 @@
 <script>
+	import {
+		goto
+	} from '$app/navigation';
+
 	export let data;
+	
+	let metacontent = ""
+	let c = data.isclient
+
+	if (c) {
+		goto("/setup")
+	}
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Meower</title>
+	<meta name="description" content="Meower media platform" />
 </svelte:head>
 
-{#if data.isclient}
-	Client sided
+{#if !c}
+	Loading...
 {:else}
-	Server sided
+	Still Loading...
 {/if}
-
-<style>
-	
-</style>

@@ -1,0 +1,111 @@
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Regular.ttf);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Medium.ttf);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Bold.ttf);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Black.ttf);
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Light.ttf);
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(../assets/fonts/Roboto/Roboto-Thin.ttf);
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: Simvoni;
+    src: url(../assets/fonts/simvoni/Simvoni.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Simvoni;
+    src: url(../assets/fonts/simvoni/Simvoni-Bold.ttf);
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Whitney;
+    font-weight: normal;
+    src: url(../assets/fonts/whitney/whitney-medium.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney;
+    font-weight: bold;
+    src: url(../assets/fonts/whitney/whitney-bold.otf) format("opentype");
+}
+    
+@font-face {
+    font-family: Whitney;
+    font-weight: lighter;
+    src: url(../assets/fonts/whitney/whitney-light.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney Italic;
+    font-weight: normal;
+    src: url(../assets/fonts/whitney/whitney-mediumitalic.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney Italic;
+    font-weight: bold;
+    src: url(../assets/fonts/whitney/whitney-semibolditalic.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney Italic;
+    font-weight: lighter;
+    src: url(../assets/fonts/whitney/whitney-lightitalic.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney Book;
+    font-weight: normal;
+    src: url(../assets/fonts/whitney/whitneybook.otf) format("opentype");
+}
+
+@font-face {
+    font-family: Whitney Book;
+    font-weight: lighter;
+    src: url(../assets/fonts/whitney/whitneybook-italic.otf) format("opentype");
+}
+
+body {
+    font-family: "Whitney", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+input, button {
+    background-color: var(--accent-color);
+    color: var(--color);
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-family: Roboto;
+    font-weight: 400;
+}

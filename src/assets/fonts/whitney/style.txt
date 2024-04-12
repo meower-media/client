@@ -1,0 +1,47 @@
+@font-face {
+  font-family: Whitney;
+  font-weight: normal;
+  src: url(fonts/whitney/whitney-medium.otf) format("opentype");
+  }
+  
+@font-face {
+  font-family: Whitney;
+  font-weight: bold;
+  src: url(fonts/whitney/whitney-bold.otf) format("opentype");
+}
+    
+@font-face {
+  font-family: Whitney;
+  font-weight: lighter;
+  src: url(fonts/whitney/whitney-light.otf) format("opentype");
+}
+  
+@font-face {
+  font-family: Whitney Italic;
+  font-weight: normal;
+  src: url(fonts/whitney/whitney-mediumitalic.otf) format("opentype");
+}
+
+      @font-face {
+  font-family: Whitney Italic;
+  font-weight: bold;
+  src: url(fonts/whitney/whitney-semibolditalic.otf) format("opentype");
+}
+
+@font-face {
+  font-family: Whitney Italic;
+  font-weight: lighter;
+  src: url(fonts/whitney/whitney-lightitalic.otf) format("opentype");
+}
+
+@font-face {
+  font-family: Whitney Book;
+  font-weight: normal;
+  src: url(fonts/whitney/whitneybook.otf) format("opentype");
+}
+
+@font-face {
+  font-family: Whitney Book;
+  font-weight: lighter;
+  src: url(fonts/whitney/whitneybook-italic.otf) format("opentype");
+}
