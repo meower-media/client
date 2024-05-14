@@ -303,8 +303,8 @@
 						mod_deleted: cmd.val.mod_deleted,
 						deleted_at: cmd.val.deleted_at,
 					};
-					items = items.filter(post => post.nonce !== cmd.val.nonce);
 					list.addItem(post);
+					items = items.filter(post => post.nonce !== cmd.val.nonce);
 					if ($user.sfx && cmd.val.u !== $user.name)
 						playNotification();
 				}
