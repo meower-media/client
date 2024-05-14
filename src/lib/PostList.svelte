@@ -304,7 +304,9 @@
 						deleted_at: cmd.val.deleted_at,
 					};
 					list.addItem(post);
-					items = items.filter(post => post.nonce !== cmd.val.nonce);
+					if (cmd.val.nonce) {
+						items = items.filter(post => post.nonce !== cmd.val.nonce);
+					}
 					if ($user.sfx && cmd.val.u !== $user.name)
 						playNotification();
 				}
