@@ -292,7 +292,6 @@
 					if (cmd.val.post_origin !== postOrigin) return;
 					const post = {
 						id: id++,
-						nonce: cmd.val.nonce,
 						post_id: cmd.val._id,
 						post_origin: cmd.val.post_origin,
 						user: cmd.val.u,
@@ -304,12 +303,8 @@
 						mod_deleted: cmd.val.mod_deleted,
 						deleted_at: cmd.val.deleted_at,
 					};
-					const postIndex = items.findIndex(post => post.nonce === cmd.val.nonce);
-					if (postIndex !== -1) {
-						items[postIndex] = post;
-					} else {
-						list.addItem(post);
-					}
+					items = items.filter(post => post.nonce !== cmd.val.nonce);
+					list.addItem(post);
 					if ($user.sfx && cmd.val.u !== $user.name)
 						playNotification();
 				}
