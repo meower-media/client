@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
+	import ExternalImage from "./ExternalImage.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -318,9 +319,7 @@
 										error = "";
 										editing = true;
 										await tick();
-										editContentInput.value =
-											post.unfiltered_content ||
-											post.content;
+										editContentInput.value = post.content;
 										editContentInput.focus();
 										autoresize(editContentInput);
 									}}
@@ -583,8 +582,15 @@
 	{/if}
 	{#if !editing}
 		<div class="post-images">
+			{#each post.attachments as attachment}
+				<Attachment
+					id={attachment.id}
+					filename={attachment.filename}
+					mime={attachment.mime}
+				/>
+			{/each}
 			{#each images as { title, url }}
-				<Attachment {title} {url} />
+				<ExternalImage {title} {url} />
 			{/each}
 		</div>
 	{/if}

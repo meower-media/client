@@ -97,6 +97,7 @@
 			draggable={false}
 		/>
 	</button>
+	<!-- hidden until the server settings bug gets fixed
 	{#if $user.debug}
 		<button
 			on:click={() => modals.showModal(DebugModal)}
@@ -111,6 +112,7 @@
 			/>
 		</button>
 	{/if}
+	-->
 	{#if $user.permissions}
 		<button
 			on:click={() => modals.showModal(ModPanelModal)}
