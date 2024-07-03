@@ -69,7 +69,7 @@
 			webhook = post.user == "Webhooks";
 		}
 
-		if (bridged || webhook) {
+		if ((bridged || webhook) && post.content) {
 			if (webhook) {
 				post.content = post.content.slice(
 					post.content.indexOf(": ") + 2
@@ -141,7 +141,7 @@
 			md.linkify.add("@", {
 				validate: function (text, pos) {
 					var tail = text.slice(pos);
-					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					return tail.match(/[a-zA-Z0-9-_]{0,20}/gs)[0].length;
 				},
 				normalize: function (match) {
 					match.url =
