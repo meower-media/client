@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
+	import ExternalImage from "./ExternalImage.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -68,7 +69,7 @@
 			webhook = post.user == "Webhooks";
 		}
 
-		if (bridged || webhook) {
+		if ((bridged || webhook) && post.content) {
 			if (webhook) {
 				post.content = post.content.slice(
 					post.content.indexOf(": ") + 2
@@ -155,7 +156,7 @@
 			md.linkify.add("@", {
 				validate: function (text, pos) {
 					let tail = text.slice(pos);
-					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					return tail.match(/[a-zA-Z0-9-_]{0,20}/gs)[0].length;
 				},
 				normalize: function (match) {
 					match.url = "/users/" + match.url.replace(/^@/, "");
@@ -191,6 +192,7 @@
 							const b64href = decodeURIComponent(btoa(href));
 							childToken.attrs.push([
 								"onclick",
+								`return confirmLink('${b64href}')`,
 								`return confirmLink('${b64href}')`,
 							]);
 						}
@@ -359,9 +361,7 @@
 										error = "";
 										editing = true;
 										await tick();
-										editContentInput.value =
-											post.unfiltered_content ||
-											post.content;
+										editContentInput.value = post.content;
 										editContentInput.focus();
 										autoresize(editContentInput);
 									}}
@@ -648,8 +648,15 @@
 	{/if}
 	{#if !editing}
 		<div class="post-images">
+			{#each post.attachments as attachment}
+				<Attachment
+					id={attachment.id}
+					filename={attachment.filename}
+					mime={attachment.mime}
+				/>
+			{/each}
 			{#each images as { title, url }}
-				<Attachment {title} {url} />
+				<ExternalImage {title} {url} />
 			{/each}
 		</div>
 	{/if}
