@@ -45,7 +45,7 @@
 
 <svelte:window on:keydown={handle_keydown} />
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <div
 	class="modal-background"
 	on:click={close}
