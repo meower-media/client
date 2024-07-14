@@ -3,12 +3,13 @@
 
 	import SignupModal from "./Signup.svelte";
 
-	import {user} from "../stores.js";
+	import {authHeader, user} from "../stores.js";
 	import * as clm from "../clmanager.js";
 	import * as modals from "../modals.js";
 	import * as BGM from "../BGM.js";
 
 	import {focus} from "@roxi/routify";
+	import {apiUrl} from "../urls";
 
 	let username, password, loading, error;
 </script>
@@ -25,47 +26,52 @@
 				}
 
 				loading = true;
+
+				const resp = await fetch(`${apiUrl}auth/login`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						username: username,
+						password: password,
+					}),
+				});
+
+				let data;
+
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "authpswd",
-							val: {
-								username: username,
-								pswd: password,
-							},
-						},
-					});
+					data = await resp.json();
 				} catch (e) {
 					loading = false;
-					switch (e) {
-						case "E:103 | ID not found":
-							error = "Invalid username!";
-							break;
-						case "E:025 | Deleted":
-							error = "This account has been deleted!";
-							break;
-						case "I:011 | Invalid Password":
+					error = "Invalid response!";
+					return;
+				}
+
+				if (!data.error) {
+					authHeader.set({
+						username,
+						token: data.token,
+					});
+
+					await clm.login();
+
+					BGM.playBGM($user.bgm_song);
+					modals.closeLastModal();
+				} else {
+					loading = false;
+					switch (data.type) {
+						case "invalidCredentials":
 							error = "Invalid password!";
 							break;
-						case "E:018 | Account Banned":
-							break;
-						case "E:019 | Illegal characters detected":
-							error =
-								"Usernames must not have spaces or other special characters!";
-							break;
-						case "E:106 | Too many requests":
+						case "tooManyRequests":
 							error =
 								"Too many requests! Please try again later.";
 							break;
 						default:
-							error = `Unexpected ${e} error!`;
+							error = "Unexpected " + data.type + " error!";
 					}
-					return;
 				}
-
-				BGM.playBGM($user.bgm_song);
-				modals.closeLastModal();
 			}}
 		>
 			<label for="username" style={error ? "color: crimson;" : ""}>

@@ -24,6 +24,7 @@
 		"vite": "^4.5.2"
 	},
 	"dependencies": {
+		"@hcaptcha/vanilla-hcaptcha": "^1.1.0-alpha2",
 		"lucide-svelte": "^0.294.0"
 	}
 }
