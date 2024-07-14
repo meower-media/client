@@ -26,7 +26,7 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import MarkdownIt from "markdown-it";
-	import twemoji from "twemoji";
+	import twemoji from "@twemoji/api";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 

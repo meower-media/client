@@ -46,6 +46,7 @@
 
 <!-- routify:options bundle=true -->
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <main
 	id="main"
 	style:--orange={$useCustomTheme ? $customTheme.orange : null}
