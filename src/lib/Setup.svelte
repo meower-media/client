@@ -4,7 +4,7 @@
 	import LoginModal from "./modals/Login.svelte";
 	import SignupModal from "./modals/Signup.svelte";
 
-	import {screen, setupPage as page, user, authHeader} from "./stores.js";
+	import {screen, setupPage as page, user, authHeader, modalStack} from "./stores.js";
 	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -127,16 +127,20 @@
 		}
 	}
 
-	function handleLoginModal() {
-		modals.showModal(LoginModal);
+	function handle_modal(_, modal = LoginModal) {
+		modals.showModal(modal);
 
-		// TODO: on successful login, make sure the setup screen closes
+		modalStack.subscribe(val => {
+			if (val.length === 0 && $authHeader.token) {
+				loginStatus = "";
+				BGM.playBGM($user.bgm_song);
+				screen.set("main");
+			}
+		})
 	}
 
-	function handleSignupModal() {
-		modals.showModal(SignupModal);
-
-		// TODO: on successful signup, make sure the setup screen closes
+	function signup_modal(_) {
+		handle_modal(_, SignupModal);
 	}
 </script>
 
@@ -171,7 +175,7 @@
 					<br /><br />
 				</div>
 				<button
-					on:click={handleLoginModal}
+					on:click={handle_modal}
 					on:mousedown={() => {
 						serverSelectorTimeout = setTimeout(() => {
 							modals.showModal(ServerSelectorModal);
@@ -179,7 +183,7 @@
 					}}>Log in</button
 				>
 				<br />
-				<button on:click={handleSignupModal}
+				<button on:click={signup_modal}
 					>Create an account</button
 				> <br />
 				{#if !requireLogin}
