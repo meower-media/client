@@ -1,11 +1,12 @@
 /**
  * @typedef {{
  * 	id: number,
+ *  nonce?: string,
  * 	post_id?: string,
  *  post_origin: string,
  * 	user: string,
  * 	content: string,
- *  unfiltered_content?: string,
+ *  attachments: Array<Attachment>,
  * 	date: number,
  *  edited_at?: number,
  *  isDeleted: boolean,
@@ -62,6 +63,17 @@
  * 	uuid: string
  * }} User
  */
+
+/**
+ * @typedef {{
+* 	id: string,
+*   mime: string,
+*   filename: string,
+*   size: number,
+*   width: number,
+*   height: number
+* }} Attachment
+*/
 
 // make vscode recognize this as a module
 export {};
