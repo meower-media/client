@@ -34,7 +34,7 @@
 
 <svelte:body on:click={() => (popupShown = false)} />
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <div on:click|stopPropagation class="sidebar" in:fade={{duration: 800}}>
 	{#if $OOBERunning}
 		<div class="locked" />
@@ -97,22 +97,6 @@
 			draggable={false}
 		/>
 	</button>
-	<!-- hidden until the server settings bug gets fixed
-	{#if $user.debug}
-		<button
-			on:click={() => modals.showModal(DebugModal)}
-			class="debugpanel-btn round"
-			title="Debug Panel"
-		>
-			<img
-				src={terminal}
-				alt="Open debug panel"
-				height="auto"
-				draggable={false}
-			/>
-		</button>
-	{/if}
-	-->
 	{#if $user.permissions}
 		<button
 			on:click={() => modals.showModal(ModPanelModal)}
@@ -146,7 +130,7 @@
 	</button>
 </div>
 {#if popupShown}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {

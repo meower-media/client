@@ -46,6 +46,7 @@
 
 <!-- routify:options bundle=true -->
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <main
 	id="main"
 	style:--orange={$useCustomTheme ? $customTheme.orange : null}
@@ -256,13 +257,6 @@
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
-	}
-
-	.banner {
-		background-color: crimson;
-		margin: 0;
-		padding: 0.5em;
-		text-align: center;
 	}
 
 	:global(main.layout-old) .main-screen {
