@@ -306,25 +306,7 @@ export async function connect() {
 			link.log("manager", "connection restored");
 			link.off(onErrorEv);
 
-			// re-authenticate
-			if (_authHeader.username && _authHeader.token) {
-				try {
-					// TODO: handle token refresh here
-					await meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "authpswd",
-							val: {
-								username: _authHeader.username,
-								pswd: _authHeader.token,
-							},
-						},
-					});
-				} catch (e) {
-					console.error(e);
-					modals.showModal(LoggedOutModal);
-				}
-			}
+			await login();
 
 			// refresh screen
 			screen.set("blank");
@@ -481,6 +463,34 @@ export async function connect() {
 		link.error("manager", "conenction error:", e);
 		modals.showModal(ConnectionFailedModal);
 		return e;
+	}
+}
+
+/** Login using credentials in authHeaders */
+export async function login() {
+	// re-authenticate
+	if (_authHeader.username && _authHeader.token) {
+		try {
+			// TODO: replace meowerRequest
+			const resp = await meowerRequest({
+				cmd: "direct",
+				val: {
+					cmd: "authpswd",
+					val: {
+						username: _authHeader.username,
+						pswd: _authHeader.token,
+					},
+				},
+			});
+
+			authHeader.set({
+				..._authHeader,
+				token: resp.payload.token,
+			});
+		} catch (e) {
+			console.error(e);
+			modals.showModal(LoggedOutModal);
+		}
 	}
 }
 

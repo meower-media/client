@@ -4,7 +4,7 @@
 	import LoginModal from "./modals/Login.svelte";
 	import SignupModal from "./modals/Signup.svelte";
 
-	import {screen, setupPage as page, user} from "./stores.js";
+	import {screen, setupPage as page, user, authHeader} from "./stores.js";
 	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -75,7 +75,21 @@
 					localStorage.getItem("meower_savedusername") &&
 					localStorage.getItem("meower_savedpassword")
 				) {
-					// TODO: reimplement saved accounts
+					authHeader.set({
+						username: localStorage.getItem("meower_savedusername"),
+						token: localStorage.getItem("meower_savedpassword"),
+					});
+
+					await clm.login()
+
+					if ($user.name) {
+						loginStatus = "";
+						BGM.playBGM($user.bgm_song);
+						screen.set("main");
+					} else {
+						await sleep(100);
+						await mainSetup();
+					}
 				} else {
 					await sleep(100);
 					await mainSetup();
