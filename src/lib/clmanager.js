@@ -18,7 +18,7 @@ import {
 	intentionalDisconnect,
 	reconnecting,
 	disconnected,
-	disconnectReason
+	disconnectReason,
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
@@ -271,9 +271,7 @@ export async function connect() {
 	});
 	disconnectEvent = link.on("disconnected", async e => {
 		// make sure connection was started (we can know by checking if pingInterval is set)
-		if (!pingInterval) { 
-			return
-		}
+		if (!pingInterval) return;
 
 		// clear ping interval
 		clearInterval(pingInterval);
