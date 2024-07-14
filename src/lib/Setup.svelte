@@ -73,9 +73,9 @@
 
 				if (
 					localStorage.getItem("meower_savedusername") &&
-					localStorage.getItem("meower_savedtoken")
+					localStorage.getItem("meower_savedpassword")
 				) {
-					// TODO: reimplement saved accounts with tokens
+					// TODO: reimplement saved accounts
 				} else {
 					await sleep(100);
 					await mainSetup();
