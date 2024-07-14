@@ -140,6 +140,7 @@
 		);
 
 		try {
+			// TODO: replace with api-accounts
 			await clm.meowerRequest({
 				cmd: "direct",
 				val: {
@@ -322,6 +323,7 @@
 
 					loginStatus = "Creating account...";
 
+					// TODO: replace with api-accounts
 					clm.meowerRequest({
 						cmd: "direct",
 						val: {

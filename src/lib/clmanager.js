@@ -309,6 +309,7 @@ export async function connect() {
 			// re-authenticate
 			if (_authHeader.username && _authHeader.token) {
 				try {
+					// TODO: handle token refresh here
 					await meowerRequest({
 						cmd: "direct",
 						val: {
