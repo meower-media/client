@@ -5,7 +5,6 @@
 	import OOBE from "../lib/OOBE/Main.svelte";
 	import Sidebar from "../lib/Sidebar.svelte";
 	import Spinner from "../lib/Spinner.svelte";
-	import MeowerDownModal from "../lib/modals/MeowerDown.svelte";
 
 	import {
 		screen,
@@ -15,8 +14,7 @@
 		user,
 		spinner,
 		useCustomTheme,
-		customTheme,
-		showMeowerDown
+		customTheme
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
@@ -70,9 +68,6 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-	{#if $showMeowerDown && !$reconnecting}
-		<MeowerDownModal />
-	{/if}
 
 	{#if $reconnecting}
 		<Modal>
@@ -263,13 +258,6 @@
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
-	}
-
-	.banner {
-		background-color: crimson;
-		margin: 0;
-		padding: 0.5em;
-		text-align: center;
 	}
 
 	:global(main.layout-old) .main-screen {

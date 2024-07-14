@@ -18,8 +18,7 @@ import {
 	intentionalDisconnect,
 	reconnecting,
 	disconnected,
-	disconnectReason,
-	showMeowerDown
+	disconnectReason
 } from "./stores.js";
 import unloadedProfile from "./unloadedprofile.js";
 import {stringToTheme, applyTheme, removeTheme} from "./CustomTheme.js";
@@ -273,7 +272,6 @@ export async function connect() {
 	disconnectEvent = link.on("disconnected", async e => {
 		// make sure connection was started (we can know by checking if pingInterval is set)
 		if (!pingInterval) { 
-			showMeowerDown.set(true)
 			return
 		}
 
@@ -318,7 +316,6 @@ export async function connect() {
 			screen.set("main");
 
 			// hide modal
-			showMeowerDown.set(false);
 			reconnecting.set(false);
 		});
 		try {
