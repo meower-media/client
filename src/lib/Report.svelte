@@ -138,7 +138,7 @@
 				post_origin: report.content.post_origin,
 				user: report.content.u,
 				content: report.content.p,
-				unfiltered_content: report.unfiltered_p,
+				attachments: report.content.attachments,
 				date: report.content.t.e,
 				edited_at: report.content.edited_at,
 				isDeleted: report.content.isDeleted,
