@@ -471,29 +471,45 @@ export async function login() {
 	// re-authenticate
 	if (_authHeader.username && _authHeader.token) {
 		try {
-			// TODO: replace meowerRequest
-			const resp = await meowerRequest({
-				cmd: "direct",
+			spinner.set(true);
+
+			const timer = setTimeout(() => {
+				spinner.set(false);
+
+				throw "Timed out"
+			}, 10000);
+
+			const ev = link.sendListener({
+				cmd: "authpswd",
 				val: {
-					cmd: "authpswd",
-					val: {
-						username: _authHeader.username,
-						pswd: _authHeader.token,
-					},
+					username: _authHeader.username,
+					pswd: _authHeader.token,
 				},
-			});
+				listener: "svelte-auth",
+			}, cmd => {
+				if (cmd.cmd === "direct") {
+					clearTimeout(timer);
+					link.off(ev);
+					spinner.set(false);
 
-			authHeader.set({
-				..._authHeader,
-				token: resp.payload.token,
-			});
+					const resp = cmd.val;
 
-			_user = {
-				..._user,
-				...resp.payload,
-			};
-
-			user.set(_user);
+					authHeader.set({
+						..._authHeader,
+						token: resp.payload.token,
+					});
+		
+					_user = {
+						..._user,
+						...resp.payload,
+					};
+		
+					user.set(_user);
+				} else {
+					spinner.set(false);
+					throw cmd;
+				}
+			})
 		} catch (e) {
 			console.error(e);
 			modals.showModal(LoggedOutModal);
@@ -524,46 +540,6 @@ export async function disconnect() {
 	return new Promise(resolve => {
 		link.once("disconnected", resolve);
 		link.disconnect(1000, "Intentional disconnect");
-	});
-}
-
-/**
- * Send a "Meower request" - a packet that makes the server respond with a direct and a statuscode packet.
- *
- * @param {object} data
- * @returns {Promise<object | string>} Either an object representing the direct command's val parameter (if it resolves), or an error code as a string (if it rejects).
- */
-export async function meowerRequest(data) {
-	link.log("manager", "meower request", data);
-	spinner.set(true);
-	return new Promise((resolve, reject) => {
-		let returnData = null;
-		const timer = setTimeout(() => {
-			reject("Timed out");
-			spinner.set(false);
-		}, 10000);
-		const ev = link.sendListener(
-			{
-				...data,
-				listener: "listener_" + Math.floor(Math.random() * 10000000),
-			},
-			cmd => {
-				if (cmd.cmd === "statuscode") {
-					link.off(ev);
-					spinner.set(false);
-
-					clearTimeout(timer);
-
-					if (cmd.val === "I:100 | OK") {
-						resolve(returnData);
-					} else {
-						reject(cmd.val);
-					}
-				} else if (cmd.cmd === "direct") {
-					returnData = cmd.val;
-				}
-			}
-		);
 	});
 }
 
