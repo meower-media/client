@@ -2,7 +2,7 @@
 	import {createEventDispatcher, onDestroy} from "svelte";
 	import {scale, fade, slide} from "svelte/transition";
 	import {expoOut} from "svelte/easing";
-    import {mobile} from "./responsiveness.js";
+	import {mobile} from "./responsiveness.js";
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch("close");
