@@ -39,6 +39,7 @@
 			}
 		} else {
 			removeTheme();
+
 		}
 		modals.closeLastModal();
 	}}

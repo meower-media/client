@@ -5,9 +5,11 @@
 	import * as modals from "../modals.js";
 
 	import {focus} from "@roxi/routify";
+	import * as key from "../keyDetect.js";
 
 	let clUrl = localStorage.getItem("meower_linkurl");
 	let apiUrl = localStorage.getItem("meower_apiurl");
+	let uploadsUrl = localStorage.getItem("meower_uploadsurl");
 	let loading, error;
 </script>
 
@@ -19,16 +21,28 @@
 				// set loading state
 				loading = true;
 
-				// fill in blank fields
-				if (!clUrl) clUrl = "ws://127.0.0.1:3000";
-				if (!apiUrl) apiUrl = "http://127.0.0.1:3001/";
+				// set clUrl
+				if (clUrl) {
+					localStorage.setItem("meower_linkurl", clUrl);
+				} else {
+					localStorage.removeItem("meower_linkurl");
+				}
 
-				// add / to API URL if it doesn't end with one
-				if (!apiUrl.endsWith("/")) apiUrl = `${apiUrl}/`;
+				// set apiUrl
+				if (apiUrl) {
+					if (!apiUrl.endsWith("/")) apiUrl = `${apiUrl}/`;
+					localStorage.setItem("meower_apiurl", apiUrl);
+				} else {
+					localStorage.removeItem("meower_apiurl");
+				}
 
-				// set local storage items
-				localStorage.setItem("meower_linkurl", clUrl);
-				localStorage.setItem("meower_apiurl", apiUrl);
+				// set uploadsUrl
+				if (uploadsUrl) {
+					if (!uploadsUrl.endsWith("/")) uploadsUrl = `${uploadsUrl}/`;
+					localStorage.setItem("meower_uploadsurl", uploadsUrl);
+				} else {
+					localStorage.removeItem("meower_uploadsurl");
+				}
 
 				// refresh
 				window.location.reload();
@@ -51,7 +65,7 @@
 				id="cl-url"
 				type="text"
 				class="modal-input white"
-				placeholder="ws://127.0.0.1:3000"
+				placeholder="wss://api.meower.org/v0/cloudlink"
 				disabled={loading}
 				bind:value={clUrl}
 				use:focus
@@ -65,9 +79,22 @@
 				id="api-url"
 				type="text"
 				class="modal-input white"
-				placeholder="http://127.0.0.1:3001/"
+				placeholder="https://api.meower.org/"
 				disabled={loading}
 				bind:value={apiUrl}
+			/>
+			<br /><br />
+			<label for="uploads-url" style={error ? "color: crimson;" : ""}
+				><b>Uploads URL</b>
+				{#if error}<i>- {error}</i>{/if}</label
+			>
+			<input
+				id="uploads-url"
+				type="text"
+				class="modal-input white"
+				placeholder="https://uploads.meower.org/"
+				disabled={loading}
+				bind:value={uploadsUrl}
 			/>
 			<br /><br />
 			<div class="modal-buttons">
@@ -80,8 +107,17 @@
 					type="button"
 					disabled={loading}
 					on:click={() => {
-						clUrl = "";
-						apiUrl = "";
+						if (key.shiftHeld) {
+							localStorage.removeItem("meower_linkurl");
+							localStorage.removeItem("meower_apiurl");
+              localStorage.removeItem("meower_uploadsurl");
+
+							window.location.reload();
+						} else {
+							clUrl = "";
+							apiUrl = "";
+              uploadsUrl = "";
+						}
 					}}>Reset</button
 				>
 				<button type="submit" disabled={loading}>Save & Reload</button>
