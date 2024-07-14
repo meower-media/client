@@ -5,8 +5,8 @@
 	import BasicModal from "../Basic.svelte";
 
 	import * as modals from "../../modals.js";
-	import { apiUrl } from "src/lib/urls";
-	import { authHeader } from "src/lib/stores";
+	import { apiUrl } from "../../urls";
+	import { authHeader } from "../../stores";
 
 	export let modalData;
 
