@@ -5,6 +5,7 @@
 	import * as modals from "../modals.js";
 
 	import {focus} from "@roxi/routify";
+	import * as key from "../keyDetect.js";
 
 	let clUrl = localStorage.getItem("meower_linkurl");
 	let apiUrl = localStorage.getItem("meower_apiurl");
@@ -106,9 +107,17 @@
 					type="button"
 					disabled={loading}
 					on:click={() => {
-						clUrl = "";
-						apiUrl = "";
-						uploadsUrl = "";
+						if (key.shiftHeld) {
+							localStorage.removeItem("meower_linkurl");
+							localStorage.removeItem("meower_apiurl");
+              localStorage.removeItem("meower_uploadsurl");
+
+							window.location.reload();
+						} else {
+							clUrl = "";
+							apiUrl = "";
+              uploadsUrl = "";
+						}
 					}}>Reset</button
 				>
 				<button type="submit" disabled={loading}>Save & Reload</button>
