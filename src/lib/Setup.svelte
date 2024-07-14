@@ -1,10 +1,10 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
 	import ServerSelectorModal from "./modals/ServerSelector.svelte";
-	import BasicModal from "./modals/Basic.svelte";
-	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
+	import LoginModal from "./modals/Login.svelte";
+	import SignupModal from "./modals/Signup.svelte";
 
-	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
+	import {screen, setupPage as page, user} from "./stores.js";
 	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -42,8 +42,6 @@
 		}
 	}
 
-	let acceptTerms = false;
-
 	let requireLogin = false;
 	$: requireLogin =
 		$isActive("./inbox") || $isActive("./chats", {}, {strict: false});
@@ -75,13 +73,9 @@
 
 				if (
 					localStorage.getItem("meower_savedusername") &&
-					localStorage.getItem("meower_savedpassword")
+					localStorage.getItem("meower_savedtoken")
 				) {
-					doLogin(
-						localStorage.getItem("meower_savedusername"),
-						localStorage.getItem("meower_savedpassword"),
-						true
-					);
+					// TODO: reimplement saved accounts with tokens
 				} else {
 					await sleep(100);
 					await mainSetup();
@@ -119,71 +113,16 @@
 		}
 	}
 
-	/**
-	 * Logs in.
-	 *
-	 * @param {string} username
-	 * @param {string} password
-	 */
-	async function doLogin(
-		username,
-		password,
-		autoLogin = false,
-		savedLogin = false
-	) {
-		setTimeout(
-			() => {
-				if ($user.name) return;
-				loginStatus = "Logging in...";
-			},
-			autoLogin ? 500 : 0
-		);
+	function handleLoginModal() {
+		modals.showModal(LoginModal);
 
-		try {
-			// TODO: replace with api-accounts
-			await clm.meowerRequest({
-				cmd: "direct",
-				val: {
-					cmd: "authpswd",
-					val: {
-						username: username,
-						pswd: password,
-					},
-				},
-			});
-		} catch (e) {
-			if (autoLogin) return mainSetup();
-			switch (e) {
-				case "E:103 | ID not found":
-					loginStatus = "Invalid username!";
-					break;
-				case "E:025 | Deleted":
-					loginStatus = "This account has been deleted!";
-					break;
-				case "I:011 | Invalid Password":
-					loginStatus = savedLogin
-						? "Session expired! Please login again."
-						: "Invalid password!";
-					break;
-				case "E:018 | Account Banned":
-					loginStatus = "";
-					break;
-				case "E:019 | Illegal characters detected":
-					loginStatus =
-						"Usernames must not have spaces or other special characters!";
-					break;
-				case "E:106 | Too many requests":
-					loginStatus = "Too many requests! Please try again later.";
-					break;
-				default:
-					loginStatus = `Unexpected ${e} error!`;
-			}
-			return;
-		}
+		// TODO: on successful login, make sure the setup screen closes
+	}
 
-		loginStatus = "";
-		BGM.playBGM($user.bgm_song);
-		screen.set("main");
+	function handleSignupModal() {
+		modals.showModal(SignupModal);
+
+		// TODO: on successful signup, make sure the setup screen closes
 	}
 </script>
 
@@ -218,7 +157,7 @@
 					<br /><br />
 				</div>
 				<button
-					on:click={() => page.set("login")}
+					on:click={handleLoginModal}
 					on:mousedown={() => {
 						serverSelectorTimeout = setTimeout(() => {
 							modals.showModal(ServerSelectorModal);
@@ -226,25 +165,9 @@
 					}}>Log in</button
 				>
 				<br />
-				<button on:click={() => page.set("join")}
+				<button on:click={handleSignupModal}
 					>Create an account</button
 				> <br />
-				{#if localStorage.getItem("meower_savedusername")}
-					<button
-						on:click={() => {
-							doLogin(
-								localStorage.getItem("meower_savedusername"),
-								localStorage.getItem("meower_savedpassword"),
-								false,
-								true
-							);
-						}}
-						>Use saved login ({localStorage.getItem(
-							"meower_savedusername"
-						)})</button
-					>
-					<p class="small">{loginStatus}</p>
-				{/if}
 				{#if !requireLogin}
 					<button
 						on:click={() => {
@@ -268,163 +191,8 @@
 				</div>
 			</div>
 		</div>
-	{:else if $page === "login"}
-		<div class="fullcenter">
-			<h1>Login to Meower</h1>
-
-			<form
-				class="column-ui"
-				on:submit|preventDefault={e => {
-					if (!(e.target[0].value && e.target[1].value)) {
-						loginStatus =
-							"You must specify a username and a password to login!";
-						return false;
-					}
-					doLogin(e.target[0].value, e.target[1].value);
-					return false;
-				}}
-			>
-				<input type="text" placeholder="Username" maxlength="20" />
-				<input type="password" placeholder="Password" maxlength="255" />
-				<span class="login-status">{loginStatus}</span>
-				<div class="buttons">
-					<button
-						type="button"
-						on:click|preventDefault={() => {
-							page.set("welcome");
-							loginStatus = "";
-							return false;
-						}}>Go back</button
-					>
-					<button type="submit">Log in</button>
-				</div>
-			</form>
-		</div>
-	{:else if $page === "join"}
-		<div class="fullcenter">
-			<h1>Welcome to Meower</h1>
-
-			<form
-				class="column-ui"
-				on:submit|preventDefault={e => {
-					const username = e.target[0].value;
-					const password = e.target[1].value;
-					const confirmPassword = e.target[2].value;
-					if (!(username && password)) {
-						loginStatus =
-							"You must specify a username and a password to create an account!";
-						return false;
-					}
-					if (password !== confirmPassword) {
-						loginStatus =
-							"Passwords do not match! Make sure you have entered your password correctly.";
-						return false;
-					}
-
-					loginStatus = "Creating account...";
-
-					// TODO: replace with api-accounts
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "gen_account",
-							val: {
-								username: username,
-								pswd: password,
-							},
-						},
-						listener: "join",
-					})
-						.then(async val => {
-							user.update(v =>
-								Object.assign(v, {
-									name: val.payload.username,
-									unread_inbox: true,
-									layout: "new",
-								})
-							);
-							loginStatus = "";
-							OOBERunning.set(true);
-							screen.set("main");
-						})
-						.catch(code => {
-							switch (code) {
-								case "I:015 | Account exists":
-									loginStatus = `${username} is taken!`;
-									break;
-								case "E:019 | Illegal characters detected":
-									loginStatus =
-										"Usernames must not have spaces or other special characters!";
-									break;
-								case "E:106 | Too many requests":
-									loginStatus =
-										"Too many requests! Please try again later.";
-									break;
-								case "E:119 | IP Blocked":
-									modals.showModal(
-										AccountCreationBlockedModal
-									);
-									loginStatus = "";
-									break;
-								case "E:122 | Command disabled by sysadmin":
-									modals.showModal(BasicModal, {
-										title: "Registration Disabled",
-										desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later.",
-									});
-									loginStatus = "";
-									break;
-								default:
-									loginStatus = `Unexpected ${code} error!`;
-							}
-						});
-				}}
-			>
-				<input type="text" placeholder="Username" maxlength="20" />
-				<input
-					type="password"
-					placeholder="Password"
-					minlength="8"
-					maxlength="255"
-				/>
-				<input
-					type="password"
-					placeholder="Confirm password"
-					maxlength="255"
-					autocomplete="new-password"
-				/>
-				<p class="checkboxes">
-					<input
-						id="accept-terms"
-						type="checkbox"
-						bind:checked={acceptTerms}
-					/>
-					<label for="accept-terms">
-						I agree to <a
-							href="https://meower.org/legal"
-							target="_blank"
-							rel="noreferrer"
-							>Meower's Terms of Service and Privacy Policy</a
-						>
-					</label>
-				</p>
-				<span class="login-status">{loginStatus}</span>
-				<div class="buttons">
-					<button
-						type="button"
-						on:click|preventDefault={() => {
-							page.set("welcome");
-							loginStatus = "";
-							return false;
-						}}>Go back</button
-					>
-					<button type="submit" disabled={!acceptTerms}>Join!</button>
-				</div>
-			</form>
-		</div>
 	{:else if $page === "blank"}
 		<div />
-	{:else if $page === "go"}
-		<div class="fullcenter">Let's go!</div>
 	{:else}
 		<div class="fullcenter">
 			<div class="column-ui">
@@ -527,23 +295,7 @@
 		padding-right: 0;
 	}
 
-	.login-status {
-		height: 0;
-		overflow: visible;
-	}
-
-	label,
-	.checkboxes input {
-		vertical-align: middle;
-	}
-
-	.checkboxes {
-		text-align: left;
-		font-size: 90%;
-	}
-
-	button,
-	input {
+	button {
 		margin-bottom: 0.2cm;
 	}
 
