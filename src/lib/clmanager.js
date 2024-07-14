@@ -487,6 +487,13 @@ export async function login() {
 				..._authHeader,
 				token: resp.payload.token,
 			});
+
+			_user = {
+				..._user,
+				...resp.payload,
+			};
+
+			user.set(_user);
 		} catch (e) {
 			console.error(e);
 			modals.showModal(LoggedOutModal);
