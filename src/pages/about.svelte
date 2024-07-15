@@ -120,7 +120,7 @@
 		<ul>
 			<li>Fixed a bug where uploading images would result in a 404</li>
 			<li>Added an "X" Button to blocked users in the blocked user list</li>
-			<li>Fixed several regarding authentication</li>
+			<li>Fixed several bugs regarding authentication</li>
 			<li>Re-Added debug panel to sidebar and fixed an issue with the registration text in the mod panel</li>
 		</ul>
 		<small>Test your sites before deploying them onto production kids!</small>
