@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
+	import ExternalImage from "./ExternalImage.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -25,16 +26,22 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import MarkdownIt from "markdown-it";
-	import twemoji from "twemoji";
+	import twemoji from "@twemoji/api";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
+	/**
+	 * @type {import('src/lib/types.js').ListPost}
+	 */
 	export let post = {
 		content: ""
 	};
 	export let buttons = true;
 	export let input = null;
 	export let adminView = false;
+	export let error = "";
+	export let retryPost;
+	export let removePost;
 
 	let bridged = false;
 	let webhook = false;
@@ -42,7 +49,6 @@
 	let images = [];
 
 	let editing = false;
-	let editError = "";
 	let editContentInput, editSaveButton;
 
 	let deleteButton;
@@ -65,7 +71,12 @@
 			webhook = post.user == "Webhooks";
 		}
 
-		if (bridged || webhook) {
+		if ((bridged || webhook) && post.content) {
+			if (webhook) {
+				post.content = post.content.slice(
+					post.content.indexOf(": ") + 2
+				);
+			}
 			post.user = post.content.split(": ")[0];
 			post.content = post.content.slice(post.content.indexOf(": ") + 2);
 		}
@@ -106,32 +117,37 @@
 	}
 
 	function confirmLink(link) {
+		link = atob(encodeURIComponent(link)); // we now base64 encode the link to prevent XSS
 		if (
-			link.startsWith(
-				`${window.location.protocol}//${window.location.host}`
-			) ||
-			link.startsWith(window.location.host)
+			!link.startsWith("https:") &&
+			!link.startsWith("http:") &&
+			!link.startsWith("/")
 		) {
-			$goto(
-				link
-					.replace(
-						`${window.location.protocol}//${window.location.host}`,
-						""
-					)
-					.replace(window.location.host, "")
-			);
+			link = "https://" + link;
+		}
+		let url = new URL(link, location.href);
+		if (url.host === location.host) {
+			$goto(url.pathname);
 		} else {
-			modals.showModal(ConfirmHyperlinkModal, {link});
+			modals.showModal(ConfirmHyperlinkModal, {link: url.href});
 		}
 		return false;
 	}
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	/** @param {string} content */
+	/**
+	 * @param {string} content
+	 * @returns {Promise<{
+	 * 	html?: string,
+	 * 	error?: Error,
+	 * 	youtubeEmbeds?: Array<{title: string, author: string, thumbnail: string, id: number, url: string}>
+	 * }>}
+	 */
 	async function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
-		var renderedContent;
+		let renderedContent;
+		const youtubeEmbeds = [];
 
 		try {
 			const md = new MarkdownIt("default", {
@@ -141,14 +157,11 @@
 			});
 			md.linkify.add("@", {
 				validate: function (text, pos) {
-					var tail = text.slice(pos);
-					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					let tail = text.slice(pos);
+					return tail.match(/[a-zA-Z0-9-_]{0,20}/gs)[0].length;
 				},
 				normalize: function (match) {
-					match.url =
-						window.location.host +
-						"/users/" +
-						match.url.replace(/^@/, "");
+					match.url = "/users/" + match.url.replace(/^@/, "");
 				},
 			});
 			const tokens = md.parse(
@@ -172,16 +185,17 @@
 								)
 							) {
 								childToken.attrs[srcPos][1] = "about:blank";
-								console.log(childToken);
 							}
 						}
 						if (childToken.type === "link_open") {
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
+							const b64href = decodeURIComponent(btoa(href));
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${href}')`,
+								`return confirmLink('${b64href}')`,
+								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
@@ -197,7 +211,7 @@
 			);
 
 			if ($user.embeds_enabled) {
-				let youtubeMatches = [
+				const youtubeMatches = [
 					...new Set(
 						content.match(
 							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
@@ -207,22 +221,24 @@
 				for (const watchURL of youtubeMatches) {
 					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
 						continue;
-					let response = await (
+					const response = await (
 						await fetch(
 							`https://youtube.com/oembed?url=${watchURL}`
 						)
 					).json();
-					renderedContent += `<div class="youtube-container">
-						<h4>${response.title}</h4>
-						<span style="color: #606060; font-size: 1.1rem">${response.author_name}</span><br><br>
-						<img src="${response.thumbnail_url}" height=180 width=240 loading="lazy" alt="Thumbnail for ${response.title}">
-					</div>`;
+					youtubeEmbeds.push({
+						title: response.title,
+						author: response.author_name,
+						thumbnail: response.thumbnail_url,
+						id: youtubeEmbeds.length,
+						url: watchURL
+					});
 				}
 			}
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
-			return `Failed rendering post: ${e}`;
+			return {error: e};
 		}
 
 		// twemoji
@@ -232,7 +248,10 @@
 			size: 20,
 		});
 
-		return renderedContent;
+		return {
+			html: renderedContent,
+			youtubeEmbeds,
+		};
 	}
 
 	async function adminDelete() {
@@ -251,7 +270,7 @@
 			post.mod_deleted = true;
 			post.deleted_at = Math.floor(Date.now() / 1000);
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminDeleteButton.disabled = false;
 	}
@@ -275,12 +294,14 @@
 			post.mod_deleted = null;
 			post.deleted_at = null;
 		} catch (e) {
-			editError = e;
+			error = e;
 		}
 		adminRestoreButton.disabled = false;
 	}
 
-	onMount(initPostUser);
+	onMount(async () => {
+		initPostUser();
+	});
 
 	$: noPFP =
 		post.user === "Notification" ||
@@ -294,7 +315,20 @@
 	<div class="post-header">
 		{#if buttons}
 			<div class="settings-controls">
-				{#if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
+				{#if post.pending}
+					{#if error}
+						<button
+							class="circle restore"
+							title="Retry"
+							on:click={retryPost}
+						/>
+						<button
+							class="circle trash"
+							title="Delete"
+							on:click={removePost}
+						/>
+					{/if}
+				{:else if adminView && hasPermission(adminPermissions.DELETE_POSTS)}
 					{#if post.isDeleted}
 						<button
 							class="circle restore"
@@ -322,18 +356,25 @@
 					{/if}
 					{#if input && !input.disabled && !noPFP && !editing}
 						{#if post.user === $user.name}
-							<button
-								class="circle pen"
-								on:click={async () => {
-									editError = "";
-									editing = true;
-									await tick();
-									editContentInput.value =
-										post.unfiltered_content || post.content;
-									editContentInput.focus();
-									autoresize(editContentInput);
-								}}
-							/>
+							{#if !bridged}
+								<button
+									class="circle pen"
+									on:click={async () => {
+										error = "";
+										editing = true;
+										await tick();
+										editContentInput.value = post.content;
+										editContentInput.focus();
+										autoresize(editContentInput);
+									}}
+								/>
+							{:else}
+								<button
+									class="circle pen"
+									disabled
+									title="You cannot edit bridged messages."
+								/>
+							{/if}
 						{/if}
 						<button
 							class="circle reply"
@@ -376,42 +417,50 @@
 							}}
 						/>
 						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
-							<button
-								class="circle trash"
-								bind:this={deleteButton}
-								on:click={async () => {
-									if (shiftHeld) {
-										deleteButton.disabled = true;
-										try {
-											const resp = await fetch(
-												`${apiUrl}posts?id=${post.post_id}`,
-												{
-													method: "DELETE",
-													headers: $authHeader,
-												}
-											);
-											if (!resp.ok) {
-												if (resp.status === 429) {
+							{#if !bridged}
+								<button
+									class="circle trash"
+									bind:this={deleteButton}
+									on:click={async () => {
+										if (shiftHeld) {
+											deleteButton.disabled = true;
+											try {
+												const resp = await fetch(
+													`${apiUrl}posts?id=${post.post_id}`,
+													{
+														method: "DELETE",
+														headers: $authHeader,
+													}
+												);
+												if (!resp.ok) {
+													if (resp.status === 429) {
+														throw new Error(
+															"Too many requests! Try again later."
+														);
+													}
 													throw new Error(
-														"Too many requests! Try again later."
+														"Response code is not OK; code is " +
+															resp.status
 													);
 												}
-												throw new Error(
-													"Response code is not OK; code is " +
-														resp.status
-												);
+											} catch (e) {
+												error = e;
 											}
-										} catch (e) {
-											editError = e;
+											deleteButton.disabled = false;
+										} else {
+											modals.showModal(DeletePostModal, {
+												post,
+											});
 										}
-										deleteButton.disabled = false;
-									} else {
-										modals.showModal(DeletePostModal, {
-											post,
-										});
-									}
-								}}
-							/>
+									}}
+								/>
+							{:else}
+								<button
+									class="circle trash"
+									disabled
+									title="You cannot delete bridged messages."
+								/>
+							{/if}
 						{:else}
 							<button
 								class="circle report"
@@ -576,25 +625,61 @@
 							);
 						}
 					} catch (e) {
-						editError = e;
+						error = e;
 					}
 				}}>Save</button
 			>
 		</div>
 	{:else}
-		<p class="post-content" style="border-left-color: #4b5563;">
+		<p
+			class="post-content"
+			style="border-left-color: #4b5563; {post.pending
+				? 'opacity: 0.5;'
+				: ''}"
+		>
 			{#await addFancyElements(post.content) then content}
-				{@html content}
+				{#if content.error}
+					Error rendering post: {content.error}
+				{:else}
+					{#if content.html}
+						{@html content.html}
+					{/if}
+					{#if content.youtubeEmbeds}
+						{#each content.youtubeEmbeds as embed (embed.id)}
+							<div class="youtube-container">
+								<h4>{embed.title}</h4>
+								<span style="color: #606060; font-size: 1.1rem"
+									>{embed.author}</span
+								><br /><br />
+								<a href={embed.url} target="_blank" rel="noreferrer">
+									<img
+										src={embed.thumbnail}
+										height="180"
+										loading="lazy"
+										alt="Thumbnail for {embed.title}"
+									/>
+								</a>
+							</div>
+						{/each}
+					{/if}
+				{/if}
 			{/await}
 		</p>
 	{/if}
-	{#if editError}
-		<p style="color: crimson;">{editError}</p>
+	{#if error}
+		<p style="color: crimson;">{error}</p>
 	{/if}
 	{#if !editing}
 		<div class="post-images">
+			{#each post.attachments as attachment}
+				<Attachment
+					id={attachment.id}
+					filename={attachment.filename}
+					mime={attachment.mime}
+				/>
+			{/each}
 			{#each images as { title, url }}
-				<Attachment {title} {url} />
+				<ExternalImage {title} {url} />
 			{/each}
 		</div>
 	{/if}

@@ -1,23 +1,29 @@
 /**
  * @typedef {{
  * 	id: number,
- * 	post_id: string,
+ *  nonce?: string,
+ * 	post_id?: string,
  *  post_origin: string,
  * 	user: string,
  * 	content: string,
- *  unfiltered_content?: string,
+ *  attachments: Array<Attachment>,
  * 	date: number,
  *  edited_at?: number,
  *  isDeleted: boolean,
  *  mod_deleted?: boolean,
  *  deleted_at?: number,
+ *  pending?: boolean,
+ *  error?: string
  * }} ListPost
  */
 
 /**
  * @typedef {{
  * 	_id: string,
+ *  edited_at?: number,
  * 	isDeleted: boolean,
+ *  mod_deleted?: boolean,
+ *  deleted_at: number,
  * 	p: string,
  * 	post_id: string,
  * 	post_origin: string,
@@ -57,6 +63,17 @@
  * 	uuid: string
  * }} User
  */
+
+/**
+ * @typedef {{
+* 	id: string,
+*   mime: string,
+*   filename: string,
+*   size: number,
+*   width: number,
+*   height: number
+* }} Attachment
+*/
 
 // make vscode recognize this as a module
 export {};

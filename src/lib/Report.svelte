@@ -8,7 +8,7 @@
 
 	import {authHeader} from "./stores.js";
 	import {apiUrl} from "./urls.js";
-	import { adminPermissions, hasPermission } from "./bitField.js";
+	import {adminPermissions, hasPermission} from "./bitField.js";
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
@@ -138,7 +138,7 @@
 				post_origin: report.content.post_origin,
 				user: report.content.u,
 				content: report.content.p,
-				unfiltered_content: report.unfiltered_p,
+				attachments: report.content.attachments,
 				date: report.content.t.e,
 				edited_at: report.content.edited_at,
 				isDeleted: report.content.isDeleted,

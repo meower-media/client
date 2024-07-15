@@ -12,7 +12,6 @@
 	import RecentNetblocksModal from "./RecentNetblocks.svelte";
 	import SendAnnouncementModal from "./SendAnnouncement.svelte";
 	import KickAllUsersModal from "./KickAllUsers.svelte";
-	import RestartServerModal from "./RestartServer.svelte";
 	import EnableRepairModeModal from "./EnableRepairMode.svelte";
 
 	import {authHeader} from "../../stores.js";
@@ -39,7 +38,7 @@
 	let firstLoad = true;
 
 	async function getServerStatus() {
-		const resp = await fetch(`${apiUrl}status`);
+		const resp = await fetch(apiUrl);
 		if (!resp.ok) {
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}
@@ -255,11 +254,6 @@
 					style="margin-right: 0.25em; margin-bottom: 0.25em;"
 					on:click={() => modals.showModal(KickAllUsersModal)}
 					>Kick all users</button
-				>
-				<button
-					style="margin-right: 0.25em; margin-bottom: 0.25em;"
-					on:click={() => modals.showModal(RestartServerModal)}
-					>Restart server</button
 				>
 				<button
 					style="margin-right: 0.25em; margin-bottom: 0.25em;"
