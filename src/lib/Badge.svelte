@@ -4,16 +4,14 @@
 	export let text = "BADGE";
 	export let title = null;
 	export let checkmark = false;
-	export let small = false;
 </script>
 
 <span
 	class="badge"
 	alt="({text})"
 	class:hastitle={title}
-	class:checkmark
-	class:small
 	{title}
+	class:checkmark
 >
 	{text}
 </span>
@@ -38,10 +36,6 @@
 
 	.badge.hastitle {
 		cursor: help;
-	}
-
-	.badge.small {
-		font-size: 16px;
 	}
 
 	.checkmark::before {

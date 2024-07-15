@@ -5,8 +5,7 @@
 	import BasicModal from "../Basic.svelte";
 
 	import * as modals from "../../modals.js";
-	import { apiUrl } from "../../urls.js";
-	import { authHeader } from "../../stores";
+	import * as clm from "../../clmanager.js";
 
 	export let modalData;
 
@@ -24,41 +23,34 @@
 		<form
 			on:submit|preventDefault={async () => {
 				loading = true;
-
-				const resp = await fetch(`${apiUrl}posts/${post.post_id}/report`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						...$authHeader,
-					},
-					body: JSON.stringify({ reason, comment })
-				})
-
-				let body;
-
 				try {
-					body = await resp.json();
-				} catch (e) {
-					loading = false;
-					error = "Failed to parse response!";
-					return;
-				}
-
-				if (body.error) {
-					loading = false
-
-					let code = body.type;
-
-					if (code === "tooManyRequests") {
-						error = "Too many requests! Please try again later.";
-					} else {
-						error = "Unexpected " + code + " error!";
-					}
-				} else {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "report",
+							val: {
+								type: 0,
+								// @ts-ignore
+								id: post.post_id,
+								reason,
+								comment,
+							},
+						},
+					});
 					modals.replaceLastModal(BasicModal, {
 						title: "Report Post",
 						desc: "Successfully reported post! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!",
 					});
+				} catch (code) {
+					loading = false;
+					switch (code) {
+						case "E:106 | Too many requests":
+							error =
+								"Too many requests! Please try again later.";
+							break;
+						default:
+							error = "Unexpected " + code + " error!";
+					}
 				}
 			}}
 		>

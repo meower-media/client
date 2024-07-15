@@ -5,8 +5,6 @@
 	import * as clm from "../../clmanager.js";
 
 	import {goto, focus} from "@roxi/routify";
-	import {authHeader} from "../../stores";
-	import {apiUrl} from "../../urls";
 
 	let oldPassword, newPassword, newPasswordConfirmation, loading, error;
 </script>
@@ -25,53 +23,38 @@
 
 				// request change password
 				loading = true;
-
-				const resp = await fetch(`${apiUrl}me/password`, {
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-						...$authHeader,
-					},
-					body: JSON.stringify({oldPassword, newPassword}),
-				});
-
-				let body;
-
 				try {
-					body = await resp.json();
-				} catch (e) {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "change_pswd",
+							val: {
+								old: oldPassword,
+								new: newPassword,
+							},
+						},
+					});
+					clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "del_tokens",
+							val: "",
+						},
+					});
+					$goto("/logout");
+				} catch (code) {
 					loading = false;
-					error = "Failed to parse response!";
-					return;
-				}
-
-				if (body.error) {
-					loading = false;
-
-					let code = body.type;
-
 					switch (code) {
-						case "invalidCredentials":
-							error = "Invalid password!";
+						case "I:011 | Invalid Password":
+							error = "Current password is invalid!";
 							break;
-						case "tooManyRequests":
+						case "E:106 | Too many requests":
 							error =
 								"Too many requests! Please try again later.";
 							break;
 						default:
 							error = "Unexpected " + code + " error!";
 					}
-				} else {
-					fetch(`${apiUrl}me`, {
-						method: "DELETE",
-						headers: {
-							"Content-Type": "application/json",
-							...$authHeader,
-						},
-						body: JSON.stringify({newPassword}),
-					});
-					
-					$goto("/logout");
 				}
 			}}
 		>
