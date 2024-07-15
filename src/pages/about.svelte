@@ -128,6 +128,7 @@
 			<li>Update dependencies</li>
 			<li>Use bottom sheet for modals on mobile</li>
 		</ul>
+	</Container>
 	<Container>
 		<h2>1.8.3</h2>
 		<ul>
