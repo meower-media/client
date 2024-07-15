@@ -116,17 +116,26 @@
 <Container>
 	<h2>Changelog</h2>
 	<Container>
+		<h2>1.9.1</h2>
+		<ul>
+			<li>Fixed a bug where uploading images would result in a 404</li>
+			<li>Added an "X" Button to blocked users in the blocked user list</li>
+			<li>Fixed several bugs regarding authentication</li>
+			<li>Re-Added debug panel to sidebar and fixed an issue with the registration text in the mod panel</li>
+		</ul>
+		<small>Test your sites before deploying them onto production kids!</small>
+	</Container>
+	<Container>
 		<h2>1.9.0</h2>
 		<ul>
-			<li>Add better post attachment support</li>
-			<li>Add blockquote replies</li>
-			<li>Add Discord emoji support</li>
-			<li>Add new splash screen</li>
-			<li>Fix settings on mobile</li>
-			<li>Improve changelog for older versions</li>
-			<li>Replace Cloudlink commands with API requests</li>
-			<li>Update dependencies</li>
-			<li>Use bottom sheet for modals on mobile</li>
+			<li>Added better post attachment support</li>
+			<li>Added blockquote replies</li>
+			<li>Added Discord emoji support</li>
+			<li>Added A New splash screen</li>
+			<li>Fix the settings screen on mobile</li>
+			<li>Improve the changelog for older versions of meower svelte</li>
+			<li>API requests are now fully in place of the CL commands</li>
+			<li>modals will now use "bottom sheet" on mobile</li>
 		</ul>
 	</Container>
 	<Container>

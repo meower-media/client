@@ -15,7 +15,7 @@
 
 	export let modalData;
 
-	let {postOrigin} = modalData;
+	let postOrigin = modalData;
 	let uploadRequests = [];
 	let uploadPercentages = {};
 	let totalUploadPercentage = 0;
@@ -115,7 +115,7 @@
 					on:submit|preventDefault={async () => {
 						loading = true;
 						try {
-							const resp = await fetch(`${apiUrl}${postOrigin === "home" ? "home" : `/posts/${postOrigin}`}`, {
+							const resp = await fetch(`${apiUrl}${postOrigin === "home" ? "home" : `posts/${postOrigin}`}`, {
 								method: "POST",
 								headers: {
 									"Content-Type": "application/json",
