@@ -22,7 +22,6 @@
 	import Personalization from "../lib/settings/Personalization.svelte";
 	import Security from "../lib/settings/Security.svelte";
 	import Sessions from "../lib/settings/Sessions.svelte";
-	import ParentalControls from "../lib/settings/ParentalControls.svelte";
 	import BlockedUsers from "../lib/settings/BlockedUsers.svelte";
 	import ReportHistory from "../lib/settings/ReportHistory.svelte";
 	import About from "./about.svelte";
@@ -180,8 +179,6 @@
 			<Security />
 		{:else if selectedTab == "sessions"}
 			<Sessions />
-		{:else if selectedTab == "parentalControls"}
-			<ParentalControls />
 		{:else if selectedTab == "blockedUsers"}
 			<BlockedUsers />
 		{:else if selectedTab == "reportHistory"}
