@@ -22,7 +22,6 @@
 	import ProfileView from "../../lib/ProfileView.svelte";
 	import Member from "../../lib/Member.svelte";
 	import Container from "../../lib/Container.svelte";
-	import * as clm from "../../lib/clmanager.js";
 	import PostList from "../../lib/PostList.svelte";
 
 	import {params, goto} from "@roxi/routify";
@@ -43,17 +42,6 @@
 				created: 0,
 				last_active: 0,
 				deleted: false,
-			});
-
-			clm.link.send({
-				cmd: "direct",
-				val: {
-					cmd: "set_chat_state",
-					val: {
-						state: 1,
-						chatid: "livechat",
-					},
-				},
 			});
 		} else if ($params.admin) {
 			try {
@@ -116,19 +104,6 @@
 
 	onDestroy(() => {
 		if (chatsStoreSubscription) chatsStoreSubscription();
-
-		if ($chat._id === "livechat") {
-			clm.link.send({
-				cmd: "direct",
-				val: {
-					cmd: "set_chat_state",
-					val: {
-						state: 0,
-						chatid: "livechat",
-					},
-				},
-			});
-		}
 
 		chat.set({
 			_id: "",
@@ -280,13 +255,12 @@
 					Members <span class="small">({$chat.members.length})</span>
 				</h2>
 				<div class="settings-controls">
-					{#if !$params.admin || hasPermission(adminPermissions.EDIT_CHATS)}
+					{#if !$params.admin}
 						<button
 							class="circle plus"
 							on:click={() => {
 								if (
-									isRestricted(userRestrictions.NEW_CHATS) &&
-									!$params.admin
+									isRestricted(userRestrictions.NEW_CHATS)
 								) {
 									modals.showModal(AccountBannedModal, {
 										ban: $user.ban,

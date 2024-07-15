@@ -438,11 +438,14 @@
 						) ||
 							(userProtected &&
 								!hasPermission(adminPermissions.SYSADMIN))}
-						bind:value={formattedBanExpires}
+						value={formattedBanExpires}
 						on:change={() => {
-							banState.expires = Math.floor(
-								new Date(formattedBanExpires).getTime() / 1000
-							);
+							banState = Object.assign(banState, {
+								expires: Math.floor(
+									new Date(formattedBanExpires).getTime() /
+										1000
+								),
+							});
 						}}
 					/>
 				{/if}

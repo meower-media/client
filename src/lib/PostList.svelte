@@ -23,7 +23,7 @@
 	import BasicModal from "./modals/Basic.svelte";
 	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
 	import BlockUserModal from "./modals/safety/BlockUser.svelte";
-	import AddImageModal from "./modals/AddImage.svelte";
+	import SendFiles from "./modals/SendFiles.svelte";
 
 	import {
 		relationships,
@@ -180,7 +180,7 @@
 				post_origin: post.post_origin,
 				user: post.u,
 				content: post.p,
-				unfiltered_content: post.unfiltered_p,
+				attachments: post.attachments,
 				date: post.t.e,
 				edited_at: post.edited_at,
 				isDeleted: post.isDeleted,
@@ -217,9 +217,11 @@
 		 */
 		const pendingPost = {
 			id: id++,
+			nonce: Math.random().toString(),
 			post_origin: postOrigin,
 			user: $user.name,
 			content,
+			attachments: [],
 			date: Math.floor(new Date().getTime() / 1000),
 			isDeleted: false,
 			pending: true,
@@ -239,13 +241,16 @@
 							"Content-Type": "application/json",
 							...$authHeader,
 						},
-						body: JSON.stringify({content}),
+						body: JSON.stringify({
+							content,
+							nonce: pendingPost.nonce,
+						}),
 					}
 				);
 				const json = await resp.json();
 
 				if (resp.ok) {
-					resolve(json._id);
+					resolve();
 				} else {
 					reject(json.type);
 				}
@@ -253,16 +258,6 @@
 				reject(e);
 			}
 		});
-
-		let evId = clm.link.on("direct", cmd => {
-			postProm.then(postId => {
-				if (cmd.val._id === postId) {
-					items = items.filter(v => v.id !== pendingPost.id);
-					clm.link.off(evId);
-				}
-			});
-		});
-
 		postProm.catch(e => {
 			postErrors[pendingPost.id] = e;
 		});
@@ -290,7 +285,7 @@
 							post_origin: post.post_origin,
 							user: post.u,
 							content: post.p,
-							unfiltered_content: post.unfiltered_p,
+							attachments: post.attachments,
 							date: post.t.e,
 							edited_at: post.edited_at,
 							isDeleted: post.isDeleted,
@@ -301,54 +296,25 @@
 				}
 				if (!isGC || cmd.val.state === 2) {
 					if (cmd.val.post_origin !== postOrigin) return;
-					list.addItem({
+					const post = {
 						id: id++,
 						post_id: cmd.val._id,
 						post_origin: cmd.val.post_origin,
 						user: cmd.val.u,
 						content: cmd.val.p,
-						unfiltered_content: cmd.val.unfiltered_p,
+						attachments: cmd.val.attachments,
 						date: cmd.val.t.e,
 						edited_at: cmd.val.edited_at,
 						isDeleted: cmd.val.isDeleted,
 						mod_deleted: cmd.val.mod_deleted,
 						deleted_at: cmd.val.deleted_at,
-					});
+					};
+					list.addItem(post);
+					if (cmd.val.nonce) {
+						items = items.filter(post => post.nonce !== cmd.val.nonce);
+					}
 					if ($user.sfx && cmd.val.u !== $user.name)
 						playNotification();
-				}
-				if (
-					isGC &&
-					cmd.val.state === 0 &&
-					cmd.val.chatid === postOrigin
-				) {
-					list.addItem({
-						id: id++,
-						post_id: "",
-						post_origin: postOrigin || fetchUrl,
-						user: "Server",
-						content: `@${cmd.val.u} left ${chatName}.`,
-						date: Date.now() / 1000,
-						isDeleted: false,
-					});
-					if ($user.sfx && cmd.val.u !== $user.name)
-						playNotification();
-				}
-				if (
-					isGC &&
-					cmd.val.state === 1 &&
-					cmd.val.chatid === postOrigin
-				) {
-					list.addItem({
-						id: id++,
-						post_id: "",
-						post_origin: postOrigin || fetchUrl,
-						user: "Server",
-						content: `@${cmd.val.u} joined ${chatName}.`,
-						date: Date.now() / 1000,
-						isDeleted: false,
-					});
-					if ($user.sfx) playNotification();
 				}
 			});
 			destroy = () => clm.link.off(evId);
@@ -383,7 +349,7 @@
 					let toReplace = content.split("/")[1];
 					let replaceWith = content.replace(`s/${toReplace}/`, "");
 
-					let newContent = post.unfiltered_content || post.content;
+					let newContent = post.content;
 					newContent = newContent
 						.replace(toReplace, replaceWith)
 						.trim();
@@ -479,9 +445,8 @@
 				>
 			{:else}
 				<button
-					class="upload-image"
-					name="addImage"
-					title="Add an image"
+					class="send-files"
+					title="Send files"
 					on:click|preventDefault={() => {
 						modals.showModal(AddImageModal, {postInput});
 					}}>+</button
@@ -620,7 +585,7 @@
 		max-height: 300px;
 	}
 
-	.upload-image {
+	.send-files {
 		padding: 0;
 		padding-left: 0.8rem;
 		padding-right: 0.8rem;

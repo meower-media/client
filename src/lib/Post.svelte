@@ -6,6 +6,7 @@
 	import Badge from "./Badge.svelte";
 	import LiText from "./LiText.svelte";
 	import Attachment from "./Attachment.svelte";
+	import ExternalImage from "./ExternalImage.svelte";
 
 	import ConfirmHyperlinkModal from "./modals/ConfirmHyperlink.svelte";
 	import DeletePostModal from "./modals/DeletePost.svelte";
@@ -25,7 +26,7 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import MarkdownIt from "markdown-it";
-	import twemoji from "twemoji";
+	import twemoji from "@twemoji/api";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
@@ -68,7 +69,7 @@
 			webhook = post.user == "Webhooks";
 		}
 
-		if (bridged || webhook) {
+		if ((bridged || webhook) && post.content) {
 			if (webhook) {
 				post.content = post.content.slice(
 					post.content.indexOf(": ") + 2
@@ -114,32 +115,37 @@
 	}
 
 	function confirmLink(link) {
+		link = atob(encodeURIComponent(link)); // we now base64 encode the link to prevent XSS
 		if (
-			link.startsWith(
-				`${window.location.protocol}//${window.location.host}`
-			) ||
-			link.startsWith(window.location.host)
+			!link.startsWith("https:") &&
+			!link.startsWith("http:") &&
+			!link.startsWith("/")
 		) {
-			$goto(
-				link
-					.replace(
-						`${window.location.protocol}//${window.location.host}`,
-						""
-					)
-					.replace(window.location.host, "")
-			);
+			link = "https://" + link;
+		}
+		let url = new URL(link, location.href);
+		if (url.host === location.host) {
+			$goto(url.pathname);
 		} else {
-			modals.showModal(ConfirmHyperlinkModal, {link});
+			modals.showModal(ConfirmHyperlinkModal, {link: url.href});
 		}
 		return false;
 	}
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	/** @param {string} content */
+	/**
+	 * @param {string} content
+	 * @returns {Promise<{
+	 * 	html?: string,
+	 * 	error?: Error,
+	 * 	youtubeEmbeds?: Array<{title: string, author: string, thumbnail: string, id: number, url: string}>
+	 * }>}
+	 */
 	async function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
-		var renderedContent;
+		let renderedContent;
+		const youtubeEmbeds = [];
 
 		try {
 			const md = new MarkdownIt("default", {
@@ -149,14 +155,11 @@
 			});
 			md.linkify.add("@", {
 				validate: function (text, pos) {
-					var tail = text.slice(pos);
-					return tail.match(/[a-zA-Z0-9-_]{1,20}/gs)[0].length;
+					let tail = text.slice(pos);
+					return tail.match(/[a-zA-Z0-9-_]{0,20}/gs)[0].length;
 				},
 				normalize: function (match) {
-					match.url =
-						window.location.host +
-						"/users/" +
-						match.url.replace(/^@/, "");
+					match.url = "/users/" + match.url.replace(/^@/, "");
 				},
 			});
 			const tokens = md.parse(
@@ -180,16 +183,17 @@
 								)
 							) {
 								childToken.attrs[srcPos][1] = "about:blank";
-								console.log(childToken);
 							}
 						}
 						if (childToken.type === "link_open") {
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
+							const b64href = decodeURIComponent(btoa(href));
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${href}')`,
+								`return confirmLink('${b64href}')`,
+								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
@@ -205,7 +209,7 @@
 			);
 
 			if ($user.embeds_enabled) {
-				let youtubeMatches = [
+				const youtubeMatches = [
 					...new Set(
 						content.match(
 							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
@@ -215,22 +219,24 @@
 				for (const watchURL of youtubeMatches) {
 					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
 						continue;
-					let response = await (
+					const response = await (
 						await fetch(
 							`https://youtube.com/oembed?url=${watchURL}`
 						)
 					).json();
-					renderedContent += `<div class="youtube-container">
-						<h4>${response.title}</h4>
-						<span style="color: #606060; font-size: 1.1rem">${response.author_name}</span><br><br>
-						<img src="${response.thumbnail_url}" height=180 width=240 loading="lazy" alt="Thumbnail for ${response.title}">
-					</div>`;
+					youtubeEmbeds.push({
+						title: response.title,
+						author: response.author_name,
+						thumbnail: response.thumbnail_url,
+						id: youtubeEmbeds.length,
+						url: watchURL
+					});
 				}
 			}
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
-			return `Failed rendering post: ${e}`;
+			return {error: e};
 		}
 
 		// twemoji
@@ -240,7 +246,10 @@
 			size: 20,
 		});
 
-		return renderedContent;
+		return {
+			html: renderedContent,
+			youtubeEmbeds,
+		};
 	}
 
 	async function adminDelete() {
@@ -352,9 +361,7 @@
 										error = "";
 										editing = true;
 										await tick();
-										editContentInput.value =
-											post.unfiltered_content ||
-											post.content;
+										editContentInput.value = post.content;
 										editContentInput.focus();
 										autoresize(editContentInput);
 									}}
@@ -608,7 +615,31 @@
 				: ''}"
 		>
 			{#await addFancyElements(post.content) then content}
-				{@html content}
+				{#if content.error}
+					Error rendering post: {content.error}
+				{:else}
+					{#if content.html}
+						{@html content.html}
+					{/if}
+					{#if content.youtubeEmbeds}
+						{#each content.youtubeEmbeds as embed (embed.id)}
+							<div class="youtube-container">
+								<h4>{embed.title}</h4>
+								<span style="color: #606060; font-size: 1.1rem"
+									>{embed.author}</span
+								><br /><br />
+								<a href={embed.url} target="_blank" rel="noreferrer">
+									<img
+										src={embed.thumbnail}
+										height="180"
+										loading="lazy"
+										alt="Thumbnail for {embed.title}"
+									/>
+								</a>
+							</div>
+						{/each}
+					{/if}
+				{/if}
 			{/await}
 		</p>
 	{/if}
@@ -617,8 +648,15 @@
 	{/if}
 	{#if !editing}
 		<div class="post-images">
+			{#each post.attachments as attachment}
+				<Attachment
+					id={attachment.id}
+					filename={attachment.filename}
+					mime={attachment.mime}
+				/>
+			{/each}
 			{#each images as { title, url }}
-				<Attachment {title} {url} />
+				<ExternalImage {title} {url} />
 			{/each}
 		</div>
 	{/if}

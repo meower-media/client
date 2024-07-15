@@ -12,5 +12,6 @@ export const linkUrl =
 export const apiUrl =
 	localStorage.getItem("meower_apiurl") ||
 	(beta ? "https://beta.meower.org/api/" : "https://api.meower.org/");
+export const uploadsUrl = localStorage.getItem("meower_uploadsurl") || "https://uploads.meower.org/";
 export const encodeApiURLParams =
 	localStorage.getItem("meower_encodeapi") || false;

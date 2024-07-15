@@ -31,7 +31,7 @@
 				$goto(`/users/${username}`);
 			}}>View full profile</button
 		>
-		{#if ($chat.owner == $user.name && username != $user.name) || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
+		{#if ($chat.owner == $user.name && username != $user.name)}
 			<button
 				class="long"
 				on:click={() =>
@@ -39,6 +39,8 @@
 			>
 				Remove from chat
 			</button>
+		{/if}
+		{#if ($chat.owner == $user.name && username != $user.name) || ($params.admin && hasPermission(adminPermissions.EDIT_CHATS))}
 			<button
 				class="long"
 				on:click={() =>

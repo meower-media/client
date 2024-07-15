@@ -1,59 +1,38 @@
 <!--
-    Generic meower attachment wrapper
+    Generic Meower attachment wrapper
 -->
 
 <script>
-	import {onMount} from "svelte";
-	import Container from "./Container.svelte";
+	import { uploadsUrl } from "./urls";
 
-	export let title;
-	export let url;
+	export let id;
+	export let filename;
+	export let mime;
 
-	let type, typeSplit, show, error;
-
-	onMount(async () => {
-		try {
-			const resp = await fetch(url);
-			if (resp.ok) {
-				type = resp.headers.get("Content-Type");
-				typeSplit = type.split(";")[0].split("/")[0];
-				show = true;
-			} else {
-				error = "Status Code " + resp.status;
-			}
-		} catch (e) {
-			error = e;
-		}
-	});
+	let url;
+	let previewUrl;
+	$: {
+		url = `${uploadsUrl}attachments/${id}/${filename}`;
+		previewUrl = `${url}?preview`;
+	}
 </script>
 
 <div class="AttachmentClass">
-	{#if show}
-		<a href={url} target="_blank" rel="noreferrer">
-			{#if typeSplit == "image"}
-				<img src={url} alt={title} {title} class="post-image" />
-			{:else if typeSplit == "video"}
-				<!-- svelte-ignore a11y-media-has-caption -->
-				<video src={url} controls class="post-image" />
-			{:else if typeSplit == "audio"}
-				<audio controls>
-					<source src={url} />
-				</audio>
-			{:else}
-				Other File Type ({type})
-			{/if}
-		</a>
-	{/if}
-	{#if error}
-		<Container>
-			This attachment had an error loading. Reason:
-			<br />
-			{error}
-			<br /><br />
-			View the Attachment
-			<a href={url} target="_blank" rel="noreferrer">here</a> instead.
-		</Container>
-	{/if}
+	<a href={url} target="_blank" rel="noreferrer">
+		{#if mime.startsWith("image/")}
+			<img src={previewUrl} alt={filename} class="post-image" />
+		{:else if mime.startsWith("video/")}
+			<!-- svelte-ignore a11y-media-has-caption -->
+			<video src={previewUrl} controls class="post-image" />
+		{:else if mime.startsWith("audio/")}
+			<!-- svelte-ignore a11y-media-has-caption -->
+			<audio controls>
+				<source src={previewUrl} />
+			</audio>
+		{:else}
+			{filename}
+		{/if}
+	</a>
 </div>
 
 <style>
@@ -61,5 +40,6 @@
 		max-height: 12em;
 		max-width: 100%;
 		border-radius: 5px;
+		overflow: hidden;
 	}
 </style>
