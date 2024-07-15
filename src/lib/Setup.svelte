@@ -1,11 +1,10 @@
 <!-- Boring orange screen with login and signup. -->
 <script>
 	import ServerSelectorModal from "./modals/ServerSelector.svelte";
-	import LoginModal from "./modals/Login.svelte";
-	import SignupModal from "./modals/Signup.svelte";
-	import StartupErrorModal from "./modals/StartupError.svelte";
+	import BasicModal from "./modals/Basic.svelte";
+	import AccountCreationBlockedModal from "./modals/safety/AccountCreationBlocked.svelte";
 
-	import {screen, setupPage as page, user, authHeader, modalStack} from "./stores.js";
+	import {screen, setupPage as page, OOBERunning, user} from "./stores.js";
 	import unloadedProfile from "./unloadedprofile.js";
 	import * as clm from "./clmanager.js";
 	import * as modals from "./modals.js";
@@ -43,6 +42,8 @@
 		}
 	}
 
+	let acceptTerms = false;
+
 	let requireLogin = false;
 	$: requireLogin =
 		$isActive("./inbox") || $isActive("./chats", {}, {strict: false});
@@ -51,52 +52,41 @@
 		page.subscribe(async value => {
 			if (!setup) return;
 
+			setup.classList.remove("white");
 			if (value === "logo") {
-				try {
-					loginStatus = ""
-					setup.classList.remove("setup");
+				loginStatus = "";
 
-					await tick();
-					if (!logoImg) return;
+				await tick();
+				if (!logoImg) return;
+				setup.classList.add("white");
+				logoImg.height = 0;
+				logo.classList.remove("top");
 
-					await connect();
-					setup.classList.remove("setupnobg");
-					setup.classList.add("setup");
-					logoImg.classList.remove("logo-img-color");
-					await sleep(50);
+				await sleep(600);
+				// Directly changing image height instead
+				// of using transforms to prevent blur
+				logoImg.height = 80;
+				await sleep(300);
+				setup.classList.remove("white");
+				logoImg.height = 40;
+				logo.classList.add("top");
 
-					document.getElementById("meower-logo").remove()
-					if (
-						localStorage.getItem("meower_savedusername") &&
-						localStorage.getItem("meower_savedpassword")
-					) {
-						authHeader.set({
-							username: localStorage.getItem("meower_savedusername"),
-							token: localStorage.getItem("meower_savedpassword"),
-						});
+				await connect();
 
-						await clm.login()
-
-						if ($user.name) {
-							loginStatus = "";
-							BGM.playBGM($user.bgm_song);
-							screen.set("main");
-						} else {
-							await sleep(100);
-							await mainSetup();
-						}
-					} else {
-						await sleep(100);
-						await mainSetup();
-					}
-				} catch (error) {
-					document.getElementById("meower-logo").remove()
-					modals.showModal(StartupErrorModal, {error: error})
+				if (
+					localStorage.getItem("meower_savedusername") &&
+					localStorage.getItem("meower_savedpassword")
+				) {
+					doLogin(
+						localStorage.getItem("meower_savedusername"),
+						localStorage.getItem("meower_savedpassword"),
+						true
+					);
+				} else {
+					await sleep(100);
+					await mainSetup();
 				}
 			} else if (value === "reconnect") {
-				if (document.getElementById("meower-logo")) { document.getElementById("meower-logo").remove() }
-				setup.classList.remove("setupnobg");
-				setup.classList.add("setup");
 				loginStatus = "";
 				await connect();
 				await sleep(100);
@@ -120,7 +110,7 @@
 		user.set(unloadedProfile());
 		loginStatus = "";
 		page.set("blank");
-		await sleep(300);
+		await sleep(500);
 		if (requireLogin || $isActive("./index")) {
 			page.set("welcome");
 		} else {
@@ -129,32 +119,88 @@
 		}
 	}
 
-	function handle_modal(_, modal = LoginModal) {
-		modals.showModal(modal);
+	/**
+	 * Logs in.
+	 *
+	 * @param {string} username
+	 * @param {string} password
+	 */
+	async function doLogin(
+		username,
+		password,
+		autoLogin = false,
+		savedLogin = false
+	) {
+		setTimeout(
+			() => {
+				if ($user.name) return;
+				loginStatus = "Logging in...";
+			},
+			autoLogin ? 500 : 0
+		);
 
-		modalStack.subscribe(val => {
-			if (val.length === 0 && $authHeader.token) {
-				loginStatus = "";
-				BGM.playBGM($user.bgm_song);
-				screen.set("main");
+		try {
+			await clm.meowerRequest({
+				cmd: "direct",
+				val: {
+					cmd: "authpswd",
+					val: {
+						username: username,
+						pswd: password,
+					},
+				},
+			});
+		} catch (e) {
+			if (autoLogin) return mainSetup();
+			switch (e) {
+				case "E:103 | ID not found":
+					loginStatus = "Invalid username!";
+					break;
+				case "E:025 | Deleted":
+					loginStatus = "This account has been deleted!";
+					break;
+				case "I:011 | Invalid Password":
+					loginStatus = savedLogin
+						? "Session expired! Please login again."
+						: "Invalid password!";
+					break;
+				case "E:018 | Account Banned":
+					loginStatus = "";
+					break;
+				case "E:019 | Illegal characters detected":
+					loginStatus =
+						"Usernames must not have spaces or other special characters!";
+					break;
+				case "E:106 | Too many requests":
+					loginStatus = "Too many requests! Please try again later.";
+					break;
+				default:
+					loginStatus = `Unexpected ${e} error!`;
 			}
-		})
-	}
+			return;
+		}
 
-	function signup_modal(_) {
-		handle_modal(_, SignupModal);
+		loginStatus = "";
+		BGM.playBGM($user.bgm_song);
+		screen.set("main");
 	}
 </script>
 
-<div bind:this={setup} in:fade={{duration: 250}} out:fade={{duration: 250}} class="setup setupnobg">
+<div bind:this={setup} out:fade={{duration: 500}} class="setup white">
 	{#if $page === "logo"}
-		<div out:fade={{duration: 300}}>
-			<img
-				bind:this={logoImg}
-				alt="Meower"
-				src={meowerLogo}
-				class="logo-img logo-img-color presvl-fullcenter"
-			/>
+		<div out:fade={{duration: 300}} class="fullcenter">
+			<div>
+				<div class="logo top" bind:this={logo}>
+					<img
+						bind:this={logoImg}
+						alt="Meower"
+						src={meowerLogo}
+						class="logo-img"
+						height="40"
+					/>
+				</div>
+				<div class="connecting">{loginStatus}</div>
+			</div>
 		</div>
 	{:else if $page === "reconnect"}
 		<div class="fullcenter">Reconnecting...</div>
@@ -171,7 +217,7 @@
 					<br /><br />
 				</div>
 				<button
-					on:click={handle_modal}
+					on:click={() => page.set("login")}
 					on:mousedown={() => {
 						serverSelectorTimeout = setTimeout(() => {
 							modals.showModal(ServerSelectorModal);
@@ -179,9 +225,25 @@
 					}}>Log in</button
 				>
 				<br />
-				<button on:click={signup_modal}
+				<button on:click={() => page.set("join")}
 					>Create an account</button
 				> <br />
+				{#if localStorage.getItem("meower_savedusername")}
+					<button
+						on:click={() => {
+							doLogin(
+								localStorage.getItem("meower_savedusername"),
+								localStorage.getItem("meower_savedpassword"),
+								false,
+								true
+							);
+						}}
+						>Use saved login ({localStorage.getItem(
+							"meower_savedusername"
+						)})</button
+					>
+					<p class="small">{loginStatus}</p>
+				{/if}
 				{#if !requireLogin}
 					<button
 						on:click={() => {
@@ -205,8 +267,162 @@
 				</div>
 			</div>
 		</div>
+	{:else if $page === "login"}
+		<div class="fullcenter">
+			<h1>Login to Meower</h1>
+
+			<form
+				class="column-ui"
+				on:submit|preventDefault={e => {
+					if (!(e.target[0].value && e.target[1].value)) {
+						loginStatus =
+							"You must specify a username and a password to login!";
+						return false;
+					}
+					doLogin(e.target[0].value, e.target[1].value);
+					return false;
+				}}
+			>
+				<input type="text" placeholder="Username" maxlength="20" />
+				<input type="password" placeholder="Password" maxlength="255" />
+				<span class="login-status">{loginStatus}</span>
+				<div class="buttons">
+					<button
+						type="button"
+						on:click|preventDefault={() => {
+							page.set("welcome");
+							loginStatus = "";
+							return false;
+						}}>Go back</button
+					>
+					<button type="submit">Log in</button>
+				</div>
+			</form>
+		</div>
+	{:else if $page === "join"}
+		<div class="fullcenter">
+			<h1>Welcome to Meower</h1>
+
+			<form
+				class="column-ui"
+				on:submit|preventDefault={e => {
+					const username = e.target[0].value;
+					const password = e.target[1].value;
+					const confirmPassword = e.target[2].value;
+					if (!(username && password)) {
+						loginStatus =
+							"You must specify a username and a password to create an account!";
+						return false;
+					}
+					if (password !== confirmPassword) {
+						loginStatus =
+							"Passwords do not match! Make sure you have entered your password correctly.";
+						return false;
+					}
+
+					loginStatus = "Creating account...";
+
+					clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "gen_account",
+							val: {
+								username: username,
+								pswd: password,
+							},
+						},
+						listener: "join",
+					})
+						.then(async val => {
+							user.update(v =>
+								Object.assign(v, {
+									name: val.payload.username,
+									unread_inbox: true,
+									layout: "new",
+								})
+							);
+							loginStatus = "";
+							OOBERunning.set(true);
+							screen.set("main");
+						})
+						.catch(code => {
+							switch (code) {
+								case "I:015 | Account exists":
+									loginStatus = `${username} is taken!`;
+									break;
+								case "E:019 | Illegal characters detected":
+									loginStatus =
+										"Usernames must not have spaces or other special characters!";
+									break;
+								case "E:106 | Too many requests":
+									loginStatus =
+										"Too many requests! Please try again later.";
+									break;
+								case "E:119 | IP Blocked":
+									modals.showModal(
+										AccountCreationBlockedModal
+									);
+									loginStatus = "";
+									break;
+								case "E:122 | Command disabled by sysadmin":
+									modals.showModal(BasicModal, {
+										title: "Registration Disabled",
+										desc: "Unfortunately, you may not create a new account at this time. An administrator has disabled registration. Please try again later.",
+									});
+									loginStatus = "";
+									break;
+								default:
+									loginStatus = `Unexpected ${code} error!`;
+							}
+						});
+				}}
+			>
+				<input type="text" placeholder="Username" maxlength="20" />
+				<input
+					type="password"
+					placeholder="Password"
+					minlength="8"
+					maxlength="255"
+				/>
+				<input
+					type="password"
+					placeholder="Confirm password"
+					maxlength="255"
+					autocomplete="new-password"
+				/>
+				<p class="checkboxes">
+					<input
+						id="accept-terms"
+						type="checkbox"
+						bind:checked={acceptTerms}
+					/>
+					<label for="accept-terms">
+						I agree to <a
+							href="https://meower.org/legal"
+							target="_blank"
+							rel="noreferrer"
+							>Meower's Terms of Service and Privacy Policy</a
+						>
+					</label>
+				</p>
+				<span class="login-status">{loginStatus}</span>
+				<div class="buttons">
+					<button
+						type="button"
+						on:click|preventDefault={() => {
+							page.set("welcome");
+							loginStatus = "";
+							return false;
+						}}>Go back</button
+					>
+					<button type="submit" disabled={!acceptTerms}>Join!</button>
+				</div>
+			</form>
+		</div>
 	{:else if $page === "blank"}
 		<div />
+	{:else if $page === "go"}
+		<div class="fullcenter">Let's go!</div>
 	{:else}
 		<div class="fullcenter">
 			<div class="column-ui">
@@ -226,25 +442,6 @@
 	.setup {
 		background-color: var(--orange);
 		color: var(--foreground-orange);
-		font-size: 150%;
-		transition: 0.25s;
-
-		text-align: center;
-
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1000;
-
-		width: 100%;
-		min-height: 100vh;
-		height: 100%;
-
-		display: table;
-	}
-	.setupnobg {
-		background-color: #0A0A0A;
-		color: #FFFFFF;
 		font-size: 150%;
 
 		text-align: center;
@@ -272,40 +469,34 @@
 		vertical-align: middle;
 		padding: 0.5em;
 	}
-	.presvl-fullcenter {
-		width: 40vh;
-		height: 40vh;
-		box-sizing: border-box;
-		position: absolute; 
-		z-index: -2;
 
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%,-50%);
-
-		margin: auto;
-		overflow: auto;
-
-		display: table-cell;
-		vertical-align: middle;
-		padding: 0.5em;
+	.setup.white {
+		background-color: var(--background);
+		color: var(--orange-button);
 	}
 
+	.logo {
+		position: relative;
+		bottom: 0px;
+		transition: bottom 0.3s cubic-bezier(0, 1, 1, 1);
+	}
 	.logo-img {
 		transition: height 0.3s cubic-bezier(0, 1, 1, 1);
-		user-select: none;
+	}
+	.logo.top {
+		bottom: 10px;
 	}
 	.setup:not(.white) .logo-img {
 		filter: brightness(0) invert(1);
 	}
 
-
-	.logo-img-color {
-		filter: brightness(10) !important;
-	}
-
 	.small {
 		font-size: 75%;
+	}
+
+	.connecting {
+		height: 0;
+		overflow: visible;
 	}
 
 	.column-ui {
@@ -334,7 +525,23 @@
 		padding-right: 0;
 	}
 
-	button {
+	.login-status {
+		height: 0;
+		overflow: visible;
+	}
+
+	label,
+	.checkboxes input {
+		vertical-align: middle;
+	}
+
+	.checkboxes {
+		text-align: left;
+		font-size: 90%;
+	}
+
+	button,
+	input {
 		margin-bottom: 0.2cm;
 	}
 

@@ -15,6 +15,6 @@ The Meower client is possible thanks to these ***amazing*** **people**!
 - @silvxrcat
 - @mdwalters
 - @williamhorning
-- @zedsleepyhead
+- @zedthehedgehog
 - @ArrowAced
 - @theotherhades

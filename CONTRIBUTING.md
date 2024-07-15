@@ -20,6 +20,7 @@ To clone and run a development server on your machine (that autoupdates when you
 git clone https://github.com/meower-media-co/Meower-Svelte
 cd Meower-Svelte
 npm install
+npm run dev:routify (in a separate terminal)
 npm run dev
 ```
 

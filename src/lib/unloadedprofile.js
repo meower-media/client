@@ -21,7 +21,6 @@ export default function unloadedProfile() {
 		debug: false,
 		hide_blocked_users: false,
 		favorited_chats: [],
-		embeds_enabled: true,
 		pfp_data: 1,
 		quote: "",
 		ban: {

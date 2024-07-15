@@ -38,7 +38,7 @@
 	let firstLoad = true;
 
 	async function getServerStatus() {
-		const resp = await fetch(apiUrl);
+		const resp = await fetch(`${apiUrl}status`);
 		if (!resp.ok) {
 			throw new Error("Response code is not OK; code is " + resp.status);
 		}

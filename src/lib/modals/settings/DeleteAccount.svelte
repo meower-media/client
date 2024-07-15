@@ -3,11 +3,11 @@
 	import Container from "../../Container.svelte";
 
 	import * as modals from "../../modals.js";
+	import * as clm from "../../clmanager.js";
 
-	import {authHeader, user} from "../../stores.js";
+	import {user} from "../../stores.js";
 
 	import {goto, focus} from "@roxi/routify";
-	import { apiUrl } from "../../urls";
 
 	let username, password, loading, error;
 </script>
@@ -26,43 +26,28 @@
 
 				// request account deletion
 				loading = true;
-
-				const resp = await fetch(`${apiUrl}me`, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-						...$authHeader,
-					},
-					body: JSON.stringify({ password }),
-				});
-
-				let body;
-
 				try {
-					body = await resp.json();
-				} catch (e) {
+					await clm.meowerRequest({
+						cmd: "direct",
+						val: {
+							cmd: "del_account",
+							val: password,
+						},
+					});
+					$goto("/logout");
+				} catch (code) {
 					loading = false;
-					error = "Failed to parse response!";
-					return;
-				}
-
-				if (body.error) {
-					loading = false;
-
-					let code = body.type;
-
 					switch (code) {
-						case "invalidCredentials":
+						case "I:011 | Invalid Password":
 							error = "Invalid password!";
 							break;
-						case "tooManyRequests":
-							error = "Too many requests! Please try again later.";
+						case "E:106 | Too many requests":
+							error =
+								"Too many requests! Please try again later.";
 							break;
 						default:
 							error = "Unexpected " + code + " error!";
 					}
-				} else {
-					$goto("/logout");
 				}
 			}}
 		>
