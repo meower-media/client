@@ -148,21 +148,6 @@
 	<div on:click|stopPropagation class="popup">
 		<button
 			on:click={() => {
-				if (!$user.name) {
-					modals.showModal(SignupModal);
-					return;
-				}
-				$goto(`/users/${$user.name}`);
-				popupShown = false;
-			}}
-			class="profile-btn round"
-			title="Profile"
-		>
-			<img src={profile} alt="Profile" draggable={false} />
-			<span class="label">Profile</span>
-		</button>
-		<button
-			on:click={() => {
 				$goto("/settings");
 				popupShown = false;
 			}}
@@ -170,16 +155,6 @@
 		>
 			<img src={settings} alt="Settings" draggable={false} />
 			<span class="label">Settings</span>
-		</button>
-		<button
-			on:click={() => {
-				$goto("/about");
-				popupShown = false;
-			}}
-			class="about-btn round"
-		>
-			<img src={info} alt="About" draggable={false} />
-			<span class="label">About</span>
 		</button>
 		<button
 			on:click={() => {

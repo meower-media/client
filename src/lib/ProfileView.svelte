@@ -126,6 +126,14 @@
 								})}
 						/>
 					{/if}
+					{#if data._id == $user.name}
+						<button
+							title="Edit Profile"
+							class="circle pen"
+							on:click={() =>
+								$goto("/settings")}
+						/>
+					{/if}
 					{#if data._id !== $user.name && (data.flags & userFlags.SYSTEM) !== userFlags.SYSTEM && (data.flags & userFlags.DELETED) !== userFlags.DELETED}
 						<button
 							title="Report {data._id}"
