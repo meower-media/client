@@ -89,12 +89,7 @@
 			<button
 				on:click={() => {
 					if ($user.theme.includes("custom:")) {
-						try {
-							applyTheme(stringToTheme($user.theme));
-						} catch (e) {
-							console.error(`Failed to apply custom theme: ${e}`);
-							removeTheme();
-						}
+						applyTheme(stringToTheme($user.theme));
 					} else {
 						removeTheme();
 					}

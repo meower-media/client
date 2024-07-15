@@ -14,7 +14,7 @@
 		user,
 		spinner,
 		useCustomTheme,
-		customTheme
+		customTheme,
 	} from "../lib/stores.js";
 	import {mobile, touch} from "../lib/responsiveness.js";
 	import * as BGM from "../lib/BGM.js";
@@ -46,7 +46,6 @@
 
 <!-- routify:options bundle=true -->
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <main
 	id="main"
 	style:--orange={$useCustomTheme ? $customTheme.orange : null}
@@ -69,7 +68,6 @@
 	on:mousedown={() => BGM.canPlayNow()}
 	on:keydown={() => BGM.canPlayNow()}
 >
-
 	{#if $reconnecting}
 		<Modal>
 			<h2 slot="header">Reconnecting...</h2>
@@ -146,6 +144,7 @@
 		--pfp-bg: white;
 		--pfp-outline: #d9d9d9;
 
+		background-color: var(--background);
 		color: var(--foreground);
 		scrollbar-color: var(--orange) var(--orange-scrollbar-back);
 		font-size: 15pt;
@@ -194,7 +193,6 @@
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
-		background-color: var(--background);
 	}
 
 	.transition {
@@ -204,7 +202,6 @@
 		position: absolute;
 		animation-fill-mode: forwards;
 		animation-timing-function: ease;
-		transition: 0.5s;
 		z-index: 2;
 	}
 
@@ -259,6 +256,13 @@
 		--view-height: calc(100vh - 0.66em);
 
 		background-color: var(--background);
+	}
+
+	.banner {
+		background-color: crimson;
+		margin: 0;
+		padding: 0.5em;
+		text-align: center;
 	}
 
 	:global(main.layout-old) .main-screen {

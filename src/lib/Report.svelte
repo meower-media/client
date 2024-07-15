@@ -95,11 +95,20 @@
 		{#if report.content.post_origin === "home"}
 			<a href="/" on:click|preventDefault={$goto("/home")}> Home </a><br
 			/>
+		{:else if report.content.post_origin === "inbox"}
+			<a
+				href="/"
+				on:click|preventDefault={$goto(
+					`/users/${report.content.u}/admin/inbox`
+				)}
+			>
+				{report.content.u}'s inbox
+			</a><br />
 		{:else}
 			<a
 				href="/"
 				on:click|preventDefault={$goto(
-					`/chats/${report.content.post_origin}?admin=1`
+					`/chats/${report.content.post_origin}`
 				)}
 			>
 				{report.content.post_origin}

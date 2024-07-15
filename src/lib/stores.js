@@ -19,9 +19,6 @@ export const reconnecting = writable(false);
 export const disconnected = writable(false);
 export const disconnectReason = writable("");
 
-// Last (blank) clicked
-export const profileClicked = writable("");
-
 // Last typed timestamp
 export const lastTyped = writable(0);
 

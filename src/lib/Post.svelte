@@ -26,16 +26,14 @@
 	// @ts-ignore
 	import {autoresize} from "svelte-textarea-autoresize";
 	import MarkdownIt from "markdown-it";
-	import twemoji from "@twemoji/api";
+	import twemoji from "twemoji";
 	import {goto} from "@roxi/routify";
 	import {onMount, tick} from "svelte";
 
 	/**
 	 * @type {import('src/lib/types.js').ListPost}
 	 */
-	export let post = {
-		content: ""
-	};
+	export let post;
 	export let buttons = true;
 	export let input = null;
 	export let adminView = false;
@@ -117,42 +115,23 @@
 	}
 
 	function confirmLink(link) {
-		link = atob(encodeURIComponent(link)); // we now base64 encode the link to prevent XSS
-		if (
-			!link.startsWith("https:") &&
-			!link.startsWith("http:") &&
-			!link.startsWith("/")
-		) {
+		link = atob(link); // we now base64 encode the link to prevent XSS
+		if (!link.startsWith("https:") && !link.startsWith("http:") && !link.startsWith("/")) {
 			link = "https://" + link;
 		}
 		let url = new URL(link, location.href);
 		if (url.host === location.host) {
 			$goto(url.pathname);
 		} else {
-			modals.showModal(ConfirmHyperlinkModal, {link: url.href});
+			modals.showModal(ConfirmHyperlinkModal, {link});
 		}
 		return false;
 	}
 	// @ts-ignore
 	window.confirmLink = confirmLink;
 
-	function createEmote(original, id, isGif, size) {
-		return `​![${original}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`
-	}
-
-	/**
-	 * @param {string} content
-	 * @returns {Promise<{
-	 * 	html?: string,
-	 * 	error?: Error,
-	 * 	youtubeEmbeds?: Array<{title: string, author: string, thumbnail: string, id: number, url: string}>
-	 * }>}
-	 */
-	async function addFancyElements(content) {
+	function addFancyElements(content) {
 		// markdown (which has HTML escaping built-in)
-		let renderedContent;
-		const youtubeEmbeds = [];
-
 		try {
 			const md = new MarkdownIt("default", {
 				breaks: true,
@@ -161,29 +140,18 @@
 			});
 			md.linkify.add("@", {
 				validate: function (text, pos) {
-					let tail = text.slice(pos);
+					var tail = text.slice(pos);
 					return tail.match(/[a-zA-Z0-9-_]{0,20}/gs)[0].length;
 				},
 				normalize: function (match) {
-					match.url = "/users/" + match.url.replace(/^@/, "");
+					match.url =
+						window.location.host +
+						"/users/" +
+						match.url.replace(/^@/, "");
 				},
 			});
-
-			var emoteContent = content;
-            const discordEmotes = Array.from(content.matchAll(/<a?:\w+:\d+>/g))
-
-            discordEmotes.forEach(element => {
-				const isGif = element[0].startsWith("<a:")
-                const tok = element[0].replace("a", '').slice(0, -1).slice(1).split(":")
-
-                emoteContent = emoteContent.split(element).join(createEmote(element, tok[2], isGif))
-            });
-
-
-
-
 			const tokens = md.parse(
-				emoteContent
+				content
 					.replaceAll(/\[([^\]]+?): (https:\/\/[^\]]+?)\]/gs, "")
 					.replaceAll(/\*\*\*\*/gs, "\\*\\*\\*\\*"),
 				{}
@@ -203,73 +171,43 @@
 								)
 							) {
 								childToken.attrs[srcPos][1] = "about:blank";
+								console.log(childToken);
 							}
 						}
 						if (childToken.type === "link_open") {
 							const href = childToken.attrs.find(
 								attr => attr[0] === "href"
 							)[1];
-							const b64href = decodeURIComponent(btoa(href));
+							const b64href = btoa(href);
 							childToken.attrs.push([
 								"onclick",
-								`return confirmLink('${b64href}')`,
 								`return confirmLink('${b64href}')`,
 							]);
 						}
 					}
 				}
 			}
-
-			renderedContent = md.renderer.render(tokens, md.options);
+			content = md.renderer.render(tokens, md.options);
 
 			// add quote containers to blockquotes (although, quotes are currently broken)
-			renderedContent = renderedContent.replaceAll(
+			content = content.replaceAll(
 				/<blockquote>(.+?)<\/blockquote>/gms,
-				'<blockquote><p>$1</p></blockquote>'
+				'<div class="quote-container"><blockquote>$1</blockquote></div>'
 			);
-
-			if ($user.embeds_enabled) {
-				const youtubeMatches = [
-					...new Set(
-						content.match(
-							/(\<|)(http|https):\/\/(www.youtube.com\/watch\?v=|youtube.com\/watch\?v=|youtu.be\/)(\S{11})(\>|)?/gm
-						)
-					),
-				];
-				for (const watchURL of youtubeMatches) {
-					if (watchURL.startsWith("<") && watchURL.endsWith(">"))
-						continue;
-					const response = await (
-						await fetch(
-							`https://youtube.com/oembed?url=${watchURL}`
-						)
-					).json();
-					youtubeEmbeds.push({
-						title: response.title,
-						author: response.author_name,
-						thumbnail: response.thumbnail_url,
-						id: youtubeEmbeds.length,
-						url: watchURL
-					});
-				}
-			}
 		} catch (e) {
 			// this is to stop any possible XSS attacks by bypassing the markdown lib
 			// which is responsible for escaping HTML
-			return {error: e};
+			return `Failed rendering post: ${e}`;
 		}
 
 		// twemoji
-		renderedContent = twemoji.parse(renderedContent, {
+		content = twemoji.parse(content, {
 			folder: "svg",
 			ext: ".svg",
 			size: 20,
 		});
 
-		return {
-			html: renderedContent,
-			youtubeEmbeds,
-		};
+		return content;
 	}
 
 	async function adminDelete() {
@@ -397,39 +335,18 @@
 						<button
 							class="circle reply"
 							on:click={() => {
-								let existingText = input.value.trim();
+								let existingText = input.value;
 
 								const mentionRegex = /^@\w+\s*/i;
 								const mention = "@" + post.user + " ";
 
 								if (mentionRegex.test(existingText)) {
-									existingText = existingText
+									input.value = existingText
 										.trim()
 										.replace(mentionRegex, mention);
 								} else {
-									existingText = mention + existingText.trim();
+									input.value = mention + existingText.trim();
 								}
-								existingText += "\n";
-								let snipped = false;
-								/* @type {string[]} */
-								let iter = post.content.split("\n");
-
-
-								iter.forEach(element => {
-
-									if (element.replaceAll(/\s/g, '').startsWith(">")) {
-										if (!snipped) {
-											snipped = true;
-											existingText += "> > [snip]\n";
-											return;
-										}
-										return;
-									}
-									snipped = false;
-									existingText += "> " + element + "\n";
-								});
-								existingText += "\n";
-								input.value = existingText;
 
 								input.focus();
 							}}
@@ -656,31 +573,7 @@
 				: ''}"
 		>
 			{#await addFancyElements(post.content) then content}
-				{#if content.error}
-					Error rendering post: {content.error}
-				{:else}
-					{#if content.html}
-						{@html content.html}
-					{/if}
-					{#if content.youtubeEmbeds}
-						{#each content.youtubeEmbeds as embed (embed.id)}
-							<div class="youtube-container">
-								<h4>{embed.title}</h4>
-								<span style="color: #606060; font-size: 1.1rem"
-									>{embed.author}</span
-								><br /><br />
-								<a href={embed.url} target="_blank" rel="noreferrer">
-									<img
-										src={embed.thumbnail}
-										height="180"
-										loading="lazy"
-										alt="Thumbnail for {embed.title}"
-									/>
-								</a>
-							</div>
-						{/each}
-					{/if}
-				{/if}
+				{@html content}
 			{/await}
 		</p>
 	{/if}
@@ -759,25 +652,4 @@
 		margin-bottom: 0.5em;
 		width: 100%;
 	}
-
-	:global(.youtube-container) {
-		border: solid 2px var(--orange);
-		padding: 10px;
-		border-radius: 10px;
-		width: 50%;
-	}
-
-
-	:global(blockquote) {
-		margin: 0.25em;
-		border-left: 4px solid var(--orange-dark);
-	}
-
-	:global(blockquote p) {
-		margin-left: 1em;
-	}
-	:global(blockquote blockquote) {
-		margin-left: 1em;
-	}
-
 </style>

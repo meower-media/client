@@ -93,7 +93,6 @@
 	}
 
 	.bgm-author {
-		padding-top: 0.5em;
 		font-size: 0.5em;
 		text-align: center;
 		font-weight: normal;

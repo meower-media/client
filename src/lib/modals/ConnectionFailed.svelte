@@ -9,16 +9,12 @@
 	let ipBlocked = false;
 
 	onMount(async () => {
-		const resp = await fetch(apiUrl);
+		const resp = await fetch(`${apiUrl}status`);
 		if (!resp.ok) return;
 
 		const json = await resp.json();
-
-		if (json.type === "repairModeEnabled") {
-			repairMode = true;
-		} else if (json.type === "ipBlocked") {
-			ipBlocked = true;
-		}
+		if (json.isRepairMode) repairMode = true;
+		if (json.ipBlocked) ipBlocked = true;
 	});
 </script>
 

@@ -11,7 +11,7 @@
 </Container>
 
 <img
-	src="https://meower.org/images/assets/cat_disks.jpg"
+	src="https://meower.org/assets/cat_disks.jpg"
 	alt="cat disks"
 	style="max-width: 25%;"
 />
