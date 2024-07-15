@@ -8,7 +8,7 @@
 
 	import {authHeader} from "./stores.js";
 	import {apiUrl} from "./urls.js";
-	import { adminPermissions, hasPermission } from "./bitField.js";
+	import {adminPermissions, hasPermission} from "./bitField.js";
 	import * as modals from "./modals.js";
 
 	import {goto} from "@roxi/routify";
@@ -95,20 +95,11 @@
 		{#if report.content.post_origin === "home"}
 			<a href="/" on:click|preventDefault={$goto("/home")}> Home </a><br
 			/>
-		{:else if report.content.post_origin === "inbox"}
-			<a
-				href="/"
-				on:click|preventDefault={$goto(
-					`/users/${report.content.u}/admin/inbox`
-				)}
-			>
-				{report.content.u}'s inbox
-			</a><br />
 		{:else}
 			<a
 				href="/"
 				on:click|preventDefault={$goto(
-					`/chats/${report.content.post_origin}`
+					`/chats/${report.content.post_origin}?admin=1`
 				)}
 			>
 				{report.content.post_origin}
@@ -147,7 +138,7 @@
 				post_origin: report.content.post_origin,
 				user: report.content.u,
 				content: report.content.p,
-				unfiltered_content: report.unfiltered_p,
+				attachments: report.content.attachments,
 				date: report.content.t.e,
 				edited_at: report.content.edited_at,
 				isDeleted: report.content.isDeleted,

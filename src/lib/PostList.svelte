@@ -15,7 +15,7 @@
 	Slots:
 	- error and empty: These slots unction the same as PagedList (see its comment).
 		There are no "loaded" or "item" slots.
-	
+
 	Events:
 	- loaded: Fired when the list loads for the first time.
 -->
@@ -23,19 +23,18 @@
 	import BasicModal from "./modals/Basic.svelte";
 	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
 	import BlockUserModal from "./modals/safety/BlockUser.svelte";
-	import AddImageModal from "./modals/AddImage.svelte";
+	import SendFiles from "./modals/SendFiles.svelte";
 
 	import {
 		relationships,
 		authHeader,
 		user,
-		spinner,
 		lastTyped,
 		chat,
-		postInput as postInput_2,
 	} from "./stores.js";
 	import {userRestrictions, isRestricted} from "../lib/bitField.js";
 	import {shiftHeld} from "./keyDetect.js";
+	import {mobile} from "./responsiveness.js";
 	import {playNotification} from "./sounds.js";
 	import * as modals from "./modals.js";
 	import PagedList from "./PagedList.svelte";
@@ -49,6 +48,12 @@
 	import {createEventDispatcher} from "svelte";
 	const dispatch = createEventDispatcher();
 
+	// @ts-ignore
+	import {autoresize} from "svelte-textarea-autoresize";
+
+	import {params} from "@roxi/routify";
+	import {onMount, onDestroy} from "svelte";
+
 	export let fetchUrl = "home";
 	export let postOrigin = "home";
 	export let chatName = "Home";
@@ -57,41 +62,45 @@
 	export let addToChat = false;
 	export let adminView = false;
 
-	// @ts-ignore
-	import {autoresize} from "svelte-textarea-autoresize";
-
-	import {fly} from "svelte/transition";
-	import {flip} from "svelte/animate";
-	import {params} from "@roxi/routify";
-	import {onMount, onDestroy} from "svelte";
-
 	let id = 0;
-	let postErrors = "";
+	let postErrors = {};
 
-	let postInput, submitBtn, userRestricted, dmWith;
-
-	let addToChatLoading = {};
-
+	// User restriction status
+	let userRestricted = false;
 	$: {
-		userRestricted =
-			(postOrigin === "home" &&
-				isRestricted(userRestrictions.HOME_POSTS)) ||
-			(!["home", "inbox"].includes(postOrigin) &&
-				isRestricted(userRestrictions.CHAT_POSTS));
-
-		if ($chat.type === 1) {
-			dmWith = $chat.members.filter(
-				username => username !== $user.name
-			)[0];
+		if (
+			postOrigin === "home" &&
+			isRestricted(userRestrictions.HOME_POSTS)
+		) {
+			userRestricted = true;
+		} else if (
+			!["home", "inbox"].includes(postOrigin) &&
+			isRestricted(userRestrictions.CHAT_POSTS)
+		) {
+			userRestricted = true;
 		} else {
-			dmWith = null;
+			userRestricted = false;
 		}
 	}
+
+	// DM recipient
+	let dmWith = "";
+	let recipientBlocked = false;
+	$: {
+		if ($chat.type === 1) {
+			dmWith = $chat.members.find(username => username !== $user.name);
+			recipientBlocked = $relationships[dmWith] === 2;
+		}
+	}
+
+	// Elements
+	let postInput, submitBtn;
+
+	let addToChatLoading = {};
 
 	// PagedList stuff
 	let list;
 	export let items = [];
-
 	let firstLoad = true;
 
 	/**
@@ -106,7 +115,7 @@
 		if (!fetchUrl) {
 			// don't load anything
 			if (firstLoad) dispatch("loaded");
-			firstLoad = true;
+			firstLoad = false;
 			return {
 				numPages: 1,
 				result: [],
@@ -171,7 +180,7 @@
 				post_origin: post.post_origin,
 				user: post.u,
 				content: post.p,
-				unfiltered_content: post.unfiltered_p,
+				attachments: post.attachments,
 				date: post.t.e,
 				edited_at: post.edited_at,
 				isDeleted: post.isDeleted,
@@ -179,106 +188,135 @@
 				deleted_at: post.deleted_at,
 			};
 		});
+		if ($user.hide_blocked_users) {
+			// @ts-ignore
+			result = result.filter(
+				post =>
+					$relationships[post._id] !== 2 &&
+					$relationships[post.u] !== 2
+			);
+		}
 		const numPages = json["pages"];
 
 		if (firstLoad) dispatch("loaded");
-		firstLoad = true;
+		firstLoad = false;
 		return {
 			numPages,
 			result,
 		};
 	}
 
-	let destroy = () => {};
-	onDestroy(() => destroy());
+	function sendPost(content) {
+		/**
+		 * @type {import('src/lib/types.js').ListPost}
+		 */
+		const pendingPost = {
+			id: id++,
+			nonce: Math.random().toString(),
+			post_origin: postOrigin,
+			user: $user.name,
+			content,
+			attachments: [],
+			date: Math.floor(new Date().getTime() / 1000),
+			isDeleted: false,
+			pending: true,
+		};
+		list.addItem(pendingPost);
 
-	/**
-	 * Adds events to listen for live post updates.
-	 */
-	function listenOnLink() {
-		const evId = clm.link.on("direct", cmd => {
-			if (!cmd.val) return;
-
-			const isGC = postOrigin !== "home";
-			if (cmd.val.mode === "delete") {
-				if (adminView) return;
-				items = items.filter(post => post.post_id !== cmd.val.id);
-			} // This needs to be here to even function - Bloctans
-			if (cmd.val.mode === "update_post") {
-				let itemIndex = items.findIndex(
-					post => post.post_id === cmd.val.payload._id
+		const postProm = new Promise(async (resolve, reject) => {
+			try {
+				const resp = await fetch(
+					`${apiUrl}${
+						postOrigin === "home" ? "home" : `/posts/${$chat._id}`
+					}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							...$authHeader,
+						},
+						body: JSON.stringify({
+							content,
+							nonce: pendingPost.nonce,
+						}),
+					}
 				);
-				if (itemIndex !== -1) {
-					let post = cmd.val.payload;
-					items[itemIndex] = {
-						id: items[itemIndex].id,
-						post_id: post._id,
-						post_origin: post.post_origin,
-						user: post.u,
-						content: post.p,
-						unfiltered_content: post.unfiltered_p,
-						date: post.t.e,
-						edited_at: post.edited_at,
-						isDeleted: post.isDeleted,
-						mod_deleted: post.mod_deleted,
-						deleted_at: post.deleted_at,
-					};
+				const json = await resp.json();
+
+				if (resp.ok) {
+					resolve();
+				} else {
+					reject(json.type);
 				}
-			}
-			if (!isGC || cmd.val.state === 2) {
-				if (cmd.val.post_origin !== postOrigin) return;
-				list.addItem({
-					id: id++,
-					post_id: cmd.val._id,
-					post_origin: cmd.val.post_origin,
-					user: cmd.val.u,
-					content: cmd.val.p,
-					unfiltered_content: cmd.val.unfiltered_p,
-					date: cmd.val.t.e,
-					edited_at: cmd.val.edited_at,
-					isDeleted: cmd.val.isDeleted,
-					mod_deleted: cmd.val.mod_deleted,
-					deleted_at: cmd.val.deleted_at,
-				});
-				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
-			}
-			if (isGC && cmd.val.state === 0 && cmd.val.chatid === postOrigin) {
-				list.addItem({
-					id: id++,
-					post_id: "",
-					post_origin: postOrigin || fetchUrl,
-					user: "Server",
-					content: `@${cmd.val.u} left ${chatName}.`,
-					date: Date.now() / 1000,
-					isDeleted: false,
-				});
-				if ($user.sfx && cmd.val.u !== $user.name) playNotification();
-			}
-			if (isGC && cmd.val.state === 1 && cmd.val.chatid === postOrigin) {
-				list.addItem({
-					id: id++,
-					post_id: "",
-					post_origin: postOrigin || fetchUrl,
-					user: "Server",
-					content: `@${cmd.val.u} joined ${chatName}.`,
-					date: Date.now() / 1000,
-					isDeleted: false,
-				});
-				if ($user.sfx) playNotification();
+			} catch (e) {
+				reject(e);
 			}
 		});
-		destroy = () => clm.link.off(evId);
+		postProm.catch(e => {
+			postErrors[pendingPost.id] = e;
+		});
 	}
+
 	onMount(() => {
 		if (postOrigin) {
-			if (clm.link.ws.readyState === 1) {
-				listenOnLink();
-			} else {
-				clm.link.once("connected", listenOnLink);
-			}
+			const evId = clm.link.on("direct", cmd => {
+				if (!cmd.val) return;
+
+				const isGC = postOrigin !== "home";
+				if (cmd.val.mode === "delete") {
+					if (adminView) return;
+					items = items.filter(post => post.post_id !== cmd.val.id);
+				}
+				if (cmd.val.mode === "update_post") {
+					let itemIndex = items.findIndex(
+						post => post.post_id === cmd.val.payload._id
+					);
+					if (itemIndex !== -1) {
+						let post = cmd.val.payload;
+						items[itemIndex] = {
+							id: items[itemIndex].id,
+							post_id: post._id,
+							post_origin: post.post_origin,
+							user: post.u,
+							content: post.p,
+							attachments: post.attachments,
+							date: post.t.e,
+							edited_at: post.edited_at,
+							isDeleted: post.isDeleted,
+							mod_deleted: post.mod_deleted,
+							deleted_at: post.deleted_at,
+						};
+					}
+				}
+				if (!isGC || cmd.val.state === 2) {
+					if (cmd.val.post_origin !== postOrigin) return;
+					const post = {
+						id: id++,
+						post_id: cmd.val._id,
+						post_origin: cmd.val.post_origin,
+						user: cmd.val.u,
+						content: cmd.val.p,
+						attachments: cmd.val.attachments,
+						date: cmd.val.t.e,
+						edited_at: cmd.val.edited_at,
+						isDeleted: cmd.val.isDeleted,
+						mod_deleted: cmd.val.mod_deleted,
+						deleted_at: cmd.val.deleted_at,
+					};
+					list.addItem(post);
+					if (cmd.val.nonce) {
+						items = items.filter(post => post.nonce !== cmd.val.nonce);
+					}
+					if ($user.sfx && cmd.val.u !== $user.name)
+						playNotification();
+				}
+			});
+			destroy = () => clm.link.off(evId);
 		}
-		if (!fetchUrl) dispatch("loaded");
 	});
+
+	let destroy = () => {};
+	onDestroy(() => destroy());
 </script>
 
 <div>
@@ -289,137 +327,55 @@
 			class="createpost"
 			autocomplete="off"
 			on:submit|preventDefault={/** @type {SubmitEvent} */ e => {
-				postErrors = "";
-
 				// @ts-ignore
 				const input = e.target.elements.input;
 				// @ts-ignore
-				const content = e.target.elements.input.value;
-
-				if (!content.trim()) {
-					postErrors = "You cannot send an empty post!";
-					return false;
-				}
-
-				// substitute command
-				if (content.match(/^s\/.+\//gs)) {
-					let toReplace = content.split("/")[1];
-					let replaceWith = content.replace(`s/${toReplace}/`, "");
-
-					let post = items.find(_post => _post.user === $user.name);
-					if (post) {
-						setTimeout(async () => {
-							let newContent = post.content.replace(
-								toReplace,
-								replaceWith
-							);
-							console.log(post);
-							if (post.unfiltered_content) {
-								newContent = post.unfiltered_content.replace(
-									toReplace,
-									replaceWith
-								);
-							}
-							if (newContent.trim() === "") {
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "DELETE",
-											headers: $authHeader,
-										}
-									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
-											throw new Error(
-												"Too many requests! Try again later."
-											);
-										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
-									}
-								} catch (e) {
-									postErrors = `Error while deleting post: ${e}`;
-								}
-							} else if (newContent !== post.content) {
-								try {
-									const resp = await fetch(
-										`${apiUrl}posts?id=${post.post_id}`,
-										{
-											method: "PATCH",
-											headers: {
-												"Content-Type":
-													"application/json",
-												...$authHeader,
-											},
-											body: JSON.stringify({
-												content: newContent,
-											}),
-										}
-									);
-									if (!resp.ok) {
-										if (resp.status === 429) {
-											throw new Error(
-												"Too many requests! Try again later."
-											);
-										}
-										throw new Error(
-											"Response code is not OK; code is " +
-												resp.status
-										);
-									}
-								} catch (e) {
-									postErrors = e;
-								}
-							}
-						}, 0);
-					}
-
-					input.value = "";
-					input.rows = "1";
-					input.style.height = "45px";
+				const content = e.target.elements.input.value.trim();
+				if (!content) {
 					return;
 				}
 
-				spinner.set(true);
+				if (content.match(/^s\/.+\//gs)) {
+					// substitute command
+					let post = items.find(_post => _post.user === $user.name);
+					if (!post) return;
 
-				submitBtn.disabled = true;
-				clm.meowerRequest({
-					cmd: "direct",
-					val: {
-						cmd: postOrigin === "home" ? "post_home" : "post_chat",
-						val:
-							postOrigin === "home"
-								? content
-								: {
-										p: content,
-										chatid: postOrigin,
-								  },
-					},
-				})
-					.then(() => {
-						input.value = "";
-						input.rows = "1";
-						input.style.height = "45px";
-						submitBtn.disabled = false;
-					})
-					.catch(code => {
-						submitBtn.disabled = false;
-						switch (code) {
-							case "E:106 | Too many requests":
-								postErrors = "You're posting too fast!";
-								break;
-							case "I:017 | Missing permissions":
-								postErrors =
-									"Someone’s privacy settings are preventing you from sending messages here.";
-								break;
-							default:
-								postErrors = "Unexpected " + code + " error!";
-						}
-					});
-				return false;
+					let toReplace = content.split("/")[1];
+					let replaceWith = content.replace(`s/${toReplace}/`, "");
+
+					let newContent = post.content;
+					newContent = newContent
+						.replace(toReplace, replaceWith)
+						.trim();
+
+					if (newContent) {
+						fetch(`${apiUrl}posts?id=${post.post_id}`, {
+							method: "PATCH",
+							headers: {
+								"Content-Type": "application/json",
+								...$authHeader,
+							},
+							body: JSON.stringify({
+								content: newContent,
+							}),
+						}).catch(e => {
+							console.error(e);
+							postErrors[post.id] = e;
+						});
+					} else {
+						fetch(`${apiUrl}posts?id=${post.post_id}`, {
+							method: "DELETE",
+							headers: $authHeader,
+						}).catch(e => (postErrors[post.id] = e));
+					}
+				} else {
+					// normal post
+					sendPost(content);
+				}
+
+				input.value = "";
+				input.rows = "1";
+				input.style.height = "45px";
 			}}
 		>
 			<textarea
@@ -427,37 +383,37 @@
 				class="white"
 				placeholder={userRestricted
 					? "Your account is currently restricted."
-					: $relationships[dmWith] === 2
+					: recipientBlocked
 					? `You have blocked ${dmWith}.`
 					: "Write something..."}
 				name="input"
 				autocomplete="off"
 				maxlength="4000"
 				rows="1"
-				disabled={userRestricted || $relationships[dmWith] === 2}
+				disabled={userRestricted || recipientBlocked}
 				use:autoresize
 				on:input={() => {
-					postErrors = "";
-					if ($lastTyped + 1500 < +new Date()) {
+					if ($lastTyped + 2000 < +new Date()) {
 						lastTyped.set(+new Date());
-						clm.link.send({
-							cmd: "direct",
-							val: {
-								cmd: "set_chat_state",
-								val: {
-									chatid:
-										postOrigin === "home"
-											? "livechat"
-											: postOrigin,
-									state: postOrigin === "home" ? 101 : 100,
-								},
-							},
-							listener: "typing_indicator",
-						});
+						fetch(
+							`${apiUrl}${
+								postOrigin === "home"
+									? "home"
+									: `/chats/${$chat._id}`
+							}/typing`,
+							{
+								method: "POST",
+								headers: $authHeader,
+							}
+						);
 					}
 				}}
 				on:keydown={event => {
-					if (event.key == "Enter" && !shiftHeld) {
+					if (
+						event.key == "Enter" &&
+						!shiftHeld &&
+						!($mobile && shiftHeld)
+					) {
 						event.preventDefault();
 						if (!submitBtn.disabled) submitBtn.click();
 					}
@@ -475,7 +431,7 @@
 						});
 					}}>View details</button
 				>
-			{:else if $relationships[dmWith] === 2}
+			{:else if recipientBlocked}
 				<button
 					on:click|preventDefault={() =>
 						modals.showModal(BlockUserModal, {username: dmWith})}
@@ -483,12 +439,10 @@
 				>
 			{:else}
 				<button
-					class="upload-image"
-					name="addImage"
-					title="Add an image"
+					class="send-files"
+					title="Send files"
 					on:click|preventDefault={() => {
-						postInput_2.set(postInput);
-						modals.showModal(AddImageModal);
+						modals.showModal(AddImageModal, {postInput});
 					}}>+</button
 				>
 				<button
@@ -499,95 +453,95 @@
 			{/if}
 		</form>
 	{/if}
-	<div class="post-errors">{postErrors}</div>
 	{#if postOrigin}
 		<TypingIndicator forPage={postOrigin} />
 	{/if}
 	<PagedList maxItems={100} bind:items {loadPage} bind:this={list}>
 		<svelte:fragment slot="loaded" let:items={_items}>
-			{#each [...new Set(_items)] as post (post.id)}
-				<div
-					class="item"
-					transition:fly|local={{y: -50, duration: 250}}
-					animate:flip={{duration: 250}}
-				>
+			{#each _items as post (post.id)}
+				<div class="item">
 					{#if "lower_username" in post}
-						{#if !$user.hide_blocked_users || $relationships[post._id] !== 2}
-							<ProfileView
-								profile={post}
-								small={true}
-								canClick={true}
-								canDoActions={!addToChat}
-							/>
-							{#if addToChat && !$chat.members.includes(post._id)}
-								<div class="settings-controls">
-									<button
-										class="circle add"
-										title="Add to chat"
-										disabled={addToChatLoading[post._id]}
-										on:click={async () => {
-											addToChatLoading[post._id] = true;
-											try {
-												const resp = await fetch(
-													`${apiUrl}${
-														$params.admin
-															? "admin/"
-															: ""
-													}chats/${
-														$chat._id
-													}/members/${post._id}`,
-													{
-														method: "PUT",
-														headers: $authHeader,
-													}
-												);
-												if (!resp.ok) {
-													switch (resp.status) {
-														case 403:
-															throw new Error(
-																`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
-															);
-														case 404:
-															throw new Error(
-																`${post._id} not found.`
-															);
-														case 409:
-															throw new Error(
-																`${post._id} is already a member of ${$chat.nickname}.`
-															);
-														case 429:
-															throw new Error(
-																"Too many requests! Try again later."
-															);
-														default:
-															throw new Error(
-																"Response code is not OK; code is " +
-																	resp.status
-															);
-													}
-												}
-												if ($params.admin) {
-													$chat = await resp.json();
-												}
-												delete addToChatLoading[
+						<ProfileView
+							profile={post}
+							small={true}
+							canClick={true}
+							canDoActions={!addToChat}
+						/>
+						{#if addToChat && !$chat.members.includes(post._id)}
+							<div class="settings-controls">
+								<button
+									class="circle add"
+									title="Add to chat"
+									disabled={addToChatLoading[post._id]}
+									on:click={async () => {
+										addToChatLoading[post._id] = true;
+										try {
+											const resp = await fetch(
+												`${apiUrl}${
+													$params.admin
+														? "admin/"
+														: ""
+												}chats/${$chat._id}/members/${
 													post._id
-												];
-											} catch (e) {
-												modals.showModal(BasicModal, {
-													title: `Failed to add ${post._id} to ${$chat.nickname}`,
-													desc: e,
-												});
-												delete addToChatLoading[
-													post._id
-												];
+												}`,
+												{
+													method: "PUT",
+													headers: $authHeader,
+												}
+											);
+											if (!resp.ok) {
+												switch (resp.status) {
+													case 403:
+														throw new Error(
+															`Someone's privacy settings are preventing you from adding ${post._id} to ${$chat.nickname}.`
+														);
+													case 404:
+														throw new Error(
+															`${post._id} not found.`
+														);
+													case 409:
+														throw new Error(
+															`${post._id} is already a member of ${$chat.nickname}.`
+														);
+													case 429:
+														throw new Error(
+															"Too many requests! Try again later."
+														);
+													default:
+														throw new Error(
+															"Response code is not OK; code is " +
+																resp.status
+														);
+												}
 											}
-										}}
-									/>
-								</div>
-							{/if}
+											if ($params.admin) {
+												$chat = await resp.json();
+											}
+											delete addToChatLoading[post._id];
+										} catch (e) {
+											modals.showModal(BasicModal, {
+												title: `Failed to add ${post._id} to ${$chat.nickname}`,
+												desc: e,
+											});
+											delete addToChatLoading[post._id];
+										}
+									}}
+								/>
+							</div>
 						{/if}
-					{:else if !$user.hide_blocked_users || $relationships[post.user] !== 2}
-						<Post {post} {adminView} input={postInput} />
+					{:else}
+						<Post
+							{post}
+							{adminView}
+							input={postInput}
+							error={postErrors[post.id]}
+							retryPost={() => {
+								sendPost(post.content);
+								items = items.filter(v => v.id !== post.id);
+							}}
+							removePost={() =>
+								(items = items.filter(v => v.id !== post.id))}
+						/>
 					{/if}
 				</div>
 			{/each}
@@ -599,9 +553,7 @@
 			</Container>
 		</slot>
 		<slot name="empty" slot="empty">
-			{#if postOrigin === "livechat"}
-				{""}
-			{:else}
+			{#if postOrigin !== "livechat"}
 				<Container>
 					{#if $user.name && canPost}
 						No posts here. Check back later or be the first to post!
@@ -627,14 +579,7 @@
 		max-height: 300px;
 	}
 
-	.post-errors {
-		color: crimson;
-		font-size: 75%;
-		font-weight: bold;
-		margin: 0.25em 0;
-	}
-
-	.upload-image {
+	.send-files {
 		padding: 0;
 		padding-left: 0.8rem;
 		padding-right: 0.8rem;
