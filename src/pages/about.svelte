@@ -116,6 +116,19 @@
 <Container>
 	<h2>Changelog</h2>
 	<Container>
+		<h2>1.9.0</h2>
+		<ul>
+			<li>Add api accounts support</li>
+			<li>Add better post attachment support</li>
+			<li>Add blockquote replies</li>
+			<li>Add Discord emoji support</li>
+			<li>Add new splash screen</li>
+			<li>Fix settings on mobile</li>
+			<li>Improve changelog for older versions</li>
+			<li>Update dependencies</li>
+			<li>Use bottom sheet for modals on mobile</li>
+		</ul>
+	<Container>
 		<h2>1.8.3</h2>
 		<ul>
 			<li>Added post attachments</li>
