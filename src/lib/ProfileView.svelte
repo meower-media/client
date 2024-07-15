@@ -198,7 +198,7 @@
 				{/if}
 				{#if canBlock}
 					<button
-						title={`${blocked ? "Unb" : "B"}lock ${data._id}`}
+						title={`Unblock ${data._id}`}
 						class="circle close"
 						on:click={() =>
 							modals.showModal(BlockUserModal, {username: data._id})}
