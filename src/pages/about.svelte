@@ -123,6 +123,7 @@
 			<li>Fixed several regarding authentication</li>
 			<li>Re-Added debug panel to sidebar and fixed an issue with the registration text in the mod panel</li>
 		</ul>
+		<small>Test your sites before deploying them onto production kids!</small>
 	</Container>
 	<Container>
 		<h2>1.9.0</h2>
