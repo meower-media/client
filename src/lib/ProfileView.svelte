@@ -22,8 +22,9 @@
 	import ModerateUserModal from "./modals/moderation/ModerateUser.svelte";
 	import ReportUserModal from "./modals/safety/ReportUser.svelte";
 	import AccountBannedModal from "./modals/safety/AccountBanned.svelte";
+	import BlockUserModal from "./modals/safety/BlockUser.svelte";
 
-	import {authHeader, chats, ulist, user} from "./stores.js";
+	import {authHeader, chats, ulist, user, relationships} from "./stores.js";
 	import {apiUrl} from "./urls.js";
 	import {userFlags} from "./bitField.js";
 	import loadProfile from "./loadProfile.js";
@@ -38,6 +39,7 @@
 	export let canClick = false;
 	export let canDoActions = false;
 	export let dmChat = null;
+	export let canBlock = false;
 
 	function load() {
 		if (profile) {
@@ -45,6 +47,10 @@
 		}
 		return loadProfile(username, true);
 	}
+
+	let blocked
+
+	$: blocked = $relationships[username] === 2;
 </script>
 
 <div>
@@ -189,6 +195,14 @@
 							}}
 						/>
 					{/if}
+				{/if}
+				{#if canBlock}
+					<button
+						title={`${blocked ? "Unb" : "B"}lock ${data._id}`}
+						class="circle close"
+						on:click={() =>
+							modals.showModal(BlockUserModal, {username: data._id})}
+					/>
 				{/if}
 			</div>
 

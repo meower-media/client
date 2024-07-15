@@ -97,6 +97,20 @@
 			draggable={false}
 		/>
 	</button>
+	{#if $user.debug}
+		<button
+			on:click={() => modals.showModal(DebugModal)}
+			class="debugpanel-btn round"
+			title="Debug Panel"
+		>
+			<img
+				src={terminal}
+				alt="Open debug panel"
+				height="auto"
+				draggable={false}
+			/>
+		</button>
+	{/if}
 	{#if $user.permissions}
 		<button
 			on:click={() => modals.showModal(ModPanelModal)}
