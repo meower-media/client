@@ -442,7 +442,7 @@
 					class="send-files"
 					title="Send files"
 					on:click|preventDefault={() => {
-						modals.showModal(AddImageModal, {postInput});
+						modals.showModal(SendFiles, {postInput});
 					}}>+</button
 				>
 				<button
