@@ -46,7 +46,7 @@ user.subscribe(v => {
 			try {
 				applyTheme(stringToTheme(_user.theme));
 			} catch (e) {
-				console.error(`Failed to load custom theme: ${e}`);
+				console.error(`Failed to apply custom theme: ${e}`);
 				removeTheme();
 			}
 		} else {
@@ -306,24 +306,7 @@ export async function connect() {
 			link.log("manager", "connection restored");
 			link.off(onErrorEv);
 
-			// re-authenticate
-			if (_authHeader.username && _authHeader.token) {
-				try {
-					await meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "authpswd",
-							val: {
-								username: _authHeader.username,
-								pswd: _authHeader.token,
-							},
-						},
-					});
-				} catch (e) {
-					console.error(e);
-					modals.showModal(LoggedOutModal);
-				}
-			}
+			await login();
 
 			// refresh screen
 			screen.set("blank");
@@ -483,6 +466,57 @@ export async function connect() {
 	}
 }
 
+/** Login using credentials in authHeaders */
+export async function login() {
+	// re-authenticate
+	if (_authHeader.username && _authHeader.token) {
+		try {
+			spinner.set(true);
+
+			const timer = setTimeout(() => {
+				spinner.set(false);
+
+				throw "Timed out"
+			}, 10000);
+
+			const ev = link.sendListener({
+				cmd: "authpswd",
+				val: {
+					username: _authHeader.username,
+					pswd: _authHeader.token,
+				},
+				listener: "svelte-auth",
+			}, cmd => {
+				if (cmd.cmd === "direct") {
+					clearTimeout(timer);
+					link.off(ev);
+					spinner.set(false);
+
+					const resp = cmd.val;
+
+					authHeader.set({
+						..._authHeader,
+						token: resp.payload.token,
+					});
+		
+					_user = {
+						..._user,
+						...resp.payload,
+					};
+		
+					user.set(_user);
+				} else {
+					spinner.set(false);
+					throw cmd;
+				}
+			})
+		} catch (e) {
+			console.error(e);
+			modals.showModal(LoggedOutModal);
+		}
+	}
+}
+
 /**
  * Safely disconnect from the server.
  */
@@ -506,46 +540,6 @@ export async function disconnect() {
 	return new Promise(resolve => {
 		link.once("disconnected", resolve);
 		link.disconnect(1000, "Intentional disconnect");
-	});
-}
-
-/**
- * Send a "Meower request" - a packet that makes the server respond with a direct and a statuscode packet.
- *
- * @param {object} data
- * @returns {Promise<object | string>} Either an object representing the direct command's val parameter (if it resolves), or an error code as a string (if it rejects).
- */
-export async function meowerRequest(data) {
-	link.log("manager", "meower request", data);
-	spinner.set(true);
-	return new Promise((resolve, reject) => {
-		let returnData = null;
-		const timer = setTimeout(() => {
-			reject("Timed out");
-			spinner.set(false);
-		}, 10000);
-		const ev = link.sendListener(
-			{
-				...data,
-				listener: "listener_" + Math.floor(Math.random() * 10000000),
-			},
-			cmd => {
-				if (cmd.cmd === "statuscode") {
-					link.off(ev);
-					spinner.set(false);
-
-					clearTimeout(timer);
-
-					if (cmd.val === "I:100 | OK") {
-						resolve(returnData);
-					} else {
-						reject(cmd.val);
-					}
-				} else if (cmd.cmd === "direct") {
-					returnData = cmd.val;
-				}
-			}
-		);
 	});
 }
 

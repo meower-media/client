@@ -22,7 +22,6 @@
 	import ProfileView from "../../lib/ProfileView.svelte";
 	import Member from "../../lib/Member.svelte";
 	import Container from "../../lib/Container.svelte";
-	import * as clm from "../../lib/clmanager.js";
 	import PostList from "../../lib/PostList.svelte";
 
 	import {params, goto} from "@roxi/routify";
