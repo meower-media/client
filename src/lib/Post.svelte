@@ -34,7 +34,7 @@
 	 * @type {import('src/lib/types.js').ListPost}
 	 */
 	export let post = {
-		content: ""
+		content: "",
 	};
 	export let buttons = true;
 	export let input = null;
@@ -137,7 +137,7 @@
 	window.confirmLink = confirmLink;
 
 	function createEmote(original, id, isGif, size) {
-		return `​![${original}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`
+		return `​![${original}](https://cdn.discordapp.com/emojis/${id}.${isGif ? "gif" : "webp"}?size=32&quality=lossless)`;
 	}
 
 	/**
@@ -170,17 +170,20 @@
 			});
 
 			var emoteContent = content;
-            const discordEmotes = Array.from(content.matchAll(/<a?:\w+:\d+>/g))
+			const discordEmotes = Array.from(content.matchAll(/<a?:\w+:\d+>/g));
 
-            discordEmotes.forEach(element => {
-				const isGif = element[0].startsWith("<a:")
-                const tok = element[0].replace("a", '').slice(0, -1).slice(1).split(":")
+			discordEmotes.forEach(element => {
+				const isGif = element[0].startsWith("<a:");
+				const tok = element[0]
+					.replace("a", "")
+					.slice(0, -1)
+					.slice(1)
+					.split(":");
 
-                emoteContent = emoteContent.split(element).join(createEmote(element, tok[2], isGif))
-            });
-
-
-
+				emoteContent = emoteContent
+					.split(element)
+					.join(createEmote(element, tok[2], isGif));
+			});
 
 			const tokens = md.parse(
 				emoteContent
@@ -225,7 +228,7 @@
 			// add quote containers to blockquotes (although, quotes are currently broken)
 			renderedContent = renderedContent.replaceAll(
 				/<blockquote>(.+?)<\/blockquote>/gms,
-				'<blockquote><p>$1</p></blockquote>'
+				"<blockquote><p>$1</p></blockquote>"
 			);
 
 			if ($user.embeds_enabled) {
@@ -241,7 +244,8 @@
 						continue;
 					const response = await (
 						await fetch(
-							`https://youtube.com/oembed?url=${watchURL}`
+							`https://youtube.com/oembed?url=${watchURL}`,
+							{cache: "force-cache"}
 						)
 					).json();
 					youtubeEmbeds.push({
@@ -249,7 +253,7 @@
 						author: response.author_name,
 						thumbnail: response.thumbnail_url,
 						id: youtubeEmbeds.length,
-						url: watchURL
+						url: watchURL,
 					});
 				}
 			}
@@ -407,17 +411,20 @@
 										.trim()
 										.replace(mentionRegex, mention);
 								} else {
-									existingText = mention + existingText.trim();
+									existingText =
+										mention + existingText.trim();
 								}
 								existingText += "\n";
 								let snipped = false;
 								/* @type {string[]} */
 								let iter = post.content.split("\n");
 
-
 								iter.forEach(element => {
-
-									if (element.replaceAll(/\s/g, '').startsWith(">")) {
+									if (
+										element
+											.replaceAll(/\s/g, "")
+											.startsWith(">")
+									) {
 										if (!snipped) {
 											snipped = true;
 											existingText += "> > [snip]\n";
@@ -509,11 +516,11 @@
 						? post.user === "Server"
 							? 102
 							: post.post_origin === "inbox" &&
-							  (post.user === "Announcement" ||
-									post.user === "Notification" ||
-									post.user.startsWith("Notification to"))
-							? 101
-							: -2
+								  (post.user === "Announcement" ||
+										post.user === "Notification" ||
+										post.user.startsWith("Notification to"))
+								? 101
+								: -2
 						: profile.pfp_data}
 					alt="{post.user}'s profile picture"
 					online={$ulist.includes(post.user)}
@@ -669,7 +676,11 @@
 								<span style="color: #606060; font-size: 1.1rem"
 									>{embed.author}</span
 								><br /><br />
-								<a href={embed.url} target="_blank" rel="noreferrer">
+								<a
+									href={embed.url}
+									target="_blank"
+									rel="noreferrer"
+								>
 									<img
 										src={embed.thumbnail}
 										height="180"
@@ -767,7 +778,6 @@
 		width: 50%;
 	}
 
-
 	:global(blockquote) {
 		margin: 0.25em;
 		border-left: 4px solid var(--orange-dark);
@@ -779,5 +789,4 @@
 	:global(blockquote blockquote) {
 		margin-left: 1em;
 	}
-
 </style>
