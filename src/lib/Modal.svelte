@@ -42,6 +42,14 @@
 			previously_focused.focus();
 		});
 	}
+
+	let animation, animationProps;
+	$: {
+		animation = $mobile ? slide : scale;
+		animationProps = $mobile ?
+			{duration: 500, easing: expoOut} :
+			{start: 0.8, duration: 200, easing: expoOut};
+	};
 </script>
 
 <svelte:window on:keydown={handle_keydown} />
@@ -53,42 +61,23 @@
 	transition:fade={{duration: 100, easing: expoOut}}
 />
 
-{#if $mobile}
-    <div
-	    class="bottom-sheet"
-	    role="dialog"
-	    aria-modal="true"
-	    bind:this={modal}
-	    transition:slide={{duration: 500, easing: expoOut}}
-    >
-        <div class="settings-controls">
-            {#if showClose}
-                <button class="circle close" title="Close modal" on:click={close} />
-            {/if}
-        </div>
+<div
+	class:modal={!$mobile}
+	class:bottom-sheet={$mobile}
+	role="dialog"
+	aria-modal="true"
+	bind:this={modal}
+	transition:animation={animationProps}
+>
+	<div class="settings-controls">
+		{#if showClose}
+			<button class="circle close" title="Close modal" on:click={close} />
+		{/if}
+	</div>
 
-        <slot name="header" />
-        <slot />
-    </div>
-{:else}
-    <div
-	    class="modal"
-	    role="dialog"
-	    aria-modal="true"
-	    bind:this={modal}
-        transition:scale={{start: 0.8, duration: 200, easing: expoOut}}
-    >
-        <div class="settings-controls">
-            {#if showClose}
-                <button class="circle close" title="Close modal" on:click={close} />
-            {/if}
-        </div>
-
-        <slot name="header" />
-        <hr />
-        <slot />
-    </div>
-{/if}
+	<slot name="header" />
+	<slot />
+</div>
 
 <style>
 	.modal-background {
@@ -113,8 +102,10 @@
 		transform: translate(-50%, -50%);
 		padding: 1em;
 		background-color: var(--background);
-		border: solid 2px var(--orange);
+		border-top: solid 5px var(--orange);
+		border-bottom: solid 5px var(--background);
 		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0,0,0,.1);
 	}
 
     .bottom-sheet {
@@ -130,6 +121,7 @@
         padding: 1em;
         background-color: var(--background);
         border-radius: 30px 30px 0px 0px;
+		border-bottom: solid 5px var(--background);
     }
 
     .settings-controls {
