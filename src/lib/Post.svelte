@@ -432,6 +432,7 @@
 								input.value = existingText;
 
 								input.focus();
+								autoresize(input);
 							}}
 						/>
 						{#if post.user === $user.name || (post.post_origin === $chat._id && $chat.owner === $user.name)}
