@@ -118,7 +118,7 @@
 	<Container>
 		<h2>1.8.4</h2>
 		<ul>
-			<li>Moved to using the REST API for more things</li>
+			<li>Switch to using the REST API for more things</li>
 		</ul>
 	</Container>
 	<Container>
