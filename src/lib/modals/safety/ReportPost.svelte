@@ -5,7 +5,8 @@
 	import BasicModal from "../Basic.svelte";
 
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
+	import { apiUrl } from "../../urls.js";
+	import { authHeader } from "../../stores.js";
 
 	export let modalData;
 
@@ -24,33 +25,26 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "report",
-							val: {
-								type: 0,
-								// @ts-ignore
-								id: post.post_id,
-								reason,
-								comment,
-							},
-						},
-					});
+					const resp = await fetch(
+						`${apiUrl}posts/${post.post_id}/report`,
+						{
+							method: "POST",
+							headers: { 'Content-Type': 'application/json', ...$authHeader },
+							body: JSON.stringify({ reason, comment }),
+						}
+					);
+					if (!resp.ok) {
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
+					}
 					modals.replaceLastModal(BasicModal, {
 						title: "Report Post",
 						desc: "Successfully reported post! A moderator will view your report soon. Thank you for your help with keeping Meower a safe and welcoming place!",
 					});
-				} catch (code) {
+				} catch (e) {
 					loading = false;
-					switch (code) {
-						case "E:106 | Too many requests":
-							error =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							error = "Unexpected " + code + " error!";
-					}
+					error = e;
 				}
 			}}
 		>

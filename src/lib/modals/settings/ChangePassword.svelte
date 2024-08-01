@@ -2,11 +2,12 @@
 	import Modal from "../../Modal.svelte";
 
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
+	import { apiUrl } from "../../urls.js";
+	import { authHeader } from "../../stores.js";
 
 	import {goto, focus} from "@roxi/routify";
 
-	let oldPassword, newPassword, newPasswordConfirmation, loading, error;
+	let oldPassword, newPassword, newPasswordConfirmation, clearSessions, loading, error;
 </script>
 
 <Modal on:close={modals.closeLastModal}>
@@ -24,37 +25,37 @@
 				// request change password
 				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "change_pswd",
-							val: {
+					const resp = await fetch(
+						`${apiUrl}me/password`,
+						{
+							method: "PATCH",
+							headers: { 'Content-Type': 'application/json', ...$authHeader },
+							body: JSON.stringify({
 								old: oldPassword,
 								new: newPassword,
-							},
-						},
-					});
-					clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "del_tokens",
-							val: "",
-						},
-					});
-					$goto("/logout");
-				} catch (code) {
-					loading = false;
-					switch (code) {
-						case "I:011 | Invalid Password":
-							error = "Current password is invalid!";
-							break;
-						case "E:106 | Too many requests":
-							error =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							error = "Unexpected " + code + " error!";
+							}),
+						}
+					);
+					if (!resp.ok) {
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
+					if (clearSessions) {
+						fetch(
+							`${apiUrl}me/tokens`,
+							{
+								method: "DELETE",
+								headers: $authHeader,
+							}
+						);
+						$goto("/logout");
+					} else {
+						modals.closeLastModal();
+					}			
+				} catch (e) {
+					loading = false;
+					error = e;
 				}
 			}}
 		>
@@ -101,6 +102,10 @@
 				disabled={loading}
 				bind:value={newPasswordConfirmation}
 			/><br />
+			<label>
+				<input type="checkbox" bind:checked={clearSessions} />
+				Logout everywhere
+			</label><br />
 			<br />
 			<div class="modal-buttons">
 				<button
@@ -123,5 +128,8 @@
 <style>
 	input[type="password"] {
 		margin-bottom: 0.5em;
+	}
+	label, input[type="checkbox"] {
+		vertical-align: middle;
 	}
 </style>

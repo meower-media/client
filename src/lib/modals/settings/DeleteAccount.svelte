@@ -3,7 +3,8 @@
 	import Container from "../../Container.svelte";
 
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
+	import { apiUrl } from "../../urls.js";
+	import { authHeader } from "../../stores.js";
 
 	import {user} from "../../stores.js";
 
@@ -27,27 +28,23 @@
 				// request account deletion
 				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "del_account",
-							val: password,
-						},
-					});
-					$goto("/logout");
-				} catch (code) {
-					loading = false;
-					switch (code) {
-						case "I:011 | Invalid Password":
-							error = "Invalid password!";
-							break;
-						case "E:106 | Too many requests":
-							error =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							error = "Unexpected " + code + " error!";
+					const resp = await fetch(
+						`${apiUrl}me`,
+						{
+							method: "DELETE",
+							headers: { 'Content-Type': 'application/json', ...$authHeader },
+							body: JSON.stringify({ password }),
+						}
+					);
+					if (!resp.ok) {
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
+					$goto("/logout");	
+				} catch (e) {
+					loading = false;
+					error = e;
 				}
 			}}
 		>

@@ -552,7 +552,7 @@ export async function meowerRequest(data) {
 /**
  * Sends a request to update the user's settings.
  *
- * @returns {Promise<object | string>} Either an object or an error code; see meowerRequest.
+ * @returns {Promise<Response>}
  */
 export async function updateProfile(updatedValues) {
 	if (!_user.name) return;

@@ -2,7 +2,8 @@
 	import Modal from "../../Modal.svelte";
 
 	import * as modals from "../../modals.js";
-	import * as clm from "../../clmanager.js";
+	import { apiUrl } from "../../urls.js";
+	import { authHeader } from "../../stores.js";
 
 	import {goto, focus} from "@roxi/routify";
 
@@ -16,24 +17,22 @@
 			on:submit|preventDefault={async () => {
 				loading = true;
 				try {
-					await clm.meowerRequest({
-						cmd: "direct",
-						val: {
-							cmd: "del_tokens",
-							val: "",
-						},
-					});
-					$goto("/logout");
-				} catch (code) {
-					loading = false;
-					switch (code) {
-						case "E:106 | Too many requests":
-							error =
-								"Too many requests! Please try again later.";
-							break;
-						default:
-							error = "Unexpected " + code + " error!";
+					const resp = await fetch(
+						`${apiUrl}me/tokens`,
+						{
+							method: "DELETE",
+							headers: $authHeader,
+						}
+					);
+					if (!resp.ok) {
+						throw new Error(
+							"Response code is not OK; code is " + resp.status
+						);
 					}
+					$goto("/logout");
+				} catch (e) {
+					loading = false;
+					error = e;
 				}
 			}}
 		>
