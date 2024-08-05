@@ -241,7 +241,8 @@
 						continue;
 					const response = await (
 						await fetch(
-							`https://youtube.com/oembed?url=${watchURL}`
+							`https://youtube.com/oembed?url=${watchURL}`,
+							{cache: "force-cache"},
 						)
 					).json();
 					youtubeEmbeds.push({
@@ -779,5 +780,4 @@
 	:global(blockquote blockquote) {
 		margin-left: 1em;
 	}
-
 </style>
