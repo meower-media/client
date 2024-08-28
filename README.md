@@ -1,4 +1,4 @@
-![banner](https://raw.githubusercontent.com/meower-media/client/add-banner/branding/client%20banner.svg)
+![banner](./branding/client%20banner.svg)
 # Client
 The main Meower client, written in [Svelte](https://svelte.dev).
 
