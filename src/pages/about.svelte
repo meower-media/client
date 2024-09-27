@@ -40,7 +40,7 @@
 	<a href="https://meower.org" target="_blank" rel="noreferrer">Learn more</a>
 	|
 	<a
-		href="https://github.com/meower-media-co"
+		href="https://github.com/meower-media"
 		target="_blank"
 		rel="noreferrer">Source code</a
 	>

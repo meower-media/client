@@ -276,7 +276,7 @@
 			<pre><code>{e}</code></pre>
 			Try again. If this issue persists,
 			<a
-				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
+				href="https://github.com/meower-media/client/issues/new"
 				>create an issue on Meower Svelte's issue tracker</a
 			> with the error code shown above.
 		</Container>
