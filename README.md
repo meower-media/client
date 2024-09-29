@@ -1,4 +1,6 @@
-# Meower Svelte
+![banner](./branding/client%20banner.svg)
+
+# Client
 The main Meower client, written in [Svelte](https://svelte.dev).
 
 ## Contributing
