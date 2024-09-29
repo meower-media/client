@@ -13,7 +13,7 @@
 	<div slot="default">
 		<p>{"We encountered an error while starting Meower, Here's some info that may help: "+error}</p>
         <p>Try reloading, and if this happens again, <a
-				href="https://github.com/Meower-Media-Co/Meower-Svelte/issues/new"
+				href="https://github.com/meower-media/client/issues/new"
 				>create an issue on Meower Svelte's issue tracker</a
 			> with the info shown above.
         </p>
