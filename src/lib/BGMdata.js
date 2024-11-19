@@ -42,7 +42,7 @@ export const audioData = [
 		file: "2c0293c58590d4d0ff3a0636f197d9ca.mp3",
 	},
 	{
-		name: "Meower is (not) dead",
+		name: "Meower is dead",
 		author: "Voxalice",
 		file: "c25441be9d4f5547baf85cc444253259.mp3",
 	},
@@ -52,7 +52,7 @@ export const audioData = [
 		file: "d56dc789ac58918b555c666935e56392.wav",
 	},
 	{
-		name: "Meower is (not) dead Instrumental",
+		name: "Meower is dead Instrumental",
 		author: "Voxalice",
 		file: "8437988a9f23bb09fd6a50b280e5bed9.wav",
 	},
